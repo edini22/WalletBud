@@ -12,3 +12,5 @@ link wildfly
 ```
 https://github.com/wildfly/wildfly/releases/download/32.0.1.Final/wildfly-32.0.1.Final.zip
 ```
+
+versão do JAVA -> 22

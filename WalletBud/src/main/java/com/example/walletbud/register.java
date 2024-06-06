@@ -13,9 +13,18 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import java.io.StringReader;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Path("/register")
 public class register {
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+    public static boolean validate(String emailStr) {
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
+        return matcher.matches();
+    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -36,8 +45,14 @@ public class register {
                     .build();
         }
 
-        if (email == null || !email.contains("@")) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        if (!validate(email)) {
+            JsonObject jsonResponse = Json.createObjectBuilder()
+                    .add("message", "Email address is invalid")
+                    .build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(jsonResponse.toString())
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
         }
 
         try {

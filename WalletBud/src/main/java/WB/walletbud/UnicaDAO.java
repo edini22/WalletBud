@@ -8,147 +8,135 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import org.orm.*;
 import org.hibernate.Query;
-
+import org.hibernate.LockMode;
 import java.util.List;
 
 public class UnicaDAO {
 	public static Unica loadUnicaByORMID(int id_transacao) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadUnicaByORMID(session, id_transacao);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica getUnicaByORMID(int id_transacao) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return getUnicaByORMID(session, id_transacao);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica loadUnicaByORMID(int id_transacao, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadUnicaByORMID(session, id_transacao, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica getUnicaByORMID(int id_transacao, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return getUnicaByORMID(session, id_transacao, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica loadUnicaByORMID(PersistentSession session, int id_transacao) throws PersistentException {
 		try {
-			return (Unica) session.load(Unica.class, Integer.valueOf(id_transacao));
+			return (Unica) session.load(wb.walletbud.Unica.class, Integer.valueOf(id_transacao));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica getUnicaByORMID(PersistentSession session, int id_transacao) throws PersistentException {
 		try {
-			return (Unica) session.get(Unica.class, Integer.valueOf(id_transacao));
+			return (Unica) session.get(wb.walletbud.Unica.class, Integer.valueOf(id_transacao));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica loadUnicaByORMID(PersistentSession session, int id_transacao, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			return (Unica) session.load(Unica.class, Integer.valueOf(id_transacao), lockMode);
+			return (Unica) session.load(wb.walletbud.Unica.class, Integer.valueOf(id_transacao), lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica getUnicaByORMID(PersistentSession session, int id_transacao, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			return (Unica) session.get(Unica.class, Integer.valueOf(id_transacao), lockMode);
+			return (Unica) session.get(wb.walletbud.Unica.class, Integer.valueOf(id_transacao), lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryUnica(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return queryUnica(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryUnica(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return queryUnica(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica[] listUnicaByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return listUnicaByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica[] listUnicaByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return listUnicaByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryUnica(PersistentSession session, String condition, String orderBy) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Unica as Unica");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Unica as Unica");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -158,13 +146,12 @@ public class UnicaDAO {
 			return query.list();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryUnica(PersistentSession session, String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Unica as Unica");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Unica as Unica");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -175,7 +162,6 @@ public class UnicaDAO {
 			return query.list();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -186,7 +172,6 @@ public class UnicaDAO {
 			return (Unica[]) list.toArray(new Unica[list.size()]);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -197,29 +182,26 @@ public class UnicaDAO {
 			return (Unica[]) list.toArray(new Unica[list.size()]);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica loadUnicaByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadUnicaByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica loadUnicaByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadUnicaByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -242,28 +224,26 @@ public class UnicaDAO {
 	
 	public static java.util.Iterator iterateUnicaByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return iterateUnicaByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateUnicaByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return iterateUnicaByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateUnicaByQuery(PersistentSession session, String condition, String orderBy) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Unica as Unica");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Unica as Unica");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -273,13 +253,12 @@ public class UnicaDAO {
 			return query.iterate();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateUnicaByQuery(PersistentSession session, String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Unica as Unica");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Unica as Unica");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -290,88 +269,50 @@ public class UnicaDAO {
 			return query.iterate();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Unica createUnica() {
-		return new Unica();
+		return new wb.walletbud.Unica();
 	}
 	
-	public static boolean save(Unica unica) throws PersistentException {
+	public static boolean save(wb.walletbud.Unica unica) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().saveObject(unica);
+			wb.walletbud.AASICPersistentManager.instance().saveObject(unica);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean delete(Unica unica) throws PersistentException {
+	public static boolean delete(wb.walletbud.Unica unica) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().deleteObject(unica);
+			wb.walletbud.AASICPersistentManager.instance().deleteObject(unica);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean deleteAndDissociate(Unica unica)throws PersistentException {
+	public static boolean refresh(wb.walletbud.Unica unica) throws PersistentException {
 		try {
-			UserTransacao[] lUserTransacaos = unica.userTransacao.toArray();
-			for(int i = 0; i < lUserTransacaos.length; i++) {
-				lUserTransacaos[i].setTransacaoId_transacao(null);
-			}
-			return delete(unica);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			throw new PersistentException(e);
-		}
-	}
-	
-	public static boolean deleteAndDissociate(Unica unica, org.orm.PersistentSession session)throws PersistentException {
-		try {
-			UserTransacao[] lUserTransacaos = unica.userTransacao.toArray();
-			for(int i = 0; i < lUserTransacaos.length; i++) {
-				lUserTransacaos[i].setTransacaoId_transacao(null);
-			}
-			try {
-				session.delete(unica);
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			throw new PersistentException(e);
-		}
-	}
-	
-	public static boolean refresh(Unica unica) throws PersistentException {
-		try {
-			AASICPersistentManager.instance().getSession().refresh(unica);
+			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(unica);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean evict(Unica unica) throws PersistentException {
+	public static boolean evict(wb.walletbud.Unica unica) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().getSession().evict(unica);
+			wb.walletbud.AASICPersistentManager.instance().getSession().evict(unica);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}

@@ -8,10 +8,10 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import org.hibernate.Criteria;
 import org.orm.PersistentException;
@@ -20,18 +20,10 @@ import org.orm.criteria.*;
 
 public class UserTransacaoCriteria extends AbstractORMCriteria {
 	public final IntegerExpression ID;
-	public final IntegerExpression userId_userId;
-	public final AssociationExpression userId_user;
-	public final IntegerExpression transacaoId_transacaoId;
-	public final AssociationExpression transacaoId_transacao;
 	
 	public UserTransacaoCriteria(Criteria criteria) {
 		super(criteria);
 		ID = new IntegerExpression("ID", this);
-		userId_userId = new IntegerExpression("userId_user.id_user", this);
-		userId_user = new AssociationExpression("userId_user", this);
-		transacaoId_transacaoId = new IntegerExpression("transacaoId_transacao.id_transacao", this);
-		transacaoId_transacao = new AssociationExpression("transacaoId_transacao", this);
 	}
 	
 	public UserTransacaoCriteria(PersistentSession session) {
@@ -39,15 +31,7 @@ public class UserTransacaoCriteria extends AbstractORMCriteria {
 	}
 	
 	public UserTransacaoCriteria() throws PersistentException {
-		this(AASICPersistentManager.instance().getSession());
-	}
-	
-	public UserCriteria createUserId_userCriteria() {
-		return new UserCriteria(createCriteria("userId_user"));
-	}
-	
-	public TransacaoCriteria createTransacaoId_transacaoCriteria() {
-		return new TransacaoCriteria(createCriteria("transacaoId_transacao"));
+		this(wb.walletbud.AASICPersistentManager.instance().getSession());
 	}
 	
 	public UserTransacao uniqueUserTransacao() {

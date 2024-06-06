@@ -1,4 +1,4 @@
-package WB.walletbud;
+package wb.walletbud;
 
 import org.orm.PersistentException;
 import org.orm.PersistentTransaction;

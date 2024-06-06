@@ -8,10 +8,10 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
@@ -24,14 +24,14 @@ public class NotificacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final StringExpression descrição;
 	
 	public NotificacaoDetachedCriteria() {
-		super(Notificacao.class, NotificacaoCriteria.class);
+		super(wb.walletbud.Notificacao.class, wb.walletbud.NotificacaoCriteria.class);
 		id_notificacao = new IntegerExpression("id_notificacao", this.getDetachedCriteria());
 		date = new DateExpression("date", this.getDetachedCriteria());
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
 	}
 	
 	public NotificacaoDetachedCriteria(DetachedCriteria aDetachedCriteria) {
-		super(aDetachedCriteria, NotificacaoCriteria.class);
+		super(aDetachedCriteria, wb.walletbud.NotificacaoCriteria.class);
 		id_notificacao = new IntegerExpression("id_notificacao", this.getDetachedCriteria());
 		date = new DateExpression("date", this.getDetachedCriteria());
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());

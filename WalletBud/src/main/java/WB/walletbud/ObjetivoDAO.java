@@ -8,147 +8,135 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import org.orm.*;
 import org.hibernate.Query;
-
+import org.hibernate.LockMode;
 import java.util.List;
 
 public class ObjetivoDAO {
 	public static Objetivo loadObjetivoByORMID(int id_objetivo) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadObjetivoByORMID(session, id_objetivo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo getObjetivoByORMID(int id_objetivo) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return getObjetivoByORMID(session, id_objetivo);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo loadObjetivoByORMID(int id_objetivo, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadObjetivoByORMID(session, id_objetivo, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo getObjetivoByORMID(int id_objetivo, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return getObjetivoByORMID(session, id_objetivo, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo loadObjetivoByORMID(PersistentSession session, int id_objetivo) throws PersistentException {
 		try {
-			return (Objetivo) session.load(Objetivo.class, Integer.valueOf(id_objetivo));
+			return (Objetivo) session.load(wb.walletbud.Objetivo.class, Integer.valueOf(id_objetivo));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo getObjetivoByORMID(PersistentSession session, int id_objetivo) throws PersistentException {
 		try {
-			return (Objetivo) session.get(Objetivo.class, Integer.valueOf(id_objetivo));
+			return (Objetivo) session.get(wb.walletbud.Objetivo.class, Integer.valueOf(id_objetivo));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo loadObjetivoByORMID(PersistentSession session, int id_objetivo, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			return (Objetivo) session.load(Objetivo.class, Integer.valueOf(id_objetivo), lockMode);
+			return (Objetivo) session.load(wb.walletbud.Objetivo.class, Integer.valueOf(id_objetivo), lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo getObjetivoByORMID(PersistentSession session, int id_objetivo, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			return (Objetivo) session.get(Objetivo.class, Integer.valueOf(id_objetivo), lockMode);
+			return (Objetivo) session.get(wb.walletbud.Objetivo.class, Integer.valueOf(id_objetivo), lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryObjetivo(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return queryObjetivo(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryObjetivo(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return queryObjetivo(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo[] listObjetivoByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return listObjetivoByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo[] listObjetivoByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return listObjetivoByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryObjetivo(PersistentSession session, String condition, String orderBy) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Objetivo as Objetivo");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Objetivo as Objetivo");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -158,13 +146,12 @@ public class ObjetivoDAO {
 			return query.list();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryObjetivo(PersistentSession session, String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Objetivo as Objetivo");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Objetivo as Objetivo");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -175,7 +162,6 @@ public class ObjetivoDAO {
 			return query.list();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -186,7 +172,6 @@ public class ObjetivoDAO {
 			return (Objetivo[]) list.toArray(new Objetivo[list.size()]);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -197,29 +182,26 @@ public class ObjetivoDAO {
 			return (Objetivo[]) list.toArray(new Objetivo[list.size()]);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo loadObjetivoByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadObjetivoByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo loadObjetivoByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadObjetivoByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -242,28 +224,26 @@ public class ObjetivoDAO {
 	
 	public static java.util.Iterator iterateObjetivoByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return iterateObjetivoByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateObjetivoByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return iterateObjetivoByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateObjetivoByQuery(PersistentSession session, String condition, String orderBy) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Objetivo as Objetivo");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Objetivo as Objetivo");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -273,13 +253,12 @@ public class ObjetivoDAO {
 			return query.iterate();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateObjetivoByQuery(PersistentSession session, String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Objetivo as Objetivo");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Objetivo as Objetivo");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -290,55 +269,50 @@ public class ObjetivoDAO {
 			return query.iterate();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Objetivo createObjetivo() {
-		return new Objetivo();
+		return new wb.walletbud.Objetivo();
 	}
 	
-	public static boolean save(Objetivo objetivo) throws PersistentException {
+	public static boolean save(wb.walletbud.Objetivo objetivo) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().saveObject(objetivo);
+			wb.walletbud.AASICPersistentManager.instance().saveObject(objetivo);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean delete(Objetivo objetivo) throws PersistentException {
+	public static boolean delete(wb.walletbud.Objetivo objetivo) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().deleteObject(objetivo);
+			wb.walletbud.AASICPersistentManager.instance().deleteObject(objetivo);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean refresh(Objetivo objetivo) throws PersistentException {
+	public static boolean refresh(wb.walletbud.Objetivo objetivo) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().getSession().refresh(objetivo);
+			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(objetivo);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean evict(Objetivo objetivo) throws PersistentException {
+	public static boolean evict(wb.walletbud.Objetivo objetivo) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().getSession().evict(objetivo);
+			wb.walletbud.AASICPersistentManager.instance().getSession().evict(objetivo);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}

@@ -8,10 +8,10 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import org.hibernate.Criteria;
 import org.orm.PersistentException;
@@ -33,7 +33,7 @@ public class ComentarioCriteria extends AbstractORMCriteria {
 	}
 	
 	public ComentarioCriteria() throws PersistentException {
-		this(AASICPersistentManager.instance().getSession());
+		this(wb.walletbud.AASICPersistentManager.instance().getSession());
 	}
 	
 	public Comentario uniqueComentario() {

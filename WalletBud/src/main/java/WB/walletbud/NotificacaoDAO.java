@@ -8,147 +8,135 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import org.orm.*;
 import org.hibernate.Query;
-
+import org.hibernate.LockMode;
 import java.util.List;
 
 public class NotificacaoDAO {
 	public static Notificacao loadNotificacaoByORMID(int id_notificacao) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadNotificacaoByORMID(session, id_notificacao);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao getNotificacaoByORMID(int id_notificacao) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return getNotificacaoByORMID(session, id_notificacao);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao loadNotificacaoByORMID(int id_notificacao, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadNotificacaoByORMID(session, id_notificacao, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao getNotificacaoByORMID(int id_notificacao, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return getNotificacaoByORMID(session, id_notificacao, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao loadNotificacaoByORMID(PersistentSession session, int id_notificacao) throws PersistentException {
 		try {
-			return (Notificacao) session.load(Notificacao.class, Integer.valueOf(id_notificacao));
+			return (Notificacao) session.load(wb.walletbud.Notificacao.class, Integer.valueOf(id_notificacao));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao getNotificacaoByORMID(PersistentSession session, int id_notificacao) throws PersistentException {
 		try {
-			return (Notificacao) session.get(Notificacao.class, Integer.valueOf(id_notificacao));
+			return (Notificacao) session.get(wb.walletbud.Notificacao.class, Integer.valueOf(id_notificacao));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao loadNotificacaoByORMID(PersistentSession session, int id_notificacao, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			return (Notificacao) session.load(Notificacao.class, Integer.valueOf(id_notificacao), lockMode);
+			return (Notificacao) session.load(wb.walletbud.Notificacao.class, Integer.valueOf(id_notificacao), lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao getNotificacaoByORMID(PersistentSession session, int id_notificacao, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			return (Notificacao) session.get(Notificacao.class, Integer.valueOf(id_notificacao), lockMode);
+			return (Notificacao) session.get(wb.walletbud.Notificacao.class, Integer.valueOf(id_notificacao), lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryNotificacao(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return queryNotificacao(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryNotificacao(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return queryNotificacao(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao[] listNotificacaoByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return listNotificacaoByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao[] listNotificacaoByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return listNotificacaoByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryNotificacao(PersistentSession session, String condition, String orderBy) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Notificacao as Notificacao");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Notificacao as Notificacao");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -158,13 +146,12 @@ public class NotificacaoDAO {
 			return query.list();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryNotificacao(PersistentSession session, String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Notificacao as Notificacao");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Notificacao as Notificacao");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -175,7 +162,6 @@ public class NotificacaoDAO {
 			return query.list();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -186,7 +172,6 @@ public class NotificacaoDAO {
 			return (Notificacao[]) list.toArray(new Notificacao[list.size()]);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -197,29 +182,26 @@ public class NotificacaoDAO {
 			return (Notificacao[]) list.toArray(new Notificacao[list.size()]);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao loadNotificacaoByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadNotificacaoByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao loadNotificacaoByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadNotificacaoByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -242,28 +224,26 @@ public class NotificacaoDAO {
 	
 	public static java.util.Iterator iterateNotificacaoByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return iterateNotificacaoByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateNotificacaoByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return iterateNotificacaoByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateNotificacaoByQuery(PersistentSession session, String condition, String orderBy) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Notificacao as Notificacao");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Notificacao as Notificacao");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -273,13 +253,12 @@ public class NotificacaoDAO {
 			return query.iterate();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateNotificacaoByQuery(PersistentSession session, String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Notificacao as Notificacao");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Notificacao as Notificacao");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -290,55 +269,50 @@ public class NotificacaoDAO {
 			return query.iterate();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Notificacao createNotificacao() {
-		return new Notificacao();
+		return new wb.walletbud.Notificacao();
 	}
 	
-	public static boolean save(Notificacao notificacao) throws PersistentException {
+	public static boolean save(wb.walletbud.Notificacao notificacao) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().saveObject(notificacao);
+			wb.walletbud.AASICPersistentManager.instance().saveObject(notificacao);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean delete(Notificacao notificacao) throws PersistentException {
+	public static boolean delete(wb.walletbud.Notificacao notificacao) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().deleteObject(notificacao);
+			wb.walletbud.AASICPersistentManager.instance().deleteObject(notificacao);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean refresh(Notificacao notificacao) throws PersistentException {
+	public static boolean refresh(wb.walletbud.Notificacao notificacao) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().getSession().refresh(notificacao);
+			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(notificacao);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean evict(Notificacao notificacao) throws PersistentException {
+	public static boolean evict(wb.walletbud.Notificacao notificacao) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().getSession().evict(notificacao);
+			wb.walletbud.AASICPersistentManager.instance().getSession().evict(notificacao);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}

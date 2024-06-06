@@ -8,10 +8,10 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
@@ -26,14 +26,13 @@ public class FixaDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final StringExpression descrição;
 	public final StringExpression local;
 	public final StringExpression tipo;
-	public final CollectionExpression userTransacao;
 	public final IntegerExpression repetição;
 	public final BooleanExpression pago;
 	public final DateExpression data_pagamento;
 	public final IntegerExpression id_fixa;
 	
 	public FixaDetachedCriteria() {
-		super(Fixa.class, FixaCriteria.class);
+		super(wb.walletbud.Fixa.class, wb.walletbud.FixaCriteria.class);
 		id_transacao = new IntegerExpression("id_transacao", this.getDetachedCriteria());
 		name = new StringExpression("name", this.getDetachedCriteria());
 		value = new FloatExpression("value", this.getDetachedCriteria());
@@ -41,7 +40,6 @@ public class FixaDetachedCriteria extends AbstractORMDetachedCriteria {
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
 		local = new StringExpression("local", this.getDetachedCriteria());
 		tipo = new StringExpression("tipo", this.getDetachedCriteria());
-		userTransacao = new CollectionExpression("ORM_UserTransacao", this.getDetachedCriteria());
 		repetição = new IntegerExpression("repetição", this.getDetachedCriteria());
 		pago = new BooleanExpression("pago", this.getDetachedCriteria());
 		data_pagamento = new DateExpression("data_pagamento", this.getDetachedCriteria());
@@ -49,7 +47,7 @@ public class FixaDetachedCriteria extends AbstractORMDetachedCriteria {
 	}
 	
 	public FixaDetachedCriteria(DetachedCriteria aDetachedCriteria) {
-		super(aDetachedCriteria, FixaCriteria.class);
+		super(aDetachedCriteria, wb.walletbud.FixaCriteria.class);
 		id_transacao = new IntegerExpression("id_transacao", this.getDetachedCriteria());
 		name = new StringExpression("name", this.getDetachedCriteria());
 		value = new FloatExpression("value", this.getDetachedCriteria());
@@ -57,15 +55,10 @@ public class FixaDetachedCriteria extends AbstractORMDetachedCriteria {
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
 		local = new StringExpression("local", this.getDetachedCriteria());
 		tipo = new StringExpression("tipo", this.getDetachedCriteria());
-		userTransacao = new CollectionExpression("ORM_UserTransacao", this.getDetachedCriteria());
 		repetição = new IntegerExpression("repetição", this.getDetachedCriteria());
 		pago = new BooleanExpression("pago", this.getDetachedCriteria());
 		data_pagamento = new DateExpression("data_pagamento", this.getDetachedCriteria());
 		id_fixa = new IntegerExpression("id_fixa", this.getDetachedCriteria());
-	}
-	
-	public UserTransacaoDetachedCriteria createUserTransacaoCriteria() {
-		return new UserTransacaoDetachedCriteria(createCriteria("ORM_UserTransacao"));
 	}
 	
 	public Fixa uniqueFixa(PersistentSession session) {

@@ -8,10 +8,10 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import org.hibernate.Criteria;
 import org.orm.PersistentException;
@@ -35,7 +35,7 @@ public class NotificacaoCriteria extends AbstractORMCriteria {
 	}
 	
 	public NotificacaoCriteria() throws PersistentException {
-		this(AASICPersistentManager.instance().getSession());
+		this(wb.walletbud.AASICPersistentManager.instance().getSession());
 	}
 	
 	public Notificacao uniqueNotificacao() {

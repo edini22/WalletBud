@@ -8,151 +8,135 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
 import org.orm.*;
 import org.hibernate.Query;
-
+import org.hibernate.LockMode;
 import java.util.List;
 
 public class UserDAO {
-//	private static final Logger log = LogManager.getLogger(UserDAO.class);
-
 	public static User loadUserByORMID(int id_user) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadUserByORMID(session, id_user);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User getUserByORMID(int id_user) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return getUserByORMID(session, id_user);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User loadUserByORMID(int id_user, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadUserByORMID(session, id_user, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User getUserByORMID(int id_user, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return getUserByORMID(session, id_user, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User loadUserByORMID(PersistentSession session, int id_user) throws PersistentException {
 		try {
-			return (User) session.load(User.class, Integer.valueOf(id_user));
+			return (User) session.load(wb.walletbud.User.class, Integer.valueOf(id_user));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User getUserByORMID(PersistentSession session, int id_user) throws PersistentException {
 		try {
-			return (User) session.get(User.class, Integer.valueOf(id_user));
+			return (User) session.get(wb.walletbud.User.class, Integer.valueOf(id_user));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User loadUserByORMID(PersistentSession session, int id_user, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			return (User) session.load(User.class, Integer.valueOf(id_user), lockMode);
+			return (User) session.load(wb.walletbud.User.class, Integer.valueOf(id_user), lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User getUserByORMID(PersistentSession session, int id_user, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			return (User) session.get(User.class, Integer.valueOf(id_user), lockMode);
+			return (User) session.get(wb.walletbud.User.class, Integer.valueOf(id_user), lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryUser(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return queryUser(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryUser(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return queryUser(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User[] listUserByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return listUserByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User[] listUserByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return listUserByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryUser(PersistentSession session, String condition, String orderBy) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.User as User");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.User as User");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -162,13 +146,12 @@ public class UserDAO {
 			return query.list();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryUser(PersistentSession session, String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.User as User");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.User as User");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -179,7 +162,6 @@ public class UserDAO {
 			return query.list();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -190,7 +172,6 @@ public class UserDAO {
 			return (User[]) list.toArray(new User[list.size()]);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -201,29 +182,26 @@ public class UserDAO {
 			return (User[]) list.toArray(new User[list.size()]);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User loadUserByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadUserByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User loadUserByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadUserByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -246,28 +224,26 @@ public class UserDAO {
 	
 	public static java.util.Iterator iterateUserByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return iterateUserByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateUserByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return iterateUserByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateUserByQuery(PersistentSession session, String condition, String orderBy) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.User as User");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.User as User");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -277,13 +253,12 @@ public class UserDAO {
 			return query.iterate();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateUserByQuery(PersistentSession session, String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.User as User");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.User as User");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -294,88 +269,50 @@ public class UserDAO {
 			return query.iterate();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static User createUser() {
-		return new User();
+		return new wb.walletbud.User();
 	}
 	
-	public static boolean save(User user) throws PersistentException {
+	public static boolean save(wb.walletbud.User user) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().saveObject(user);
+			wb.walletbud.AASICPersistentManager.instance().saveObject(user);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean delete(User user) throws PersistentException {
+	public static boolean delete(wb.walletbud.User user) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().deleteObject(user);
+			wb.walletbud.AASICPersistentManager.instance().deleteObject(user);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean deleteAndDissociate(User user)throws PersistentException {
+	public static boolean refresh(wb.walletbud.User user) throws PersistentException {
 		try {
-			UserTransacao[] lUserTransacaos = user.userTransacao.toArray();
-			for(int i = 0; i < lUserTransacaos.length; i++) {
-				lUserTransacaos[i].setUserId_user(null);
-			}
-			return delete(user);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			throw new PersistentException(e);
-		}
-	}
-	
-	public static boolean deleteAndDissociate(User user, org.orm.PersistentSession session)throws PersistentException {
-		try {
-			UserTransacao[] lUserTransacaos = user.userTransacao.toArray();
-			for(int i = 0; i < lUserTransacaos.length; i++) {
-				lUserTransacaos[i].setUserId_user(null);
-			}
-			try {
-				session.delete(user);
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			throw new PersistentException(e);
-		}
-	}
-	
-	public static boolean refresh(User user) throws PersistentException {
-		try {
-			AASICPersistentManager.instance().getSession().refresh(user);
+			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(user);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean evict(User user) throws PersistentException {
+	public static boolean evict(wb.walletbud.User user) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().getSession().evict(user);
+			wb.walletbud.AASICPersistentManager.instance().getSession().evict(user);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}

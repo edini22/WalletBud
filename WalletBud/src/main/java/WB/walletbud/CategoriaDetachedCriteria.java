@@ -8,10 +8,10 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
@@ -24,14 +24,14 @@ public class CategoriaDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final StringExpression tipo;
 	
 	public CategoriaDetachedCriteria() {
-		super(Categoria.class, CategoriaCriteria.class);
+		super(wb.walletbud.Categoria.class, wb.walletbud.CategoriaCriteria.class);
 		id_categoria = new IntegerExpression("id_categoria", this.getDetachedCriteria());
 		name = new StringExpression("name", this.getDetachedCriteria());
 		tipo = new StringExpression("tipo", this.getDetachedCriteria());
 	}
 	
 	public CategoriaDetachedCriteria(DetachedCriteria aDetachedCriteria) {
-		super(aDetachedCriteria, CategoriaCriteria.class);
+		super(aDetachedCriteria, wb.walletbud.CategoriaCriteria.class);
 		id_categoria = new IntegerExpression("id_categoria", this.getDetachedCriteria());
 		name = new StringExpression("name", this.getDetachedCriteria());
 		tipo = new StringExpression("tipo", this.getDetachedCriteria());

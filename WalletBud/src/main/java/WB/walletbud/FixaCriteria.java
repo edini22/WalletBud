@@ -8,10 +8,10 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import org.hibernate.Criteria;
 import org.orm.PersistentException;
@@ -26,7 +26,6 @@ public class FixaCriteria extends AbstractORMCriteria {
 	public final StringExpression descrição;
 	public final StringExpression local;
 	public final StringExpression tipo;
-	public final CollectionExpression userTransacao;
 	public final IntegerExpression repetição;
 	public final BooleanExpression pago;
 	public final DateExpression data_pagamento;
@@ -41,7 +40,6 @@ public class FixaCriteria extends AbstractORMCriteria {
 		descrição = new StringExpression("descrição", this);
 		local = new StringExpression("local", this);
 		tipo = new StringExpression("tipo", this);
-		userTransacao = new CollectionExpression("ORM_UserTransacao", this);
 		repetição = new IntegerExpression("repetição", this);
 		pago = new BooleanExpression("pago", this);
 		data_pagamento = new DateExpression("data_pagamento", this);
@@ -53,11 +51,7 @@ public class FixaCriteria extends AbstractORMCriteria {
 	}
 	
 	public FixaCriteria() throws PersistentException {
-		this(AASICPersistentManager.instance().getSession());
-	}
-	
-	public UserTransacaoCriteria createUserTransacaoCriteria() {
-		return new UserTransacaoCriteria(createCriteria("ORM_UserTransacao"));
+		this(wb.walletbud.AASICPersistentManager.instance().getSession());
 	}
 	
 	public Fixa uniqueFixa() {

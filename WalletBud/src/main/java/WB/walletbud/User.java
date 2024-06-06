@@ -8,29 +8,14 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 public class User {
 	public User() {
 	}
-	
-	private java.util.Set this_getSet (int key) {
-		if (key == ORMConstants.KEY_USER_USERTRANSACAO) {
-			return ORM_userTransacao;
-		}
-		
-		return null;
-	}
-	
-	org.orm.util.ORMAdapter _ormAdapter = new org.orm.util.AbstractORMAdapter() {
-		public java.util.Set getSet(int key) {
-			return this_getSet(key);
-		}
-		
-	};
 	
 	private int id_user;
 	
@@ -43,8 +28,6 @@ public class User {
 	private float saldo = 0.0f;
 	
 	private String idioma = "portugues";
-	
-	private java.util.Set ORM_userTransacao = new java.util.HashSet();
 	
 	private void setId_user(int value) {
 		this.id_user = value;
@@ -97,16 +80,6 @@ public class User {
 	public String getIdioma() {
 		return idioma;
 	}
-	
-	private void setORM_UserTransacao(java.util.Set value) {
-		this.ORM_userTransacao = value;
-	}
-	
-	private java.util.Set getORM_UserTransacao() {
-		return ORM_userTransacao;
-	}
-	
-	public final UserTransacaoSetCollection userTransacao = new UserTransacaoSetCollection(this, _ormAdapter, ORMConstants.KEY_USER_USERTRANSACAO, ORMConstants.KEY_USERTRANSACAO_USERID_USER, ORMConstants.KEY_MUL_ONE_TO_MANY);
 	
 	public int getId() {
 		//TODO: Implement Method

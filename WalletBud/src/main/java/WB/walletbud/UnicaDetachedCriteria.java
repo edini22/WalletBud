@@ -8,10 +8,10 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
@@ -26,10 +26,9 @@ public class UnicaDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final StringExpression descrição;
 	public final StringExpression local;
 	public final StringExpression tipo;
-	public final CollectionExpression userTransacao;
 	
 	public UnicaDetachedCriteria() {
-		super(Unica.class, UnicaCriteria.class);
+		super(wb.walletbud.Unica.class, wb.walletbud.UnicaCriteria.class);
 		id_transacao = new IntegerExpression("id_transacao", this.getDetachedCriteria());
 		name = new StringExpression("name", this.getDetachedCriteria());
 		value = new FloatExpression("value", this.getDetachedCriteria());
@@ -37,11 +36,10 @@ public class UnicaDetachedCriteria extends AbstractORMDetachedCriteria {
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
 		local = new StringExpression("local", this.getDetachedCriteria());
 		tipo = new StringExpression("tipo", this.getDetachedCriteria());
-		userTransacao = new CollectionExpression("ORM_UserTransacao", this.getDetachedCriteria());
 	}
 	
 	public UnicaDetachedCriteria(DetachedCriteria aDetachedCriteria) {
-		super(aDetachedCriteria, UnicaCriteria.class);
+		super(aDetachedCriteria, wb.walletbud.UnicaCriteria.class);
 		id_transacao = new IntegerExpression("id_transacao", this.getDetachedCriteria());
 		name = new StringExpression("name", this.getDetachedCriteria());
 		value = new FloatExpression("value", this.getDetachedCriteria());
@@ -49,11 +47,6 @@ public class UnicaDetachedCriteria extends AbstractORMDetachedCriteria {
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
 		local = new StringExpression("local", this.getDetachedCriteria());
 		tipo = new StringExpression("tipo", this.getDetachedCriteria());
-		userTransacao = new CollectionExpression("ORM_UserTransacao", this.getDetachedCriteria());
-	}
-	
-	public UserTransacaoDetachedCriteria createUserTransacaoCriteria() {
-		return new UserTransacaoDetachedCriteria(createCriteria("ORM_UserTransacao"));
 	}
 	
 	public Unica uniqueUnica(PersistentSession session) {

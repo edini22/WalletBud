@@ -1,42 +1,41 @@
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
 package ormsamples;
 
-import WB.walletbud.*;
 import org.orm.*;
 public class DeleteAASICData {
 	public void deleteTestData() throws PersistentException {
-		PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+		PersistentTransaction t = wb.walletbud.AASICPersistentManager.instance().getSession().beginTransaction();
 		try {
-			User diagrama_de_classesWalletBudUser = UserDAO.loadUserByQuery(null, null);
+			wb.walletbud.UserTransacao wBWalletBudUserTransacao = wb.walletbud.UserTransacaoDAO.loadUserTransacaoByQuery(null, null);
 			// Delete the persistent object
-			UserDAO.delete(diagrama_de_classesWalletBudUser);
-			Categoria diagrama_de_classesWalletBudCategoria = CategoriaDAO.loadCategoriaByQuery(null, null);
+			wb.walletbud.UserTransacaoDAO.delete(wBWalletBudUserTransacao);
+			wb.walletbud.User wBWalletBudUser = wb.walletbud.UserDAO.loadUserByQuery(null, null);
 			// Delete the persistent object
-			CategoriaDAO.delete(diagrama_de_classesWalletBudCategoria);
-			Comentario diagrama_de_classesWalletBudComentario = ComentarioDAO.loadComentarioByQuery(null, null);
+			wb.walletbud.UserDAO.delete(wBWalletBudUser);
+			wb.walletbud.Transacao wBWalletBudTransacao = wb.walletbud.TransacaoDAO.loadTransacaoByQuery(null, null);
 			// Delete the persistent object
-			ComentarioDAO.delete(diagrama_de_classesWalletBudComentario);
-			Transacao diagrama_de_classesWalletBudTransacao = TransacaoDAO.loadTransacaoByQuery(null, null);
+			wb.walletbud.TransacaoDAO.delete(wBWalletBudTransacao);
+			wb.walletbud.Fixa wBWalletBudFixa = wb.walletbud.FixaDAO.loadFixaByQuery(null, null);
 			// Delete the persistent object
-			TransacaoDAO.delete(diagrama_de_classesWalletBudTransacao);
-			Objetivo diagrama_de_classesWalletBudObjetivo = ObjetivoDAO.loadObjetivoByQuery(null, null);
+			wb.walletbud.FixaDAO.delete(wBWalletBudFixa);
+			wb.walletbud.Unica wBWalletBudUnica = wb.walletbud.UnicaDAO.loadUnicaByQuery(null, null);
 			// Delete the persistent object
-			ObjetivoDAO.delete(diagrama_de_classesWalletBudObjetivo);
-			Notificacao diagrama_de_classesWalletBudNotificacao = NotificacaoDAO.loadNotificacaoByQuery(null, null);
+			wb.walletbud.UnicaDAO.delete(wBWalletBudUnica);
+			wb.walletbud.Notificacao wBWalletBudNotificacao = wb.walletbud.NotificacaoDAO.loadNotificacaoByQuery(null, null);
 			// Delete the persistent object
-			NotificacaoDAO.delete(diagrama_de_classesWalletBudNotificacao);
-			Fixa diagrama_de_classesWalletBudFixa = FixaDAO.loadFixaByQuery(null, null);
+			wb.walletbud.NotificacaoDAO.delete(wBWalletBudNotificacao);
+			wb.walletbud.Objetivo wBWalletBudObjetivo = wb.walletbud.ObjetivoDAO.loadObjetivoByQuery(null, null);
 			// Delete the persistent object
-			FixaDAO.delete(diagrama_de_classesWalletBudFixa);
-			Unica diagrama_de_classesWalletBudUnica = UnicaDAO.loadUnicaByQuery(null, null);
+			wb.walletbud.ObjetivoDAO.delete(wBWalletBudObjetivo);
+			wb.walletbud.Comentario wBWalletBudComentario = wb.walletbud.ComentarioDAO.loadComentarioByQuery(null, null);
 			// Delete the persistent object
-			UnicaDAO.delete(diagrama_de_classesWalletBudUnica);
-			UserTransacao diagrama_de_classesWalletBudUserTransacao = UserTransacaoDAO.loadUserTransacaoByQuery(null, null);
+			wb.walletbud.ComentarioDAO.delete(wBWalletBudComentario);
+			wb.walletbud.Categoria wBWalletBudCategoria = wb.walletbud.CategoriaDAO.loadCategoriaByQuery(null, null);
 			// Delete the persistent object
-			UserTransacaoDAO.delete(diagrama_de_classesWalletBudUserTransacao);
+			wb.walletbud.CategoriaDAO.delete(wBWalletBudCategoria);
 			t.commit();
 		}
 		catch (Exception e) {
@@ -52,7 +51,7 @@ public class DeleteAASICData {
 				deleteAASICData.deleteTestData();
 			}
 			finally {
-				AASICPersistentManager.instance().disposePersistentManager();
+				wb.walletbud.AASICPersistentManager.instance().disposePersistentManager();
 			}
 		}
 		catch (Exception e) {

@@ -8,10 +8,10 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
@@ -20,35 +20,15 @@ import org.orm.criteria.*;
 
 public class UserTransacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression ID;
-	public final IntegerExpression userId_userId;
-	public final AssociationExpression userId_user;
-	public final IntegerExpression transacaoId_transacaoId;
-	public final AssociationExpression transacaoId_transacao;
 	
 	public UserTransacaoDetachedCriteria() {
-		super(UserTransacao.class, UserTransacaoCriteria.class);
+		super(wb.walletbud.UserTransacao.class, wb.walletbud.UserTransacaoCriteria.class);
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
-		userId_userId = new IntegerExpression("userId_user.id_user", this.getDetachedCriteria());
-		userId_user = new AssociationExpression("userId_user", this.getDetachedCriteria());
-		transacaoId_transacaoId = new IntegerExpression("transacaoId_transacao.id_transacao", this.getDetachedCriteria());
-		transacaoId_transacao = new AssociationExpression("transacaoId_transacao", this.getDetachedCriteria());
 	}
 	
 	public UserTransacaoDetachedCriteria(DetachedCriteria aDetachedCriteria) {
-		super(aDetachedCriteria, UserTransacaoCriteria.class);
+		super(aDetachedCriteria, wb.walletbud.UserTransacaoCriteria.class);
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
-		userId_userId = new IntegerExpression("userId_user.id_user", this.getDetachedCriteria());
-		userId_user = new AssociationExpression("userId_user", this.getDetachedCriteria());
-		transacaoId_transacaoId = new IntegerExpression("transacaoId_transacao.id_transacao", this.getDetachedCriteria());
-		transacaoId_transacao = new AssociationExpression("transacaoId_transacao", this.getDetachedCriteria());
-	}
-	
-	public UserDetachedCriteria createUserId_userCriteria() {
-		return new UserDetachedCriteria(createCriteria("userId_user"));
-	}
-	
-	public TransacaoDetachedCriteria createTransacaoId_transacaoCriteria() {
-		return new TransacaoDetachedCriteria(createCriteria("transacaoId_transacao"));
 	}
 	
 	public UserTransacao uniqueUserTransacao(PersistentSession session) {

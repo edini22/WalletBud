@@ -8,147 +8,135 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import org.orm.*;
 import org.hibernate.Query;
-
+import org.hibernate.LockMode;
 import java.util.List;
 
 public class ComentarioDAO {
 	public static Comentario loadComentarioByORMID(int id_comentario) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadComentarioByORMID(session, id_comentario);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario getComentarioByORMID(int id_comentario) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return getComentarioByORMID(session, id_comentario);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario loadComentarioByORMID(int id_comentario, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadComentarioByORMID(session, id_comentario, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario getComentarioByORMID(int id_comentario, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return getComentarioByORMID(session, id_comentario, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario loadComentarioByORMID(PersistentSession session, int id_comentario) throws PersistentException {
 		try {
-			return (Comentario) session.load(Comentario.class, Integer.valueOf(id_comentario));
+			return (Comentario) session.load(wb.walletbud.Comentario.class, Integer.valueOf(id_comentario));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario getComentarioByORMID(PersistentSession session, int id_comentario) throws PersistentException {
 		try {
-			return (Comentario) session.get(Comentario.class, Integer.valueOf(id_comentario));
+			return (Comentario) session.get(wb.walletbud.Comentario.class, Integer.valueOf(id_comentario));
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario loadComentarioByORMID(PersistentSession session, int id_comentario, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			return (Comentario) session.load(Comentario.class, Integer.valueOf(id_comentario), lockMode);
+			return (Comentario) session.load(wb.walletbud.Comentario.class, Integer.valueOf(id_comentario), lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario getComentarioByORMID(PersistentSession session, int id_comentario, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			return (Comentario) session.get(Comentario.class, Integer.valueOf(id_comentario), lockMode);
+			return (Comentario) session.get(wb.walletbud.Comentario.class, Integer.valueOf(id_comentario), lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryComentario(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return queryComentario(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryComentario(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return queryComentario(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario[] listComentarioByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return listComentarioByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario[] listComentarioByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return listComentarioByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryComentario(PersistentSession session, String condition, String orderBy) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Comentario as Comentario");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Comentario as Comentario");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -158,13 +146,12 @@ public class ComentarioDAO {
 			return query.list();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static List queryComentario(PersistentSession session, String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Comentario as Comentario");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Comentario as Comentario");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -175,7 +162,6 @@ public class ComentarioDAO {
 			return query.list();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -186,7 +172,6 @@ public class ComentarioDAO {
 			return (Comentario[]) list.toArray(new Comentario[list.size()]);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -197,29 +182,26 @@ public class ComentarioDAO {
 			return (Comentario[]) list.toArray(new Comentario[list.size()]);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario loadComentarioByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadComentarioByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario loadComentarioByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return loadComentarioByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
@@ -242,28 +224,26 @@ public class ComentarioDAO {
 	
 	public static java.util.Iterator iterateComentarioByQuery(String condition, String orderBy) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return iterateComentarioByQuery(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateComentarioByQuery(String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
 		try {
-			PersistentSession session = AASICPersistentManager.instance().getSession();
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			return iterateComentarioByQuery(session, condition, orderBy, lockMode);
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateComentarioByQuery(PersistentSession session, String condition, String orderBy) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Comentario as Comentario");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Comentario as Comentario");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -273,13 +253,12 @@ public class ComentarioDAO {
 			return query.iterate();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static java.util.Iterator iterateComentarioByQuery(PersistentSession session, String condition, String orderBy, org.hibernate.LockMode lockMode) throws PersistentException {
-		StringBuffer sb = new StringBuffer("From diagrama_de_classes.walletbud.Comentario as Comentario");
+		StringBuffer sb = new StringBuffer("From wb.walletbud.Comentario as Comentario");
 		if (condition != null)
 			sb.append(" Where ").append(condition);
 		if (orderBy != null)
@@ -290,55 +269,50 @@ public class ComentarioDAO {
 			return query.iterate();
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
 	public static Comentario createComentario() {
-		return new Comentario();
+		return new wb.walletbud.Comentario();
 	}
 	
-	public static boolean save(Comentario comentario) throws PersistentException {
+	public static boolean save(wb.walletbud.Comentario comentario) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().saveObject(comentario);
+			wb.walletbud.AASICPersistentManager.instance().saveObject(comentario);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean delete(Comentario comentario) throws PersistentException {
+	public static boolean delete(wb.walletbud.Comentario comentario) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().deleteObject(comentario);
+			wb.walletbud.AASICPersistentManager.instance().deleteObject(comentario);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean refresh(Comentario comentario) throws PersistentException {
+	public static boolean refresh(wb.walletbud.Comentario comentario) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().getSession().refresh(comentario);
+			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(comentario);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}
 	
-	public static boolean evict(Comentario comentario) throws PersistentException {
+	public static boolean evict(wb.walletbud.Comentario comentario) throws PersistentException {
 		try {
-			AASICPersistentManager.instance().getSession().evict(comentario);
+			wb.walletbud.AASICPersistentManager.instance().getSession().evict(comentario);
 			return true;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			throw new PersistentException(e);
 		}
 	}

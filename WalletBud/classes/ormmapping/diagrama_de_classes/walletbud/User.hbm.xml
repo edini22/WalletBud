@@ -12,7 +12,7 @@ License Type: Academic
 		</id>
 		<property name="name" column="Name" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="password" column="Password" type="string" length="255" not-null="false" lazy="false"/>
-		<property name="email" column="Email" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="email" column="Email" type="string" length="255" not-null="false" unique="true" lazy="false"/>
 		<property name="saldo" column="Saldo" type="float" length="10" not-null="true" lazy="false"/>
 		<property name="idioma" column="Idioma" type="string" length="255" not-null="false" lazy="false"/>
 		<set name="ORM_UserTransacao" lazy="true" cascade="save-update,lock" inverse="true">

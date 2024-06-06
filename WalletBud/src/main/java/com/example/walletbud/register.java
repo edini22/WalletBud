@@ -1,7 +1,5 @@
 package com.example.walletbud;
 
-import WB.walletbud.SystemInterface;
-
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -12,6 +10,9 @@ import jakarta.ws.rs.core.Response;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
+
+import wb.walletbud.SystemInterface;
+
 import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,20 +57,29 @@ public class register {
         }
 
         try {
-            SystemInterface.createUser(username, password, email);
+            if(SystemInterface.createUser(username, password, email) ){
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "User registered successfully")
+                        .build();
+
+                return Response.status(Response.Status.CREATED)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }else{
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Email Já registado!")
+                        .build();
+
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
         } catch (Exception e) {
             System.out.println("Error while creating user: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-
-        JsonObject jsonResponse = Json.createObjectBuilder()
-                .add("message", "User registered successfully")
-                .build();
-
-        return Response.status(Response.Status.CREATED)
-                .entity(jsonResponse.toString())
-                .type(MediaType.APPLICATION_JSON)
-                .build();
-
     }
 }

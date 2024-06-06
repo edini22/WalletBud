@@ -1,42 +1,41 @@
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
 package ormsamples;
 
-import WB.walletbud.*;
 import org.orm.*;
 public class CreateAASICData {
 	public void createTestData() throws PersistentException {
-		PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+		PersistentTransaction t = wb.walletbud.AASICPersistentManager.instance().getSession().beginTransaction();
 		try {
-			User diagrama_de_classesWalletBudUser = UserDAO.createUser();
-			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : userTransacao, saldo
-			UserDAO.save(diagrama_de_classesWalletBudUser);
-			Categoria diagrama_de_classesWalletBudCategoria = CategoriaDAO.createCategoria();
+			wb.walletbud.UserTransacao wBWalletBudUserTransacao = wb.walletbud.UserTransacaoDAO.createUserTransacao();
 			// Initialize the properties of the persistent object here
-			CategoriaDAO.save(diagrama_de_classesWalletBudCategoria);
-			Comentario diagrama_de_classesWalletBudComentario = ComentarioDAO.createComentario();
-			// Initialize the properties of the persistent object here
-			ComentarioDAO.save(diagrama_de_classesWalletBudComentario);
-			Transacao diagrama_de_classesWalletBudTransacao = TransacaoDAO.createTransacao();
-			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : userTransacao, value
-			TransacaoDAO.save(diagrama_de_classesWalletBudTransacao);
-			Objetivo diagrama_de_classesWalletBudObjetivo = ObjetivoDAO.createObjetivo();
+			wb.walletbud.UserTransacaoDAO.save(wBWalletBudUserTransacao);
+			wb.walletbud.User wBWalletBudUser = wb.walletbud.UserDAO.createUser();
+			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : saldo
+			wb.walletbud.UserDAO.save(wBWalletBudUser);
+			wb.walletbud.Transacao wBWalletBudTransacao = wb.walletbud.TransacaoDAO.createTransacao();
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : value
-			ObjetivoDAO.save(diagrama_de_classesWalletBudObjetivo);
-			Notificacao diagrama_de_classesWalletBudNotificacao = NotificacaoDAO.createNotificacao();
+			wb.walletbud.TransacaoDAO.save(wBWalletBudTransacao);
+			wb.walletbud.Fixa wBWalletBudFixa = wb.walletbud.FixaDAO.createFixa();
 			// Initialize the properties of the persistent object here
-			NotificacaoDAO.save(diagrama_de_classesWalletBudNotificacao);
-			Fixa diagrama_de_classesWalletBudFixa = FixaDAO.createFixa();
+			wb.walletbud.FixaDAO.save(wBWalletBudFixa);
+			wb.walletbud.Unica wBWalletBudUnica = wb.walletbud.UnicaDAO.createUnica();
 			// Initialize the properties of the persistent object here
-			FixaDAO.save(diagrama_de_classesWalletBudFixa);
-			Unica diagrama_de_classesWalletBudUnica = UnicaDAO.createUnica();
+			wb.walletbud.UnicaDAO.save(wBWalletBudUnica);
+			wb.walletbud.Notificacao wBWalletBudNotificacao = wb.walletbud.NotificacaoDAO.createNotificacao();
 			// Initialize the properties of the persistent object here
-			UnicaDAO.save(diagrama_de_classesWalletBudUnica);
-			UserTransacao diagrama_de_classesWalletBudUserTransacao = UserTransacaoDAO.createUserTransacao();
-			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : transacaoId_transacao, userId_user
-			UserTransacaoDAO.save(diagrama_de_classesWalletBudUserTransacao);
+			wb.walletbud.NotificacaoDAO.save(wBWalletBudNotificacao);
+			wb.walletbud.Objetivo wBWalletBudObjetivo = wb.walletbud.ObjetivoDAO.createObjetivo();
+			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : value
+			wb.walletbud.ObjetivoDAO.save(wBWalletBudObjetivo);
+			wb.walletbud.Comentario wBWalletBudComentario = wb.walletbud.ComentarioDAO.createComentario();
+			// Initialize the properties of the persistent object here
+			wb.walletbud.ComentarioDAO.save(wBWalletBudComentario);
+			wb.walletbud.Categoria wBWalletBudCategoria = wb.walletbud.CategoriaDAO.createCategoria();
+			// Initialize the properties of the persistent object here
+			wb.walletbud.CategoriaDAO.save(wBWalletBudCategoria);
 			t.commit();
 		}
 		catch (Exception e) {
@@ -52,7 +51,7 @@ public class CreateAASICData {
 				createAASICData.createTestData();
 			}
 			finally {
-				AASICPersistentManager.instance().disposePersistentManager();
+				wb.walletbud.AASICPersistentManager.instance().disposePersistentManager();
 			}
 		}
 		catch (Exception e) {

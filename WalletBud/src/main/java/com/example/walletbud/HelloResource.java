@@ -7,6 +7,7 @@ import jakarta.ws.rs.Produces;
 @Path("/hello-world")
 public class HelloResource {
     @GET
+    @Secured
     @Produces("text/plain")
     public String hello() {
         return "Hello, World!";

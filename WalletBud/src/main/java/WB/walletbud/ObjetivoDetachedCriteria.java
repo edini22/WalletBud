@@ -8,10 +8,10 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
@@ -25,7 +25,7 @@ public class ObjetivoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final StringExpression descrição;
 	
 	public ObjetivoDetachedCriteria() {
-		super(Objetivo.class, ObjetivoCriteria.class);
+		super(wb.walletbud.Objetivo.class, wb.walletbud.ObjetivoCriteria.class);
 		id_objetivo = new IntegerExpression("id_objetivo", this.getDetachedCriteria());
 		value = new FloatExpression("value", this.getDetachedCriteria());
 		name = new StringExpression("name", this.getDetachedCriteria());
@@ -33,7 +33,7 @@ public class ObjetivoDetachedCriteria extends AbstractORMDetachedCriteria {
 	}
 	
 	public ObjetivoDetachedCriteria(DetachedCriteria aDetachedCriteria) {
-		super(aDetachedCriteria, ObjetivoCriteria.class);
+		super(aDetachedCriteria, wb.walletbud.ObjetivoCriteria.class);
 		id_objetivo = new IntegerExpression("id_objetivo", this.getDetachedCriteria());
 		value = new FloatExpression("value", this.getDetachedCriteria());
 		name = new StringExpression("name", this.getDetachedCriteria());

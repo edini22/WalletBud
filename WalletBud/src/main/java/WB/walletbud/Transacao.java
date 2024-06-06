@@ -8,29 +8,14 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 public class Transacao {
 	public Transacao() {
 	}
-	
-	private java.util.Set this_getSet (int key) {
-		if (key == ORMConstants.KEY_TRANSACAO_USERTRANSACAO) {
-			return ORM_userTransacao;
-		}
-		
-		return null;
-	}
-	
-	org.orm.util.ORMAdapter _ormAdapter = new org.orm.util.AbstractORMAdapter() {
-		public java.util.Set getSet(int key) {
-			return this_getSet(key);
-		}
-		
-	};
 	
 	private int id_transacao;
 	
@@ -45,8 +30,6 @@ public class Transacao {
 	private String local;
 	
 	private String tipo;
-	
-	private java.util.Set ORM_userTransacao = new java.util.HashSet();
 	
 	private void setId_transacao(int value) {
 		this.id_transacao = value;
@@ -113,16 +96,6 @@ public class Transacao {
 	public String getTipo() {
 		return tipo;
 	}
-	
-	private void setORM_UserTransacao(java.util.Set value) {
-		this.ORM_userTransacao = value;
-	}
-	
-	private java.util.Set getORM_UserTransacao() {
-		return ORM_userTransacao;
-	}
-	
-	public final UserTransacaoSetCollection userTransacao = new UserTransacaoSetCollection(this, _ormAdapter, ORMConstants.KEY_TRANSACAO_USERTRANSACAO, ORMConstants.KEY_USERTRANSACAO_TRANSACAOID_TRANSACAO, ORMConstants.KEY_MUL_ONE_TO_MANY);
 	
 	public int getId() {
 		//TODO: Implement Method

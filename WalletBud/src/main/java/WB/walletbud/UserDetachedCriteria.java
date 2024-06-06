@@ -8,10 +8,10 @@
  */
 
 /**
- * Licensee: GSenra(University of Minho)
- * License Type: Academic
+ * Licensee: 
+ * License Type: Evaluation
  */
-package WB.walletbud;
+package wb.walletbud;
 
 import java.util.List;
 import org.hibernate.criterion.DetachedCriteria;
@@ -25,32 +25,25 @@ public class UserDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final StringExpression email;
 	public final FloatExpression saldo;
 	public final StringExpression idioma;
-	public final CollectionExpression userTransacao;
 	
 	public UserDetachedCriteria() {
-		super(User.class, UserCriteria.class);
+		super(wb.walletbud.User.class, wb.walletbud.UserCriteria.class);
 		id_user = new IntegerExpression("id_user", this.getDetachedCriteria());
 		name = new StringExpression("name", this.getDetachedCriteria());
 		password = new StringExpression("password", this.getDetachedCriteria());
 		email = new StringExpression("email", this.getDetachedCriteria());
 		saldo = new FloatExpression("saldo", this.getDetachedCriteria());
 		idioma = new StringExpression("idioma", this.getDetachedCriteria());
-		userTransacao = new CollectionExpression("ORM_UserTransacao", this.getDetachedCriteria());
 	}
 	
 	public UserDetachedCriteria(DetachedCriteria aDetachedCriteria) {
-		super(aDetachedCriteria, UserCriteria.class);
+		super(aDetachedCriteria, wb.walletbud.UserCriteria.class);
 		id_user = new IntegerExpression("id_user", this.getDetachedCriteria());
 		name = new StringExpression("name", this.getDetachedCriteria());
 		password = new StringExpression("password", this.getDetachedCriteria());
 		email = new StringExpression("email", this.getDetachedCriteria());
 		saldo = new FloatExpression("saldo", this.getDetachedCriteria());
 		idioma = new StringExpression("idioma", this.getDetachedCriteria());
-		userTransacao = new CollectionExpression("ORM_UserTransacao", this.getDetachedCriteria());
-	}
-	
-	public UserTransacaoDetachedCriteria createUserTransacaoCriteria() {
-		return new UserTransacaoDetachedCriteria(createCriteria("ORM_UserTransacao"));
 	}
 	
 	public User uniqueUser(PersistentSession session) {

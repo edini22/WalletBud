@@ -20,12 +20,16 @@ import org.orm.criteria.*;
 
 public class NotificacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression id_notificacao;
+	public final IntegerExpression userId_userId;
+	public final AssociationExpression userId_user;
 	public final DateExpression date;
 	public final StringExpression descrição;
 	
 	public NotificacaoDetachedCriteria() {
 		super(wb.walletbud.Notificacao.class, wb.walletbud.NotificacaoCriteria.class);
 		id_notificacao = new IntegerExpression("id_notificacao", this.getDetachedCriteria());
+		userId_userId = new IntegerExpression("userId_user.id_user", this.getDetachedCriteria());
+		userId_user = new AssociationExpression("userId_user", this.getDetachedCriteria());
 		date = new DateExpression("date", this.getDetachedCriteria());
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
 	}
@@ -33,8 +37,14 @@ public class NotificacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public NotificacaoDetachedCriteria(DetachedCriteria aDetachedCriteria) {
 		super(aDetachedCriteria, wb.walletbud.NotificacaoCriteria.class);
 		id_notificacao = new IntegerExpression("id_notificacao", this.getDetachedCriteria());
+		userId_userId = new IntegerExpression("userId_user.id_user", this.getDetachedCriteria());
+		userId_user = new AssociationExpression("userId_user", this.getDetachedCriteria());
 		date = new DateExpression("date", this.getDetachedCriteria());
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
+	}
+	
+	public wb.walletbud.UserDetachedCriteria createUserId_userCriteria() {
+		return new wb.walletbud.UserDetachedCriteria(createCriteria("userId_user"));
 	}
 	
 	public Notificacao uniqueNotificacao(PersistentSession session) {

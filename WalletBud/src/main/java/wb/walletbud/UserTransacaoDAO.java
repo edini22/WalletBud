@@ -297,6 +297,45 @@ public class UserTransacaoDAO {
 		}
 	}
 	
+	public static boolean deleteAndDissociate(wb.walletbud.UserTransacao userTransacao)throws PersistentException {
+		try {
+			if (userTransacao.getUsertransacaoId() != null) {
+				userTransacao.getUsertransacaoId().transacao.remove(userTransacao);
+			}
+			
+			if (userTransacao.getUserId_user() != null) {
+				userTransacao.getUserId_user().user_categoria.remove(userTransacao);
+			}
+			
+			return delete(userTransacao);
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
+	public static boolean deleteAndDissociate(wb.walletbud.UserTransacao userTransacao, org.orm.PersistentSession session)throws PersistentException {
+		try {
+			if (userTransacao.getUsertransacaoId() != null) {
+				userTransacao.getUsertransacaoId().transacao.remove(userTransacao);
+			}
+			
+			if (userTransacao.getUserId_user() != null) {
+				userTransacao.getUserId_user().user_categoria.remove(userTransacao);
+			}
+			
+			try {
+				session.delete(userTransacao);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
 	public static boolean refresh(wb.walletbud.UserTransacao userTransacao) throws PersistentException {
 		try {
 			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(userTransacao);

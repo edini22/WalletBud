@@ -20,12 +20,16 @@ import org.orm.criteria.*;
 
 public class NotificacaoCriteria extends AbstractORMCriteria {
 	public final IntegerExpression id_notificacao;
+	public final IntegerExpression userId_userId;
+	public final AssociationExpression userId_user;
 	public final DateExpression date;
 	public final StringExpression descrição;
 	
 	public NotificacaoCriteria(Criteria criteria) {
 		super(criteria);
 		id_notificacao = new IntegerExpression("id_notificacao", this);
+		userId_userId = new IntegerExpression("userId_user.id_user", this);
+		userId_user = new AssociationExpression("userId_user", this);
 		date = new DateExpression("date", this);
 		descrição = new StringExpression("descrição", this);
 	}
@@ -36,6 +40,10 @@ public class NotificacaoCriteria extends AbstractORMCriteria {
 	
 	public NotificacaoCriteria() throws PersistentException {
 		this(wb.walletbud.AASICPersistentManager.instance().getSession());
+	}
+	
+	public UserCriteria createUserId_userCriteria() {
+		return new UserCriteria(createCriteria("userId_user"));
 	}
 	
 	public Notificacao uniqueNotificacao() {

@@ -297,6 +297,45 @@ public class ComentarioDAO {
 		}
 	}
 	
+	public static boolean deleteAndDissociate(wb.walletbud.Comentario comentario)throws PersistentException {
+		try {
+			if (comentario.getUserId_user() != null) {
+				comentario.getUserId_user().comentario.remove(comentario);
+			}
+			
+			if (comentario.getTransacaoId_transacao() != null) {
+				comentario.getTransacaoId_transacao().comentario.remove(comentario);
+			}
+			
+			return delete(comentario);
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
+	public static boolean deleteAndDissociate(wb.walletbud.Comentario comentario, org.orm.PersistentSession session)throws PersistentException {
+		try {
+			if (comentario.getUserId_user() != null) {
+				comentario.getUserId_user().comentario.remove(comentario);
+			}
+			
+			if (comentario.getTransacaoId_transacao() != null) {
+				comentario.getTransacaoId_transacao().comentario.remove(comentario);
+			}
+			
+			try {
+				session.delete(comentario);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
 	public static boolean refresh(wb.walletbud.Comentario comentario) throws PersistentException {
 		try {
 			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(comentario);

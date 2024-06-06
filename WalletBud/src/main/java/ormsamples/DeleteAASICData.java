@@ -18,12 +18,6 @@ public class DeleteAASICData {
 			wb.walletbud.Transacao wBWalletBudTransacao = wb.walletbud.TransacaoDAO.loadTransacaoByQuery(null, null);
 			// Delete the persistent object
 			wb.walletbud.TransacaoDAO.delete(wBWalletBudTransacao);
-			wb.walletbud.Fixa wBWalletBudFixa = wb.walletbud.FixaDAO.loadFixaByQuery(null, null);
-			// Delete the persistent object
-			wb.walletbud.FixaDAO.delete(wBWalletBudFixa);
-			wb.walletbud.Unica wBWalletBudUnica = wb.walletbud.UnicaDAO.loadUnicaByQuery(null, null);
-			// Delete the persistent object
-			wb.walletbud.UnicaDAO.delete(wBWalletBudUnica);
 			wb.walletbud.Notificacao wBWalletBudNotificacao = wb.walletbud.NotificacaoDAO.loadNotificacaoByQuery(null, null);
 			// Delete the persistent object
 			wb.walletbud.NotificacaoDAO.delete(wBWalletBudNotificacao);
@@ -36,6 +30,15 @@ public class DeleteAASICData {
 			wb.walletbud.Categoria wBWalletBudCategoria = wb.walletbud.CategoriaDAO.loadCategoriaByQuery(null, null);
 			// Delete the persistent object
 			wb.walletbud.CategoriaDAO.delete(wBWalletBudCategoria);
+			wb.walletbud.TransacaoFixa wBWalletBudTransacaoFixa = wb.walletbud.TransacaoFixaDAO.loadTransacaoFixaByQuery(null, null);
+			// Delete the persistent object
+			wb.walletbud.TransacaoFixaDAO.delete(wBWalletBudTransacaoFixa);
+			wb.walletbud.Fixa wBWalletBudFixa = wb.walletbud.FixaDAO.loadFixaByQuery(null, null);
+			// Delete the persistent object
+			wb.walletbud.FixaDAO.delete(wBWalletBudFixa);
+			wb.walletbud.Unica wBWalletBudUnica = wb.walletbud.UnicaDAO.loadUnicaByQuery(null, null);
+			// Delete the persistent object
+			wb.walletbud.UnicaDAO.delete(wBWalletBudUnica);
 			t.commit();
 		}
 		catch (Exception e) {

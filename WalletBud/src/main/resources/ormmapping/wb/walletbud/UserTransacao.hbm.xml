@@ -10,5 +10,9 @@ License Type: Evaluation
 			<generator class="native">
 			</generator>
 		</id>
+		<many-to-one name="usertransacaoId" cascade="lock" column="TransacaoId_transacao" class="wb.walletbud.Transacao" not-null="true" lazy="proxy" access="field">
+		</many-to-one>
+		<many-to-one name="userId_user" cascade="lock" column="UserId_user" class="wb.walletbud.User" not-null="true" lazy="proxy" access="field">
+		</many-to-one>
 	</class>
 </hibernate-mapping>

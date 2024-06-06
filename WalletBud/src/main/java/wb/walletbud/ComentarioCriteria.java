@@ -20,11 +20,19 @@ import org.orm.criteria.*;
 
 public class ComentarioCriteria extends AbstractORMCriteria {
 	public final IntegerExpression id_comentario;
+	public final IntegerExpression userId_userId;
+	public final AssociationExpression userId_user;
+	public final IntegerExpression transacaoId_transacaoId;
+	public final AssociationExpression transacaoId_transacao;
 	public final StringExpression descrição;
 	
 	public ComentarioCriteria(Criteria criteria) {
 		super(criteria);
 		id_comentario = new IntegerExpression("id_comentario", this);
+		userId_userId = new IntegerExpression("userId_user.id_user", this);
+		userId_user = new AssociationExpression("userId_user", this);
+		transacaoId_transacaoId = new IntegerExpression("transacaoId_transacao.id_transacao", this);
+		transacaoId_transacao = new AssociationExpression("transacaoId_transacao", this);
 		descrição = new StringExpression("descrição", this);
 	}
 	
@@ -34,6 +42,14 @@ public class ComentarioCriteria extends AbstractORMCriteria {
 	
 	public ComentarioCriteria() throws PersistentException {
 		this(wb.walletbud.AASICPersistentManager.instance().getSession());
+	}
+	
+	public UserCriteria createUserId_userCriteria() {
+		return new UserCriteria(createCriteria("userId_user"));
+	}
+	
+	public TransacaoCriteria createTransacaoId_transacaoCriteria() {
+		return new TransacaoCriteria(createCriteria("transacaoId_transacao"));
 	}
 	
 	public Comentario uniqueComentario() {

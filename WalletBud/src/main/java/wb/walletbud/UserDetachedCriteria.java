@@ -25,6 +25,11 @@ public class UserDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final StringExpression email;
 	public final FloatExpression saldo;
 	public final StringExpression idioma;
+	public final CollectionExpression notificacao;
+	public final CollectionExpression objetivo;
+	public final CollectionExpression comentario;
+	public final CollectionExpression categoria;
+	public final CollectionExpression user_categoria;
 	
 	public UserDetachedCriteria() {
 		super(wb.walletbud.User.class, wb.walletbud.UserCriteria.class);
@@ -34,6 +39,11 @@ public class UserDetachedCriteria extends AbstractORMDetachedCriteria {
 		email = new StringExpression("email", this.getDetachedCriteria());
 		saldo = new FloatExpression("saldo", this.getDetachedCriteria());
 		idioma = new StringExpression("idioma", this.getDetachedCriteria());
+		notificacao = new CollectionExpression("ORM_Notificacao", this.getDetachedCriteria());
+		objetivo = new CollectionExpression("ORM_Objetivo", this.getDetachedCriteria());
+		comentario = new CollectionExpression("ORM_Comentario", this.getDetachedCriteria());
+		categoria = new CollectionExpression("ORM_Categoria", this.getDetachedCriteria());
+		user_categoria = new CollectionExpression("ORM_User_categoria", this.getDetachedCriteria());
 	}
 	
 	public UserDetachedCriteria(DetachedCriteria aDetachedCriteria) {
@@ -44,6 +54,31 @@ public class UserDetachedCriteria extends AbstractORMDetachedCriteria {
 		email = new StringExpression("email", this.getDetachedCriteria());
 		saldo = new FloatExpression("saldo", this.getDetachedCriteria());
 		idioma = new StringExpression("idioma", this.getDetachedCriteria());
+		notificacao = new CollectionExpression("ORM_Notificacao", this.getDetachedCriteria());
+		objetivo = new CollectionExpression("ORM_Objetivo", this.getDetachedCriteria());
+		comentario = new CollectionExpression("ORM_Comentario", this.getDetachedCriteria());
+		categoria = new CollectionExpression("ORM_Categoria", this.getDetachedCriteria());
+		user_categoria = new CollectionExpression("ORM_User_categoria", this.getDetachedCriteria());
+	}
+	
+	public wb.walletbud.NotificacaoDetachedCriteria createNotificacaoCriteria() {
+		return new wb.walletbud.NotificacaoDetachedCriteria(createCriteria("ORM_Notificacao"));
+	}
+	
+	public wb.walletbud.ObjetivoDetachedCriteria createObjetivoCriteria() {
+		return new wb.walletbud.ObjetivoDetachedCriteria(createCriteria("ORM_Objetivo"));
+	}
+	
+	public wb.walletbud.ComentarioDetachedCriteria createComentarioCriteria() {
+		return new wb.walletbud.ComentarioDetachedCriteria(createCriteria("ORM_Comentario"));
+	}
+	
+	public wb.walletbud.CategoriaDetachedCriteria createCategoriaCriteria() {
+		return new wb.walletbud.CategoriaDetachedCriteria(createCriteria("ORM_Categoria"));
+	}
+	
+	public wb.walletbud.UserTransacaoDetachedCriteria createUser_categoriaCriteria() {
+		return new wb.walletbud.UserTransacaoDetachedCriteria(createCriteria("ORM_User_categoria"));
 	}
 	
 	public User uniqueUser(PersistentSession session) {

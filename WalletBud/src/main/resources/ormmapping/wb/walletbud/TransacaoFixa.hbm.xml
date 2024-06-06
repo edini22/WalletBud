@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+Licensee: 
+License Type: Evaluation
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="wb.walletbud.TransacaoFixa" table="TransacaoFixa" lazy="false">
+		<id name="ID" column="ID" type="integer" unsaved-value="0">
+			<generator class="native">
+			</generator>
+		</id>
+		<many-to-one name="transacaofixa_ID" cascade="lock" column="TransacaoId_transacao" class="wb.walletbud.Fixa" not-null="true" lazy="proxy" access="field">
+		</many-to-one>
+		<property name="dataPagamento" column="DataPagamento" type="date" not-null="false" lazy="false"/>
+		<property name="dataAtual" column="DataAtual" type="date" not-null="false" lazy="false"/>
+	</class>
+</hibernate-mapping>

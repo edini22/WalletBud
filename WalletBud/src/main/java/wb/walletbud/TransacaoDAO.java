@@ -297,6 +297,69 @@ public class TransacaoDAO {
 		}
 	}
 	
+	public static boolean deleteAndDissociate(wb.walletbud.Transacao transacao)throws PersistentException {
+		if (transacao instanceof wb.walletbud.Fixa) {
+			return wb.walletbud.FixaDAO.deleteAndDissociate((wb.walletbud.Fixa) transacao);
+		}
+		
+		if (transacao instanceof wb.walletbud.Unica) {
+			return wb.walletbud.UnicaDAO.deleteAndDissociate((wb.walletbud.Unica) transacao);
+		}
+		
+		try {
+			if (transacao.getCategoriaId_categoria() != null) {
+				transacao.getCategoriaId_categoria().transacao.remove(transacao);
+			}
+			
+			wb.walletbud.Comentario[] lComentarios = transacao.comentario.toArray();
+			for(int i = 0; i < lComentarios.length; i++) {
+				lComentarios[i].setTransacaoId_transacao(null);
+			}
+			wb.walletbud.UserTransacao[] lTransacaos = transacao.transacao.toArray();
+			for(int i = 0; i < lTransacaos.length; i++) {
+				lTransacaos[i].setUsertransacaoId(null);
+			}
+			return delete(transacao);
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
+	public static boolean deleteAndDissociate(wb.walletbud.Transacao transacao, org.orm.PersistentSession session)throws PersistentException {
+		if (transacao instanceof wb.walletbud.Fixa) {
+			return wb.walletbud.FixaDAO.deleteAndDissociate((wb.walletbud.Fixa) transacao, session);
+		}
+		
+		if (transacao instanceof wb.walletbud.Unica) {
+			return wb.walletbud.UnicaDAO.deleteAndDissociate((wb.walletbud.Unica) transacao, session);
+		}
+		
+		try {
+			if (transacao.getCategoriaId_categoria() != null) {
+				transacao.getCategoriaId_categoria().transacao.remove(transacao);
+			}
+			
+			wb.walletbud.Comentario[] lComentarios = transacao.comentario.toArray();
+			for(int i = 0; i < lComentarios.length; i++) {
+				lComentarios[i].setTransacaoId_transacao(null);
+			}
+			wb.walletbud.UserTransacao[] lTransacaos = transacao.transacao.toArray();
+			for(int i = 0; i < lTransacaos.length; i++) {
+				lTransacaos[i].setUsertransacaoId(null);
+			}
+			try {
+				session.delete(transacao);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
 	public static boolean refresh(wb.walletbud.Transacao transacao) throws PersistentException {
 		try {
 			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(transacao);

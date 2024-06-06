@@ -11,8 +11,10 @@ License Type: Evaluation
 			</generator>
 		</id>
 		<discriminator column="Discriminator" type="string"/>
+		<many-to-one name="categoriaId_categoria" cascade="lock" column="CategoriaId_categoria" class="wb.walletbud.Categoria" not-null="true" lazy="proxy" access="field">
+		</many-to-one>
 		<property name="name" column="Name" type="string" length="255" not-null="false" lazy="false"/>
-		<property name="value" column="Value" type="float" length="10" not-null="true" lazy="false"/>
+		<property name="value" column="Value" type="float" not-null="true" lazy="false"/>
 		<property name="date" column="`Date`" type="date" not-null="false" lazy="false"/>
 		<property name="descrição" column="Descrição" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="local" column="Local" type="string" length="255" not-null="false" lazy="false"/>
@@ -21,11 +23,21 @@ License Type: Evaluation
 				receita ou despesa
 			</meta>
 		</property>
+		<set name="ORM_Comentario" lazy="true" cascade="save-update,lock" inverse="true">
+			<key column="TransacaoId_transacao" not-null="true"/>
+			<one-to-many class="wb.walletbud.Comentario"/>
+		</set>
+		<set name="ORM_Transacao" lazy="true" cascade="save-update,lock" inverse="true">
+			<key column="TransacaoId_transacao" not-null="true"/>
+			<one-to-many class="wb.walletbud.UserTransacao"/>
+		</set>
 		<subclass name="wb.walletbud.Fixa" discriminator-value="Fixa" lazy="false">
-			<property name="repetição" column="Repetição" type="integer" length="10" not-null="false" lazy="false"/>
-			<property name="pago" column="Pago" type="boolean" not-null="false" lazy="false"/>
-			<property name="data_pagamento" column="Data_pagamento" type="date" not-null="false" lazy="false"/>
-			<property name="id_fixa" column="Id_fixa" type="integer" length="10" not-null="false" lazy="false"/>
+			<property name="dataTransacao" column="DataTransacao" type="date" not-null="false" lazy="false"/>
+			<property name="repeticao" column="Repeticao" type="integer" length="10" not-null="false" lazy="false"/>
+			<set name="ORM_Fixa" lazy="true" cascade="save-update,lock" inverse="true">
+				<key column="TransacaoId_transacao" not-null="true"/>
+				<one-to-many class="wb.walletbud.TransacaoFixa"/>
+			</set>
 		</subclass>
 		<subclass name="wb.walletbud.Unica" discriminator-value="Unica" lazy="false">
 		</subclass>

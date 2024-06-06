@@ -297,6 +297,37 @@ public class ObjetivoDAO {
 		}
 	}
 	
+	public static boolean deleteAndDissociate(wb.walletbud.Objetivo objetivo)throws PersistentException {
+		try {
+			if (objetivo.getUserId_user() != null) {
+				objetivo.getUserId_user().objetivo.remove(objetivo);
+			}
+			
+			return delete(objetivo);
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
+	public static boolean deleteAndDissociate(wb.walletbud.Objetivo objetivo, org.orm.PersistentSession session)throws PersistentException {
+		try {
+			if (objetivo.getUserId_user() != null) {
+				objetivo.getUserId_user().objetivo.remove(objetivo);
+			}
+			
+			try {
+				session.delete(objetivo);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
 	public static boolean refresh(wb.walletbud.Objetivo objetivo) throws PersistentException {
 		try {
 			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(objetivo);

@@ -17,7 +17,22 @@ public class Notificacao {
 	public Notificacao() {
 	}
 	
+	private void this_setOwner(Object owner, int key) {
+		if (key == wb.walletbud.ORMConstants.KEY_NOTIFICACAO_USERID_USER) {
+			this.userId_user = (wb.walletbud.User) owner;
+		}
+	}
+	
+	org.orm.util.ORMAdapter _ormAdapter = new org.orm.util.AbstractORMAdapter() {
+		public void setOwner(Object owner, int key) {
+			this_setOwner(owner, key);
+		}
+		
+	};
+	
 	private int id_notificacao;
+	
+	private wb.walletbud.User userId_user;
 	
 	private java.util.Date date;
 	
@@ -49,6 +64,30 @@ public class Notificacao {
 	
 	public String getDescrição() {
 		return descrição;
+	}
+	
+	public void setUserId_user(wb.walletbud.User value) {
+		if (userId_user != null) {
+			userId_user.notificacao.remove(this);
+		}
+		if (value != null) {
+			value.notificacao.add(this);
+		}
+	}
+	
+	public wb.walletbud.User getUserId_user() {
+		return userId_user;
+	}
+	
+	/**
+	 * This method is for internal use only.
+	 */
+	public void setORM_UserId_user(wb.walletbud.User value) {
+		this.userId_user = value;
+	}
+	
+	private wb.walletbud.User getORM_UserId_user() {
+		return userId_user;
 	}
 	
 	public int getId() {

@@ -35,6 +35,7 @@ build/
 .vscode/
 
 /target
+/classes
 
 ### Mac OS ###
 .DS_Store

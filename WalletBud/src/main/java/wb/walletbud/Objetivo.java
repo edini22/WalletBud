@@ -17,7 +17,22 @@ public class Objetivo {
 	public Objetivo() {
 	}
 	
+	private void this_setOwner(Object owner, int key) {
+		if (key == wb.walletbud.ORMConstants.KEY_OBJETIVO_USERID_USER) {
+			this.userId_user = (wb.walletbud.User) owner;
+		}
+	}
+	
+	org.orm.util.ORMAdapter _ormAdapter = new org.orm.util.AbstractORMAdapter() {
+		public void setOwner(Object owner, int key) {
+			this_setOwner(owner, key);
+		}
+		
+	};
+	
 	private int id_objetivo;
+	
+	private wb.walletbud.User userId_user;
 	
 	private float value;
 	
@@ -59,6 +74,30 @@ public class Objetivo {
 	
 	public String getDescrição() {
 		return descrição;
+	}
+	
+	public void setUserId_user(wb.walletbud.User value) {
+		if (userId_user != null) {
+			userId_user.objetivo.remove(this);
+		}
+		if (value != null) {
+			value.objetivo.add(this);
+		}
+	}
+	
+	public wb.walletbud.User getUserId_user() {
+		return userId_user;
+	}
+	
+	/**
+	 * This method is for internal use only.
+	 */
+	public void setORM_UserId_user(wb.walletbud.User value) {
+		this.userId_user = value;
+	}
+	
+	private wb.walletbud.User getORM_UserId_user() {
+		return userId_user;
 	}
 	
 	public int getId() {

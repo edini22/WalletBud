@@ -20,30 +20,36 @@ import org.orm.criteria.*;
 
 public class FixaCriteria extends AbstractORMCriteria {
 	public final IntegerExpression id_transacao;
+	public final IntegerExpression categoriaId_categoriaId;
+	public final AssociationExpression categoriaId_categoria;
 	public final StringExpression name;
 	public final FloatExpression value;
 	public final DateExpression date;
 	public final StringExpression descrição;
 	public final StringExpression local;
 	public final StringExpression tipo;
-	public final IntegerExpression repetição;
-	public final BooleanExpression pago;
-	public final DateExpression data_pagamento;
-	public final IntegerExpression id_fixa;
+	public final CollectionExpression comentario;
+	public final CollectionExpression transacao;
+	public final DateExpression dataTransacao;
+	public final IntegerExpression repeticao;
+	public final CollectionExpression fixa;
 	
 	public FixaCriteria(Criteria criteria) {
 		super(criteria);
 		id_transacao = new IntegerExpression("id_transacao", this);
+		categoriaId_categoriaId = new IntegerExpression("categoriaId_categoria.id_categoria", this);
+		categoriaId_categoria = new AssociationExpression("categoriaId_categoria", this);
 		name = new StringExpression("name", this);
 		value = new FloatExpression("value", this);
 		date = new DateExpression("date", this);
 		descrição = new StringExpression("descrição", this);
 		local = new StringExpression("local", this);
 		tipo = new StringExpression("tipo", this);
-		repetição = new IntegerExpression("repetição", this);
-		pago = new BooleanExpression("pago", this);
-		data_pagamento = new DateExpression("data_pagamento", this);
-		id_fixa = new IntegerExpression("id_fixa", this);
+		comentario = new CollectionExpression("ORM_Comentario", this);
+		transacao = new CollectionExpression("ORM_Transacao", this);
+		dataTransacao = new DateExpression("dataTransacao", this);
+		repeticao = new IntegerExpression("repeticao", this);
+		fixa = new CollectionExpression("ORM_Fixa", this);
 	}
 	
 	public FixaCriteria(PersistentSession session) {
@@ -52,6 +58,22 @@ public class FixaCriteria extends AbstractORMCriteria {
 	
 	public FixaCriteria() throws PersistentException {
 		this(wb.walletbud.AASICPersistentManager.instance().getSession());
+	}
+	
+	public wb.walletbud.TransacaoFixaCriteria createFixaCriteria() {
+		return new wb.walletbud.TransacaoFixaCriteria(createCriteria("ORM_Fixa"));
+	}
+	
+	public CategoriaCriteria createCategoriaId_categoriaCriteria() {
+		return new CategoriaCriteria(createCriteria("categoriaId_categoria"));
+	}
+	
+	public wb.walletbud.ComentarioCriteria createComentarioCriteria() {
+		return new wb.walletbud.ComentarioCriteria(createCriteria("ORM_Comentario"));
+	}
+	
+	public wb.walletbud.UserTransacaoCriteria createTransacaoCriteria() {
+		return new wb.walletbud.UserTransacaoCriteria(createCriteria("ORM_Transacao"));
 	}
 	
 	public Fixa uniqueFixa() {

@@ -12,8 +12,28 @@ License Type: Evaluation
 		</id>
 		<property name="name" column="Name" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="password" column="Password" type="string" length="255" not-null="false" lazy="false"/>
-		<property name="email" column="Email" unique="true" type="string" length="255" not-null="false" lazy="false"/>
-		<property name="saldo" column="Saldo" type="float" length="10" not-null="true" lazy="false"/>
+		<property name="email" column="Email" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="saldo" column="Saldo" type="float" not-null="true" lazy="false"/>
 		<property name="idioma" column="Idioma" type="string" length="255" not-null="false" lazy="false"/>
+		<set name="ORM_Notificacao" lazy="true" cascade="save-update,lock" inverse="true">
+			<key column="UserId_user" not-null="true"/>
+			<one-to-many class="wb.walletbud.Notificacao"/>
+		</set>
+		<set name="ORM_Objetivo" lazy="true" cascade="save-update,lock" inverse="true">
+			<key column="UserId_user" not-null="true"/>
+			<one-to-many class="wb.walletbud.Objetivo"/>
+		</set>
+		<set name="ORM_Comentario" lazy="true" cascade="save-update,lock" inverse="true">
+			<key column="UserId_user" not-null="true"/>
+			<one-to-many class="wb.walletbud.Comentario"/>
+		</set>
+		<set name="ORM_Categoria" lazy="true" cascade="save-update,lock" inverse="true">
+			<key column="UserId_user" not-null="true"/>
+			<one-to-many class="wb.walletbud.Categoria"/>
+		</set>
+		<set name="ORM_User_categoria" lazy="true" cascade="save-update,lock" inverse="true">
+			<key column="UserId_user" not-null="true"/>
+			<one-to-many class="wb.walletbud.UserTransacao"/>
+		</set>
 	</class>
 </hibernate-mapping>

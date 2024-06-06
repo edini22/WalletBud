@@ -17,45 +17,52 @@ public class Fixa extends wb.walletbud.Transacao {
 	public Fixa() {
 	}
 	
-	private int repetição;
-	
-	private boolean pago = false;
-	
-	private java.util.Date data_pagamento;
-	
-	private int id_fixa;
-	
-	public void setId_fixa(int value) {
-		this.id_fixa = value;
+	private java.util.Set this_getSet (int key) {
+		if (key == wb.walletbud.ORMConstants.KEY_FIXA_FIXA) {
+			return ORM_fixa;
+		}
+		
+		return null;
 	}
 	
-	public int getId_fixa() {
-		return id_fixa;
+	org.orm.util.ORMAdapter _ormAdapter = new org.orm.util.AbstractORMAdapter() {
+		public java.util.Set getSet(int key) {
+			return this_getSet(key);
+		}
+		
+	};
+	
+	private java.util.Date dataTransacao;
+	
+	private int repeticao;
+	
+	private java.util.Set ORM_fixa = new java.util.HashSet();
+	
+	public void setDataTransacao(java.util.Date value) {
+		this.dataTransacao = value;
 	}
 	
-	public void setRepetição(int value) {
-		this.repetição = value;
+	public java.util.Date getDataTransacao() {
+		return dataTransacao;
 	}
 	
-	public int getRepetição() {
-		return repetição;
+	public void setRepeticao(int value) {
+		this.repeticao = value;
 	}
 	
-	public void setPago(boolean value) {
-		this.pago = value;
+	public int getRepeticao() {
+		return repeticao;
 	}
 	
-	public boolean getPago() {
-		return pago;
+	private void setORM_Fixa(java.util.Set value) {
+		this.ORM_fixa = value;
 	}
 	
-	public void setData_pagamento(java.util.Date value) {
-		this.data_pagamento = value;
+	private java.util.Set getORM_Fixa() {
+		return ORM_fixa;
 	}
 	
-	public java.util.Date getData_pagamento() {
-		return data_pagamento;
-	}
+	public final wb.walletbud.TransacaoFixaSetCollection fixa = new wb.walletbud.TransacaoFixaSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_FIXA_FIXA, wb.walletbud.ORMConstants.KEY_TRANSACAOFIXA_TRANSACAOFIXA_ID, wb.walletbud.ORMConstants.KEY_MUL_ONE_TO_MANY);
 	
 	public String toString() {
 		return super.toString();

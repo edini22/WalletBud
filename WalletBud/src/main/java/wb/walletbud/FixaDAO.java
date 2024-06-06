@@ -297,6 +297,61 @@ public class FixaDAO {
 		}
 	}
 	
+	public static boolean deleteAndDissociate(wb.walletbud.Fixa fixa)throws PersistentException {
+		try {
+			wb.walletbud.TransacaoFixa[] lFixas = fixa.fixa.toArray();
+			for(int i = 0; i < lFixas.length; i++) {
+				lFixas[i].setTransacaofixa_ID(null);
+			}
+			if (fixa.getCategoriaId_categoria() != null) {
+				fixa.getCategoriaId_categoria().transacao.remove(fixa);
+			}
+			
+			wb.walletbud.Comentario[] lComentarios = fixa.comentario.toArray();
+			for(int i = 0; i < lComentarios.length; i++) {
+				lComentarios[i].setTransacaoId_transacao(null);
+			}
+			wb.walletbud.UserTransacao[] lTransacaos = fixa.transacao.toArray();
+			for(int i = 0; i < lTransacaos.length; i++) {
+				lTransacaos[i].setUsertransacaoId(null);
+			}
+			return delete(fixa);
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
+	public static boolean deleteAndDissociate(wb.walletbud.Fixa fixa, org.orm.PersistentSession session)throws PersistentException {
+		try {
+			wb.walletbud.TransacaoFixa[] lFixas = fixa.fixa.toArray();
+			for(int i = 0; i < lFixas.length; i++) {
+				lFixas[i].setTransacaofixa_ID(null);
+			}
+			if (fixa.getCategoriaId_categoria() != null) {
+				fixa.getCategoriaId_categoria().transacao.remove(fixa);
+			}
+			
+			wb.walletbud.Comentario[] lComentarios = fixa.comentario.toArray();
+			for(int i = 0; i < lComentarios.length; i++) {
+				lComentarios[i].setTransacaoId_transacao(null);
+			}
+			wb.walletbud.UserTransacao[] lTransacaos = fixa.transacao.toArray();
+			for(int i = 0; i < lTransacaos.length; i++) {
+				lTransacaos[i].setUsertransacaoId(null);
+			}
+			try {
+				session.delete(fixa);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
 	public static boolean refresh(wb.walletbud.Fixa fixa) throws PersistentException {
 		try {
 			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(fixa);

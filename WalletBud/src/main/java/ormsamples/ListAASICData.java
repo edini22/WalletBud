@@ -33,22 +33,6 @@ public class ListAASICData {
 		}
 		System.out.println(length + " record(s) retrieved.");
 		
-		System.out.println("Listing Fixa...");
-		wb.walletbud.Fixa[] wBWalletBudFixas = wb.walletbud.FixaDAO.listFixaByQuery(null, null);
-		length = Math.min(wBWalletBudFixas.length, ROW_COUNT);
-		for (int i = 0; i < length; i++) {
-			System.out.println(wBWalletBudFixas[i]);
-		}
-		System.out.println(length + " record(s) retrieved.");
-		
-		System.out.println("Listing Unica...");
-		wb.walletbud.Unica[] wBWalletBudUnicas = wb.walletbud.UnicaDAO.listUnicaByQuery(null, null);
-		length = Math.min(wBWalletBudUnicas.length, ROW_COUNT);
-		for (int i = 0; i < length; i++) {
-			System.out.println(wBWalletBudUnicas[i]);
-		}
-		System.out.println(length + " record(s) retrieved.");
-		
 		System.out.println("Listing Notificacao...");
 		wb.walletbud.Notificacao[] wBWalletBudNotificacaos = wb.walletbud.NotificacaoDAO.listNotificacaoByQuery(null, null);
 		length = Math.min(wBWalletBudNotificacaos.length, ROW_COUNT);
@@ -78,6 +62,30 @@ public class ListAASICData {
 		length = Math.min(wBWalletBudCategorias.length, ROW_COUNT);
 		for (int i = 0; i < length; i++) {
 			System.out.println(wBWalletBudCategorias[i]);
+		}
+		System.out.println(length + " record(s) retrieved.");
+		
+		System.out.println("Listing TransacaoFixa...");
+		wb.walletbud.TransacaoFixa[] wBWalletBudTransacaoFixas = wb.walletbud.TransacaoFixaDAO.listTransacaoFixaByQuery(null, null);
+		length = Math.min(wBWalletBudTransacaoFixas.length, ROW_COUNT);
+		for (int i = 0; i < length; i++) {
+			System.out.println(wBWalletBudTransacaoFixas[i]);
+		}
+		System.out.println(length + " record(s) retrieved.");
+		
+		System.out.println("Listing Fixa...");
+		wb.walletbud.Fixa[] wBWalletBudFixas = wb.walletbud.FixaDAO.listFixaByQuery(null, null);
+		length = Math.min(wBWalletBudFixas.length, ROW_COUNT);
+		for (int i = 0; i < length; i++) {
+			System.out.println(wBWalletBudFixas[i]);
+		}
+		System.out.println(length + " record(s) retrieved.");
+		
+		System.out.println("Listing Unica...");
+		wb.walletbud.Unica[] wBWalletBudUnicas = wb.walletbud.UnicaDAO.listUnicaByQuery(null, null);
+		length = Math.min(wBWalletBudUnicas.length, ROW_COUNT);
+		for (int i = 0; i < length; i++) {
+			System.out.println(wBWalletBudUnicas[i]);
 		}
 		System.out.println(length + " record(s) retrieved.");
 		
@@ -119,30 +127,6 @@ public class ListAASICData {
 			 System.out.println(wBWalletBudTransacaos[i]);
 		}
 		System.out.println(length + " Transacao record(s) retrieved."); 
-		
-		System.out.println("Listing Fixa by Criteria...");
-		wb.walletbud.FixaCriteria wBWalletBudFixaCriteria = new wb.walletbud.FixaCriteria();
-		// Please uncomment the follow line and fill in parameter(s) 
-		//wBWalletBudFixaCriteria.id_transacao.eq();
-		wBWalletBudFixaCriteria.setMaxResults(ROW_COUNT);
-		wb.walletbud.Fixa[] wBWalletBudFixas = wBWalletBudFixaCriteria.listFixa();
-		length =wBWalletBudFixas== null ? 0 : Math.min(wBWalletBudFixas.length, ROW_COUNT); 
-		for (int i = 0; i < length; i++) {
-			 System.out.println(wBWalletBudFixas[i]);
-		}
-		System.out.println(length + " Fixa record(s) retrieved."); 
-		
-		System.out.println("Listing Unica by Criteria...");
-		wb.walletbud.UnicaCriteria wBWalletBudUnicaCriteria = new wb.walletbud.UnicaCriteria();
-		// Please uncomment the follow line and fill in parameter(s) 
-		//wBWalletBudUnicaCriteria.id_transacao.eq();
-		wBWalletBudUnicaCriteria.setMaxResults(ROW_COUNT);
-		wb.walletbud.Unica[] wBWalletBudUnicas = wBWalletBudUnicaCriteria.listUnica();
-		length =wBWalletBudUnicas== null ? 0 : Math.min(wBWalletBudUnicas.length, ROW_COUNT); 
-		for (int i = 0; i < length; i++) {
-			 System.out.println(wBWalletBudUnicas[i]);
-		}
-		System.out.println(length + " Unica record(s) retrieved."); 
 		
 		System.out.println("Listing Notificacao by Criteria...");
 		wb.walletbud.NotificacaoCriteria wBWalletBudNotificacaoCriteria = new wb.walletbud.NotificacaoCriteria();
@@ -191,6 +175,42 @@ public class ListAASICData {
 			 System.out.println(wBWalletBudCategorias[i]);
 		}
 		System.out.println(length + " Categoria record(s) retrieved."); 
+		
+		System.out.println("Listing TransacaoFixa by Criteria...");
+		wb.walletbud.TransacaoFixaCriteria wBWalletBudTransacaoFixaCriteria = new wb.walletbud.TransacaoFixaCriteria();
+		// Please uncomment the follow line and fill in parameter(s) 
+		//wBWalletBudTransacaoFixaCriteria.ID.eq();
+		wBWalletBudTransacaoFixaCriteria.setMaxResults(ROW_COUNT);
+		wb.walletbud.TransacaoFixa[] wBWalletBudTransacaoFixas = wBWalletBudTransacaoFixaCriteria.listTransacaoFixa();
+		length =wBWalletBudTransacaoFixas== null ? 0 : Math.min(wBWalletBudTransacaoFixas.length, ROW_COUNT); 
+		for (int i = 0; i < length; i++) {
+			 System.out.println(wBWalletBudTransacaoFixas[i]);
+		}
+		System.out.println(length + " TransacaoFixa record(s) retrieved."); 
+		
+		System.out.println("Listing Fixa by Criteria...");
+		wb.walletbud.FixaCriteria wBWalletBudFixaCriteria = new wb.walletbud.FixaCriteria();
+		// Please uncomment the follow line and fill in parameter(s) 
+		//wBWalletBudFixaCriteria.id_transacao.eq();
+		wBWalletBudFixaCriteria.setMaxResults(ROW_COUNT);
+		wb.walletbud.Fixa[] wBWalletBudFixas = wBWalletBudFixaCriteria.listFixa();
+		length =wBWalletBudFixas== null ? 0 : Math.min(wBWalletBudFixas.length, ROW_COUNT); 
+		for (int i = 0; i < length; i++) {
+			 System.out.println(wBWalletBudFixas[i]);
+		}
+		System.out.println(length + " Fixa record(s) retrieved."); 
+		
+		System.out.println("Listing Unica by Criteria...");
+		wb.walletbud.UnicaCriteria wBWalletBudUnicaCriteria = new wb.walletbud.UnicaCriteria();
+		// Please uncomment the follow line and fill in parameter(s) 
+		//wBWalletBudUnicaCriteria.id_transacao.eq();
+		wBWalletBudUnicaCriteria.setMaxResults(ROW_COUNT);
+		wb.walletbud.Unica[] wBWalletBudUnicas = wBWalletBudUnicaCriteria.listUnica();
+		length =wBWalletBudUnicas== null ? 0 : Math.min(wBWalletBudUnicas.length, ROW_COUNT); 
+		for (int i = 0; i < length; i++) {
+			 System.out.println(wBWalletBudUnicas[i]);
+		}
+		System.out.println(length + " Unica record(s) retrieved."); 
 		
 	}
 	

@@ -297,6 +297,69 @@ public class UserDAO {
 		}
 	}
 	
+	public static boolean deleteAndDissociate(wb.walletbud.User user)throws PersistentException {
+		try {
+			wb.walletbud.Notificacao[] lNotificacaos = user.notificacao.toArray();
+			for(int i = 0; i < lNotificacaos.length; i++) {
+				lNotificacaos[i].setUserId_user(null);
+			}
+			wb.walletbud.Objetivo[] lObjetivos = user.objetivo.toArray();
+			for(int i = 0; i < lObjetivos.length; i++) {
+				lObjetivos[i].setUserId_user(null);
+			}
+			wb.walletbud.Comentario[] lComentarios = user.comentario.toArray();
+			for(int i = 0; i < lComentarios.length; i++) {
+				lComentarios[i].setUserId_user(null);
+			}
+			wb.walletbud.Categoria[] lCategorias = user.categoria.toArray();
+			for(int i = 0; i < lCategorias.length; i++) {
+				lCategorias[i].setUserId_user(null);
+			}
+			wb.walletbud.UserTransacao[] lUser_categorias = user.user_categoria.toArray();
+			for(int i = 0; i < lUser_categorias.length; i++) {
+				lUser_categorias[i].setUserId_user(null);
+			}
+			return delete(user);
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
+	public static boolean deleteAndDissociate(wb.walletbud.User user, org.orm.PersistentSession session)throws PersistentException {
+		try {
+			wb.walletbud.Notificacao[] lNotificacaos = user.notificacao.toArray();
+			for(int i = 0; i < lNotificacaos.length; i++) {
+				lNotificacaos[i].setUserId_user(null);
+			}
+			wb.walletbud.Objetivo[] lObjetivos = user.objetivo.toArray();
+			for(int i = 0; i < lObjetivos.length; i++) {
+				lObjetivos[i].setUserId_user(null);
+			}
+			wb.walletbud.Comentario[] lComentarios = user.comentario.toArray();
+			for(int i = 0; i < lComentarios.length; i++) {
+				lComentarios[i].setUserId_user(null);
+			}
+			wb.walletbud.Categoria[] lCategorias = user.categoria.toArray();
+			for(int i = 0; i < lCategorias.length; i++) {
+				lCategorias[i].setUserId_user(null);
+			}
+			wb.walletbud.UserTransacao[] lUser_categorias = user.user_categoria.toArray();
+			for(int i = 0; i < lUser_categorias.length; i++) {
+				lUser_categorias[i].setUserId_user(null);
+			}
+			try {
+				session.delete(user);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
 	public static boolean refresh(wb.walletbud.User user) throws PersistentException {
 		try {
 			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(user);

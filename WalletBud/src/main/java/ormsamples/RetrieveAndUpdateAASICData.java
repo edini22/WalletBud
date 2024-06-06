@@ -18,12 +18,6 @@ public class RetrieveAndUpdateAASICData {
 			wb.walletbud.Transacao wBWalletBudTransacao = wb.walletbud.TransacaoDAO.loadTransacaoByQuery(null, null);
 			// Update the properties of the persistent object
 			wb.walletbud.TransacaoDAO.save(wBWalletBudTransacao);
-			wb.walletbud.Fixa wBWalletBudFixa = wb.walletbud.FixaDAO.loadFixaByQuery(null, null);
-			// Update the properties of the persistent object
-			wb.walletbud.FixaDAO.save(wBWalletBudFixa);
-			wb.walletbud.Unica wBWalletBudUnica = wb.walletbud.UnicaDAO.loadUnicaByQuery(null, null);
-			// Update the properties of the persistent object
-			wb.walletbud.UnicaDAO.save(wBWalletBudUnica);
 			wb.walletbud.Notificacao wBWalletBudNotificacao = wb.walletbud.NotificacaoDAO.loadNotificacaoByQuery(null, null);
 			// Update the properties of the persistent object
 			wb.walletbud.NotificacaoDAO.save(wBWalletBudNotificacao);
@@ -36,6 +30,15 @@ public class RetrieveAndUpdateAASICData {
 			wb.walletbud.Categoria wBWalletBudCategoria = wb.walletbud.CategoriaDAO.loadCategoriaByQuery(null, null);
 			// Update the properties of the persistent object
 			wb.walletbud.CategoriaDAO.save(wBWalletBudCategoria);
+			wb.walletbud.TransacaoFixa wBWalletBudTransacaoFixa = wb.walletbud.TransacaoFixaDAO.loadTransacaoFixaByQuery(null, null);
+			// Update the properties of the persistent object
+			wb.walletbud.TransacaoFixaDAO.save(wBWalletBudTransacaoFixa);
+			wb.walletbud.Fixa wBWalletBudFixa = wb.walletbud.FixaDAO.loadFixaByQuery(null, null);
+			// Update the properties of the persistent object
+			wb.walletbud.FixaDAO.save(wBWalletBudFixa);
+			wb.walletbud.Unica wBWalletBudUnica = wb.walletbud.UnicaDAO.loadUnicaByQuery(null, null);
+			// Update the properties of the persistent object
+			wb.walletbud.UnicaDAO.save(wBWalletBudUnica);
 			t.commit();
 		}
 		catch (Exception e) {
@@ -63,18 +66,6 @@ public class RetrieveAndUpdateAASICData {
 		//wBWalletBudTransacaoCriteria.id_transacao.eq();
 		System.out.println(wBWalletBudTransacaoCriteria.uniqueTransacao());
 		
-		System.out.println("Retrieving Fixa by FixaCriteria");
-		wb.walletbud.FixaCriteria wBWalletBudFixaCriteria = new wb.walletbud.FixaCriteria();
-		// Please uncomment the follow line and fill in parameter(s)
-		//wBWalletBudFixaCriteria.id_transacao.eq();
-		System.out.println(wBWalletBudFixaCriteria.uniqueFixa());
-		
-		System.out.println("Retrieving Unica by UnicaCriteria");
-		wb.walletbud.UnicaCriteria wBWalletBudUnicaCriteria = new wb.walletbud.UnicaCriteria();
-		// Please uncomment the follow line and fill in parameter(s)
-		//wBWalletBudUnicaCriteria.id_transacao.eq();
-		System.out.println(wBWalletBudUnicaCriteria.uniqueUnica());
-		
 		System.out.println("Retrieving Notificacao by NotificacaoCriteria");
 		wb.walletbud.NotificacaoCriteria wBWalletBudNotificacaoCriteria = new wb.walletbud.NotificacaoCriteria();
 		// Please uncomment the follow line and fill in parameter(s)
@@ -98,6 +89,24 @@ public class RetrieveAndUpdateAASICData {
 		// Please uncomment the follow line and fill in parameter(s)
 		//wBWalletBudCategoriaCriteria.id_categoria.eq();
 		System.out.println(wBWalletBudCategoriaCriteria.uniqueCategoria());
+		
+		System.out.println("Retrieving TransacaoFixa by TransacaoFixaCriteria");
+		wb.walletbud.TransacaoFixaCriteria wBWalletBudTransacaoFixaCriteria = new wb.walletbud.TransacaoFixaCriteria();
+		// Please uncomment the follow line and fill in parameter(s)
+		//wBWalletBudTransacaoFixaCriteria.ID.eq();
+		System.out.println(wBWalletBudTransacaoFixaCriteria.uniqueTransacaoFixa());
+		
+		System.out.println("Retrieving Fixa by FixaCriteria");
+		wb.walletbud.FixaCriteria wBWalletBudFixaCriteria = new wb.walletbud.FixaCriteria();
+		// Please uncomment the follow line and fill in parameter(s)
+		//wBWalletBudFixaCriteria.id_transacao.eq();
+		System.out.println(wBWalletBudFixaCriteria.uniqueFixa());
+		
+		System.out.println("Retrieving Unica by UnicaCriteria");
+		wb.walletbud.UnicaCriteria wBWalletBudUnicaCriteria = new wb.walletbud.UnicaCriteria();
+		// Please uncomment the follow line and fill in parameter(s)
+		//wBWalletBudUnicaCriteria.id_transacao.eq();
+		System.out.println(wBWalletBudUnicaCriteria.uniqueUnica());
 		
 	}
 	

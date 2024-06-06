@@ -297,6 +297,37 @@ public class NotificacaoDAO {
 		}
 	}
 	
+	public static boolean deleteAndDissociate(wb.walletbud.Notificacao notificacao)throws PersistentException {
+		try {
+			if (notificacao.getUserId_user() != null) {
+				notificacao.getUserId_user().notificacao.remove(notificacao);
+			}
+			
+			return delete(notificacao);
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
+	public static boolean deleteAndDissociate(wb.walletbud.Notificacao notificacao, org.orm.PersistentSession session)throws PersistentException {
+		try {
+			if (notificacao.getUserId_user() != null) {
+				notificacao.getUserId_user().notificacao.remove(notificacao);
+			}
+			
+			try {
+				session.delete(notificacao);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		catch(Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+	
 	public static boolean refresh(wb.walletbud.Notificacao notificacao) throws PersistentException {
 		try {
 			wb.walletbud.AASICPersistentManager.instance().getSession().refresh(notificacao);

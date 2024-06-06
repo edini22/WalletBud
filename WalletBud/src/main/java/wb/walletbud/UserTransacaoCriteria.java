@@ -20,10 +20,18 @@ import org.orm.criteria.*;
 
 public class UserTransacaoCriteria extends AbstractORMCriteria {
 	public final IntegerExpression ID;
+	public final IntegerExpression usertransacaoIdId;
+	public final AssociationExpression usertransacaoId;
+	public final IntegerExpression userId_userId;
+	public final AssociationExpression userId_user;
 	
 	public UserTransacaoCriteria(Criteria criteria) {
 		super(criteria);
 		ID = new IntegerExpression("ID", this);
+		usertransacaoIdId = new IntegerExpression("usertransacaoId.id_transacao", this);
+		usertransacaoId = new AssociationExpression("usertransacaoId", this);
+		userId_userId = new IntegerExpression("userId_user.id_user", this);
+		userId_user = new AssociationExpression("userId_user", this);
 	}
 	
 	public UserTransacaoCriteria(PersistentSession session) {
@@ -32,6 +40,14 @@ public class UserTransacaoCriteria extends AbstractORMCriteria {
 	
 	public UserTransacaoCriteria() throws PersistentException {
 		this(wb.walletbud.AASICPersistentManager.instance().getSession());
+	}
+	
+	public TransacaoCriteria createUsertransacaoIdCriteria() {
+		return new TransacaoCriteria(createCriteria("usertransacaoId"));
+	}
+	
+	public UserCriteria createUserId_userCriteria() {
+		return new UserCriteria(createCriteria("userId_user"));
 	}
 	
 	public UserTransacao uniqueUserTransacao() {

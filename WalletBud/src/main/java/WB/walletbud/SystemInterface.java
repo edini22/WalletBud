@@ -23,7 +23,7 @@ public class SystemInterface {
         System.exit(0);
     }
 
-    public void createUser(String name, String password, String email) throws PersistentException {
+    public static void createUser(String name, String password, String email) throws PersistentException {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
 

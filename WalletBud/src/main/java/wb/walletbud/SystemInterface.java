@@ -1,6 +1,7 @@
 package wb.walletbud;
 
 
+import jakarta.json.JsonArray;
 import jakarta.json.JsonArrayBuilder;
 
 import jakarta.json.Json;
@@ -12,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -397,9 +399,47 @@ public class SystemInterface {
 
             Unica[] unicas = UnicaDAO.listUnicaByQuery(condition,null);
 
+            condition = "UserId_user = " + user.getId_user();
+            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
+            ArrayList<Unica> transacoes_id = new ArrayList<>(Arrays.asList(unicas));
+
+            for(TransacaoPartilhada transacaoPartilhada : transacoes_partilhada){
+                try{
+                    Unica u = UnicaDAO.getUnicaByORMID(transacaoPartilhada.getUsertransacaoId().getId_transacao());
+
+                    if(u != null && u.getTipo().equals(tipo)){
+                        transacoes_id.add(u);
+                    }
+                } catch (Exception e){
+                    //nao era unica
+                }
+            }
+
+
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
-            for (Unica unica : unicas) {
+            for (Unica unica : transacoes_id) {
+                condition = "TransacaoId_transacao = " + unica.getId_transacao();
+                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
+
+                JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
+                JsonObject userJs = Json.createObjectBuilder()
+                        .add("id", user.getId_user())
+                        .add("name", user.getName())
+                        .add("email", user.getEmail())
+                        .build();
+                userArrayBuilder.add(userJs);
+                for (TransacaoPartilhada tpPartilhada : tp) {
+                    User u = tpPartilhada.getUserId_user();
+                    JsonObject userJson = Json.createObjectBuilder()
+                            .add("id", u.getId_user())
+                            .add("name", u.getName())
+                            .add("email", u.getEmail())
+                            .build();
+                    userArrayBuilder.add(userJson);
+                }
+                JsonArray userArray = userArrayBuilder.build();
+
                 JsonObject unicaJson = Json.createObjectBuilder()
                         .add("id", unica.getId_transacao())
                         .add("name", unica.getName())
@@ -407,6 +447,7 @@ public class SystemInterface {
                         .add("date", unica.getDate().toString())
                         .add("descricao", unica.getDescrição())
                         .add("local", unica.getLocal())
+                        .add("users", userArray)
                         .build();
                 arrayBuilder.add(unicaJson);
             }
@@ -432,8 +473,9 @@ public class SystemInterface {
                         .build();
             }
 
-            String condition = "Id_transacao = " + id + " AND Userid_user = " + user.getId_user() + " AND Tipo = '" + tipo + "'";
-            Unica[] unicas = UnicaDAO.listUnicaByQuery(condition, null);
+            String condition = "Id_transacao = " + id + " AND Tipo = '" + tipo + "'";
+            Unica[] unicas = UnicaDAO.listUnicaByQuery(condition, null); // ate aqui qualuer um pode requisitar esta transacao
+
 
             if (unicas.length == 0) {
                 return Json.createObjectBuilder()
@@ -441,6 +483,36 @@ public class SystemInterface {
             }
 
             Unica unica = unicas[0];
+
+            condition = "TransacaoId_transacao = " + id;
+            TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
+            //verificar se o owner o se com quem esta transacao esta partilhada corresponde ao user que esta a pedir, senao se verificar return vazio
+            if(!(unica.getOwner_id() == user || checkTransationAcess(user, tp)) ){
+                return Json.createObjectBuilder()
+                        .build();
+            }
+
+            //ver com quem esta partilhada a transacao
+            // Construir o JsonArray para a lista de usuários
+            JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
+            JsonObject userJs = Json.createObjectBuilder()
+                    .add("id", user.getId_user())
+                    .add("name", user.getName())
+                    .add("email", user.getEmail())
+                    .build();
+            userArrayBuilder.add(userJs);
+            for (TransacaoPartilhada tpPartilhada : tp) {
+                User u = tpPartilhada.getUserId_user();
+                JsonObject userJson = Json.createObjectBuilder()
+                        .add("id", u.getId_user())
+                        .add("name", u.getName())
+                        .add("email", u.getEmail())
+                        .build();
+                userArrayBuilder.add(userJson);
+            }
+            JsonArray userArray = userArrayBuilder.build();
+
+
             JsonObject unicaJson = Json.createObjectBuilder()
                     .add("id", unica.getId_transacao())
                     .add("name", unica.getName())
@@ -448,6 +520,7 @@ public class SystemInterface {
                     .add("date", unica.getDate().toString())
                     .add("descricao", unica.getDescrição())
                     .add("local", unica.getLocal())
+                    .add("users", userArray)
                     .build();
 
             return unicaJson;
@@ -457,6 +530,19 @@ public class SystemInterface {
             return Json.createObjectBuilder()
                     .build();
         }
+
+    }
+
+    public static boolean checkTransationAcess( User user , TransacaoPartilhada[] tp ){
+        //return se corresponder a algum deles
+        boolean check = false;
+        for(TransacaoPartilhada tpPartilhada : tp){
+            if( tpPartilhada.getUserId_user() == user){
+                check = true;
+                break;
+            }
+        }
+        return check;
 
     }
     

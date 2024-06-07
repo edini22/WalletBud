@@ -100,19 +100,29 @@ public class ReceitaUnica {
         reader.close();
         String tipo = "receita";
         try {
+            String name, descricao, local, dateStr;
+            int IdCategoria;
+            Timestamp timestamp;
+
             int IdTransacao = jsonObject.getInt("IdTransacao");
-            String name = jsonObject.getString("name");
-            String descricao = jsonObject.getString("descricao");
-            String local = jsonObject.getString("local");
-            int IdCategoria = jsonObject.getInt("IdCategoria");
-            String dateStr  = jsonObject.getString("date");
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
-            Timestamp timestamp = Timestamp.valueOf(dateTime);
+            try {name = jsonObject.getString("name");} catch (java.lang.NullPointerException en) {name = null;}
+            try {descricao = jsonObject.getString("descricao");} catch (java.lang.NullPointerException en) {descricao = null;}
+            try {local = jsonObject.getString("local");} catch (java.lang.NullPointerException en) {local = null;}
+            try {IdCategoria = jsonObject.getInt("IdCategoria");} catch (java.lang.NullPointerException en) {IdCategoria = -1;}
+            try {dateStr  = jsonObject.getString("date");} catch (java.lang.NullPointerException en) {dateStr = null;}
+            if (dateStr != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
+                timestamp = Timestamp.valueOf(dateTime);
+            }else {
+                timestamp = null;
+            }
 
-            String value_str = jsonObject.getString("value");
-            float value = Float.parseFloat(value_str);
-
+            String value_str;
+            float value;
+            try {value_str = jsonObject.getString("value");} catch (java.lang.NullPointerException en) {value_str = null;}
+            if (value_str != null) value = Float.parseFloat(value_str);
+            else value = -1;
 
             int cond = SystemInterface.editUnica(IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp,email);
 
@@ -157,4 +167,63 @@ public class ReceitaUnica {
         }
 
     }
+
+    @GET
+    @Path("/list")
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response ListReceitasUnicasUser(String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+
+        try{
+            JsonObject unicas = SystemInterface.getUnicas(email, "receita");
+
+            if (unicas.isEmpty()) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Nenhuma receita única encontrada!")
+                        .build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            return Response.ok(unicas.toString(), MediaType.APPLICATION_JSON).build();
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
+    @GET
+    @Path("/get/{id}")
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getReceitaUnica(@PathParam("id") int id, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+        try {
+
+            JsonObject unica = SystemInterface.getJsonUnicaById(id,email,"receita");
+
+            if (unica.isEmpty()) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Receita única não encontrada!")
+                        .build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            return Response.ok(unica.toString(), MediaType.APPLICATION_JSON).build();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

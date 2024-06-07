@@ -353,8 +353,11 @@ public class SystemInterface {
         try {
             User user = getUserByEmail(email);
             if(user == null) return -3;
-            Categoria cat = getCategoriaById(categoria, email);
-            if(cat == null) return -1;
+            Categoria cat = null;
+            if(categoria != -1) {
+                cat = getCategoriaById(categoria, email);
+                if(cat == null) return -1;
+            }
 
             String condition = "Id_transacao = '" + id + "' AND UserId_user = '" + user.getId_user() + "'";
             Unica[] unicas = UnicaDAO.listUnicaByQuery(condition, null);
@@ -365,13 +368,12 @@ public class SystemInterface {
             }
 
             Unica unica = unicas[0];
-            unica.setName(name);
-            unica.setValue(value);
-            unica.setDescrição(descricao);
-            unica.setLocal(local);
-            unica.setTipo(tipo);
-            unica.setCategoriaId_categoria(cat);
-            unica.setDate(time);
+            if (name != null) unica.setName(name);
+            if (value != -1) unica.setValue(value);
+            if (descricao != null) unica.setDescrição(descricao);
+            if (local != null) unica.setLocal(local);
+            if (categoria != -1) unica.setCategoriaId_categoria(cat);
+            if (time != null) unica.setDate(time);
 
             UnicaDAO.save(unica);
             t.commit();
@@ -383,6 +385,80 @@ public class SystemInterface {
         return 0;
     }
 
+    public static JsonObject getUnicas(String email, String tipo) throws PersistentException {
+        try {
+            User user = getUserByEmail(email);
+            if(user == null){
+                return Json.createObjectBuilder()
+                        .build();
+            }
+
+            String condition = "UserId_user = '" + user.getId_user() + "' AND Tipo = '" + tipo + "'";
+
+            Unica[] unicas = UnicaDAO.listUnicaByQuery(condition,null);
+
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+
+            for (Unica unica : unicas) {
+                JsonObject unicaJson = Json.createObjectBuilder()
+                        .add("id", unica.getId_transacao())
+                        .add("name", unica.getName())
+                        .add("value", unica.getValue())
+                        .add("date", unica.getDate().toString())
+                        .add("descricao", unica.getDescrição())
+                        .add("local", unica.getLocal())
+                        .build();
+                arrayBuilder.add(unicaJson);
+            }
+
+            return Json.createObjectBuilder()
+                    .add("RecitasUnicas", arrayBuilder.build())
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Json.createObjectBuilder()
+                    .build();
+        }
+
+    }
+
+    public static JsonObject getJsonUnicaById(int id, String email, String tipo) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = getUserByEmail(email);
+            if (user == null) {
+                return Json.createObjectBuilder()
+                        .build();
+            }
+
+            String condition = "Id_transacao = " + id + " AND Userid_user = " + user.getId_user() + " AND Tipo = '" + tipo + "'";
+            Unica[] unicas = UnicaDAO.listUnicaByQuery(condition, null);
+
+            if (unicas.length == 0) {
+                return Json.createObjectBuilder()
+                        .build();
+            }
+
+            Unica unica = unicas[0];
+            JsonObject unicaJson = Json.createObjectBuilder()
+                    .add("id", unica.getId_transacao())
+                    .add("name", unica.getName())
+                    .add("value", unica.getValue())
+                    .add("date", unica.getDate().toString())
+                    .add("descricao", unica.getDescrição())
+                    .add("local", unica.getLocal())
+                    .build();
+
+            return unicaJson;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Json.createObjectBuilder()
+                    .build();
+        }
+
+    }
     
 
 }

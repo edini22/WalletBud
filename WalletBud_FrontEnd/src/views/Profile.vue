@@ -39,24 +39,9 @@
             <hr class="vertical dark" />
           </div>
           
-          
-          <div class="col-12 col-md-6 col-xl-4 position-relative">
-            <div class="card card-plain h-100">
-              <div class="p-3 pb-0 card-header">
-                <h6 class="mb-0">{{ $t ('Configurações de Plataforma') }}</h6>
-              </div>
-              <div class="text-dark p-3 card-body">
-                <div style="display: flex; align-items: center;">
-                  <p style="margin-right: 10px;  font-weight: bold; margin-top: 0.8rem;">{{ $t('Idioma') }}:</p>
-                  <LanguageSwitcher />
-                </div>
-              </div>
-            </div>
-            <hr class="vertical dark" />
-          </div>
 
           <div class="col-12 col-md-6 col-xl-4 position-relative">
-            <div class="card card-plain h-100">
+            
               <div class="p-3 pb-0 card-header">
                 <h6 class="mb-0">{{ $t ('Configurações de Movimentos') }}</h6>
               </div>
@@ -65,9 +50,7 @@
                   {{ $t ('Gerir Categorias')}}
                 </button>
                 <PopUpGerirCategorias />
-
               </div>
-            </div>
             <hr class="vertical dark" />
           </div>
 
@@ -85,14 +68,13 @@ import setNavPills from "@/assets/js/nav-pills.js";
 import setTooltip from "@/assets/js/tooltip.js";
 
 import { useI18n } from 'vue-i18n';
-import LanguageSwitcher from './components/LanguageSwitcher.vue';
+
 
 
 export default {
   name: "profile-overview",
   components: {
     ProfileInfoCard,
-    LanguageSwitcher,
     PopUpGerirCategorias,
   },
   setup() {

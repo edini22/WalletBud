@@ -9,8 +9,8 @@
     <div class="shadow-lg card">
       <div class="pt-3 pb-0 card-header">
         <div class="float-start">
-          <h5 class="mt-3 mb-0">Configurações</h5>
-          <p>Personaliza a plataforma.</p>
+          <h5 class="mt-3 mb-0">{{$t ('Configurações')}}</h5>
+          <p>{{$t ('Personaliza a plataforma')}}.</p>
         </div>
         <div class="mt-4 float-end" @click="toggle">
           <button class="p-0 btn btn-link text-dark fixed-plugin-close-button">
@@ -23,7 +23,7 @@
       <div class="pt-0 card-body pt-sm-3">
         <!-- Sidebar Backgrounds -->
         <div>
-          <h6 class="mb-0">Cores da Sidebar</h6>
+          <h6 class="mb-0">{{$t ('Cores da Barra Lateral')}}</h6>
         </div>
         <a href="#" class="switch-trigger background-color">
           <div
@@ -63,8 +63,8 @@
         </a>
         <!-- Sidenav Type -->
         <div class="mt-3">
-          <h6 class="mb-0">Fundo da Aba de Vavegação</h6>
-          <p class="text-sm">Escolhe entre 2 tipos.</p>
+          <h6 class="mb-0">{{$t ('Fundo da Aba de Navegação')}}</h6>
+          <p class="text-sm">{{$t ('Escolhe entre 2 tipos')}}.</p>
         </div>
         <div class="d-flex">
           <button
@@ -73,7 +73,7 @@
             :class="sidebarType === 'bg-gradient-dark' ? 'active' : ''"
             @click="sidebar('bg-gradient-dark')"
           >
-            Escura
+            {{$t ('Escura')}}
           </button>
           <button
             id="btn-white"
@@ -81,17 +81,17 @@
             :class="sidebarType === 'bg-white' ? 'active' : ''"
             @click="sidebar('bg-white')"
           >
-            Branca
+            {{$t ('Branca')}}
           </button>
         </div>
         <p class="text-sm d-xl-none d-block mt-2">
-          Só podes alterar o tipo de Aba em vista desktop.
+          {{$t ('Só podes alterar o tipo de Aba em vista desktop')}}.
         </p>
 
         <!-- Navbar Fixed -->
         <hr class="horizontal dark my-3" />
         <div class="mt-2 d-flex">
-          <h6 class="mb-0">Modo Claro / Modo Escuro</h6>
+          <h6 class="mb-0">{{$t ('Modo Claro')}} / {{$t ('Modo Escuro')}}</h6>
           <div class="form-check form-switch ps-0 ms-auto my-auto">
             <input
               class="form-check-input mt-1 ms-auto"
@@ -104,12 +104,10 @@
         <hr class="horizontal dark my-sm-4" />
 
         <!-- Change idiom -->
-        <div class="mt-3">
-          <h6 class="mb-0">Escolhe o Idioma</h6>
-          <p class="text-sm"></p>
-        </div>
-        <div class="d-flex">
+        <div class="d-flex" style="align-items: center; justify-content: space-between;">
+          <h6 class="mb-0" >{{$t ('Escolhe o Idioma')}}</h6>
           <!-- dropdown menu -->
+          <LanguageSwitcher />
         </div>
         <hr class="horizontal dark my-sm-4" />
       </div>
@@ -120,6 +118,8 @@
 <script>
 import { mapMutations, mapState, mapActions } from "vuex";
 import { activateDarkMode, deactivateDarkMode } from "@/assets/js/dark-mode";
+import LanguageSwitcher from "../views/components/LanguageSwitcher.vue";
+
 
 export default {
   name: "configurator",
@@ -175,6 +175,9 @@ export default {
   beforeMount() {
     window.addEventListener("resize", this.sidenavTypeOnResize);
     window.addEventListener("load", this.sidenavTypeOnResize);
+  },
+  components: {
+    LanguageSwitcher,
   },
 };
 </script>

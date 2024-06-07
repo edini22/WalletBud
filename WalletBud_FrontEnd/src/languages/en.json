@@ -25,5 +25,16 @@
     "Nomes de Categorias não podem ser nulos": "Category names cannot be null",
     "Adicione Categorias!": "Add Categories!",
     "Escreva uma categoria": "Write a category",
-    "Nome": "Name"
+    "Nome": "Name",
+    "Configurações": "Settings",
+    "Personaliza a plataforma": "Customize the platform",
+    "Cores da Barra Lateral": "Sidebar Colors",
+    "Escura": "Dark",
+    "Branca": "White",
+    "Só podes alterar o tipo de Aba em vista desktop": "You can only change the Tab type in desktop view",
+    "Modo Escuro": "Dark Mode",
+    "Modo Claro": "Light Mode",
+    "Escolhe entre 2 tipos": "Choose between 2 types",
+    "Fundo da Aba de Navegação": "Navigation Tab Background"
 }
+

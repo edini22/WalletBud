@@ -1,11 +1,10 @@
 {
-    "welcome": "Bem-vindo",
     "Password": "Senha",
     "FullName": "Nome Completo",
     "Email": "Email",
     "Platform Settings":"Configurações de Plataforma",
     "Profile Information":"Informações do Perfil",
-    "Language":"Idioma",
+    "Choose your Language":"Escolhe o Idioma",
     "Movement Settings":"Configurações de Movimento",
     "Manage Categories":"Gerir Categorias",
     "Manage Movement Categories":"Gerir Categorias de Movimentos",
@@ -25,5 +24,15 @@
     "Category names cannot be null": "Nomes de Categorias não podem ser nulos",
     "Add Categories!": "Adicione Categorias!",
     "Write a category": "Escreva uma categoria",
-    "Name": "Nome"
+    "Name": "Nome",
+    "Settings": "Configurações",
+    "Customize the platform": "Personaliza a plataforma",
+    "Sidebar Colors": "Cores da Barra Lateral",
+    "Dark": "Escura",
+    "White": "Branca",
+    "You can only change the Tab type in desktop view": "Só podes alterar o tipo de Aba em vista desktop",
+    "Dark Mode": "Modo Escuro",
+    "Light Mode": "Modo Claro",
+    "Choose between 2 types": "Escolhe entre 2 tipos",
+    "Navigation Tab Background": "Fundo da Aba de Navegação"
 }

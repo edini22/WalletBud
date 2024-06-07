@@ -49,9 +49,11 @@ export default {
 
 <style scoped>
 .selector {
+  font-weight: bold;
   padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ced4da; /* Cor da borda */
+  font-size: 0.8rem;
+  border: 1px solid #344767; /* Cor da borda */
+  color: #344767;
   border-radius: 0.5rem; /* Borda arredondada */
   cursor: pointer;
 }

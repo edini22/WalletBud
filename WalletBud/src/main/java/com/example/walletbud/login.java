@@ -1,5 +1,7 @@
 package com.example.walletbud;
 
+import jakarta.inject.Inject;
+
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
@@ -17,6 +19,10 @@ import java.io.StringReader;
 
 @Path("/login")
 public class login {
+
+//    @Inject
+//    private UserBean userBean;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -38,6 +44,9 @@ public class login {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("token", token)
                         .build();
+
+//                // Armazenar email no UserBean
+//                userBean.setEmail(email);
 
                 return Response.status(Response.Status.OK)
                         .entity(jsonResponse.toString())

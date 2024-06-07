@@ -58,6 +58,7 @@ public class register {
 
         try {
             if(SystemInterface.createUser(username, password, email) ){
+
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "User registered successfully")
                         .build();

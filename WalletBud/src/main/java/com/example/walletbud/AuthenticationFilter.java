@@ -27,7 +27,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     public void filter(ContainerRequestContext requestContext) throws IOException {
         Method method = resourceInfo.getResourceMethod();
 
-        // Verifica se o método ou a classe possui a anotação @Secured
         if (method.isAnnotationPresent(Secured.class) || resourceInfo.getResourceClass().isAnnotationPresent(Secured.class)) {
             String authorizationHeader = requestContext.getHeaderString("Authorization");
 
@@ -43,6 +42,12 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 Algorithm algorithm = Algorithm.HMAC256("secret");
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT jwt = verifier.verify(token);
+
+//                String email = jwt.getSubject();
+
+//                System.out.println("Email: " + email);
+
+//                requestContext.setProperty("email", email);
 
             } catch (JWTVerificationException e) {
                 requestContext.abortWith(

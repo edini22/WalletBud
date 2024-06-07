@@ -11,6 +11,8 @@ public class HelloApplication extends Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();
         resources.add(login.class);
+        resources.add(ReceitaUnica.class);
+        resources.add(Categoria.class);
         resources.add(register.class);
         resources.add(HelloResource.class);
         resources.add(AuthenticationFilter.class);

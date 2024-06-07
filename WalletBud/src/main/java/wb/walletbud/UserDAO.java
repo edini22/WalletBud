@@ -299,6 +299,10 @@ public class UserDAO {
 	
 	public static boolean deleteAndDissociate(wb.walletbud.User user)throws PersistentException {
 		try {
+			wb.walletbud.Transacao[] lTransacaoss = user.transacaos.toArray();
+			for(int i = 0; i < lTransacaoss.length; i++) {
+				lTransacaoss[i].setOwner_id(null);
+			}
 			wb.walletbud.Notificacao[] lNotificacaos = user.notificacao.toArray();
 			for(int i = 0; i < lNotificacaos.length; i++) {
 				lNotificacaos[i].setUserId_user(null);
@@ -315,7 +319,7 @@ public class UserDAO {
 			for(int i = 0; i < lCategorias.length; i++) {
 				lCategorias[i].setUserId_user(null);
 			}
-			wb.walletbud.UserTransacao[] lUser_categorias = user.user_categoria.toArray();
+			wb.walletbud.TransacaoPartilhada[] lUser_categorias = user.user_categoria.toArray();
 			for(int i = 0; i < lUser_categorias.length; i++) {
 				lUser_categorias[i].setUserId_user(null);
 			}
@@ -328,6 +332,10 @@ public class UserDAO {
 	
 	public static boolean deleteAndDissociate(wb.walletbud.User user, org.orm.PersistentSession session)throws PersistentException {
 		try {
+			wb.walletbud.Transacao[] lTransacaoss = user.transacaos.toArray();
+			for(int i = 0; i < lTransacaoss.length; i++) {
+				lTransacaoss[i].setOwner_id(null);
+			}
 			wb.walletbud.Notificacao[] lNotificacaos = user.notificacao.toArray();
 			for(int i = 0; i < lNotificacaos.length; i++) {
 				lNotificacaos[i].setUserId_user(null);
@@ -344,7 +352,7 @@ public class UserDAO {
 			for(int i = 0; i < lCategorias.length; i++) {
 				lCategorias[i].setUserId_user(null);
 			}
-			wb.walletbud.UserTransacao[] lUser_categorias = user.user_categoria.toArray();
+			wb.walletbud.TransacaoPartilhada[] lUser_categorias = user.user_categoria.toArray();
 			for(int i = 0; i < lUser_categorias.length; i++) {
 				lUser_categorias[i].setUserId_user(null);
 			}

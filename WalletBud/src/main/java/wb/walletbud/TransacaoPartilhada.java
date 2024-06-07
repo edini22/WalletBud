@@ -13,16 +13,16 @@
  */
 package wb.walletbud;
 
-public class UserTransacao {
-	public UserTransacao() {
+public class TransacaoPartilhada {
+	public TransacaoPartilhada() {
 	}
 	
 	private void this_setOwner(Object owner, int key) {
-		if (key == wb.walletbud.ORMConstants.KEY_USERTRANSACAO_USERID_USER) {
+		if (key == wb.walletbud.ORMConstants.KEY_TRANSACAOPARTILHADA_USERID_USER) {
 			this.userId_user = (wb.walletbud.User) owner;
 		}
 		
-		else if (key == wb.walletbud.ORMConstants.KEY_USERTRANSACAO_USERTRANSACAOID) {
+		else if (key == wb.walletbud.ORMConstants.KEY_TRANSACAOPARTILHADA_USERTRANSACAOID) {
 			this.usertransacaoId = (wb.walletbud.Transacao) owner;
 		}
 	}

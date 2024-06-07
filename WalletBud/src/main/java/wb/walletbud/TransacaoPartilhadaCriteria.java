@@ -18,14 +18,14 @@ import org.orm.PersistentException;
 import org.orm.PersistentSession;
 import org.orm.criteria.*;
 
-public class UserTransacaoCriteria extends AbstractORMCriteria {
+public class TransacaoPartilhadaCriteria extends AbstractORMCriteria {
 	public final IntegerExpression ID;
 	public final IntegerExpression usertransacaoIdId;
 	public final AssociationExpression usertransacaoId;
 	public final IntegerExpression userId_userId;
 	public final AssociationExpression userId_user;
 	
-	public UserTransacaoCriteria(Criteria criteria) {
+	public TransacaoPartilhadaCriteria(Criteria criteria) {
 		super(criteria);
 		ID = new IntegerExpression("ID", this);
 		usertransacaoIdId = new IntegerExpression("usertransacaoId.id_transacao", this);
@@ -34,11 +34,11 @@ public class UserTransacaoCriteria extends AbstractORMCriteria {
 		userId_user = new AssociationExpression("userId_user", this);
 	}
 	
-	public UserTransacaoCriteria(PersistentSession session) {
-		this(session.createCriteria(UserTransacao.class));
+	public TransacaoPartilhadaCriteria(PersistentSession session) {
+		this(session.createCriteria(TransacaoPartilhada.class));
 	}
 	
-	public UserTransacaoCriteria() throws PersistentException {
+	public TransacaoPartilhadaCriteria() throws PersistentException {
 		this(wb.walletbud.AASICPersistentManager.instance().getSession());
 	}
 	
@@ -50,13 +50,13 @@ public class UserTransacaoCriteria extends AbstractORMCriteria {
 		return new UserCriteria(createCriteria("userId_user"));
 	}
 	
-	public UserTransacao uniqueUserTransacao() {
-		return (UserTransacao) super.uniqueResult();
+	public TransacaoPartilhada uniqueTransacaoPartilhada() {
+		return (TransacaoPartilhada) super.uniqueResult();
 	}
 	
-	public UserTransacao[] listUserTransacao() {
+	public TransacaoPartilhada[] listTransacaoPartilhada() {
 		java.util.List list = super.list();
-		return (UserTransacao[]) list.toArray(new UserTransacao[list.size()]);
+		return (TransacaoPartilhada[]) list.toArray(new TransacaoPartilhada[list.size()]);
 	}
 }
 

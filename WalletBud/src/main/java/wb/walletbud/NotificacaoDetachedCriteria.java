@@ -22,7 +22,7 @@ public class NotificacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression id_notificacao;
 	public final IntegerExpression userId_userId;
 	public final AssociationExpression userId_user;
-	public final DateExpression date;
+	public final TimestampExpression date;
 	public final StringExpression descrição;
 	
 	public NotificacaoDetachedCriteria() {
@@ -30,7 +30,7 @@ public class NotificacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 		id_notificacao = new IntegerExpression("id_notificacao", this.getDetachedCriteria());
 		userId_userId = new IntegerExpression("userId_user.id_user", this.getDetachedCriteria());
 		userId_user = new AssociationExpression("userId_user", this.getDetachedCriteria());
-		date = new DateExpression("date", this.getDetachedCriteria());
+		date = new TimestampExpression("date", this.getDetachedCriteria());
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
 	}
 	
@@ -39,7 +39,7 @@ public class NotificacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 		id_notificacao = new IntegerExpression("id_notificacao", this.getDetachedCriteria());
 		userId_userId = new IntegerExpression("userId_user.id_user", this.getDetachedCriteria());
 		userId_user = new AssociationExpression("userId_user", this.getDetachedCriteria());
-		date = new DateExpression("date", this.getDetachedCriteria());
+		date = new TimestampExpression("date", this.getDetachedCriteria());
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
 	}
 	

@@ -12,7 +12,7 @@ License Type: Evaluation
 		</id>
 		<many-to-one name="userId_user" cascade="lock" column="UserId_user" class="wb.walletbud.User" not-null="true" lazy="proxy" access="field">
 		</many-to-one>
-		<property name="date" column="`Date`" type="date" not-null="false" lazy="false"/>
+		<property name="date" column="`Date`" type="timestamp" not-null="false" lazy="false"/>
 		<property name="descrição" column="Descrição" type="string" length="255" not-null="false" lazy="false"/>
 	</class>
 </hibernate-mapping>

@@ -34,9 +34,9 @@ public class TransacaoFixa {
 	
 	private wb.walletbud.Fixa transacaofixa_ID;
 	
-	private java.util.Date dataPagamento;
+	private java.sql.Timestamp dataPagamento;
 	
-	private java.util.Date dataAtual;
+	private java.sql.Timestamp dataAtual;
 	
 	private void setID(int value) {
 		this.ID = value;
@@ -50,19 +50,19 @@ public class TransacaoFixa {
 		return getID();
 	}
 	
-	public void setDataPagamento(java.util.Date value) {
+	public void setDataPagamento(java.sql.Timestamp value) {
 		this.dataPagamento = value;
 	}
 	
-	public java.util.Date getDataPagamento() {
+	public java.sql.Timestamp getDataPagamento() {
 		return dataPagamento;
 	}
 	
-	public void setDataAtual(java.util.Date value) {
+	public void setDataAtual(java.sql.Timestamp value) {
 		this.dataAtual = value;
 	}
 	
-	public java.util.Date getDataAtual() {
+	public java.sql.Timestamp getDataAtual() {
 		return dataAtual;
 	}
 	

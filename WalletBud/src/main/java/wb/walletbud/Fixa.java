@@ -32,17 +32,17 @@ public class Fixa extends wb.walletbud.Transacao {
 		
 	};
 	
-	private java.util.Date dataTransacao;
+	private java.sql.Timestamp dataTransacao;
 	
 	private int repeticao;
 	
 	private java.util.Set ORM_fixa = new java.util.HashSet();
 	
-	public void setDataTransacao(java.util.Date value) {
+	public void setDataTransacao(java.sql.Timestamp value) {
 		this.dataTransacao = value;
 	}
 	
-	public java.util.Date getDataTransacao() {
+	public java.sql.Timestamp getDataTransacao() {
 		return dataTransacao;
 	}
 	

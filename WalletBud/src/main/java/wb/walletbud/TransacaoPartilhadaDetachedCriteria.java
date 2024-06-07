@@ -18,15 +18,15 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.orm.PersistentSession;
 import org.orm.criteria.*;
 
-public class UserTransacaoDetachedCriteria extends AbstractORMDetachedCriteria {
+public class TransacaoPartilhadaDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression ID;
 	public final IntegerExpression usertransacaoIdId;
 	public final AssociationExpression usertransacaoId;
 	public final IntegerExpression userId_userId;
 	public final AssociationExpression userId_user;
 	
-	public UserTransacaoDetachedCriteria() {
-		super(wb.walletbud.UserTransacao.class, wb.walletbud.UserTransacaoCriteria.class);
+	public TransacaoPartilhadaDetachedCriteria() {
+		super(wb.walletbud.TransacaoPartilhada.class, wb.walletbud.TransacaoPartilhadaCriteria.class);
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
 		usertransacaoIdId = new IntegerExpression("usertransacaoId.id_transacao", this.getDetachedCriteria());
 		usertransacaoId = new AssociationExpression("usertransacaoId", this.getDetachedCriteria());
@@ -34,8 +34,8 @@ public class UserTransacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 		userId_user = new AssociationExpression("userId_user", this.getDetachedCriteria());
 	}
 	
-	public UserTransacaoDetachedCriteria(DetachedCriteria aDetachedCriteria) {
-		super(aDetachedCriteria, wb.walletbud.UserTransacaoCriteria.class);
+	public TransacaoPartilhadaDetachedCriteria(DetachedCriteria aDetachedCriteria) {
+		super(aDetachedCriteria, wb.walletbud.TransacaoPartilhadaCriteria.class);
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
 		usertransacaoIdId = new IntegerExpression("usertransacaoId.id_transacao", this.getDetachedCriteria());
 		usertransacaoId = new AssociationExpression("usertransacaoId", this.getDetachedCriteria());
@@ -51,13 +51,13 @@ public class UserTransacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 		return new wb.walletbud.UserDetachedCriteria(createCriteria("userId_user"));
 	}
 	
-	public UserTransacao uniqueUserTransacao(PersistentSession session) {
-		return (UserTransacao) super.createExecutableCriteria(session).uniqueResult();
+	public TransacaoPartilhada uniqueTransacaoPartilhada(PersistentSession session) {
+		return (TransacaoPartilhada) super.createExecutableCriteria(session).uniqueResult();
 	}
 	
-	public UserTransacao[] listUserTransacao(PersistentSession session) {
+	public TransacaoPartilhada[] listTransacaoPartilhada(PersistentSession session) {
 		List list = super.createExecutableCriteria(session).list();
-		return (UserTransacao[]) list.toArray(new UserTransacao[list.size()]);
+		return (TransacaoPartilhada[]) list.toArray(new TransacaoPartilhada[list.size()]);
 	}
 }
 

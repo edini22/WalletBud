@@ -9,9 +9,9 @@ public class RetrieveAndUpdateAASICData {
 	public void retrieveAndUpdateTestData() throws PersistentException {
 		PersistentTransaction t = wb.walletbud.AASICPersistentManager.instance().getSession().beginTransaction();
 		try {
-			wb.walletbud.UserTransacao wBWalletBudUserTransacao = wb.walletbud.UserTransacaoDAO.loadUserTransacaoByQuery(null, null);
+			wb.walletbud.TransacaoPartilhada wBWalletBudTransacaoPartilhada = wb.walletbud.TransacaoPartilhadaDAO.loadTransacaoPartilhadaByQuery(null, null);
 			// Update the properties of the persistent object
-			wb.walletbud.UserTransacaoDAO.save(wBWalletBudUserTransacao);
+			wb.walletbud.TransacaoPartilhadaDAO.save(wBWalletBudTransacaoPartilhada);
 			wb.walletbud.User wBWalletBudUser = wb.walletbud.UserDAO.loadUserByQuery(null, null);
 			// Update the properties of the persistent object
 			wb.walletbud.UserDAO.save(wBWalletBudUser);
@@ -48,11 +48,11 @@ public class RetrieveAndUpdateAASICData {
 	}
 	
 	public void retrieveByCriteria() throws PersistentException {
-		System.out.println("Retrieving UserTransacao by UserTransacaoCriteria");
-		wb.walletbud.UserTransacaoCriteria wBWalletBudUserTransacaoCriteria = new wb.walletbud.UserTransacaoCriteria();
+		System.out.println("Retrieving TransacaoPartilhada by TransacaoPartilhadaCriteria");
+		wb.walletbud.TransacaoPartilhadaCriteria wBWalletBudTransacaoPartilhadaCriteria = new wb.walletbud.TransacaoPartilhadaCriteria();
 		// Please uncomment the follow line and fill in parameter(s)
-		//wBWalletBudUserTransacaoCriteria.ID.eq();
-		System.out.println(wBWalletBudUserTransacaoCriteria.uniqueUserTransacao());
+		//wBWalletBudTransacaoPartilhadaCriteria.ID.eq();
+		System.out.println(wBWalletBudTransacaoPartilhadaCriteria.uniqueTransacaoPartilhada());
 		
 		System.out.println("Retrieving User by UserCriteria");
 		wb.walletbud.UserCriteria wBWalletBudUserCriteria = new wb.walletbud.UserCriteria();

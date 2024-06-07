@@ -11,11 +11,13 @@ License Type: Evaluation
 			</generator>
 		</id>
 		<discriminator column="Discriminator" type="string"/>
+		<many-to-one name="owner_id" cascade="lock" column="UserId_user" class="wb.walletbud.User" not-null="true" lazy="proxy" access="field">
+		</many-to-one>
 		<many-to-one name="categoriaId_categoria" cascade="lock" column="CategoriaId_categoria" class="wb.walletbud.Categoria" not-null="true" lazy="proxy" access="field">
 		</many-to-one>
 		<property name="name" column="Name" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="value" column="Value" type="float" not-null="true" lazy="false"/>
-		<property name="date" column="`Date`" type="date" not-null="false" lazy="false"/>
+		<property name="date" column="`Date`" type="timestamp" not-null="false" lazy="false"/>
 		<property name="descrição" column="Descrição" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="local" column="Local" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="tipo" column="Tipo" type="string" length="255" not-null="false" lazy="false">
@@ -29,10 +31,10 @@ License Type: Evaluation
 		</set>
 		<set name="ORM_Transacao" lazy="true" cascade="save-update,lock" inverse="true">
 			<key column="TransacaoId_transacao" not-null="true"/>
-			<one-to-many class="wb.walletbud.UserTransacao"/>
+			<one-to-many class="wb.walletbud.TransacaoPartilhada"/>
 		</set>
 		<subclass name="wb.walletbud.Fixa" discriminator-value="Fixa" lazy="false">
-			<property name="dataTransacao" column="DataTransacao" type="date" not-null="false" lazy="false"/>
+			<property name="dataTransacao" column="DataTransacao" type="timestamp" not-null="false" lazy="false"/>
 			<property name="repeticao" column="Repeticao" type="integer" length="10" not-null="false" lazy="false"/>
 			<set name="ORM_Fixa" lazy="true" cascade="save-update,lock" inverse="true">
 				<key column="TransacaoId_transacao" not-null="true"/>

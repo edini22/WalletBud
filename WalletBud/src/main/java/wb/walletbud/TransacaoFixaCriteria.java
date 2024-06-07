@@ -22,16 +22,16 @@ public class TransacaoFixaCriteria extends AbstractORMCriteria {
 	public final IntegerExpression ID;
 	public final IntegerExpression transacaofixa_IDId;
 	public final AssociationExpression transacaofixa_ID;
-	public final DateExpression dataPagamento;
-	public final DateExpression dataAtual;
+	public final TimestampExpression dataPagamento;
+	public final TimestampExpression dataAtual;
 	
 	public TransacaoFixaCriteria(Criteria criteria) {
 		super(criteria);
 		ID = new IntegerExpression("ID", this);
 		transacaofixa_IDId = new IntegerExpression("transacaofixa_ID.id_transacao", this);
 		transacaofixa_ID = new AssociationExpression("transacaofixa_ID", this);
-		dataPagamento = new DateExpression("dataPagamento", this);
-		dataAtual = new DateExpression("dataAtual", this);
+		dataPagamento = new TimestampExpression("dataPagamento", this);
+		dataAtual = new TimestampExpression("dataAtual", this);
 	}
 	
 	public TransacaoFixaCriteria(PersistentSession session) {

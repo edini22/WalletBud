@@ -15,12 +15,12 @@ package wb.walletbud;
 
 import org.orm.*;
 
-public class UserTransacaoSetCollection extends org.orm.util.ORMSet {
-	public UserTransacaoSetCollection(Object owner, org.orm.util.ORMAdapter adapter, int ownerKey, int targetKey, int collType) {
+public class TransacaoPartilhadaSetCollection extends org.orm.util.ORMSet {
+	public TransacaoPartilhadaSetCollection(Object owner, org.orm.util.ORMAdapter adapter, int ownerKey, int targetKey, int collType) {
 		super(owner, adapter, ownerKey, targetKey, true, collType);
 	}
 	
-	public UserTransacaoSetCollection(Object owner, org.orm.util.ORMAdapter adapter, int ownerKey, int collType) {
+	public TransacaoPartilhadaSetCollection(Object owner, org.orm.util.ORMAdapter adapter, int ownerKey, int collType) {
 		super(owner, adapter, ownerKey, -1, false, collType);
 	}
 	
@@ -36,7 +36,7 @@ public class UserTransacaoSetCollection extends org.orm.util.ORMSet {
 	 * Add the specified persistent object to ORMSet
 	 * @param value the persistent object
 	 */
-	public void add(UserTransacao value) {
+	public void add(TransacaoPartilhada value) {
 		if (value != null) {
 			super.add(value, value._ormAdapter);
 		}
@@ -46,7 +46,7 @@ public class UserTransacaoSetCollection extends org.orm.util.ORMSet {
 	 * Remove the specified persistent object from ORMSet
 	 * @param value the persistent object
 	 */
-	public void remove(UserTransacao value) {
+	public void remove(TransacaoPartilhada value) {
 		super.remove(value, value._ormAdapter);
 	}
 	
@@ -55,7 +55,7 @@ public class UserTransacaoSetCollection extends org.orm.util.ORMSet {
 	 * @param value the persistent object
 	 * @return True if this contains the specified persistent object
 	 */
-	public boolean contains(UserTransacao value) {
+	public boolean contains(TransacaoPartilhada value) {
 		return super.contains(value);
 	}
 	
@@ -63,8 +63,8 @@ public class UserTransacaoSetCollection extends org.orm.util.ORMSet {
 	 * Return an array containing all of the persistent objects in ORMSet
 	 * @return The persistent objects array
 	 */
-	public UserTransacao[] toArray() {
-		return (UserTransacao[]) super.toArray(new UserTransacao[size()]);
+	public TransacaoPartilhada[] toArray() {
+		return (TransacaoPartilhada[]) super.toArray(new TransacaoPartilhada[size()]);
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class UserTransacaoSetCollection extends org.orm.util.ORMSet {
 	 * </ul>
 	 * @return The persistent objects sorted array
 	 */
-	public UserTransacao[] toArray(String propertyName) {
+	public TransacaoPartilhada[] toArray(String propertyName) {
 		return toArray(propertyName, true);
 	}
 	
@@ -86,8 +86,8 @@ public class UserTransacaoSetCollection extends org.orm.util.ORMSet {
 	 * @param ascending true for ascending, false for descending
 	 * @return The persistent objects sorted array
 	 */
-	public UserTransacao[] toArray(String propertyName, boolean ascending) {
-		return (UserTransacao[]) super.toArray(new UserTransacao[size()], propertyName, ascending);
+	public TransacaoPartilhada[] toArray(String propertyName, boolean ascending) {
+		return (TransacaoPartilhada[]) super.toArray(new TransacaoPartilhada[size()], propertyName, ascending);
 	}
 	
 	protected PersistentManager getPersistentManager() throws PersistentException {

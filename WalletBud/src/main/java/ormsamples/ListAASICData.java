@@ -9,11 +9,11 @@ public class ListAASICData {
 	private static final int ROW_COUNT = 100;
 	
 	public void listTestData() throws PersistentException {
-		System.out.println("Listing UserTransacao...");
-		wb.walletbud.UserTransacao[] wBWalletBudUserTransacaos = wb.walletbud.UserTransacaoDAO.listUserTransacaoByQuery(null, null);
-		int length = Math.min(wBWalletBudUserTransacaos.length, ROW_COUNT);
+		System.out.println("Listing TransacaoPartilhada...");
+		wb.walletbud.TransacaoPartilhada[] wBWalletBudTransacaoPartilhadas = wb.walletbud.TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(null, null);
+		int length = Math.min(wBWalletBudTransacaoPartilhadas.length, ROW_COUNT);
 		for (int i = 0; i < length; i++) {
-			System.out.println(wBWalletBudUserTransacaos[i]);
+			System.out.println(wBWalletBudTransacaoPartilhadas[i]);
 		}
 		System.out.println(length + " record(s) retrieved.");
 		
@@ -92,17 +92,17 @@ public class ListAASICData {
 	}
 	
 	public void listByCriteria() throws PersistentException {
-		System.out.println("Listing UserTransacao by Criteria...");
-		wb.walletbud.UserTransacaoCriteria wBWalletBudUserTransacaoCriteria = new wb.walletbud.UserTransacaoCriteria();
+		System.out.println("Listing TransacaoPartilhada by Criteria...");
+		wb.walletbud.TransacaoPartilhadaCriteria wBWalletBudTransacaoPartilhadaCriteria = new wb.walletbud.TransacaoPartilhadaCriteria();
 		// Please uncomment the follow line and fill in parameter(s) 
-		//wBWalletBudUserTransacaoCriteria.ID.eq();
-		wBWalletBudUserTransacaoCriteria.setMaxResults(ROW_COUNT);
-		wb.walletbud.UserTransacao[] wBWalletBudUserTransacaos = wBWalletBudUserTransacaoCriteria.listUserTransacao();
-		int length =wBWalletBudUserTransacaos== null ? 0 : Math.min(wBWalletBudUserTransacaos.length, ROW_COUNT); 
+		//wBWalletBudTransacaoPartilhadaCriteria.ID.eq();
+		wBWalletBudTransacaoPartilhadaCriteria.setMaxResults(ROW_COUNT);
+		wb.walletbud.TransacaoPartilhada[] wBWalletBudTransacaoPartilhadas = wBWalletBudTransacaoPartilhadaCriteria.listTransacaoPartilhada();
+		int length =wBWalletBudTransacaoPartilhadas== null ? 0 : Math.min(wBWalletBudTransacaoPartilhadas.length, ROW_COUNT); 
 		for (int i = 0; i < length; i++) {
-			 System.out.println(wBWalletBudUserTransacaos[i]);
+			 System.out.println(wBWalletBudTransacaoPartilhadas[i]);
 		}
-		System.out.println(length + " UserTransacao record(s) retrieved."); 
+		System.out.println(length + " TransacaoPartilhada record(s) retrieved."); 
 		
 		System.out.println("Listing User by Criteria...");
 		wb.walletbud.UserCriteria wBWalletBudUserCriteria = new wb.walletbud.UserCriteria();

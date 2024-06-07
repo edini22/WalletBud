@@ -32,6 +32,10 @@ public class Transacao {
 		if (key == wb.walletbud.ORMConstants.KEY_TRANSACAO_CATEGORIAID_CATEGORIA) {
 			this.categoriaId_categoria = (wb.walletbud.Categoria) owner;
 		}
+		
+		else if (key == wb.walletbud.ORMConstants.KEY_TRANSACAO_OWNER_ID) {
+			this.owner_id = (wb.walletbud.User) owner;
+		}
 	}
 	
 	org.orm.util.ORMAdapter _ormAdapter = new org.orm.util.AbstractORMAdapter() {
@@ -47,13 +51,15 @@ public class Transacao {
 	
 	private int id_transacao;
 	
+	private wb.walletbud.User owner_id;
+	
 	private wb.walletbud.Categoria categoriaId_categoria;
 	
 	private String name;
 	
 	private float value;
 	
-	private java.util.Date date;
+	private java.sql.Timestamp date;
 	
 	private String descrição;
 	
@@ -93,11 +99,11 @@ public class Transacao {
 		return value;
 	}
 	
-	public void setDate(java.util.Date value) {
+	public void setDate(java.sql.Timestamp value) {
 		this.date = value;
 	}
 	
-	public java.util.Date getDate() {
+	public java.sql.Timestamp getDate() {
 		return date;
 	}
 	
@@ -173,7 +179,31 @@ public class Transacao {
 		return ORM_transacao;
 	}
 	
-	public final wb.walletbud.UserTransacaoSetCollection transacao = new wb.walletbud.UserTransacaoSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_TRANSACAO_TRANSACAO, wb.walletbud.ORMConstants.KEY_USERTRANSACAO_USERTRANSACAOID, wb.walletbud.ORMConstants.KEY_MUL_ONE_TO_MANY);
+	public final wb.walletbud.TransacaoPartilhadaSetCollection transacao = new wb.walletbud.TransacaoPartilhadaSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_TRANSACAO_TRANSACAO, wb.walletbud.ORMConstants.KEY_TRANSACAOPARTILHADA_USERTRANSACAOID, wb.walletbud.ORMConstants.KEY_MUL_ONE_TO_MANY);
+	
+	public void setOwner_id(wb.walletbud.User value) {
+		if (owner_id != null) {
+			owner_id.transacaos.remove(this);
+		}
+		if (value != null) {
+			value.transacaos.add(this);
+		}
+	}
+	
+	public wb.walletbud.User getOwner_id() {
+		return owner_id;
+	}
+	
+	/**
+	 * This method is for internal use only.
+	 */
+	public void setORM_Owner_id(wb.walletbud.User value) {
+		this.owner_id = value;
+	}
+	
+	private wb.walletbud.User getORM_Owner_id() {
+		return owner_id;
+	}
 	
 	public int getId() {
 		//TODO: Implement Method

@@ -23,7 +23,7 @@ License Type: Evaluation
 		<mapping resource="ormmapping/wb/walletbud/Objetivo.hbm.xml" />
 		<mapping resource="ormmapping/wb/walletbud/Transacao.hbm.xml" />
 		<mapping resource="ormmapping/wb/walletbud/TransacaoFixa.hbm.xml" />
+		<mapping resource="ormmapping/wb/walletbud/TransacaoPartilhada.hbm.xml" />
 		<mapping resource="ormmapping/wb/walletbud/User.hbm.xml" />
-		<mapping resource="ormmapping/wb/walletbud/UserTransacao.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

@@ -9,9 +9,9 @@ public class DeleteAASICData {
 	public void deleteTestData() throws PersistentException {
 		PersistentTransaction t = wb.walletbud.AASICPersistentManager.instance().getSession().beginTransaction();
 		try {
-			wb.walletbud.UserTransacao wBWalletBudUserTransacao = wb.walletbud.UserTransacaoDAO.loadUserTransacaoByQuery(null, null);
+			wb.walletbud.TransacaoPartilhada wBWalletBudTransacaoPartilhada = wb.walletbud.TransacaoPartilhadaDAO.loadTransacaoPartilhadaByQuery(null, null);
 			// Delete the persistent object
-			wb.walletbud.UserTransacaoDAO.delete(wBWalletBudUserTransacao);
+			wb.walletbud.TransacaoPartilhadaDAO.delete(wBWalletBudTransacaoPartilhada);
 			wb.walletbud.User wBWalletBudUser = wb.walletbud.UserDAO.loadUserByQuery(null, null);
 			// Delete the persistent object
 			wb.walletbud.UserDAO.delete(wBWalletBudUser);

@@ -9,14 +9,14 @@ public class CreateAASICData {
 	public void createTestData() throws PersistentException {
 		PersistentTransaction t = wb.walletbud.AASICPersistentManager.instance().getSession().beginTransaction();
 		try {
-			wb.walletbud.UserTransacao wBWalletBudUserTransacao = wb.walletbud.UserTransacaoDAO.createUserTransacao();
+			wb.walletbud.TransacaoPartilhada wBWalletBudTransacaoPartilhada = wb.walletbud.TransacaoPartilhadaDAO.createTransacaoPartilhada();
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : userId_user, usertransacaoId
-			wb.walletbud.UserTransacaoDAO.save(wBWalletBudUserTransacao);
+			wb.walletbud.TransacaoPartilhadaDAO.save(wBWalletBudTransacaoPartilhada);
 			wb.walletbud.User wBWalletBudUser = wb.walletbud.UserDAO.createUser();
-			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : user_categoria, categoria, comentario, objetivo, notificacao, saldo
+			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : user_categoria, categoria, comentario, objetivo, notificacao, transacaos, saldo
 			wb.walletbud.UserDAO.save(wBWalletBudUser);
 			wb.walletbud.Transacao wBWalletBudTransacao = wb.walletbud.TransacaoDAO.createTransacao();
-			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : transacao, comentario, value, categoriaId_categoria
+			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : transacao, comentario, value, categoriaId_categoria, owner_id
 			wb.walletbud.TransacaoDAO.save(wBWalletBudTransacao);
 			wb.walletbud.Notificacao wBWalletBudNotificacao = wb.walletbud.NotificacaoDAO.createNotificacao();
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : userId_user

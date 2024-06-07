@@ -12,7 +12,7 @@ License Type: Evaluation
 		</id>
 		<many-to-one name="transacaofixa_ID" cascade="lock" column="TransacaoId_transacao" class="wb.walletbud.Fixa" not-null="true" lazy="proxy" access="field">
 		</many-to-one>
-		<property name="dataPagamento" column="DataPagamento" type="date" not-null="false" lazy="false"/>
-		<property name="dataAtual" column="DataAtual" type="date" not-null="false" lazy="false"/>
+		<property name="dataPagamento" column="DataPagamento" type="timestamp" not-null="false" lazy="false"/>
+		<property name="dataAtual" column="DataAtual" type="timestamp" not-null="false" lazy="false"/>
 	</class>
 </hibernate-mapping>

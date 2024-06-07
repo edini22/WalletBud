@@ -299,6 +299,10 @@ public class UnicaDAO {
 	
 	public static boolean deleteAndDissociate(wb.walletbud.Unica unica)throws PersistentException {
 		try {
+			if (unica.getOwner_id() != null) {
+				unica.getOwner_id().transacaos.remove(unica);
+			}
+			
 			if (unica.getCategoriaId_categoria() != null) {
 				unica.getCategoriaId_categoria().transacao.remove(unica);
 			}
@@ -307,7 +311,7 @@ public class UnicaDAO {
 			for(int i = 0; i < lComentarios.length; i++) {
 				lComentarios[i].setTransacaoId_transacao(null);
 			}
-			wb.walletbud.UserTransacao[] lTransacaos = unica.transacao.toArray();
+			wb.walletbud.TransacaoPartilhada[] lTransacaos = unica.transacao.toArray();
 			for(int i = 0; i < lTransacaos.length; i++) {
 				lTransacaos[i].setUsertransacaoId(null);
 			}
@@ -320,6 +324,10 @@ public class UnicaDAO {
 	
 	public static boolean deleteAndDissociate(wb.walletbud.Unica unica, org.orm.PersistentSession session)throws PersistentException {
 		try {
+			if (unica.getOwner_id() != null) {
+				unica.getOwner_id().transacaos.remove(unica);
+			}
+			
 			if (unica.getCategoriaId_categoria() != null) {
 				unica.getCategoriaId_categoria().transacao.remove(unica);
 			}
@@ -328,7 +336,7 @@ public class UnicaDAO {
 			for(int i = 0; i < lComentarios.length; i++) {
 				lComentarios[i].setTransacaoId_transacao(null);
 			}
-			wb.walletbud.UserTransacao[] lTransacaos = unica.transacao.toArray();
+			wb.walletbud.TransacaoPartilhada[] lTransacaos = unica.transacao.toArray();
 			for(int i = 0; i < lTransacaos.length; i++) {
 				lTransacaos[i].setUsertransacaoId(null);
 			}

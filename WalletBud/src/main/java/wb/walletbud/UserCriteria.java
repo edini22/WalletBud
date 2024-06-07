@@ -25,6 +25,7 @@ public class UserCriteria extends AbstractORMCriteria {
 	public final StringExpression email;
 	public final FloatExpression saldo;
 	public final StringExpression idioma;
+	public final CollectionExpression transacaos;
 	public final CollectionExpression notificacao;
 	public final CollectionExpression objetivo;
 	public final CollectionExpression comentario;
@@ -39,6 +40,7 @@ public class UserCriteria extends AbstractORMCriteria {
 		email = new StringExpression("email", this);
 		saldo = new FloatExpression("saldo", this);
 		idioma = new StringExpression("idioma", this);
+		transacaos = new CollectionExpression("ORM_Transacaos", this);
 		notificacao = new CollectionExpression("ORM_Notificacao", this);
 		objetivo = new CollectionExpression("ORM_Objetivo", this);
 		comentario = new CollectionExpression("ORM_Comentario", this);
@@ -52,6 +54,10 @@ public class UserCriteria extends AbstractORMCriteria {
 	
 	public UserCriteria() throws PersistentException {
 		this(wb.walletbud.AASICPersistentManager.instance().getSession());
+	}
+	
+	public wb.walletbud.TransacaoCriteria createTransacaosCriteria() {
+		return new wb.walletbud.TransacaoCriteria(createCriteria("ORM_Transacaos"));
 	}
 	
 	public wb.walletbud.NotificacaoCriteria createNotificacaoCriteria() {
@@ -70,8 +76,8 @@ public class UserCriteria extends AbstractORMCriteria {
 		return new wb.walletbud.CategoriaCriteria(createCriteria("ORM_Categoria"));
 	}
 	
-	public wb.walletbud.UserTransacaoCriteria createUser_categoriaCriteria() {
-		return new wb.walletbud.UserTransacaoCriteria(createCriteria("ORM_User_categoria"));
+	public wb.walletbud.TransacaoPartilhadaCriteria createUser_categoriaCriteria() {
+		return new wb.walletbud.TransacaoPartilhadaCriteria(createCriteria("ORM_User_categoria"));
 	}
 	
 	public User uniqueUser() {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Model quotesql="1" tablecharset="" mysql_version="504" mssql_version="2005" derby_version="106" ingres_version="9">
-  <Entity name="UserTransacao" Unlogged="false" PKClustered="0" Temporal="false" TemporalStartTimeColumn="null" TemporalEndTimeColumn="null" TemporalHistoryTable="null">
+  <Entity name="TransacaoPartilhada" Unlogged="false" PKClustered="0" Temporal="false" TemporalStartTimeColumn="null" TemporalEndTimeColumn="null" TemporalHistoryTable="null">
     <Column name="ID">
       <PrimaryKey>true</PrimaryKey>
       <ForeignKey>false</ForeignKey>
@@ -118,6 +118,18 @@
       <Index>false</Index>
       <UserTypes/>
     </Column>
+    <Column name="UserId_user">
+      <PrimaryKey>false</PrimaryKey>
+      <ForeignKey>true</ForeignKey>
+      <ReferencedColumn>WB.WalletBud.User.Id_user</ReferencedColumn>
+      <Type>9</Type>
+      <Length>10</Length>
+      <Nullable>false</Nullable>
+      <IDGenerator>native</IDGenerator>
+      <Unique>false</Unique>
+      <Index>false</Index>
+      <UserTypes/>
+    </Column>
     <Column name="CategoriaId_categoria">
       <PrimaryKey>false</PrimaryKey>
       <ForeignKey>true</ForeignKey>
@@ -155,7 +167,7 @@
     <Column name="Date">
       <PrimaryKey>false</PrimaryKey>
       <ForeignKey>false</ForeignKey>
-      <Type>17</Type>
+      <Type>22</Type>
       <Length>0</Length>
       <Nullable>true</Nullable>
       <IDGenerator>native</IDGenerator>
@@ -199,7 +211,7 @@
     <Column name="DataTransacao">
       <PrimaryKey>false</PrimaryKey>
       <ForeignKey>false</ForeignKey>
-      <Type>17</Type>
+      <Type>22</Type>
       <Length>0</Length>
       <Nullable>true</Nullable>
       <IDGenerator>native</IDGenerator>
@@ -257,7 +269,7 @@
     <Column name="Date">
       <PrimaryKey>false</PrimaryKey>
       <ForeignKey>false</ForeignKey>
-      <Type>17</Type>
+      <Type>22</Type>
       <Length>0</Length>
       <Nullable>true</Nullable>
       <IDGenerator>native</IDGenerator>
@@ -457,7 +469,7 @@
     <Column name="DataPagamento">
       <PrimaryKey>false</PrimaryKey>
       <ForeignKey>false</ForeignKey>
-      <Type>17</Type>
+      <Type>22</Type>
       <Length>0</Length>
       <Nullable>true</Nullable>
       <IDGenerator>native</IDGenerator>
@@ -468,7 +480,7 @@
     <Column name="DataAtual">
       <PrimaryKey>false</PrimaryKey>
       <ForeignKey>false</ForeignKey>
-      <Type>17</Type>
+      <Type>22</Type>
       <Length>0</Length>
       <Nullable>true</Nullable>
       <IDGenerator>native</IDGenerator>
@@ -547,8 +559,8 @@
       <Column>Id_user</Column>
     </RefColumns>
   </ForeignKey>
-  <ForeignKey name="FKUserTransa546855">
-    <ReferenceTable>UserTransacao</ReferenceTable>
+  <ForeignKey name="FKTransacaoP220269">
+    <ReferenceTable>TransacaoPartilhada</ReferenceTable>
     <ReferencedTable>User</ReferencedTable>
     <Columns>
       <Column>UserId_user</Column>
@@ -557,14 +569,24 @@
       <Column>Id_user</Column>
     </RefColumns>
   </ForeignKey>
-  <ForeignKey name="FKUserTransa315225">
-    <ReferenceTable>UserTransacao</ReferenceTable>
+  <ForeignKey name="FKTransacaoP11361">
+    <ReferenceTable>TransacaoPartilhada</ReferenceTable>
     <ReferencedTable>Transacao</ReferencedTable>
     <Columns>
       <Column>TransacaoId_transacao</Column>
     </Columns>
     <RefColumns>
       <Column>Id_transacao</Column>
+    </RefColumns>
+  </ForeignKey>
+  <ForeignKey name="FKTransacao551035">
+    <ReferenceTable>Transacao</ReferenceTable>
+    <ReferencedTable>User</ReferencedTable>
+    <Columns>
+      <Column>UserId_user</Column>
+    </Columns>
+    <RefColumns>
+      <Column>Id_user</Column>
     </RefColumns>
   </ForeignKey>
 </Model>

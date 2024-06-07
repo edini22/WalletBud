@@ -18,7 +18,10 @@ public class User {
 	}
 	
 	private java.util.Set this_getSet (int key) {
-		if (key == wb.walletbud.ORMConstants.KEY_USER_NOTIFICACAO) {
+		if (key == wb.walletbud.ORMConstants.KEY_USER_TRANSACAOS) {
+			return ORM_transacaos;
+		}
+		else if (key == wb.walletbud.ORMConstants.KEY_USER_NOTIFICACAO) {
 			return ORM_notificacao;
 		}
 		else if (key == wb.walletbud.ORMConstants.KEY_USER_OBJETIVO) {
@@ -55,6 +58,8 @@ public class User {
 	private float saldo = 0.0f;
 	
 	private String idioma = "portugues";
+	
+	private java.util.Set ORM_transacaos = new java.util.HashSet();
 	
 	private java.util.Set ORM_notificacao = new java.util.HashSet();
 	
@@ -118,6 +123,16 @@ public class User {
 		return idioma;
 	}
 	
+	private void setORM_Transacaos(java.util.Set value) {
+		this.ORM_transacaos = value;
+	}
+	
+	private java.util.Set getORM_Transacaos() {
+		return ORM_transacaos;
+	}
+	
+	public final wb.walletbud.TransacaoSetCollection transacaos = new wb.walletbud.TransacaoSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_USER_TRANSACAOS, wb.walletbud.ORMConstants.KEY_TRANSACAO_OWNER_ID, wb.walletbud.ORMConstants.KEY_MUL_ONE_TO_MANY);
+	
 	private void setORM_Notificacao(java.util.Set value) {
 		this.ORM_notificacao = value;
 	}
@@ -166,7 +181,7 @@ public class User {
 		return ORM_user_categoria;
 	}
 	
-	public final wb.walletbud.UserTransacaoSetCollection user_categoria = new wb.walletbud.UserTransacaoSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_USER_USER_CATEGORIA, wb.walletbud.ORMConstants.KEY_USERTRANSACAO_USERID_USER, wb.walletbud.ORMConstants.KEY_MUL_ONE_TO_MANY);
+	public final wb.walletbud.TransacaoPartilhadaSetCollection user_categoria = new wb.walletbud.TransacaoPartilhadaSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_USER_USER_CATEGORIA, wb.walletbud.ORMConstants.KEY_TRANSACAOPARTILHADA_USERID_USER, wb.walletbud.ORMConstants.KEY_MUL_ONE_TO_MANY);
 	
 	public int getId() {
 		//TODO: Implement Method

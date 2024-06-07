@@ -22,16 +22,16 @@ public class TransacaoFixaDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression ID;
 	public final IntegerExpression transacaofixa_IDId;
 	public final AssociationExpression transacaofixa_ID;
-	public final DateExpression dataPagamento;
-	public final DateExpression dataAtual;
+	public final TimestampExpression dataPagamento;
+	public final TimestampExpression dataAtual;
 	
 	public TransacaoFixaDetachedCriteria() {
 		super(wb.walletbud.TransacaoFixa.class, wb.walletbud.TransacaoFixaCriteria.class);
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
 		transacaofixa_IDId = new IntegerExpression("transacaofixa_ID.id_transacao", this.getDetachedCriteria());
 		transacaofixa_ID = new AssociationExpression("transacaofixa_ID", this.getDetachedCriteria());
-		dataPagamento = new DateExpression("dataPagamento", this.getDetachedCriteria());
-		dataAtual = new DateExpression("dataAtual", this.getDetachedCriteria());
+		dataPagamento = new TimestampExpression("dataPagamento", this.getDetachedCriteria());
+		dataAtual = new TimestampExpression("dataAtual", this.getDetachedCriteria());
 	}
 	
 	public TransacaoFixaDetachedCriteria(DetachedCriteria aDetachedCriteria) {
@@ -39,8 +39,8 @@ public class TransacaoFixaDetachedCriteria extends AbstractORMDetachedCriteria {
 		ID = new IntegerExpression("ID", this.getDetachedCriteria());
 		transacaofixa_IDId = new IntegerExpression("transacaofixa_ID.id_transacao", this.getDetachedCriteria());
 		transacaofixa_ID = new AssociationExpression("transacaofixa_ID", this.getDetachedCriteria());
-		dataPagamento = new DateExpression("dataPagamento", this.getDetachedCriteria());
-		dataAtual = new DateExpression("dataAtual", this.getDetachedCriteria());
+		dataPagamento = new TimestampExpression("dataPagamento", this.getDetachedCriteria());
+		dataAtual = new TimestampExpression("dataAtual", this.getDetachedCriteria());
 	}
 	
 	public wb.walletbud.FixaDetachedCriteria createTransacaofixa_IDCriteria() {

@@ -317,7 +317,7 @@ public class SystemInterface {
         return 0;
     }
 
-    public static int createReceitaUnica(String name, float value, String descricao, String local, String tipo, int categoria,String email) throws PersistentException {
+    public static int createReceitaUnica(String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time,String email) throws PersistentException {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = getUserByEmail(email);
@@ -333,10 +333,14 @@ public class SystemInterface {
             unica.setLocal(local);
             unica.setTipo(tipo);
             unica.setCategoriaId_categoria(cat);
-            unica.setDate(date);
+            unica.setDate(time);
+            unica.setOwner_id(user);
+            UnicaDAO.save(unica);
 
 
+            t.commit();
         } catch (Exception e) {
+            t.rollback();
             e.printStackTrace();
             return -2;
         }
@@ -344,5 +348,41 @@ public class SystemInterface {
         return 0;
     }
 
+    public static int editUnica(int id, String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time,String email) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = getUserByEmail(email);
+            if(user == null) return -3;
+            Categoria cat = getCategoriaById(categoria, email);
+            if(cat == null) return -1;
+
+            String condition = "Id_transacao = '" + id + "' AND UserId_user = '" + user.getId_user() + "'";
+            Unica[] unicas = UnicaDAO.listUnicaByQuery(condition, null);
+
+            if (unicas.length == 0) {
+                t.rollback();
+                return -3;
+            }
+
+            Unica unica = unicas[0];
+            unica.setName(name);
+            unica.setValue(value);
+            unica.setDescrição(descricao);
+            unica.setLocal(local);
+            unica.setTipo(tipo);
+            unica.setCategoriaId_categoria(cat);
+            unica.setDate(time);
+
+            UnicaDAO.save(unica);
+            t.commit();
+        } catch (Exception e) {
+            t.rollback();
+            e.printStackTrace();
+            return -2;
+        }
+        return 0;
+    }
+
+    
 
 }

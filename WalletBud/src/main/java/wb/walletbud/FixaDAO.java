@@ -303,6 +303,10 @@ public class FixaDAO {
 			for(int i = 0; i < lFixas.length; i++) {
 				lFixas[i].setTransacaofixa_ID(null);
 			}
+			if (fixa.getOwner_id() != null) {
+				fixa.getOwner_id().transacaos.remove(fixa);
+			}
+			
 			if (fixa.getCategoriaId_categoria() != null) {
 				fixa.getCategoriaId_categoria().transacao.remove(fixa);
 			}
@@ -311,7 +315,7 @@ public class FixaDAO {
 			for(int i = 0; i < lComentarios.length; i++) {
 				lComentarios[i].setTransacaoId_transacao(null);
 			}
-			wb.walletbud.UserTransacao[] lTransacaos = fixa.transacao.toArray();
+			wb.walletbud.TransacaoPartilhada[] lTransacaos = fixa.transacao.toArray();
 			for(int i = 0; i < lTransacaos.length; i++) {
 				lTransacaos[i].setUsertransacaoId(null);
 			}
@@ -328,6 +332,10 @@ public class FixaDAO {
 			for(int i = 0; i < lFixas.length; i++) {
 				lFixas[i].setTransacaofixa_ID(null);
 			}
+			if (fixa.getOwner_id() != null) {
+				fixa.getOwner_id().transacaos.remove(fixa);
+			}
+			
 			if (fixa.getCategoriaId_categoria() != null) {
 				fixa.getCategoriaId_categoria().transacao.remove(fixa);
 			}
@@ -336,7 +344,7 @@ public class FixaDAO {
 			for(int i = 0; i < lComentarios.length; i++) {
 				lComentarios[i].setTransacaoId_transacao(null);
 			}
-			wb.walletbud.UserTransacao[] lTransacaos = fixa.transacao.toArray();
+			wb.walletbud.TransacaoPartilhada[] lTransacaos = fixa.transacao.toArray();
 			for(int i = 0; i < lTransacaos.length; i++) {
 				lTransacaos[i].setUsertransacaoId(null);
 			}

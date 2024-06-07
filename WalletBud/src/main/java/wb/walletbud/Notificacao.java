@@ -34,7 +34,7 @@ public class Notificacao {
 	
 	private wb.walletbud.User userId_user;
 	
-	private java.util.Date date;
+	private java.sql.Timestamp date;
 	
 	private String descrição;
 	
@@ -50,11 +50,11 @@ public class Notificacao {
 		return getId_notificacao();
 	}
 	
-	public void setDate(java.util.Date value) {
+	public void setDate(java.sql.Timestamp value) {
 		this.date = value;
 	}
 	
-	public java.util.Date getDate() {
+	public java.sql.Timestamp getDate() {
 		return date;
 	}
 	

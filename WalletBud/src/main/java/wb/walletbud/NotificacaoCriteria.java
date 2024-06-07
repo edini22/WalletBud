@@ -22,7 +22,7 @@ public class NotificacaoCriteria extends AbstractORMCriteria {
 	public final IntegerExpression id_notificacao;
 	public final IntegerExpression userId_userId;
 	public final AssociationExpression userId_user;
-	public final DateExpression date;
+	public final TimestampExpression date;
 	public final StringExpression descrição;
 	
 	public NotificacaoCriteria(Criteria criteria) {
@@ -30,7 +30,7 @@ public class NotificacaoCriteria extends AbstractORMCriteria {
 		id_notificacao = new IntegerExpression("id_notificacao", this);
 		userId_userId = new IntegerExpression("userId_user.id_user", this);
 		userId_user = new AssociationExpression("userId_user", this);
-		date = new DateExpression("date", this);
+		date = new TimestampExpression("date", this);
 		descrição = new StringExpression("descrição", this);
 	}
 	

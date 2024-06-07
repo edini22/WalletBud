@@ -307,6 +307,10 @@ public class TransacaoDAO {
 		}
 		
 		try {
+			if (transacao.getOwner_id() != null) {
+				transacao.getOwner_id().transacaos.remove(transacao);
+			}
+			
 			if (transacao.getCategoriaId_categoria() != null) {
 				transacao.getCategoriaId_categoria().transacao.remove(transacao);
 			}
@@ -315,7 +319,7 @@ public class TransacaoDAO {
 			for(int i = 0; i < lComentarios.length; i++) {
 				lComentarios[i].setTransacaoId_transacao(null);
 			}
-			wb.walletbud.UserTransacao[] lTransacaos = transacao.transacao.toArray();
+			wb.walletbud.TransacaoPartilhada[] lTransacaos = transacao.transacao.toArray();
 			for(int i = 0; i < lTransacaos.length; i++) {
 				lTransacaos[i].setUsertransacaoId(null);
 			}
@@ -336,6 +340,10 @@ public class TransacaoDAO {
 		}
 		
 		try {
+			if (transacao.getOwner_id() != null) {
+				transacao.getOwner_id().transacaos.remove(transacao);
+			}
+			
 			if (transacao.getCategoriaId_categoria() != null) {
 				transacao.getCategoriaId_categoria().transacao.remove(transacao);
 			}
@@ -344,7 +352,7 @@ public class TransacaoDAO {
 			for(int i = 0; i < lComentarios.length; i++) {
 				lComentarios[i].setTransacaoId_transacao(null);
 			}
-			wb.walletbud.UserTransacao[] lTransacaos = transacao.transacao.toArray();
+			wb.walletbud.TransacaoPartilhada[] lTransacaos = transacao.transacao.toArray();
 			for(int i = 0; i < lTransacaos.length; i++) {
 				lTransacaos[i].setUsertransacaoId(null);
 			}

@@ -1,11 +1,8 @@
 package wb.walletbud;
 
 
-import jakarta.json.JsonArray;
-import jakarta.json.JsonArrayBuilder;
+import jakarta.json.*;
 
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
 import org.orm.PersistentException;
 import org.orm.PersistentTransaction;
 
@@ -50,6 +47,12 @@ public class SystemInterface {
     public static boolean createUser(String name, String password, String email) throws PersistentException {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
+
+            User u = getUserByEmail(email);
+
+            if (u != null) {
+                return false;
+            }
 
             User user = UserDAO.createUser();
             user.setName(name);
@@ -115,6 +118,12 @@ public class SystemInterface {
     public static int verifyUser(String email, String password) throws PersistentException {
 
         try {
+            User user = getUserByEmail(email);
+
+            if (user == null) {
+                return -3;
+            }
+
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedhash = digest.digest(
                     password.getBytes(StandardCharsets.UTF_8));
@@ -319,18 +328,19 @@ public class SystemInterface {
         return 0;
     }
 
-    public static int createReceitaUnica(String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time,String email) throws PersistentException {
+    public static int createUnica(String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time,String email) throws PersistentException {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = getUserByEmail(email);
             if(user == null) return -3;
 
             Categoria cat = getCategoriaById(categoria, email);
-            if(cat == null) return -1;
+            if(cat == null) return -4;
 
             Unica unica = UnicaDAO.createUnica();
             unica.setName(name);
             unica.setValue(value);
+            unica.setShareValue(value);
             unica.setDescrição(descricao);
             unica.setLocal(local);
             unica.setTipo(tipo);
@@ -338,6 +348,15 @@ public class SystemInterface {
             unica.setDate(time);
             unica.setOwner_id(user);
             UnicaDAO.save(unica);
+
+            float saldo = user.getSaldo();
+            if(tipo.equals("receita")){
+                saldo += value;
+            }else {
+                saldo -= value;
+            }
+            user.setSaldo(saldo);
+            UserDAO.save(user);
 
 
             t.commit();
@@ -358,7 +377,7 @@ public class SystemInterface {
             Categoria cat = null;
             if(categoria != -1) {
                 cat = getCategoriaById(categoria, email);
-                if(cat == null) return -1;
+                if(cat == null) return -4;
             }
 
             String condition = "Id_transacao = '" + id + "' AND UserId_user = '" + user.getId_user() + "'";
@@ -366,12 +385,51 @@ public class SystemInterface {
 
             if (unicas.length == 0) {
                 t.rollback();
-                return -3;
+                return -1;
             }
 
             Unica unica = unicas[0];
+
+            if(!unica.getTipo().equals(tipo)){
+                t.rollback();
+                return -1;
+            }
+
             if (name != null) unica.setName(name);
-            if (value != -1) unica.setValue(value);
+            if (value != -1){
+                float aSvalue = unica.getShareValue();
+                float nSvalue = (value * aSvalue) / unica.getValue();
+                float diff = nSvalue - aSvalue ;
+
+                if(unica.getTipo().equals("receita")){
+                    user.setSaldo(user.getSaldo() + diff);
+                } else {
+                    user.setSaldo(user.getSaldo() - diff);
+                }
+                UserDAO.save(user);
+
+                //iterar pelos user todos partilhados a alterar
+                condition = "TransacaoId_transacao = " + unica.getId_transacao();
+                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
+
+                for(TransacaoPartilhada transacao : tp){
+                    User u = transacao.getUserId_user();
+                    if(unica.getTipo().equals("receita")){
+                        u.setSaldo(u.getSaldo() + diff);
+                    } else {
+                        u.setSaldo(u.getSaldo() - diff);
+                    }
+                    UserDAO.save(u);
+                }
+//                if(tp.length != 0) {
+//                    float newSvalue = nSvalue / (tp.length + 1);
+//                    unica.setShareValue(newSvalue);
+//                } else {
+                unica.setShareValue(nSvalue);
+//                }
+
+                unica.setValue(value);
+            }
             if (descricao != null) unica.setDescrição(descricao);
             if (local != null) unica.setLocal(local);
             if (categoria != -1) unica.setCategoriaId_categoria(cat);
@@ -422,11 +480,12 @@ public class SystemInterface {
                 condition = "TransacaoId_transacao = " + unica.getId_transacao();
                 TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
 
+                User Owner = unica.getOwner_id();
                 JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
                 JsonObject userJs = Json.createObjectBuilder()
-                        .add("id", user.getId_user())
-                        .add("name", user.getName())
-                        .add("email", user.getEmail())
+                        .add("id", Owner.getId_user())
+                        .add("name", Owner.getName())
+                        .add("email", Owner.getEmail())
                         .build();
                 userArrayBuilder.add(userJs);
                 for (TransacaoPartilhada tpPartilhada : tp) {
@@ -444,8 +503,10 @@ public class SystemInterface {
                         .add("id", unica.getId_transacao())
                         .add("name", unica.getName())
                         .add("value", unica.getValue())
+                        .add("shareValue", unica.getShareValue())
                         .add("date", unica.getDate().toString())
                         .add("descricao", unica.getDescrição())
+                        .add("tipo", unica.getTipo())
                         .add("local", unica.getLocal())
                         .add("users", userArray)
                         .build();
@@ -453,7 +514,7 @@ public class SystemInterface {
             }
 
             return Json.createObjectBuilder()
-                    .add("RecitasUnicas", arrayBuilder.build())
+                    .add(tipo + "s", arrayBuilder.build())
                     .build();
 
         } catch (Exception e) {
@@ -491,14 +552,14 @@ public class SystemInterface {
                 return Json.createObjectBuilder()
                         .build();
             }
-
+            User Owner = unica.getOwner_id();
             //ver com quem esta partilhada a transacao
             // Construir o JsonArray para a lista de usuários
             JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
             JsonObject userJs = Json.createObjectBuilder()
-                    .add("id", user.getId_user())
-                    .add("name", user.getName())
-                    .add("email", user.getEmail())
+                    .add("id", Owner.getId_user())
+                    .add("name", Owner.getName())
+                    .add("email", Owner.getEmail())
                     .build();
             userArrayBuilder.add(userJs);
             for (TransacaoPartilhada tpPartilhada : tp) {
@@ -517,8 +578,10 @@ public class SystemInterface {
                     .add("id", unica.getId_transacao())
                     .add("name", unica.getName())
                     .add("value", unica.getValue())
+                    .add("shareValue", unica.getShareValue())
                     .add("date", unica.getDate().toString())
                     .add("descricao", unica.getDescrição())
+                    .add("tipo", unica.getTipo())
                     .add("local", unica.getLocal())
                     .add("users", userArray)
                     .build();
@@ -533,7 +596,7 @@ public class SystemInterface {
 
     }
 
-    public static boolean checkTransationAcess( User user , TransacaoPartilhada[] tp ){
+    private static boolean checkTransationAcess( User user , TransacaoPartilhada[] tp ){
         //return se corresponder a algum deles
         boolean check = false;
         for(TransacaoPartilhada tpPartilhada : tp){
@@ -545,6 +608,127 @@ public class SystemInterface {
         return check;
 
     }
-    
+
+    public static int shareUnica(int idUnica, JsonArray usersArray, String email) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try{
+
+            User user = getUserByEmail(email);
+            if (user == null) {
+                return -3;
+            }
+            Unica unica = UnicaDAO.getUnicaByORMID(idUnica);
+
+            if(unica == null || unica.getOwner_id() != user){
+                return -1;
+            }
+
+            for (JsonValue userValue : usersArray) {
+                JsonObject userObject = userValue.asJsonObject();
+                String userEmail = userObject.getString("email");
+
+                User us = getUserByEmail(userEmail);
+                if (us == null) {
+                    continue;
+                }
+
+                //verificar se este user ja esta com acesso a transacao ou seja
+                String condition = "TransacaoId_transacao = " + idUnica + " AND UserId_user = " + us.getId_user();
+                TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
+
+                if(tps.length == 0 && unica.getOwner_id() != us){
+                    TransacaoPartilhada tp = TransacaoPartilhadaDAO.createTransacaoPartilhada();
+                    tp.setUserId_user(us);
+                    tp.setUsertransacaoId(unica);
+                    TransacaoPartilhadaDAO.save(tp);
+                }
+                else{
+                    t.rollback();
+                    return -2;
+                }
+            }
+
+            //atualizar saldos
+            float aSvalue = unica.getShareValue();
+            int anUsers = (int) (unica.getValue() / unica.getShareValue());
+
+            float nSvalue = unica.getValue() / (anUsers + usersArray.size());
+
+            float diff = nSvalue - aSvalue;
+
+            if(unica.getTipo().equals("receita")){
+                user.setSaldo(user.getSaldo() + diff);
+            } else {
+                user.setSaldo(user.getSaldo() - diff);
+            }
+            UserDAO.save(user);
+
+            String condition = "TransacaoId_transacao = " + unica.getId_transacao();
+            TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
+
+            for(TransacaoPartilhada transacao : tp){
+                User u = transacao.getUserId_user();
+                boolean exists = false;
+                for (JsonValue userValue : usersArray) {
+                    JsonObject userObject = userValue.asJsonObject();
+                    String userEmail = userObject.getString("email");
+                    if(u.getEmail().equals(userEmail)){
+                        exists = true;
+                        break;
+                    }
+                }
+                if(!exists){
+                    if(unica.getTipo().equals("receita")){
+                        u.setSaldo(u.getSaldo() + diff);
+                    } else {
+                        u.setSaldo(u.getSaldo() - diff);
+                    }
+                } else {
+                    if(unica.getTipo().equals("receita")){
+                        u.setSaldo(u.getSaldo() + nSvalue);
+                    } else {
+                        u.setSaldo(u.getSaldo() - nSvalue);
+                    }
+                }
+
+                UserDAO.save(u);
+            }
+
+            unica.setShareValue(nSvalue);
+            UnicaDAO.save(unica);
+
+            t.commit();
+        } catch (Exception e) {
+            t.rollback();
+            return -1;
+        }
+        return 0;
+    }
+
+    public static JsonObject getJsonUserInfo(String email) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = getUserByEmail(email);
+
+            if (user == null) {
+                return Json.createObjectBuilder()
+                        .build();
+            }
+
+            JsonObject userJson = Json.createObjectBuilder()
+                    .add("id", user.getId_user())
+                    .add("name", user.getName())
+                    .add("email", user.getEmail())
+                    .add("balanco", user.getSaldo())
+                    .add("idioma", user.getIdioma())
+                    .build();
+
+            return userJson;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Json.createObjectBuilder()
+                    .build();
+        }
+    }
 
 }

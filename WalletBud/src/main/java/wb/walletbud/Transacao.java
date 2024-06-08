@@ -67,6 +67,8 @@ public class Transacao {
 	
 	private String tipo;
 	
+	private float shareValue;
+	
 	private java.util.Set ORM_comentario = new java.util.HashSet();
 	
 	private java.util.Set ORM_transacao = new java.util.HashSet();
@@ -135,6 +137,14 @@ public class Transacao {
 	 */
 	public String getTipo() {
 		return tipo;
+	}
+	
+	public void setShareValue(float value) {
+		this.shareValue = value;
+	}
+	
+	public float getShareValue() {
+		return shareValue;
 	}
 	
 	public void setCategoriaId_categoria(wb.walletbud.Categoria value) {

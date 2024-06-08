@@ -30,6 +30,7 @@ public class FixaDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final StringExpression descrição;
 	public final StringExpression local;
 	public final StringExpression tipo;
+	public final FloatExpression shareValue;
 	public final CollectionExpression comentario;
 	public final CollectionExpression transacao;
 	public final TimestampExpression dataTransacao;
@@ -49,6 +50,7 @@ public class FixaDetachedCriteria extends AbstractORMDetachedCriteria {
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
 		local = new StringExpression("local", this.getDetachedCriteria());
 		tipo = new StringExpression("tipo", this.getDetachedCriteria());
+		shareValue = new FloatExpression("shareValue", this.getDetachedCriteria());
 		comentario = new CollectionExpression("ORM_Comentario", this.getDetachedCriteria());
 		transacao = new CollectionExpression("ORM_Transacao", this.getDetachedCriteria());
 		dataTransacao = new TimestampExpression("dataTransacao", this.getDetachedCriteria());
@@ -69,6 +71,7 @@ public class FixaDetachedCriteria extends AbstractORMDetachedCriteria {
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
 		local = new StringExpression("local", this.getDetachedCriteria());
 		tipo = new StringExpression("tipo", this.getDetachedCriteria());
+		shareValue = new FloatExpression("shareValue", this.getDetachedCriteria());
 		comentario = new CollectionExpression("ORM_Comentario", this.getDetachedCriteria());
 		transacao = new CollectionExpression("ORM_Transacao", this.getDetachedCriteria());
 		dataTransacao = new TimestampExpression("dataTransacao", this.getDetachedCriteria());

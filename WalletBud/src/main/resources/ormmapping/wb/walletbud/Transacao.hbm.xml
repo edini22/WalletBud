@@ -25,6 +25,7 @@ License Type: Evaluation
 				receita ou despesa
 			</meta>
 		</property>
+		<property name="shareValue" column="ShareValue" type="float" not-null="true" lazy="false"/>
 		<set name="ORM_Comentario" lazy="true" cascade="save-update,lock" inverse="true">
 			<key column="TransacaoId_transacao" not-null="true"/>
 			<one-to-many class="wb.walletbud.Comentario"/>

@@ -30,6 +30,7 @@ public class FixaCriteria extends AbstractORMCriteria {
 	public final StringExpression descrição;
 	public final StringExpression local;
 	public final StringExpression tipo;
+	public final FloatExpression shareValue;
 	public final CollectionExpression comentario;
 	public final CollectionExpression transacao;
 	public final TimestampExpression dataTransacao;
@@ -49,6 +50,7 @@ public class FixaCriteria extends AbstractORMCriteria {
 		descrição = new StringExpression("descrição", this);
 		local = new StringExpression("local", this);
 		tipo = new StringExpression("tipo", this);
+		shareValue = new FloatExpression("shareValue", this);
 		comentario = new CollectionExpression("ORM_Comentario", this);
 		transacao = new CollectionExpression("ORM_Transacao", this);
 		dataTransacao = new TimestampExpression("dataTransacao", this);

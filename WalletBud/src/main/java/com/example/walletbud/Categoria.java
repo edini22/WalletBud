@@ -160,10 +160,9 @@ public class Categoria {
             JsonObject jsonObject = reader.readObject();
             reader.close();
 
-            String id_str = jsonObject.getString("id");
+            int id = jsonObject.getInt("id");
             String name = jsonObject.getString("name");
 
-            int id = Integer.parseInt(id_str);
             int cond = SystemInterface.editCategoria(id, name, email);
 
             if(cond == 0){

@@ -25,15 +25,39 @@
                 <div class="card card-plain">
                   <div class="pb-0 card-header bg-transparent mb-4">
                     <h4 class="font-weight-bolder">Regista-te!</h4>
+                    <Configurator />
                     <p class="mb-0">
                       Insere o teu email e password para registar
                     </p>
                   </div>
                   <div class="card-body">
                     <form role="form">
-                      <div class="mb-3">
+                      <!--Nome-->
+                      <div v-if="nameError === true" class="mb-3">
                         <material-input
+                          id="name"
+                          type="text"
+                          label="Nome"
+                          name="name"
+                          size="lg"
+                          @update:value="name = $event"
+                          error
+                        />
+                      </div>
+                      <div v-if="nameError === false" class="mb-3">
+                        <material-input
+                          id="name"
+                          type="text"
                           
+                          name="name"
+                          size="lg"
+                          :value="name"
+                          @update:value="name = $event"
+                          success
+                        />
+                      </div>
+                      <div v-if="nameError === null" class="mb-3">
+                        <material-input
                           id="name"
                           type="text"
                           label="Nome"
@@ -42,7 +66,9 @@
                           @update:value="name = $event"
                         />
                       </div>
-                      <div class="mb-3">
+                      
+                      <!--Email-->
+                      <div v-if="emailError === true" class="mb-3">
                         <material-input
                           
                           id="email"
@@ -51,9 +77,59 @@
                           name="email"
                           size="lg"
                           @update:value="email = $event"
+                          error
                         />
                       </div>
-                      <div class="mb-3">
+                      <div v-if="emailError === false" class="mb-3">
+                        <material-input
+                          id="email"
+                          type="email"
+  
+                          name="email"
+                          size="lg"
+                          :value="email"
+                          @update:value="email = $event"
+                          success
+                        />
+                      </div>
+                      <!--Posso por label-->
+                      <div v-if="emailError === null" class="mb-3">
+                        <material-input
+                          id="email"
+                          type="email"
+                          label = "Email"
+                          name="email"
+                          size="lg"
+                          @update:value="email = $event"
+                        />
+                      </div>
+
+                      <!--Password-->
+                      
+                      
+                      <div v-if= "passwordError===true" class="mb-3">
+                        <material-input
+                          id="password"
+                          type="password"
+                          label="Senha"
+                          name="password"
+                          size="lg"
+                          @update:value="password = $event"
+                          error
+                        />
+                      </div>
+                      <div v-if ="passwordError===false" class="mb-3">
+                        <material-input
+                          id="password"
+                          type="password"
+                          name="password"
+                          size="lg"
+                          :value="password"
+                          @update:value="password = $event"
+                          success
+                        />
+                      </div>
+                      <div v-if="passwordError===null" class="mb-3">
                         <material-input
                           id="password"
                           type="password"
@@ -63,6 +139,8 @@
                           @update:value="password = $event"
                         />
                       </div>
+                      
+
                       <material-checkbox
                         id="flexCheckDefault"
                         class="font-weight-light"
@@ -83,7 +161,7 @@
                           color="info"
                           fullWidth
                           size="lg"
-                          @click="userSignUp"
+                          @click.prevent="userSignUp"
                           >Registar</material-button
                         >
                       </div>
@@ -120,12 +198,15 @@ import { userStore } from "@/store/userStore";
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
 
+import Configurator from "@/examples/ConfiguratorV2.vue";
+
 export default {
   name: "sign-up",
   components: {
     MaterialInput,
     MaterialCheckbox,
     MaterialButton,
+    Configurator,
   },
   setup() {
     const router = useRouter(); 
@@ -135,23 +216,55 @@ export default {
     const name = ref('');
     const termsAccepted = ref(false);
     const error = ref(null);
+    const nameError = ref(null);
+    const emailError = ref(null);
+    const passwordError = ref(null);
 
     const userSignUp = async () => {
       //teste
       //router.push({ name: "SignIn" });
+
+      alert("email: " + email.value + " password: " + password.value + " name: " + name.value + " termsAccepted: " + termsAccepted.value)
+
+      let isValid = true;
 
       if (!termsAccepted.value) {
         error.value = "Tem de aceitar os termos e condições";
         alert(error.value);
         return;
       }
-      error.value = null;
-      
-      if (!email.value || !password.value || !name.value) {
+
+      if (!name.value) {
+        nameError.value = true;
+        isValid = false;
+      } else {
+        nameError.value = false;
+      }
+
+      if (!email.value) {
+        emailError.value = true;
+        isValid = false;
+      } else {
+        emailError.value = false;
+      }
+
+      if (!password.value) {
+        passwordError.value = true;
+        isValid = false;
+      } else {
+        passwordError.value = false;
+      }
+      alert("passdone" + passwordError.value)
+
+      if (!isValid) {
         error.value = "Preencha todos os campos";
         alert(error.value);
         return;
       }
+
+      
+
+
       error.value = null;
 
       const newUser = {
@@ -176,7 +289,10 @@ export default {
       name,
       termsAccepted,
       error,
-      userSignUp
+      userSignUp,
+      nameError,
+      emailError,
+      passwordError,
     };
   },
   beforeMount() {

@@ -1,5 +1,4 @@
 {
-    "Bem-vindo": "Welcome",
     "Senha": "Password",
     "Nome Completo": "FullName",
     "Email": "Email",
@@ -35,6 +34,8 @@
     "Modo Escuro": "Dark Mode",
     "Modo Claro": "Light Mode",
     "Escolhe entre 2 tipos": "Choose between 2 types",
-    "Fundo da Aba de Navegação": "Navigation Tab Background"
+    "Fundo da Aba de Navegação": "Navigation Tab Background",
+    "Email não pode ser nulo": "Email cannot be null",
+    "Nome não pode ser nulo": "Name cannot be null"
 }
 

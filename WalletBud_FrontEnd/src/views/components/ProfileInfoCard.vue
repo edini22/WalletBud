@@ -19,17 +19,26 @@
       <ul class="list-group">
 
         <li class="pt-0 text-sm border-0 list-group-item ps-0">
+          <div v-if="showErrorNome">
+            <p class="error-pass">{{ $t('Nome não pode ser nulo') }}</p>
+          </div>
+
           <strong class="text-dark">{{ $t('Nome') }}:</strong>
-          <span v-if="!editMode">{{ info.nome }} </span>
-          <input v-else v-model="editedInfo.nome" class="full_width1"/>
+          <span v-if="!editMode">{{ name }} </span>
+          <input v-else-if="showErrorNome" class="input-error" v-model="editedInfo.name" />
+          <input v-else v-model="editedInfo.name" class="full_width1"/>
         </li>
 
         <li class="text-sm border-0 list-group-item ps-0">
+          <div v-if="showErrorEmail">
+            <p class="error-pass">{{ $t('Email não pode ser nulo') }}</p>
+          </div>
+          
           <strong class="text-dark">{{ $t('Email') }}:</strong>
-          <span v-if="!editMode">{{ info.email }}</span>
+          <span v-if="!editMode">{{ email }}</span>
+          <input v-else-if="showErrorEmail" class="input-error" v-model="editedInfo.email" />
           <input v-else v-model="editedInfo.email" class="full_width2" />
         </li>
-        
         
         <li class="text-sm border-0 list-group-item ps-0">
           <div v-if="showError">
@@ -58,82 +67,121 @@
 </template>
 
 <!--Popups necessários-->
-
 <script>
+import { userStore } from "@/store/userStore";
+import { ref, computed } from "vue";
+
 export default {
   name: "ProfileInfoCard",
   props: {
-    info: {
-      type: Object,
-      default: () => ({}),
-    },
     action: {
       type: Object,
       default: () => ({
-        route: "javascript:;",
-        tooltip: "",
-      }),
-    },
+        tooltip: '',
+        route: 'javascript:;'
+      })
+    }
   },
-  data() {
+  setup(){
+    const store = userStore();
+
+    // Definindo as propriedades da store como ref
+    const name = ref('');
+    const email = ref('');
+    const senha = ref('');
+
+    // Verificar se a store está definida antes de atribuir seus valores
+    if (store) {
+      name.value = store.name;
+      email.value = store.email;
+      senha.value = store.senha;
+    }
+
+    const editMode = ref(false);
+    const showError = ref(false);
+    const showError2 = ref(false);
+    const showErrorNome = ref(false);
+    const showErrorEmail = ref(false);
+    const editedInfo = ref({ name: '' , email: '', senha: ''});
+
+    const maskPassword = computed(() => '*'.repeat(senha.value.length));
+
+    const editProfile = () => {
+      editMode.value = true;
+      editedInfo.value.senha1 = maskPassword.value;
+      editedInfo.value.senha2 = maskPassword.value;
+      editedInfo.value.name = name.value;
+      editedInfo.value.email = email.value;
+    };
+
+    const saveChanges = () => {
+      if(checkUsername() && checkEmail() && checkPasswordsMatch()){
+        senha.value = editedInfo.value.senha1;
+        editedInfo.value.senha1 = '';
+        editedInfo.value.senha2 = '';
+
+        email.value = editedInfo.value.email;
+        name.value = editedInfo.value.name;
+        
+        store.updateUser(editedInfo.value);
+        editMode.value = false; 
+      }
+    };
+
+    const checkEmail = () => {
+      if(editedInfo.value.email.length == 0){
+        showErrorEmail.value = true;
+        return false;
+      }
+      showErrorEmail.value = false;
+      return true;
+    };
+
+    const checkUsername = () => {
+      if(editedInfo.value.name.length == 0){
+        showErrorNome.value = true;
+        return false;
+      }
+      showErrorNome.value = false;
+      return true;
+    };
+
+    const checkPasswordsMatch = () => {
+      if(editedInfo.value.senha1 !== editedInfo.value.senha2){
+        showError.value = true;
+        showError2.value = false;
+        return false;
+      }else if(editedInfo.value.senha1 == '' || editedInfo.value.senha2 == ''){
+        showError.value = false;
+        showError2.value = true;
+        return false;
+      }else if(editedInfo.value.senha1.length < 6){
+        showError.value = false;
+        showError2.value = true;
+        return false;
+      }
+      showError.value = false;
+      showError2.value = false;
+      return true;
+    };
+
     return {
-      editMode: false,
-      editedInfo: { ...this.info },
-      showError: false,
-      showError2:false,
+      editMode,
+      showError,
+      showError2,
+      showErrorEmail,
+      showErrorNome,
+      editedInfo,
+      maskPassword,
+      editProfile,
+      saveChanges,
+      name,
+      email,
     };
   },
-  computed: {
-    maskPassword() {
-      return '*'.repeat(this.editedInfo.senha.length);
-    },
-  },
-  
-  methods: {
-    editProfile() {
-      this.editMode = true;
-      this.editedInfo.senha1 = this.maskPassword;
-      this.editedInfo.senha2 = this.maskPassword;
-    },
-    
-    saveChanges() {
-      if(this.checkPasswordsMatch()){
-        this.editedInfo.senha = this.editedInfo.senha1;
-        this.editedInfo.senha1 = undefined;
-        this.editedInfo.senha2 = undefined;
-        this.$emit("saveProfile", this.editedInfo);
-        this.editMode = false; 
-      }
-    },
-
-    checkPasswordsMatch(){
-      if(this.editedInfo.senha1 !== this.editedInfo.senha2){
-        this.showError= true;
-        this.showError2= false;
-        return false;
-      }else if(this.editedInfo.senha1 == undefined || this.editedInfo.senha2 == undefined){
-        this.showError= false;
-        this.showError2= true;
-        return false;
-      }else if(this.editedInfo.senha1.length < 6){
-        this.showError= false;
-        this.showError2= true;
-        return false;
-      }
-      this.showError= false;
-      this.showError2= false;
-      return true;
-    },
-
-    closeModal() {
-      this.showModal = false;
-    },
-  },
-
+ 
 };
 </script>
-
-
 
 
 <style scoped>

@@ -34,5 +34,7 @@
     "Dark Mode": "Modo Escuro",
     "Light Mode": "Modo Claro",
     "Choose between 2 types": "Escolhe entre 2 tipos",
-    "Navigation Tab Background": "Fundo da Aba de Navegação"
+    "Navigation Tab Background": "Fundo da Aba de Navegação",
+    "Email cannot be null": "Email não pode ser nulo",
+    "Name cannot be null": "Nome não pode ser nulo"
 }

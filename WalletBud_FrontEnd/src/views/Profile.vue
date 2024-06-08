@@ -21,7 +21,9 @@
         </div>
         <div class="col-auto my-auto">
           <div class="h-100">
-            <h5 class="mb-1"> {{ profileInfo.nome }} </h5>
+            <h5 class="mb-1"> 
+               {{ profileInfo.name }}
+            </h5>
           </div>
         </div>
       </div>
@@ -68,7 +70,7 @@ import setNavPills from "@/assets/js/nav-pills.js";
 import setTooltip from "@/assets/js/tooltip.js";
 
 import { useI18n } from 'vue-i18n';
-
+import { userStore } from "@/store/userStore";
 
 
 export default {
@@ -79,19 +81,15 @@ export default {
   },
   setup() {
     const { t } = useI18n();
-    return { t };
+    const store = userStore();
+    const profileInfo = store.$state;
+    return { t, profileInfo };
   },
   data() {
     return {
       showMenu: false,
       showPopup: false,
       showMessage: false,
-      //Estão por default para teste
-      profileInfo: {
-        nome: 'Alec M. Thompson',
-        email: 'alecthompson@gmail.com',
-        senha: '123456',
-      },
     };
   },
   mounted() {
@@ -111,11 +109,6 @@ export default {
     },
     handleEditProfile() {
       this.showMessage = true;
-    },
-    saveProfile(newProfile){
-      console.log('Novo perfil recebido:', newProfile);
-      this.profileInfo = {...newProfile};
-    
     },
   },
 };

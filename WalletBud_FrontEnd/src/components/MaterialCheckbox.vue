@@ -6,6 +6,7 @@
       type="checkbox"
       :name="name"
       :checked="checked"
+      @input="$emit('update:checked', $event.target.checked)"
     />
     <label :for="id" class="custom-control-label">
       <slot />

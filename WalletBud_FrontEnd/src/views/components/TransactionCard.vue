@@ -13,11 +13,12 @@
         </div>
         <div class="me-2 mb-2">
           <!-- search movements -->
-          <material-input id="search" label="Procurar movimentos" />
+          <material-input id="search" label="Procurar movimentos" style='width: 170px;' />
         </div>
         <div class="me-2 mb-2" v-tooltip="'Descarregar'">
           <!-- download transactions file -->
           <MaterialButton
+            style="padding: 10px 10px; line-height: 19px;"
             color="info"
             variant="outline"
             size="md"

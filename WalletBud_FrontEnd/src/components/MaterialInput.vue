@@ -1,5 +1,5 @@
 <template>
-  <div style='width: 170px;'
+  <div
     class="input-group"
     :class="`input-group-${variant} ${getStatus(error, success)}`"
   >

@@ -28,6 +28,7 @@
                     type="email"
                     label="Email"
                     name="email"
+                    @update:value="email = $event"
                   />
                 </div>
                 <div class="mb-3">
@@ -36,6 +37,7 @@
                     type="password"
                     label="Senha"
                     name="password"
+                    @update:value="password = $event"
                   />
                 </div>
                 
@@ -45,6 +47,7 @@
                     variant="gradient"
                     color="info"
                     fullWidth
+                    @click="login"
                     >Entrar</material-button
                   >
                 </div>
@@ -72,13 +75,47 @@ import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
 import { mapMutations } from "vuex";
 
+import { userStore } from "@/store/userStore";
+import { ref } from 'vue';
+import { useRouter } from "vue-router";
+
 export default {
   name: "sign-in",
   components: {
-    //Navbar,
     MaterialInput,
-    //MaterialSwitch,
     MaterialButton,
+  },
+  setup() {
+    const router = useRouter(); 
+    const store = userStore();
+    const email = ref('');
+    const password = ref('');
+    const error = ref(null);
+
+    const login = async () => {
+      //teste
+      //router.push({ name: "Home" });
+
+      const credentials = {
+        email: email.value,
+        password: password.value,
+      };
+
+      try {
+        await store.login(credentials);
+        router.push({ name: "Home" });
+      } catch (err) {
+        error.value = "Credenciais inválidas";
+        console.log(error);
+      }
+
+    }
+    return{
+      email,
+      password,
+      login,
+      error
+    }
   },
   beforeMount() {
     this.toggleEveryDisplay();

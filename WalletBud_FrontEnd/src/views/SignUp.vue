@@ -33,20 +33,24 @@
                     <form role="form">
                       <div class="mb-3">
                         <material-input
+                          
                           id="name"
                           type="text"
                           label="Nome"
                           name="name"
                           size="lg"
+                          @update:value="name = $event"
                         />
                       </div>
                       <div class="mb-3">
                         <material-input
+                          
                           id="email"
                           type="email"
                           label="Email"
                           name="email"
                           size="lg"
+                          @update:value="email = $event"
                         />
                       </div>
                       <div class="mb-3">
@@ -56,12 +60,14 @@
                           label="Senha"
                           name="password"
                           size="lg"
+                          @update:value="password = $event"
                         />
                       </div>
                       <material-checkbox
                         id="flexCheckDefault"
                         class="font-weight-light"
-                        checked
+                        @update:checked="termsAccepted = $event"
+
                       >
                         Eu concordo com os
                         <a
@@ -77,6 +83,7 @@
                           color="info"
                           fullWidth
                           size="lg"
+                          @click="userSignUp"
                           >Registar</material-button
                         >
                       </div>
@@ -103,21 +110,69 @@
 </template>
 
 <script>
-
 import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialCheckbox from "@/components/MaterialCheckbox.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
 const body = document.getElementsByTagName("body")[0];
 import { mapMutations } from "vuex";
+
 import { userStore } from "@/store/userStore";
+import { ref } from 'vue';
+import { useRouter } from "vue-router";
 
 export default {
   name: "sign-up",
   components: {
-    //Navbar,
     MaterialInput,
     MaterialCheckbox,
     MaterialButton,
+  },
+  setup() {
+    const router = useRouter(); 
+    const store = userStore();
+    const email = ref('');
+    const password = ref('');
+    const name = ref('');
+    const termsAccepted = ref(false);
+    const error = ref(null);
+
+    const userSignUp = async () => {
+      //teste
+      //router.push({ name: "SignIn" });
+
+      if (!termsAccepted.value) {
+        error.value = "Tem de aceitar os termos e condições";
+        alert(error.value);
+        return;
+      }
+      
+      error.value = null;
+
+      const newUser = {
+        email: email.value,
+        senha: password.value,  
+        name: name.value,
+      };
+
+      try {
+        await store.registUser(newUser);
+        router.push({ name: "SignIn" });
+      } catch (err) {
+        error.value = "Erro ao registar";
+        alert(error.value);
+      }
+
+      
+    };
+
+    return {
+      email,
+      password,
+      name,
+      termsAccepted,
+      error,
+      userSignUp
+    };
   },
   beforeMount() {
     this.toggleEveryDisplay();
@@ -129,24 +184,8 @@ export default {
     this.toggleHideConfig();
     body.classList.add("bg-gray-100");
   },
-  data() {
-    return {
-      email: "",
-      password: "",
-      name: "",
-      termsAccepted: false,
-    };
-  },
   methods: {
     ...mapMutations(["toggleEveryDisplay", "toggleHideConfig"]),
-    async registerUser(){
-      const user = {
-        email: this.email,
-        password: this.password,
-        name: this.name,
-      };
-      await userStore.registerUser(user);
-    },
   },
 };
 </script>

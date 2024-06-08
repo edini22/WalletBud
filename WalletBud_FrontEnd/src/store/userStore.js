@@ -11,26 +11,57 @@ export const userStore = defineStore('user', {
 
   actions: {
     updateUser(editedUser) {
-        this.name = editedUser.name;
-        this.email = editedUser.email;
-        this.senha = editedUser.senha;
+      this.name = editedUser.name;
+      this.email = editedUser.email;
+      this.senha = editedUser.senha;
     },
-    async Registo(){
-        const response = await fetch('http://localhost:3000/sign-up', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                name: this.name,
-                email: this.email,
-                senha: this.senha,
-            }),
-        });
-        const data = await response.json();
-        this.name = data.name;
-        this.email = data.email;
-        this.senha = data.senha;
+
+    async registUser(newUser){
+      
+      const newUserJSON = JSON.stringify(newUser);
+      //alert(newUserJSON);
+
+      const url = "http://localhost:3000/sign-up";
+      const request = {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: newUserJSON
+      };
+      fetch(url, request)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response not ok");
+            }
+            return response.json();
+        })
+        .then(data => this.users.push(data))
+        .catch(error => console.error("Error adding user", error));
     },
+
+    async logUser(user){
+      const userJSON = JSON.stringify(user);
+      //alert(userJSON);
+
+      const url = "http://localhost:3000/sign-in";
+      const request = {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: userJSON
+      };
+      fetch(url, request)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response not ok");
+            }
+            return response.json();
+        })
+        .then(data => this.users.push(data))
+        .catch(error => console.error("Error adding user", error));
+    },
+
   },
 });

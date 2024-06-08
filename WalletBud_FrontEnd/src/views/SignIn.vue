@@ -102,7 +102,8 @@ export default {
       };
 
       try {
-        await store.login(credentials);
+        await store.logUser(credentials);
+        alert("Login efetuado com sucesso");
         router.push({ name: "Home" });
       } catch (err) {
         error.value = "Credenciais inválidas";

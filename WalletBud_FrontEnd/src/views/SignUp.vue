@@ -145,7 +145,13 @@ export default {
         alert(error.value);
         return;
       }
+      error.value = null;
       
+      if (!email.value || !password.value || !name.value) {
+        error.value = "Preencha todos os campos";
+        alert(error.value);
+        return;
+      }
       error.value = null;
 
       const newUser = {
@@ -156,13 +162,12 @@ export default {
 
       try {
         await store.registUser(newUser);
+        alert("Registado com sucesso");
         router.push({ name: "SignIn" });
       } catch (err) {
         error.value = "Erro ao registar";
         alert(error.value);
       }
-
-      
     };
 
     return {

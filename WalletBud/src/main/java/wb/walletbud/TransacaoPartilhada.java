@@ -40,6 +40,8 @@ public class TransacaoPartilhada {
 	
 	private wb.walletbud.User userId_user;
 	
+	private int confirma = 0;
+	
 	private void setID(int value) {
 		this.ID = value;
 	}
@@ -50,6 +52,14 @@ public class TransacaoPartilhada {
 	
 	public int getORMID() {
 		return getID();
+	}
+	
+	public void setConfirma(int value) {
+		this.confirma = value;
+	}
+	
+	public int getConfirma() {
+		return confirma;
 	}
 	
 	public void setUserId_user(wb.walletbud.User value) {

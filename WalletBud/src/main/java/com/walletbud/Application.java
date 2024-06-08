@@ -1,12 +1,12 @@
-package com.example.walletbud;
+package com.walletbud;
 
 import jakarta.ws.rs.ApplicationPath;
-import jakarta.ws.rs.core.Application;
+
 import java.util.HashSet;
 import java.util.Set;
 
 @ApplicationPath("/api")
-public class HelloApplication extends Application {
+public class Application extends jakarta.ws.rs.core.Application {
 
     @Override
     public Set<Class<?>> getClasses() {
@@ -16,7 +16,6 @@ public class HelloApplication extends Application {
         resources.add(Categoria.class);
         resources.add(register.class);
         resources.add(Utilizador.class);
-        resources.add(HelloResource.class);
         resources.add(AuthenticationFilter.class);
         resources.add(CORSFilter.class);
         return resources;

@@ -1,4 +1,4 @@
-package com.example.walletbud;
+package com.walletbud;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

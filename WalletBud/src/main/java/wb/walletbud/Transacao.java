@@ -59,6 +59,8 @@ public class Transacao {
 	
 	private float value;
 	
+	private float shareValue;
+	
 	private java.sql.Timestamp date;
 	
 	private String descrição;
@@ -67,7 +69,7 @@ public class Transacao {
 	
 	private String tipo;
 	
-	private float shareValue;
+	private boolean status = false;
 	
 	private java.util.Set ORM_comentario = new java.util.HashSet();
 	
@@ -99,6 +101,14 @@ public class Transacao {
 	
 	public float getValue() {
 		return value;
+	}
+	
+	public void setShareValue(float value) {
+		this.shareValue = value;
+	}
+	
+	public float getShareValue() {
+		return shareValue;
 	}
 	
 	public void setDate(java.sql.Timestamp value) {
@@ -139,12 +149,12 @@ public class Transacao {
 		return tipo;
 	}
 	
-	public void setShareValue(float value) {
-		this.shareValue = value;
+	public void setStatus(boolean value) {
+		this.status = value;
 	}
 	
-	public float getShareValue() {
-		return shareValue;
+	public boolean getStatus() {
+		return status;
 	}
 	
 	public void setCategoriaId_categoria(wb.walletbud.Categoria value) {

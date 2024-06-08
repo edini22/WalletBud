@@ -1,4 +1,4 @@
-package com.example.walletbud;
+package com.walletbud;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;

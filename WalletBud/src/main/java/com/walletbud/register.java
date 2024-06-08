@@ -1,5 +1,7 @@
-package com.example.walletbud;
+package com.walletbud;
 
+import beans.stateless.GerirUtilizador;
+import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -11,14 +13,16 @@ import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 
-import wb.walletbud.SystemInterface;
-
 import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Path("/register")
 public class register {
+
+    @EJB
+    private GerirUtilizador gerirUtilizador;
+
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
@@ -59,7 +63,7 @@ public class register {
         }
 
         try {
-            if(SystemInterface.createUser(username, password, email) ){
+            if(gerirUtilizador.createUser(username, password, email) ){
 
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "User registered successfully")

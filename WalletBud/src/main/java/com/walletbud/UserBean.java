@@ -1,4 +1,4 @@
-package com.example.walletbud;
+package com.walletbud;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;

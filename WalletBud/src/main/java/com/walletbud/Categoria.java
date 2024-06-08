@@ -1,7 +1,7 @@
-package com.example.walletbud;
+package com.walletbud;
 
-import jakarta.inject.Inject;
-
+import beans.stateless.GerirCategoria;
+import jakarta.ejb.EJB;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
@@ -9,7 +9,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import wb.walletbud.SystemInterface;
 
 import java.io.StringReader;
 
@@ -18,6 +17,9 @@ public class Categoria {
 
 //    @Inject
 //    private UserBean userBean;
+
+    @EJB
+    private GerirCategoria gerirCategoria;
 
     @POST
     @Path("/add")
@@ -45,7 +47,7 @@ public class Categoria {
             String name = jsonObject.getString("name");
             String tipo = jsonObject.getString("tipo");
 
-            int cond = SystemInterface.createCategoria(name, tipo, email);
+            int cond = gerirCategoria.createCategoria(name, tipo, email);
 
             if(cond == 0){
                 JsonObject jsonResponse = Json.createObjectBuilder()
@@ -93,7 +95,7 @@ public class Categoria {
         String email = JWTUtil.getEmailFromToken(token);
 
         try{
-            JsonObject categorias = SystemInterface.getCategorias(email);
+            JsonObject categorias = gerirCategoria.getCategorias(email);
 
             if (categorias.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
@@ -123,7 +125,7 @@ public class Categoria {
         String email = JWTUtil.getEmailFromToken(token);
         try {
 
-            JsonObject categoria = SystemInterface.getJsonCategoriaById(id,email);
+            JsonObject categoria = gerirCategoria.getJsonCategoriaById(id,email);
 
             if (categoria.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
@@ -163,7 +165,7 @@ public class Categoria {
             int id = jsonObject.getInt("id");
             String name = jsonObject.getString("name");
 
-            int cond = SystemInterface.editCategoria(id, name, email);
+            int cond = gerirCategoria.editCategoria(id, name, email);
 
             if(cond == 0){
                 JsonObject jsonResponse = Json.createObjectBuilder()

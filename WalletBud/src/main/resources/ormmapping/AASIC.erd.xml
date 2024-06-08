@@ -37,6 +37,17 @@
       <Index>false</Index>
       <UserTypes/>
     </Column>
+    <Column name="Confirma">
+      <PrimaryKey>false</PrimaryKey>
+      <ForeignKey>false</ForeignKey>
+      <Type>9</Type>
+      <Length>10</Length>
+      <Nullable>false</Nullable>
+      <IDGenerator>native</IDGenerator>
+      <Unique>false</Unique>
+      <Index>false</Index>
+      <UserTypes/>
+    </Column>
   </Entity>
   <Entity name="User" Unlogged="false" PKClustered="0" Temporal="false" TemporalStartTimeColumn="null" TemporalEndTimeColumn="null" TemporalHistoryTable="null">
     <Column name="Id_user">
@@ -164,6 +175,17 @@
       <Index>false</Index>
       <UserTypes/>
     </Column>
+    <Column name="ShareValue">
+      <PrimaryKey>false</PrimaryKey>
+      <ForeignKey>false</ForeignKey>
+      <Type>4</Type>
+      <Length>0</Length>
+      <Nullable>false</Nullable>
+      <IDGenerator>native</IDGenerator>
+      <Unique>false</Unique>
+      <Index>false</Index>
+      <UserTypes/>
+    </Column>
     <Column name="Date">
       <PrimaryKey>false</PrimaryKey>
       <ForeignKey>false</ForeignKey>
@@ -208,17 +230,6 @@
       <Index>false</Index>
       <UserTypes/>
     </Column>
-    <Column name="DataTransacao">
-      <PrimaryKey>false</PrimaryKey>
-      <ForeignKey>false</ForeignKey>
-      <Type>22</Type>
-      <Length>0</Length>
-      <Nullable>true</Nullable>
-      <IDGenerator>native</IDGenerator>
-      <Unique>false</Unique>
-      <Index>false</Index>
-      <UserTypes/>
-    </Column>
     <Column name="Repeticao">
       <PrimaryKey>false</PrimaryKey>
       <ForeignKey>false</ForeignKey>
@@ -241,11 +252,11 @@
       <Index>false</Index>
       <UserTypes/>
     </Column>
-    <Column name="ShareValue">
+    <Column name="Status">
       <PrimaryKey>false</PrimaryKey>
       <ForeignKey>false</ForeignKey>
-      <Type>4</Type>
-      <Length>0</Length>
+      <Type>1</Type>
+      <Length>1</Length>
       <Nullable>false</Nullable>
       <IDGenerator>native</IDGenerator>
       <Unique>false</Unique>

@@ -24,6 +24,7 @@ public class TransacaoPartilhadaCriteria extends AbstractORMCriteria {
 	public final AssociationExpression usertransacaoId;
 	public final IntegerExpression userId_userId;
 	public final AssociationExpression userId_user;
+	public final IntegerExpression confirma;
 	
 	public TransacaoPartilhadaCriteria(Criteria criteria) {
 		super(criteria);
@@ -32,6 +33,7 @@ public class TransacaoPartilhadaCriteria extends AbstractORMCriteria {
 		usertransacaoId = new AssociationExpression("usertransacaoId", this);
 		userId_userId = new IntegerExpression("userId_user.id_user", this);
 		userId_user = new AssociationExpression("userId_user", this);
+		confirma = new IntegerExpression("confirma", this);
 	}
 	
 	public TransacaoPartilhadaCriteria(PersistentSession session) {

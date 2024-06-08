@@ -1,6 +1,7 @@
-package com.example.walletbud;
+package com.walletbud;
 
-import jakarta.inject.Inject;
+import beans.stateless.GerirUtilizador;
+import jakarta.ejb.EJB;
 
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
@@ -8,7 +9,6 @@ import jakarta.json.JsonReader;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import wb.walletbud.SystemInterface;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -20,8 +20,8 @@ import java.io.StringReader;
 @Path("/login")
 public class login {
 
-//    @Inject
-//    private UserBean userBean;
+    @EJB
+    private GerirUtilizador gerirUtilizador;
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -38,7 +38,7 @@ public class login {
         String password = jsonObject.getString("password");
 
         try {
-            int cond = SystemInterface.verifyUser(email,password);
+            int cond = gerirUtilizador.verifyUser(email,password);
             if (cond == 0){
                 // Gerar token JWT
                 String token = generateToken(email);
@@ -47,8 +47,6 @@ public class login {
                         .add("token", token)
                         .build();
 
-//                // Armazenar email no UserBean
-//                userBean.setEmail(email);
                 System.out.println(jsonResponse.toString());
                 return Response.status(Response.Status.OK)
                         .entity(jsonResponse.toString())

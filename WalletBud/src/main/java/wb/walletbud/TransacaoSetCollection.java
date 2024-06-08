@@ -73,11 +73,12 @@ public class TransacaoSetCollection extends org.orm.util.ORMSet {
 	 * <li>id_transacao</li>
 	 * <li>name</li>
 	 * <li>value</li>
+	 * <li>shareValue</li>
 	 * <li>date</li>
 	 * <li>descrição</li>
 	 * <li>local</li>
 	 * <li>tipo</li>
-	 * <li>shareValue</li>
+	 * <li>status</li>
 	 * </ul>
 	 * @return The persistent objects sorted array
 	 */
@@ -91,11 +92,12 @@ public class TransacaoSetCollection extends org.orm.util.ORMSet {
 	 * <li>id_transacao</li>
 	 * <li>name</li>
 	 * <li>value</li>
+	 * <li>shareValue</li>
 	 * <li>date</li>
 	 * <li>descrição</li>
 	 * <li>local</li>
 	 * <li>tipo</li>
-	 * <li>shareValue</li>
+	 * <li>status</li>
 	 * </ul>
 	 * @param ascending true for ascending, false for descending
 	 * @return The persistent objects sorted array

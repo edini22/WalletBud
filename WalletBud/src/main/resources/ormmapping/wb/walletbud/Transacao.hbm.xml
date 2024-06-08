@@ -17,6 +17,7 @@ License Type: Evaluation
 		</many-to-one>
 		<property name="name" column="Name" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="value" column="Value" type="float" not-null="true" lazy="false"/>
+		<property name="shareValue" column="ShareValue" type="float" not-null="true" lazy="false"/>
 		<property name="date" column="`Date`" type="timestamp" not-null="false" lazy="false"/>
 		<property name="descrição" column="Descrição" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="local" column="Local" type="string" length="255" not-null="false" lazy="false"/>
@@ -25,7 +26,7 @@ License Type: Evaluation
 				receita ou despesa
 			</meta>
 		</property>
-		<property name="shareValue" column="ShareValue" type="float" not-null="true" lazy="false"/>
+		<property name="status" column="Status" type="boolean" length="1" not-null="true" lazy="false"/>
 		<set name="ORM_Comentario" lazy="true" cascade="save-update,lock" inverse="true">
 			<key column="TransacaoId_transacao" not-null="true"/>
 			<one-to-many class="wb.walletbud.Comentario"/>
@@ -35,7 +36,6 @@ License Type: Evaluation
 			<one-to-many class="wb.walletbud.TransacaoPartilhada"/>
 		</set>
 		<subclass name="wb.walletbud.Fixa" discriminator-value="Fixa" lazy="false">
-			<property name="dataTransacao" column="DataTransacao" type="timestamp" not-null="false" lazy="false"/>
 			<property name="repeticao" column="Repeticao" type="integer" length="10" not-null="false" lazy="false"/>
 			<set name="ORM_Fixa" lazy="true" cascade="save-update,lock" inverse="true">
 				<key column="TransacaoId_transacao" not-null="true"/>

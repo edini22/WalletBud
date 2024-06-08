@@ -24,6 +24,7 @@ public class TransacaoPartilhadaDetachedCriteria extends AbstractORMDetachedCrit
 	public final AssociationExpression usertransacaoId;
 	public final IntegerExpression userId_userId;
 	public final AssociationExpression userId_user;
+	public final IntegerExpression confirma;
 	
 	public TransacaoPartilhadaDetachedCriteria() {
 		super(wb.walletbud.TransacaoPartilhada.class, wb.walletbud.TransacaoPartilhadaCriteria.class);
@@ -32,6 +33,7 @@ public class TransacaoPartilhadaDetachedCriteria extends AbstractORMDetachedCrit
 		usertransacaoId = new AssociationExpression("usertransacaoId", this.getDetachedCriteria());
 		userId_userId = new IntegerExpression("userId_user.id_user", this.getDetachedCriteria());
 		userId_user = new AssociationExpression("userId_user", this.getDetachedCriteria());
+		confirma = new IntegerExpression("confirma", this.getDetachedCriteria());
 	}
 	
 	public TransacaoPartilhadaDetachedCriteria(DetachedCriteria aDetachedCriteria) {
@@ -41,6 +43,7 @@ public class TransacaoPartilhadaDetachedCriteria extends AbstractORMDetachedCrit
 		usertransacaoId = new AssociationExpression("usertransacaoId", this.getDetachedCriteria());
 		userId_userId = new IntegerExpression("userId_user.id_user", this.getDetachedCriteria());
 		userId_user = new AssociationExpression("userId_user", this.getDetachedCriteria());
+		confirma = new IntegerExpression("confirma", this.getDetachedCriteria());
 	}
 	
 	public wb.walletbud.TransacaoDetachedCriteria createUsertransacaoIdCriteria() {

@@ -1,12 +1,14 @@
-package com.example.walletbud;
+package com.walletbud;
 
 
+import beans.stateless.GerirFixa;
+import beans.stateless.GerirUnica;
+import jakarta.ejb.EJB;
 import jakarta.json.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import wb.walletbud.SystemInterface;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -14,14 +16,21 @@ import java.time.format.DateTimeFormatter;
 
 import java.io.StringReader;
 
-@Path("/unica")
+@Path("/{transacao}")
 public class Unica {
+
+    @EJB
+    private GerirUnica gerirUnica;
+
+    @EJB
+    private GerirFixa gerirFixa;
+
     @POST
     @Path("/{tipo}/add")
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addUnicaUser(@PathParam("tipo") String tipo,String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response addUnicaUser(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -40,8 +49,23 @@ public class Unica {
             
             String value_str = jsonObject.getString("value");
             float value = Float.parseFloat(value_str);
+            int cond = - 1;
 
-            int cond = SystemInterface.createUnica(name, value, descricao, local, tipo, IdCategoria, timestamp,email);
+            if(transacao.equals("fixa")){
+                int repeticao = jsonObject.getInt("repeticao");
+
+                cond = gerirFixa.createFixa(name, value, descricao, local, tipo, IdCategoria, timestamp, repeticao,email);
+            } else if(transacao.equals("unica")){
+                cond = gerirUnica.createUnica(name, value, descricao, local, tipo, IdCategoria, timestamp,email);
+            } else{
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Tipo de Transacao nao existe!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
 
             if(cond == 0){
                 JsonObject jsonResponse = Json.createObjectBuilder()
@@ -98,7 +122,7 @@ public class Unica {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response setUnicaUser(@PathParam("tipo") String tipo,String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response setUnicaUser(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -130,7 +154,24 @@ public class Unica {
             if (value_str != null) value = Float.parseFloat(value_str);
             else value = -1;
 
-            int cond = SystemInterface.editUnica(IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp,email);
+            int cond = - 1;
+
+            if(transacao.equals("fixa")){
+                int repeticao;
+                try {repeticao = jsonObject.getInt("repeticao");} catch (java.lang.NullPointerException en) {repeticao = -1;}
+
+                cond = gerirFixa.editFixa(IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp,repeticao,email);
+            } else if(transacao.equals("unica")){
+                cond = gerirUnica.editUnica(IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp,email);
+            } else{
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Tipo de Transacao nao existe!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
 
             if(cond == 0){
                 JsonObject jsonResponse = Json.createObjectBuilder()
@@ -186,12 +227,25 @@ public class Unica {
     @Path("/{tipo}/list")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listUnicasUser(@PathParam("tipo") String tipo,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listUnicasUser(@PathParam("transacao") String transacao,@PathParam("tipo") String tipo,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
         try{
-            JsonObject unicas = SystemInterface.getUnicas(email, tipo);
+            JsonObject unicas;
+            if(transacao.equals("fixa")){
+                unicas = gerirFixa.getFixas(email, tipo);
+            } else if(transacao.equals("unica")){
+                unicas = gerirUnica.getUnicas(email, tipo);
+            } else{
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Tipo de Transacao nao existe!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
 
             if (unicas.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
@@ -216,12 +270,24 @@ public class Unica {
     @Path("/{tipo}/get/{id}")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUnica(@PathParam("tipo") String tipo,@PathParam("id") int id, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response getUnica(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,@PathParam("id") int id, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
         try {
-
-            JsonObject unica = SystemInterface.getJsonUnicaById(id,email,tipo);
+            JsonObject unica;
+            if(transacao.equals("fixa")){
+                unica = gerirFixa.getJsonFixaById(id,email,tipo);
+            } else if(transacao.equals("unica")){
+                unica = gerirUnica.getJsonUnicaById(id,email,tipo);
+            } else{
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Tipo de Transacao nao existe!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
 
             if (unica.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
@@ -245,7 +311,7 @@ public class Unica {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response shareUnicaUser(String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response shareUnicaUser(@PathParam("transacao") String transacao, String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -262,9 +328,20 @@ public class Unica {
 
                 System.out.println("User Email: " + userEmail);
             }
-
-
-            int cond = SystemInterface.shareUnica(IdTransacao, usersArray, email);
+            int cond;
+            if(transacao.equals("fixa")){
+                cond = gerirFixa.shareFixa(IdTransacao, usersArray, email);
+            } else if(transacao.equals("unica")){
+                cond = gerirUnica.shareUnica(IdTransacao, usersArray, email);
+            } else{
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Tipo de Transacao nao existe!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
 
             if(cond == 0){
                 JsonObject jsonResponse = Json.createObjectBuilder()

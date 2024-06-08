@@ -1,15 +1,19 @@
-package com.example.walletbud;
+package com.walletbud;
 
+import jakarta.ejb.EJB;
+import beans.stateless.GerirUtilizador;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import wb.walletbud.SystemInterface;
 
 @Path("/user")
 public class Utilizador {
+
+    @EJB
+    private GerirUtilizador gerirUtilizador;
 
     @GET
     @Secured
@@ -19,7 +23,7 @@ public class Utilizador {
         String email = JWTUtil.getEmailFromToken(token);
 
         try{
-            JsonObject user = SystemInterface.getJsonUserInfo(email);
+            JsonObject user = gerirUtilizador.getJsonUserInfo(email);
 
             if (user.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
@@ -48,7 +52,7 @@ public class Utilizador {
         String email = JWTUtil.getEmailFromToken(token);
 
         try{
-            JsonObject user = SystemInterface.getJsonUserInfo(email_user);
+            JsonObject user = gerirUtilizador.getJsonUserInfo(email_user);
 
             if (user.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()

@@ -26,11 +26,12 @@ public class UnicaCriteria extends AbstractORMCriteria {
 	public final AssociationExpression categoriaId_categoria;
 	public final StringExpression name;
 	public final FloatExpression value;
+	public final FloatExpression shareValue;
 	public final TimestampExpression date;
 	public final StringExpression descrição;
 	public final StringExpression local;
 	public final StringExpression tipo;
-	public final FloatExpression shareValue;
+	public final BooleanExpression status;
 	public final CollectionExpression comentario;
 	public final CollectionExpression transacao;
 	
@@ -43,11 +44,12 @@ public class UnicaCriteria extends AbstractORMCriteria {
 		categoriaId_categoria = new AssociationExpression("categoriaId_categoria", this);
 		name = new StringExpression("name", this);
 		value = new FloatExpression("value", this);
+		shareValue = new FloatExpression("shareValue", this);
 		date = new TimestampExpression("date", this);
 		descrição = new StringExpression("descrição", this);
 		local = new StringExpression("local", this);
 		tipo = new StringExpression("tipo", this);
-		shareValue = new FloatExpression("shareValue", this);
+		status = new BooleanExpression("status", this);
 		comentario = new CollectionExpression("ORM_Comentario", this);
 		transacao = new CollectionExpression("ORM_Transacao", this);
 	}

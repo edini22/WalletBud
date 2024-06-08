@@ -254,7 +254,7 @@ export default {
       } else {
         passwordError.value = false;
       }
-      alert("passdone" + passwordError.value)
+      // alert("passdone" + passwordError.value)
 
       if (!isValid) {
         error.value = "Preencha todos os campos";
@@ -269,17 +269,26 @@ export default {
 
       const newUser = {
         email: email.value,
-        senha: password.value,  
-        name: name.value,
+        password: password.value,  
+        username: name.value,
       };
 
       try {
         await store.registUser(newUser);
+        // Se o registro for bem-sucedido, você pode mostrar uma mensagem ou redirecionar se necessário
         alert("Registado com sucesso");
-        router.push({ name: "SignIn" });
-      } catch (err) {
-        error.value = "Erro ao registar";
-        alert(error.value);
+        router.push({ name: "SignIn" }); // Redireciona para a página de login após registro
+      } catch (error) {
+        // Tratamento de erro específico para "Email Já registado!"
+        if (error.message === "Email Já registado!") {
+          alert("Este email já está registado. Utilize outro email.");
+          // Lógica adicional para manter o usuário na mesma página ou mostrar mensagem de erro
+        } else if (error.message === "Email address is invalid") {
+          alert("Email address is invalid");
+          // Lógica adicional para manter o usuário na mesma página ou mostrar mensagem de erro
+        } else {
+          alert("Erro ao registar: " + error.message);
+        }
       }
     };
 

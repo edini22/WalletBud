@@ -47,7 +47,7 @@
                     variant="gradient"
                     color="info"
                     fullWidth
-                    @click="login"
+                    @click.prevent="login"
                     >Entrar</material-button
                   >
                 </div>
@@ -94,7 +94,7 @@ export default {
 
     const login = async () => {
       //teste
-      //router.push({ name: "Home" });
+      // router.push({ name: "Home" });
 
       const credentials = {
         email: email.value,
@@ -106,8 +106,7 @@ export default {
         alert("Login efetuado com sucesso");
         router.push({ name: "Home" });
       } catch (err) {
-        error.value = "Credenciais inválidas";
-        console.log(error);
+        alert(err.message);
       }
 
     }

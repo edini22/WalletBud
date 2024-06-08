@@ -4,63 +4,84 @@ import { defineStore } from "pinia";
 export const userStore = defineStore('user', {
   state: () => ({
     //user que está logged
-    name: 'teste',
-    email: 'teste@teste.com',
-    senha: '123456',
+    username: '',
+    email: '',
+    password: '',
   }),
 
   actions: {
     updateUser(editedUser) {
-      this.name = editedUser.name;
+      this.username = editedUser.name;
       this.email = editedUser.email;
-      this.senha = editedUser.senha;
+      this.password = editedUser.senha;
     },
 
     async registUser(newUser){
       
       const newUserJSON = JSON.stringify(newUser);
-      //alert(newUserJSON);
-
-      const url = "http://localhost:3000/sign-up";
+      const url = "http://localhost:8080/WalletBud-1.0-SNAPSHOT/api/register";
       const request = {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: newUserJSON
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: newUserJSON
       };
-      fetch(url, request)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response not ok");
-            }
-            return response.json();
-        })
-        .then(data => this.users.push(data))
-        .catch(error => console.error("Error adding user", error));
+
+      const response = await fetch(url, request);
+      
+      // Verifica se a resposta não é OK
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Network response was not ok');
+      }
+
+      const data = await response.json();
+      if (data.message === "Email Já registado!") {
+        throw new Error("Email Já registado!");
+      } else if (data.message === "Email address is invalid") {
+        throw new Error("Email address is invalid");
+      }
+
+      // Adiciona o novo usuário aos dados do store (se necessário)
+      this.users.push(data); // Não sei se você precisa disso aqui
+
+      return data; // Retorna os dados do usuário registrado (se necessário)
+      
     },
 
-    async logUser(user){
-      const userJSON = JSON.stringify(user);
-      //alert(userJSON);
-
-      const url = "http://localhost:3000/sign-in";
+    async logUser(user) {
+    const newUserJSON = JSON.stringify(user);
+      const url = "http://localhost:8080/WalletBud-1.0-SNAPSHOT/api/login";
       const request = {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: userJSON
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: newUserJSON
       };
-      fetch(url, request)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response not ok");
-            }
-            return response.json();
-        })
-        .then(data => this.users.push(data))
-        .catch(error => console.error("Error adding user", error));
+
+      const response = await fetch(url, request);
+      
+      // Verifica se a resposta não é OK
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message );
+      }
+
+      const data = await response.json();
+      // if (data.message === "password does not match!") {
+      //   throw new Error("password does not match!");
+      // } else if (data.message === "Email does not exist!") {
+      //   throw new Error("Email does not exist!");
+      // }
+
+      if(data.token){
+        localStorage.setItem('token', data.token);
+      }
+
+      return data; // Retorna os dados do usuário registrado (se necessário)
+      
     },
 
   },

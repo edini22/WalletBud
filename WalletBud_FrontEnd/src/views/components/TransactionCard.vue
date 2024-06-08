@@ -5,7 +5,6 @@
         <div class="me-2 mb-2">
           <!-- time period-->
           <MaterialDropdown :on-click='changeFilter' :items='time_periods' v-model:selected="activeFilter" />
-
         </div>
         <div class="me-2 mb-2">
           <!-- filter by category or/and type -->
@@ -15,22 +14,11 @@
           <!-- search movements -->
           <material-input id="search" label="Procurar movimentos" style='width: 170px;' />
         </div>
-        <div class="me-2 mb-2" v-tooltip="'Descarregar'">
+        <div class="me-2 mt-2" v-tooltip="'Exportar'">
           <!-- download transactions file -->
-          <MaterialButton
-            style="padding: 10px 10px; line-height: 19px;"
-            color="info"
-            variant="outline"
-            size="md"
-            :active="true"
-            @click="downloadTransactions"
-            
-          >
-          <i class="material-icons">file_download</i>
-          </MaterialButton>
+          <ExportData />
         </div>
       </div>
-
       <div class="row mt-3 mb-0">
         <div class="col-md-6">
           <h6 class="mb-0">Movimentos</h6>
@@ -40,7 +28,6 @@
           <small>01 - 30 Abril 2024</small>
         </div>
       </div>
-
     </div>
     <div class="card-body pt-2 p-3 pb-1">
       <ul class="list-group">
@@ -90,6 +77,7 @@ import { useTransactionStore } from '@/store/transactionStore.js';
 import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialDropdown from "@/components/MaterialDropdown.vue";
 import MaterialFilter from "@/components/MaterialFilter.vue";
+import ExportData from '@/components/ExportData.vue';
 
 export default {
   name: "transaction-card",
@@ -100,6 +88,7 @@ export default {
     MaterialInput,
     MaterialDropdown,
     MaterialFilter,
+    ExportData,
   },
   data() {
     return {

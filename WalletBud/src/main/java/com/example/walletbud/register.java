@@ -35,6 +35,8 @@ public class register {
         JsonObject jsonObject = reader.readObject();
         reader.close();
 
+        System.out.println("Received JSON: " + jsonObject.toString());
+
         String username = jsonObject.getString("username");
         String password = jsonObject.getString("password");
         String email = jsonObject.getString("email");

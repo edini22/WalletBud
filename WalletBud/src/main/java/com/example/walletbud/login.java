@@ -32,6 +32,8 @@ public class login {
         JsonObject jsonObject = reader.readObject();
         reader.close();
 
+        System.out.println("Received JSON: " + jsonObject.toString());
+
         String email = jsonObject.getString("email");
         String password = jsonObject.getString("password");
 
@@ -47,7 +49,7 @@ public class login {
 
 //                // Armazenar email no UserBean
 //                userBean.setEmail(email);
-
+                System.out.println(jsonResponse.toString());
                 return Response.status(Response.Status.OK)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -57,7 +59,7 @@ public class login {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "password does not match!")
                         .build();
-
+                System.out.println(jsonResponse.toString());
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -66,7 +68,7 @@ public class login {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email does not exist!")
                         .build();
-
+                System.out.println(jsonResponse.toString());
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)

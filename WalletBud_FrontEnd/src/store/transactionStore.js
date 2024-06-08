@@ -10,7 +10,8 @@ export const useTransactionStore = defineStore('transaction', {
                 date: '27 Abril 2024',
                 description: 'Livro sobre JavaScript',
                 local: 'LivroStore',
-                tipo: 'Despesa'
+                tipo: 'Despesa',
+                categoria: 'Alimentação'
             },
             {
                 id: 2,
@@ -19,7 +20,8 @@ export const useTransactionStore = defineStore('transaction', {
                 date: '23 Abril 2024',
                 description: 'Conta de luz',
                 local: 'Empresa de Energia',
-                tipo: 'Receita'
+                tipo: 'Receita',
+                categoria: 'Saúde'
             },
             {
                 id: 3,
@@ -28,7 +30,8 @@ export const useTransactionStore = defineStore('transaction', {
                 date: '20 Abril 2024',
                 description: 'Depósito salário',
                 local: 'Banco XPTO',
-                tipo: 'Despesa'
+                tipo: 'Despesa',
+                categoria: 'Pessoal'
             },
             {
                 id: 4,
@@ -37,7 +40,8 @@ export const useTransactionStore = defineStore('transaction', {
                 date: '15 Abril 2024',
                 description: 'Roupas de verão',
                 local: 'Fashion Store',
-                tipo: 'Despesa'
+                tipo: 'Despesa',
+                categoria: 'Pessoal'
             },
             {
                 id: 5,
@@ -46,7 +50,8 @@ export const useTransactionStore = defineStore('transaction', {
                 date: '30 Maio 2024',
                 description: 'Salário mensal',
                 local: 'Empresa XYZ',
-                tipo: 'Receita'
+                tipo: 'Receita',
+                categoria: 'Renda'
             },
             {
                 id: 6,
@@ -55,7 +60,8 @@ export const useTransactionStore = defineStore('transaction', {
                 date: '05 Maio 2024',
                 description: 'Aluguel do apartamento',
                 local: 'Imobiliária ABC',
-                tipo: 'Despesa'
+                tipo: 'Despesa',
+                categoria: 'Pessoal'
             }
         ]
     }),

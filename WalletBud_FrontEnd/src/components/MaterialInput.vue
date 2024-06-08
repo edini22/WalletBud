@@ -1,5 +1,5 @@
 <template>
-  <div
+  <div style='width: 170px;'
     class="input-group"
     :class="`input-group-${variant} ${getStatus(error, success)}`"
   >
@@ -7,7 +7,7 @@
     <input
       :id="id"
       :type="type"
-      class="form-control"
+      class="form-control color"
       :class="getClasses(size)"
       :name="name"
       :value="value"
@@ -102,3 +102,14 @@ export default {
   },
 };
 </script>
+
+
+<style>
+.color {
+  border-color: #1a73e8 !important;
+}
+
+.material-input .input-group input::placeholder {
+  color: #1a73e8 !important;
+}
+</style>

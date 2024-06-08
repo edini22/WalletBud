@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-lg-3 col-md-6 col-sm-6">
             <mini-statistics-card
-              :title="{ text: 'Saldo Atual', value: '$53k' }"
+              :title="{ text: 'Saldo Atual', value: 'user.saldo' }"
               :icon="{
                 name: 'account_balance_wallet',
                 color: 'text-white',
@@ -15,8 +15,10 @@
           </div>
           <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
             <mini-statistics-card
-              :title="{ text: 'Today\'s Users', value: '2,300' }"
+              :title="{ text: 'Objetivo Poupança', value: '2,300' }"
               show="true"
+              btn_color="btn-outline-primary"
+              btn_text="Definir objetivo"
               :icon="{
                 name: 'savings',
                 color: 'text-white',
@@ -26,7 +28,10 @@
           </div>
           <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
             <mini-statistics-card
-              :title="{ text: 'Sales', value: '$103,430' }"
+              :title="{ text: 'Movimentos' }"
+              show="true"
+              btn_color="bg-gradient-dark"
+              btn_text="+ Adicionar Movimento"
               :icon="{
                 name: 'post_add',
                 color: 'text-white',
@@ -35,8 +40,8 @@
             />
           </div>
         </div>
-        <div class="row mt-4">
-          <div class="col-lg-4 col-md-6 mt-4">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
             <chart-holder-card
               title="Gasto Semanal"
               subtitle="Gasto por dia na semana passada"
@@ -54,7 +59,7 @@
             </chart-holder-card>
           </div>
 
-          <div class="col-md-5">
+          <div class="col-md-8 col-md-2 mt-4">
             <transaction-card />
           </div>
 
@@ -71,6 +76,8 @@ import ReportsBarChart from "@/examples/Charts/ReportsBarChart.vue";
 import MiniStatisticsCard from "./components/MiniStatisticsCard.vue";
 import TransactionCard from "./components/TransactionCard.vue";
 
+// import { useUserStore } from '@/store/userStore.js';
+
 export default {
   name: "home",
   data() {
@@ -82,6 +89,12 @@ export default {
     ReportsBarChart,
     MiniStatisticsCard,
     TransactionCard,
+  },
+  computed: {
+    /* user(){
+      const uStore = useUserStore();
+      return uStore.user;
+    }*/
   },
 };
 

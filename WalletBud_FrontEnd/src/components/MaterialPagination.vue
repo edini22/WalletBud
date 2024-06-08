@@ -10,7 +10,7 @@ export default {
   props: {
     color: {
       type: String,
-      default: "success",
+      default: "info",
     },
     size: {
       type: String,

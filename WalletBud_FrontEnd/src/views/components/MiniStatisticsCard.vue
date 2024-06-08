@@ -12,7 +12,7 @@
           >{{ icon.name }}</i
         >
       </div>
-      <div class="pt-1 text-end">
+      <div class="pt-1 text-end size" >
         <p class="text-sm mb-0 text-capitalize">{{ title.text }}</p>
         <h4 class="mb-0">{{ title.value }}</h4>
       </div>
@@ -20,7 +20,7 @@
     <hr class="dark horizontal my-0" />
     <div class="card-footer p-3 size">
       <p v-if="!show"></p>
-      <button class="btn mb-0 btn-outline-primary btn-sm null null" v-if="show">Definir objetivo</button>
+      <button class="btn mb-0 btn-sm null null" :class="btn_color" v-if="show">{{ btn_text }}</button>
     </div>
   </div>
 </template>
@@ -62,6 +62,12 @@ export default {
     show: {
       type: Boolean,
       default: false,
+    },
+    btn_color: {
+      type: String,
+    },
+    btn_text: {
+      type: String,
     }
   },
   computed: {

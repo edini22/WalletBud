@@ -24,9 +24,9 @@
           </div>
 
           <strong class="text-dark">{{ $t('Nome') }}:</strong>
-          <span v-if="!editMode">{{ name }} </span>
-          <input v-else-if="showErrorNome" class="input-error" v-model="editedInfo.name" />
-          <input v-else v-model="editedInfo.name" class="full_width1"/>
+          <span v-if="!editMode">{{ username }} </span>
+          <input v-else-if="showErrorNome" class="input-error" v-model="editedInfo.username" />
+          <input v-else v-model="editedInfo.username" class="full_width1"/>
         </li>
 
         <li class="text-sm border-0 list-group-item ps-0">
@@ -86,15 +86,15 @@ export default {
     const store = userStore();
 
     // Definindo as propriedades da store como ref
-    const name = ref('');
+    const username = ref('');
     const email = ref('');
-    const senha = ref('');
+    const password = ref('');
 
     // Verificar se a store está definida antes de atribuir seus valores
     if (store) {
-      name.value = store.name;
+      username.value = store.username;
       email.value = store.email;
-      senha.value = store.senha;
+      password.value = store.password;
     }
 
     const editMode = ref(false);
@@ -102,26 +102,26 @@ export default {
     const showError2 = ref(false);
     const showErrorNome = ref(false);
     const showErrorEmail = ref(false);
-    const editedInfo = ref({ name: '' , email: '', senha: ''});
+    const editedInfo = ref({ username: '' , email: '', password: ''});
 
-    const maskPassword = computed(() => '*'.repeat(senha.value.length));
+    const maskPassword = computed(() => '*'.repeat(password.value.length));
 
     const editProfile = () => {
       editMode.value = true;
       editedInfo.value.senha1 = maskPassword.value;
       editedInfo.value.senha2 = maskPassword.value;
-      editedInfo.value.name = name.value;
+      editedInfo.value.username = username.value;
       editedInfo.value.email = email.value;
     };
 
     const saveChanges = () => {
       if(checkUsername() && checkEmail() && checkPasswordsMatch()){
-        senha.value = editedInfo.value.senha1;
+        password.value = editedInfo.value.senha1;
         editedInfo.value.senha1 = '';
         editedInfo.value.senha2 = '';
 
         email.value = editedInfo.value.email;
-        name.value = editedInfo.value.name;
+        username.value = editedInfo.value.username;
         
         store.updateUser(editedInfo.value);
         editMode.value = false; 
@@ -138,7 +138,7 @@ export default {
     };
 
     const checkUsername = () => {
-      if(editedInfo.value.name.length == 0){
+      if(editedInfo.value.username.length == 0){
         showErrorNome.value = true;
         return false;
       }
@@ -175,7 +175,7 @@ export default {
       maskPassword,
       editProfile,
       saveChanges,
-      name,
+      username,
       email,
     };
   },

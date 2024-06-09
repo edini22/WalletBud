@@ -21,8 +21,30 @@
               </div>
             </div>
             <div class="card-body">
-              <form role="form" class="text-start mt-3">
-                <div class="mb-3">
+
+              <!--Email---->
+              <form  role="form" class="text-start mt-3">
+                <div v-if="emailError === true" class="mb-3">
+                  <material-input
+                    id="email"
+                    type="email"
+                    label="Email"
+                    name="email"
+                    @update:value="email = $event"
+                    error
+                  />
+                </div>
+                <div v-if="emailError === false" class="mb-3">
+                  <material-input
+                    id="email"
+                    type="email"
+                    name="email"
+                    :value="email"
+                    @update:value="email = $event"
+                    success
+                  />
+                </div>
+                <div v-if="emailError === null" class="mb-3">
                   <material-input
                     id="email"
                     type="email"
@@ -31,7 +53,30 @@
                     @update:value="email = $event"
                   />
                 </div>
-                <div class="mb-3">
+
+                <!--Password---->
+                <div v-if="passwordError === true" class="mb-3">
+                  <material-input
+                    id="password"
+                    type="password"
+                    label="Senha"
+                    name="password"
+                    @update:value="password = $event"
+                    error
+                  />
+                </div>
+                <div v-if="passwordError === false" class="mb-3">
+                  <material-input
+                    id="password"
+                    type="password"
+                    
+                    name="password"
+                    :value="password"
+                    @update:value="password = $event"
+                    success
+                  />
+                </div>
+                <div v-if="passwordError === null" class="mb-3">
                   <material-input
                     id="password"
                     type="password"
@@ -91,10 +136,25 @@ export default {
     const email = ref('');
     const password = ref('');
     const error = ref(null);
+    const emailError = ref(null);
+    const passwordError = ref(null);
 
     const login = async () => {
       //teste
       // router.push({ name: "Home" });
+
+      if (!email.value) {
+        emailError.value = true;
+
+      } else {
+        emailError.value = false;
+      }
+
+      if (!password.value) {
+        passwordError.value = true;
+      } else {
+        passwordError.value = false;
+      }
 
       const credentials = {
         email: email.value,
@@ -114,7 +174,9 @@ export default {
       email,
       password,
       login,
-      error
+      error,
+      emailError,
+      passwordError
     }
   },
   beforeMount() {

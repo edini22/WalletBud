@@ -4,9 +4,9 @@ import { defineStore } from "pinia";
 export const userStore = defineStore('user', {
   state: () => ({
     //user que está logged
-    username: '',
-    email: '',
-    password: '',
+    username: 'teste',
+    email: 'teste@teste',
+    password: '123456',
   }),
 
   actions: {
@@ -79,6 +79,10 @@ export const userStore = defineStore('user', {
       if(data.token){
         localStorage.setItem('token', data.token);
       }
+
+      // Adiciona o novo usuário aos dados do store (se necessário)
+      //this.users.push(data); 
+
 
       return data; // Retorna os dados do usuário registrado (se necessário)
       

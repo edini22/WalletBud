@@ -12,7 +12,15 @@
         </div>
         <div class="me-2 mb-2">
           <!-- search movements -->
-          <material-input id="search" label="Procurar movimentos" style='width: 170px;' />
+          <div class="input-group input-group-outline" 
+              :class="{'is-focused': isFocused}"
+              >
+            <label class="form-label">Procurar movimentos</label>
+            <input class="form-control form-control-default" id="search"
+              style='width: 170px;' v-model="searchQuery"
+              @focus="handleFocus" @blur="handleBlur"/>
+          </div>
+
         </div>
         <div class="me-2 mt-2" v-tooltip="'Exportar'">
           <!-- download transactions file -->
@@ -74,7 +82,6 @@ import MaterialButton from "@/components/MaterialButton.vue";
 import MaterialPagination from "@/components/MaterialPagination.vue";
 import MaterialPaginationItem from "@/components/MaterialPaginationItem.vue";
 import { useTransactionStore } from '@/store/transactionStore.js';
-import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialDropdown from "@/components/MaterialDropdown.vue";
 import MaterialFilter from "@/components/MaterialFilter.vue";
 import ExportData from '@/components/ExportData.vue';
@@ -85,7 +92,6 @@ export default {
     MaterialButton,
     MaterialPagination,
     MaterialPaginationItem,
-    MaterialInput,
     MaterialDropdown,
     MaterialFilter,
     ExportData,
@@ -95,11 +101,15 @@ export default {
       currentPage: 1,
       itemsPerPage: 4,
       activeFilter: 'Últimos 30 dias',
+      searchQuery: '',
+      isFocused: false,
       time_periods: [
         'Últimos 30 dias',
         'Últimos 60 dias',
         'Últimos 90 dias'
-      ]
+      ],
+      selectedCategories: [],
+      selectedType: '',
     };
   },
   computed: {
@@ -107,16 +117,40 @@ export default {
       const tStore = useTransactionStore();
       return tStore.transactions;
     },
+    filteredTransactions() {
+      console.log('Search Query:', this.searchQuery);
+      return this.transactions.filter(t => {
+        const search = this.searchQuery.toLowerCase();
+        return (
+          t.name.toLowerCase().includes(search) ||
+          t.date.toLowerCase().includes(search) ||
+          t.tipo.toLowerCase().includes(search) ||
+          t.value.toString().toLowerCase().includes(search)
+        );
+      });
+    },
     totalPages() {
-      return Math.ceil(this.transactions.length / this.itemsPerPage);
+      return Math.ceil(this.filteredTransactions.length / this.itemsPerPage);
     },
     paginatedTransactions() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
-      return this.transactions.slice(start, end);
+      return this.filteredTransactions.slice(start, end);
     },
   },
+  watch: {
+    searchQuery() {
+      this.currentPage = 1; // Reset pagination when search query changes
+    }
+  },
   methods: {
+    handleFocus() {
+      this.isFocused = true;
+    },
+    handleBlur() {
+      // Método chamado quando o input perde o foco (quando se clica fora dele)
+      this.isFocused = false; // Atualiza a variável para exibir a mensagem
+    },
     goToPage(page) {
       this.currentPage = page;
     },
@@ -134,8 +168,10 @@ export default {
       this.activeFilter = filter;
     },
     handleFilterChange(filterData) {
-      console.log("Filtro mudou:", filterData);
-      // Aqui você pode realizar a lógica para aplicar os filtros à sua tabela
+      this.selectedCategories = filterData.categories;
+      this.selectedType = filterData.type;
+      console.log("Categorias selecionadas:", this.selectedCategories);
+      console.log("Tipo selecionadas:", this.selectedType);
     },
   },
 };
@@ -153,5 +189,9 @@ export default {
     flex: 1 1 100%;
     /* Em telas menores, os itens ocupam 100% da largura */
   }
+}
+
+.input-group.input-group-outline .form-control {
+  border: 1px solid #1a73e8 !important;
 }
 </style>

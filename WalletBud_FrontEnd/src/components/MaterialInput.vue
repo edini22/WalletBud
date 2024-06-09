@@ -7,7 +7,7 @@
     <input
       :id="id"
       :type="type"
-      class="form-control color"
+      class="form-control"
       :class="getClasses(size)"
       :name="name"
       :value="value"
@@ -102,14 +102,3 @@ export default {
   },
 };
 </script>
-
-
-<style>
-.color {
-  border-color: #1a73e8 !important;
-}
-
-.material-input .input-group input::placeholder {
-  color: #1a73e8 !important;
-}
-</style>

@@ -3,9 +3,9 @@
     <div class="row mb-4">
       <div class="col-lg-12 position-relative z-index-2">
         <div class="row">
-          <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="col-lg-3 col-md-4 col-sm-4 col-12">
             <mini-statistics-card
-              :title="{ text: 'Saldo Atual', value: 'user.saldo' }"
+              :title="{ text: 'Saldo Atual', value: user.saldo + ' €' }"
               :icon="{
                 name: 'account_balance_wallet',
                 color: 'text-white',
@@ -13,7 +13,7 @@
               }"
             />
           </div>
-          <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
+          <div class="col-lg-3 col-md-4 col-sm-4 col-12 mt-md-0 mt-4">
             <mini-statistics-card
               :title="{ text: 'Objetivo Poupança', value: '2,300' }"
               show="true"
@@ -26,7 +26,7 @@
               }"
             />
           </div>
-          <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
+          <div class="col-lg-3 col-md-4 col-sm-4 col-12 mt-md-0 mt-4">
             <mini-statistics-card
               :title="{ text: 'Movimentos' }"
               show="true"
@@ -41,7 +41,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-4 col-md-6 col-sm-12 mt-5">
+          <div class="col-lg-4 col-md-12 col-sm-12 mt-5">
             <chart-holder-card
               title="Gasto Semanal"
               subtitle="Gasto por dia na semana passada"
@@ -49,20 +49,19 @@
             >
               <reports-bar-chart
                 :chart="{
-                  labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+                  labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'],
                   datasets: {
-                    label: 'Sales',
-                    data: [50, 20, 10, 22, 50, 10, 40],
+                    label: 'Gasto Semanal',
+                    data: [100, 20, 10, 40, 50, 10, 40],
                   },
                 }"
               />
             </chart-holder-card>
           </div>
 
-          <div class="col-md-8 col-md-2 mt-4">
+          <div class="col-lg-8 col-md-12 col-sm-12 mt-4">
             <transaction-card />
           </div>
-
         </div>
       </div>
     </div>
@@ -75,8 +74,7 @@ import ChartHolderCard from "./components/ChartHolderCard.vue";
 import ReportsBarChart from "@/examples/Charts/ReportsBarChart.vue";
 import MiniStatisticsCard from "./components/MiniStatisticsCard.vue";
 import TransactionCard from "./components/TransactionCard.vue";
-
-// import { useUserStore } from '@/store/userStore.js';
+import { userStore } from '@/store/userStore.js';
 
 export default {
   name: "home",
@@ -91,10 +89,10 @@ export default {
     TransactionCard,
   },
   computed: {
-    /* user(){
-      const uStore = useUserStore();
-      return uStore.user;
-    }*/
+    user(){
+      const uStore = userStore();
+      return uStore;
+    }
   },
 };
 

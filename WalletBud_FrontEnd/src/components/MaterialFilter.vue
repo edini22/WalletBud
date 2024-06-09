@@ -27,11 +27,12 @@
                             <div class="filter-section">
                                 <p class="title-filter">Tipos</p>
                                 <div class="type-checkboxes">
-                                    <material-checkbox v-for="(type, index) in types" :key="'type_' + index"
+                                    <material-radio v-for="(type, index) in types" :key="'type_' + index"
                                         :id="'type_' + index" :name="'type_' + index"
-                                        :checked="selectedTypes.includes(type)" @change="toggleType(type)" class="checkbox-item-2">
+                                        :checked="selectedType == type" @change="toggleType(type)"
+                                        class="checkbox-item-2">
                                         {{ type }}
-                                    </material-checkbox>
+                                    </material-radio>
                                 </div>
                             </div>
                         </div>
@@ -46,11 +47,13 @@
 
 <script>
 import MaterialCheckbox from "@/components/MaterialCheckbox.vue";
+import MaterialRadio from "@/components/MaterialRadio.vue";
 
 export default {
     name: "FilterDropdown",
     components: {
         MaterialCheckbox,
+        MaterialRadio,
     },
     data() {
         return {
@@ -61,7 +64,7 @@ export default {
             ],
             types: ["Receita", "Despesa"],
             selectedCategories: [],
-            selectedTypes: [],
+            selectedType: '',
         };
     },
     methods: {
@@ -79,17 +82,16 @@ export default {
             this.emitChanges();
         },
         toggleType(type) {
-            if (this.selectedTypes.includes(type)) {
-                this.selectedTypes = this.selectedTypes.filter((t) => t !== type);
-            } else {
-                this.selectedTypes.push(type);
-            }
+            // Limpa todas as seleções anteriores antes de definir o novo tipo selecionado
+            this.selectedType = '';
+            // Adiciona o tipo selecionado
+            this.selectedType = type;
             this.emitChanges();
         },
         emitChanges() {
             this.$emit("change", {
                 categories: this.selectedCategories,
-                types: this.selectedTypes,
+                type: this.selectedType,
             });
         },
     },
@@ -99,18 +101,22 @@ export default {
 <style scoped>
 .category-checkboxes,
 .type-checkboxes {
-  display: flex;
-  flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .checkbox-item-1 {
-  min-width: 130px; /* Define a minimum width for checkboxes */
-  flex: 1 0 45%; /* Adjust the percentage to fit more/less items per row */
+    min-width: 130px;
+    /* Define a minimum width for checkboxes */
+    flex: 1 0 45%;
+    /* Adjust the percentage to fit more/less items per row */
 }
 
 .checkbox-item-2 {
-  min-width: 110px; /* Define a minimum width for checkboxes */
-  flex: 1 0 45%; /* Adjust the percentage to fit more/less items per row */
+    min-width: 110px;
+    /* Define a minimum width for checkboxes */
+    flex: 1 0 45%;
+    /* Adjust the percentage to fit more/less items per row */
 }
 
 .custom-dropdown {
@@ -123,7 +129,6 @@ export default {
     border: none;
     cursor: pointer;
     background: none;
-    border: 1px solid #1a73e8;
     border-radius: 0.375rem;
     border-top-left-radius: 0.375rem !important;
     border-bottom-left-radius: 0.375rem !important;
@@ -135,12 +140,14 @@ export default {
     font-weight: 400;
     height: 40px;
     width: 110px;
+    background-image: linear-gradient(195deg, #49a3f1 0%, #1a73e8 100%);
 }
 
 .custom-dropdown-menu {
     position: absolute;
     top: calc(100% + 5px);
-    right: 0; /* Ajuste para alinhar com o lado direito do botão */
+    right: 0;
+    /* Ajuste para alinhar com o lado direito do botão */
     background-color: #fff;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0.25rem;

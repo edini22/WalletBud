@@ -48,9 +48,9 @@
                 <h6 class="mb-0">{{ $t ('Configurações de Movimentos') }}</h6>
               </div>
               <div class="p-3 card-body">
-                <button class="btn" data-bs-toggle="modal" data-bs-target="#categoryModal" style="background-color: #007bff; color: white;">
+                <p class="btn btn-default bg-gradient-info mb-1" data-bs-toggle="modal" data-bs-target="#categoryModal" style="background-color: #007bff; color: white;">
                   {{ $t ('Gerir Categorias')}}
-                </button>
+                </p>
                 <PopUpGerirCategorias />
               </div>
             <hr class="vertical dark" />

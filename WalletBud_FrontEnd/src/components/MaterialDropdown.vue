@@ -50,7 +50,6 @@ export default {
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 0.25rem;
     z-index: 999;
-    width: 150px;
     margin-top: 5px;
 }
 
@@ -90,7 +89,7 @@ export default {
     font-size: 0.875rem;
     font-weight: 400;
     height: 40px;
-    width: 150px;
+    width: 100% !important;
 }
 
 .dropdown-focused {

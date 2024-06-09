@@ -1,5 +1,5 @@
 <template>
-  <div class="card mb-2" :class="directionReverse ? reverseDirection : ''">
+  <div class="card mb-2 mini-statistics-card" :class="directionReverse ? reverseDirection : ''">
     <div class="card-header p-3 pt-2">
       <div
         class="icon icon-lg icon-shape shadow text-center border-radius-xl mt-n4 position-absolute"
@@ -75,8 +75,22 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .size {
   height: 65px;
+}
+.mini-statistics-card {
+  min-height: 120px;
+}
+@media (max-width: 768px) {
+  .mini-statistics-card {
+    min-height: 100px;
+  }
+  .mini-statistics-card .size {
+    font-size: 12px;
+  }
+  .mini-statistics-card h4 {
+    font-size: 18px;
+  }
 }
 </style>

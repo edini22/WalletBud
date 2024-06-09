@@ -35,7 +35,7 @@ export default {
         triggerDownload() {
             // Converter dados em CSV
             const csvData = this.convertToCSV(this.jsonData, this.csvFields);
-            this.downloadCSV(csvData, 'filename.csv');
+            this.downloadCSV(csvData, 'Movimentos.csv');
         },
         convertToCSV(data, fields) {
             const csvRows = [];

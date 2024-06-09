@@ -4,6 +4,8 @@ package beans.stateless;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.json.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.orm.PersistentException;
 import org.orm.PersistentTransaction;
 import wb.walletbud.*;
@@ -21,7 +23,10 @@ public class GerirUnica {
     @EJB
     private GerirCategoria gerirCategoria;
 
-    public int createUnica(String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, String email) throws PersistentException {
+    @EJB
+    private GerirTransacaoPartilhada gerirTransacaoPartilhada;
+
+    public int createUnica(String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, String email, JsonArray usersArray) throws PersistentException {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = gerirUtilizador.getUserByEmail(email);
@@ -40,17 +45,29 @@ public class GerirUnica {
             unica.setCategoriaId_categoria(cat);
             unica.setDate(time);
             unica.setOwner_id(user);
-            UnicaDAO.save(unica);
 
-            float saldo = user.getSaldo();
-            if(tipo.equals("receita")){
-                saldo += value;
-            }else {
-                saldo -= value;
+            // como sabemos se o gajo vai ou não partilhar a transacao status = ?
+            if (usersArray.isEmpty()) {
+                unica.setStatus(true);
+
+                float saldo = user.getSaldo();
+                if(tipo.equals("receita")){
+                    saldo += value;
+                }else {
+                    saldo -= value;
+                }
+                user.setSaldo(saldo);
+                UserDAO.save(user);
+
+            } else {
+                int status = gerirTransacaoPartilhada.shareTransaction("unica", unica.getId_transacao(), email, usersArray, unica);
+                if (status != 0) {
+                    t.rollback();
+                    return status;
+                }
             }
-            user.setSaldo(saldo);
-            UserDAO.save(user);
 
+            UnicaDAO.save(unica);
 
             t.commit();
         } catch (Exception e) {
@@ -90,36 +107,35 @@ public class GerirUnica {
 
             if (name != null) unica.setName(name);
             if (value != -1){
-                float aSvalue = unica.getShareValue();
-                float nSvalue = (value * aSvalue) / unica.getValue();
-                float diff = nSvalue - aSvalue ;
+                if (unica.getStatus()) {
+                    float aSvalue = unica.getShareValue();
+                    float nSvalue = (value * aSvalue) / unica.getValue();
+                    float diff = nSvalue - aSvalue ;
 
-                if(unica.getTipo().equals("receita")){
-                    user.setSaldo(user.getSaldo() + diff);
-                } else {
-                    user.setSaldo(user.getSaldo() - diff);
-                }
-                UserDAO.save(user);
-
-                //iterar pelos user todos partilhados a alterar
-                condition = "TransacaoId_transacao = " + unica.getId_transacao();
-                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
-
-                for(TransacaoPartilhada transacao : tp){
-                    User u = transacao.getUserId_user();
                     if(unica.getTipo().equals("receita")){
-                        u.setSaldo(u.getSaldo() + diff);
+                        user.setSaldo(user.getSaldo() + diff);
                     } else {
-                        u.setSaldo(u.getSaldo() - diff);
+                        user.setSaldo(user.getSaldo() - diff);
                     }
-                    UserDAO.save(u);
+                    UserDAO.save(user);
+
+                    //iterar pelos user todos partilhados a alterar
+                    condition = "TransacaoId_transacao = " + unica.getId_transacao();
+                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
+
+                    for(TransacaoPartilhada transacao : tp){
+                        User u = transacao.getUserId_user();
+                        if(unica.getTipo().equals("receita")){
+                            u.setSaldo(u.getSaldo() + diff);
+                        } else {
+                            u.setSaldo(u.getSaldo() - diff);
+                        }
+                        UserDAO.save(u);
+                    }
+
+                    unica.setShareValue(nSvalue);
+
                 }
-//                if(tp.length != 0) {
-//                    float newSvalue = nSvalue / (tp.length + 1);
-//                    unica.setShareValue(newSvalue);
-//                } else {
-                unica.setShareValue(nSvalue);
-//                }
 
                 unica.setValue(value);
             }
@@ -202,6 +218,7 @@ public class GerirUnica {
                         .add("categoria",unica.getCategoriaId_categoria().getName())
                         .add("tipo", unica.getTipo())
                         .add("local", unica.getLocal())
+                        .add("status", unica.getStatus())
                         .add("users", userArray)
                         .build();
                 arrayBuilder.add(unicaJson);
@@ -262,6 +279,7 @@ public class GerirUnica {
                         .add("id", u.getId_user())
                         .add("name", u.getName())
                         .add("email", u.getEmail())
+                        .add("confirma", tpPartilhada.getConfirma())
                         .build();
                 userArrayBuilder.add(userJson);
             }
@@ -277,6 +295,7 @@ public class GerirUnica {
                     .add("categoria",unica.getCategoriaId_categoria().getName())
                     .add("tipo", unica.getTipo())
                     .add("local", unica.getLocal())
+                    .add("status", unica.getStatus())
                     .add("users", userArray)
                     .build();
 
@@ -303,15 +322,15 @@ public class GerirUnica {
 
     }
 
-    public int shareUnica(int idUnica, JsonArray usersArray, String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+
+    public int shareUnica(int idUnica, JsonArray usersArray, String email, Unica unica) throws PersistentException {
         try{
 
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
                 return -3;
             }
-            Unica unica = UnicaDAO.getUnicaByORMID(idUnica);
+//            Unica unica = UnicaDAO.getUnicaByORMID(idUnica);
 
             if(unica == null || unica.getOwner_id() != user){
                 return -1;
@@ -337,65 +356,123 @@ public class GerirUnica {
                     TransacaoPartilhadaDAO.save(tp);
                 }
                 else{
-                    t.rollback();
                     return -2;
                 }
             }
 
-            //atualizar saldos
-            float aSvalue = unica.getShareValue();
-            int anUsers = (int) (unica.getValue() / unica.getShareValue());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+        return 0;
+    }
 
-            float nSvalue = unica.getValue() / (anUsers + usersArray.size());
+    public int handleUnica(String email, int id_unica,int option) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = gerirUtilizador.getUserByEmail(email);
+            if (user == null) {return -3;}
 
-            float diff = nSvalue - aSvalue;
+            Unica unica = UnicaDAO.getUnicaByORMID(id_unica);
+            if (unica == null || unica.getStatus()) {return -1;}
 
-            if(unica.getTipo().equals("receita")){
-                user.setSaldo(user.getSaldo() + diff);
-            } else {
-                user.setSaldo(user.getSaldo() - diff);
-            }
-            UserDAO.save(user);
+            if (unica.getOwner_id() == user) {return -2;}
 
             String condition = "TransacaoId_transacao = " + unica.getId_transacao();
-            TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
+            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
 
-            for(TransacaoPartilhada transacao : tp){
-                User u = transacao.getUserId_user();
-                boolean exists = false;
-                for (JsonValue userValue : usersArray) {
-                    JsonObject userObject = userValue.asJsonObject();
-                    String userEmail = userObject.getString("email");
-                    if(u.getEmail().equals(userEmail)){
-                        exists = true;
-                        break;
+            if (tps.length == 0) {return -4;}
+
+            boolean ready_to_confirm = true;
+            ArrayList<User> users = new ArrayList<>();
+
+            for (TransacaoPartilhada tp : tps) {
+
+                if (tp.getUserId_user() == user) {
+                    if (option == -1)
+                        TransacaoPartilhadaDAO.deleteAndDissociate(tp);
+                    else if (option == 1) {
+                        users.add(tp.getUserId_user());
+                        tp.setConfirma(1);
+                        TransacaoPartilhadaDAO.save(tp);
                     }
-                }
-                if(!exists){
-                    if(unica.getTipo().equals("receita")){
-                        u.setSaldo(u.getSaldo() + diff);
-                    } else {
-                        u.setSaldo(u.getSaldo() - diff);
-                    }
+                } else if (option == -1 && tp.getConfirma() == 0){
+                    ready_to_confirm = false;
+                } else if (option == 1 && tp.getConfirma() == 0) {
+                    ready_to_confirm = false;
                 } else {
-                    if(unica.getTipo().equals("receita")){
-                        u.setSaldo(u.getSaldo() + nSvalue);
-                    } else {
-                        u.setSaldo(u.getSaldo() - nSvalue);
-                    }
+                    users.add(tp.getUserId_user());
                 }
-
-                UserDAO.save(u);
             }
 
-            unica.setShareValue(nSvalue);
-            UnicaDAO.save(unica);
+            if (ready_to_confirm) {
+                // chamar função para confirmar e atualizar saldos
+                confirmUnica(unica, users);
+            }
 
             t.commit();
         } catch (Exception e) {
             t.rollback();
             return -1;
         }
+
+        return 0;
+    }
+
+    public int confirmUnica(Unica unica, ArrayList<User> usersArray) throws PersistentException {
+
+        User user = unica.getOwner_id();
+
+        // atualizar saldos
+//        float aSvalue = unica.getShareValue();
+//        int anUsers = (int) (unica.getValue() / unica.getShareValue());
+//        float nSvalue = unica.getValue() / (anUsers + usersArray.size());
+//        float diff = nSvalue - aSvalue;
+
+        float nSvalue = unica.getValue() / (usersArray.size() + 1); // + owner
+
+
+        if(unica.getTipo().equals("receita")){
+            user.setSaldo(user.getSaldo() + nSvalue);
+        } else {
+            user.setSaldo(user.getSaldo() - nSvalue);
+        }
+        UserDAO.save(user);
+
+        String condition = "TransacaoId_transacao = " + unica.getId_transacao();
+        TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition,null);
+
+        for(TransacaoPartilhada transacao : tp){
+            User u = transacao.getUserId_user();
+//            boolean exists = false;
+//            for (User userValue : usersArray) {
+//                String userEmail = userValue.getEmail();
+//                if(u.getEmail().equals(userEmail)){
+//                    exists = true;
+//                    break;
+//                }
+//            }
+//            if(!exists){
+//                if(unica.getTipo().equals("receita")){
+//                    u.setSaldo(u.getSaldo() + diff);
+//                } else {
+//                    u.setSaldo(u.getSaldo() - diff);
+//                }
+//            } else {
+                if(unica.getTipo().equals("receita")){
+                    u.setSaldo(u.getSaldo() + nSvalue);
+                } else {
+                    u.setSaldo(u.getSaldo() - nSvalue);
+                }
+//            }
+
+            UserDAO.save(u);
+        }
+
+        unica.setShareValue(nSvalue);
+        unica.setStatus(true);
+        UnicaDAO.save(unica);
+
         return 0;
     }
 

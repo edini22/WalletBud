@@ -30,7 +30,7 @@ public class Unica {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addUnicaUser(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response addTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -46,6 +46,7 @@ public class Unica {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
             Timestamp timestamp = Timestamp.valueOf(dateTime);
+            JsonArray usersArray = jsonObject.getJsonArray("users");
             
             String value_str = jsonObject.getString("value");
             float value = Float.parseFloat(value_str);
@@ -56,7 +57,7 @@ public class Unica {
 
                 cond = gerirFixa.createFixa(name, value, descricao, local, tipo, IdCategoria, timestamp, repeticao,email);
             } else if(transacao.equals("unica")){
-                cond = gerirUnica.createUnica(name, value, descricao, local, tipo, IdCategoria, timestamp,email);
+                cond = gerirUnica.createUnica(name, value, descricao, local, tipo, IdCategoria, timestamp, email, usersArray);
             } else{
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
@@ -122,7 +123,7 @@ public class Unica {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response setUnicaUser(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response setTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -227,7 +228,7 @@ public class Unica {
     @Path("/{tipo}/list")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listUnicasUser(@PathParam("transacao") String transacao,@PathParam("tipo") String tipo,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listTransactionsUser(@PathParam("transacao") String transacao,@PathParam("tipo") String tipo,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -270,7 +271,7 @@ public class Unica {
     @Path("/{tipo}/get/{id}")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUnica(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,@PathParam("id") int id, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response getTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,@PathParam("id") int id, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
         try {
@@ -307,11 +308,11 @@ public class Unica {
     }
 
     @POST
-    @Path("/share")
+    @Path("/confirm")
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response shareUnicaUser(@PathParam("transacao") String transacao, String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response confirmSharedTransaction(@PathParam("transacao") String transacao, String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -321,18 +322,23 @@ public class Unica {
         try {
 
             int IdTransacao = jsonObject.getInt("IdTransacao");
-            JsonArray usersArray = jsonObject.getJsonArray("users");
-            for (JsonValue userValue : usersArray) {
-                JsonObject userObject = userValue.asJsonObject();
-                String userEmail = userObject.getString("email");
+            int option = jsonObject.getInt("option");
 
-                System.out.println("User Email: " + userEmail);
-            }
-            int cond;
+            int cond = -1;
+
             if(transacao.equals("fixa")){
-                cond = gerirFixa.shareFixa(IdTransacao, usersArray, email);
+
+                //TODO: ...
+
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "...")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             } else if(transacao.equals("unica")){
-                cond = gerirUnica.shareUnica(IdTransacao, usersArray, email);
+                cond = gerirUnica.handleUnica(email, IdTransacao, option);
             } else{
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
@@ -344,23 +350,22 @@ public class Unica {
             }
 
             if(cond == 0){
-                JsonObject jsonResponse = Json.createObjectBuilder()
-                        .add("message", "Partilhado com sucesso!")
-                        .build();
+                JsonObject jsonResponse = null;
+                if (option == 1){
+                    jsonResponse = Json.createObjectBuilder()
+                            .add("message",  "Transacao partilhada confirmada com sucesso!")
+                            .build();
+                } else if (option == -1) {
+                    jsonResponse = Json.createObjectBuilder()
+                            .add("message",  "Transacao partilhada recusada com sucesso!")
+                            .build();
+                }
                 return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             } else if(cond == -1){
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
-                        .build();
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(jsonResponse.toString())
-                        .type(MediaType.APPLICATION_JSON)
-                        .build();
-            } else if(cond == -2){
-                JsonObject jsonResponse = Json.createObjectBuilder()
-                        .add("message", "Ja partilhou com algum dos users!")
                         .build();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
@@ -380,7 +385,7 @@ public class Unica {
 
         } catch (NumberFormatException e) {
             JsonObject jsonResponse = Json.createObjectBuilder()
-                    .add("message", "Formato invalido do IdTransacao!")
+                    .add("message", "Formato invalido de IdCategoria ou do IdTransacao!")
                     .build();
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(jsonResponse.toString())

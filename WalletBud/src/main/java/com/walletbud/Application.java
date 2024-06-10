@@ -12,7 +12,7 @@ public class Application extends jakarta.ws.rs.core.Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();
         resources.add(login.class);
-        resources.add(Unica.class);
+        resources.add(Transacao.class);
         resources.add(Categoria.class);
         resources.add(register.class);
         resources.add(Utilizador.class);

@@ -41,66 +41,21 @@ public class GerirTransacaoPartilhada {
                 cond = gerirUnica.shareUnica(IdTransacao, usersArray, email, unica);
                 System.out.println("Cond: " + cond);
             } else{
-//                JsonObject jsonResponse = Json.createObjectBuilder()
-//                        .add("message", "Tipo de Transacao nao existe!")
-//                        .build();
-//                return Response.status(Response.Status.BAD_REQUEST)
-//                        .entity(jsonResponse.toString())
-//                        .type(MediaType.APPLICATION_JSON)
-//                        .build();
                 return -1;
             }
 
             if(cond == 0){
-//                JsonObject jsonResponse = Json.createObjectBuilder()
-//                        .add("message", "Partilhado com sucesso!")
-//                        .build();
-//                return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
-//                        .type(MediaType.APPLICATION_JSON)
-//                        .build();
-                System.out.println("herreee");
                 return 0;
             } else if(cond == -1){
-//                JsonObject jsonResponse = Json.createObjectBuilder()
-//                        .add("message", "Algo de errado nao esta certo!")
-//                        .build();
-//                return Response.status(Response.Status.BAD_REQUEST)
-//                        .entity(jsonResponse.toString())
-//                        .type(MediaType.APPLICATION_JSON)
-//                        .build();
                 return -2;
             } else if(cond == -2){
-//                JsonObject jsonResponse = Json.createObjectBuilder()
-//                        .add("message", "Ja partilhou com algum dos users!")
-//                        .build();
-//                return Response.status(Response.Status.BAD_REQUEST)
-//                        .entity(jsonResponse.toString())
-//                        .type(MediaType.APPLICATION_JSON)
-//                        .build();
                 return -3;
             } else if(cond == -3){
-//                JsonObject jsonResponse = Json.createObjectBuilder()
-//                        .add("message", "Email nao registado!")
-//                        .build();
-//                return Response.status(Response.Status.BAD_REQUEST)
-//                        .entity(jsonResponse.toString())
-//                        .type(MediaType.APPLICATION_JSON)
-//                        .build();
                 return -4;
             } else{
-//                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
                 return -5;
             }
 
-        } catch (NumberFormatException e) {
-//            JsonObject jsonResponse = Json.createObjectBuilder()
-//                    .add("message", "Formato invalido do IdTransacao!")
-//                    .build();
-//            return Response.status(Response.Status.BAD_REQUEST)
-//                    .entity(jsonResponse.toString())
-//                    .type(MediaType.APPLICATION_JSON)
-//                    .build();
-            return -6;
         } catch (Exception e){
             System.out.println("Error: " + e.getMessage());
             return -7;

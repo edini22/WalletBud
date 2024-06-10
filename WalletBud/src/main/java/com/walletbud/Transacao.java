@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.io.StringReader;
 
 @Path("/{transacao}")
-public class Unica {
+public class Transacao {
 
     @EJB
     private GerirUnica gerirUnica;
@@ -306,6 +306,121 @@ public class Unica {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+    @POST
+    @Path("/share")
+    @Secured
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response shareTransaction(@PathParam("transacao") String transacao, String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+
+        JsonReader reader = Json.createReader(new StringReader(jsonString));
+        JsonObject jsonObject = reader.readObject();
+        reader.close();
+        try {
+
+            int IdTransacao = jsonObject.getInt("IdTransacao");
+            int option = jsonObject.getInt("option");
+            String email_shared = jsonObject.getString("email_shared");
+
+            if(email.equals(email_shared)){
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Nao pode partilhar consigo mesmo!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            int cond = -1;
+
+            if(transacao.equals("fixa")){
+
+                //TODO: ...
+
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "...")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if(transacao.equals("unica")){
+                cond = gerirUnica.editUsersUnica(email, IdTransacao, option, email_shared);
+            } else{
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Tipo de Transacao nao existe!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            if(cond == 0){
+                JsonObject jsonResponse = null;
+                if (option == 1){
+                    jsonResponse = Json.createObjectBuilder()
+                            .add("message",  "Transacao partilhada confirmada com sucesso!")
+                            .build();
+                } else if (option == -1) {
+                    jsonResponse = Json.createObjectBuilder()
+                            .add("message",  "Transacao partilhada recusada com sucesso!")
+                            .build();
+                }
+                return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if(cond == -1){
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Algo de errado nao esta certo!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if(cond == -2){
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Nao tem permissoes para fazer tais operações!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }else if(cond == -3){
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Email nao registado!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else{
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "erro indefinido!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+        } catch (NumberFormatException e) {
+            JsonObject jsonResponse = Json.createObjectBuilder()
+                    .add("message", "Formato invalido de IdCategoria ou do IdTransacao!")
+                    .build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(jsonResponse.toString())
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        } catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
 
     @POST
     @Path("/confirm")
@@ -371,9 +486,25 @@ public class Unica {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -3){
+            } else if(cond == -2){
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Não pode recusar uma transacao já confirmada!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }else if(cond == -3){
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email nao registado!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if(cond == -4){
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Não pode remover um utilizador não associado!")
                         .build();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())

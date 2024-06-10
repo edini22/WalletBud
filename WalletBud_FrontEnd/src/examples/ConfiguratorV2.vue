@@ -92,14 +92,7 @@
         }
       },
   
-      sidenavTypeOnResize() {
-        let white = document.querySelector("#btn-white");
-        if (window.innerWidth < 1200) {
-          white.classList.add("disabled");
-        } else {
-          white.classList.remove("disabled");
-        }
-      },
+      
     },
     computed: {
       ...mapState(["sidebarType"]),

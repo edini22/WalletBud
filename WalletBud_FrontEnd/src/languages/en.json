@@ -36,6 +36,15 @@
     "Escolhe entre 2 tipos": "Choose between 2 types",
     "Fundo da Aba de Navegação": "Navigation Tab Background",
     "Email não pode ser nulo": "Email cannot be null",
-    "Nome não pode ser nulo": "Name cannot be null"
+    "Nome não pode ser nulo": "Name cannot be null",
+    "Insere o teu email e password para registar": "Enter your email and password to register",
+    "Regista-te": "Register",
+    "Nome não pode estar vazio": "Name cannot be empty",
+    "Eu concordo com os ": "I agree with the ",
+    "Termos e Condições": "Terms and Conditions",
+    "Registar": "Register",
+    "Já tens conta": "Already have an account",
+    "Inicia ": "Log",
+    "Sessão": "In"
 }
 

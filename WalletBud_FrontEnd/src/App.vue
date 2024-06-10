@@ -30,7 +30,13 @@ Coded by www.creative-tim.com
     />
     <router-view />
     <app-footer v-show="showFooter" />
+    <configuratorV2
+      v-if = "inSingUp"
+      :toggle="toggleConfigurator"
+      :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']"
+    />
     <configurator
+      v-else
       :toggle="toggleConfigurator"
       :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']"
     />
@@ -43,6 +49,8 @@ import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
 import { mapMutations, mapState } from "vuex";
 
+import ConfiguratorV2 from "@/examples/ConfiguratorV2.vue";
+
 export default {
   name: "App",
   components: {
@@ -50,6 +58,7 @@ export default {
     Configurator,
     Navbar,
     AppFooter,
+    ConfiguratorV2,
   },
   methods: {
     ...mapMutations(["toggleConfigurator", "navbarMinimize"]),
@@ -68,7 +77,14 @@ export default {
       "showConfig",
       "hideConfigButton",
     ]),
+    inSingUp() {
+      return this.$route.path === "/sign-up";
+    },
+    inSingIn() {
+      return this.$route.path === "/sign-in";
+    },
   },
+
   beforeMount() {
     this.$store.state.isTransparent = "bg-transparent";
 

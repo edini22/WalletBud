@@ -19,15 +19,16 @@
                   }"
                 ></div>
               </div>
+              
               <div
                 class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column ms-auto me-auto ms-lg-auto me-lg-5"
               >
                 <div class="card card-plain">
                   <div class="pb-0 card-header bg-transparent mb-4">
-                    <h4 class="font-weight-bolder">Regista-te!</h4>
-                    <Configurator />
+                    <h4 class="font-weight-bolder">{{ $t('Regista-te') }}!</h4>
+                    
                     <p class="mb-0">
-                      Insere o teu email e password para registar
+                      {{ $t('Insere o teu email e password para registar') }}
                     </p>
                   </div>
                   <div class="card-body">
@@ -37,7 +38,7 @@
                         <material-input
                           id="name"
                           type="text"
-                          label="Nome não poder ser nulo"
+                          :label="$t ('Nome não pode estar vazio')"
                           labelColor="red"
                           name="name"
                           size="lg"
@@ -61,7 +62,7 @@
                         <material-input
                           id="name"
                           type="text"
-                          label="Nome"
+                          :label="$t ('Nome')"
                           name="name"
                           size="lg"
                           @update:value="name = $event"
@@ -124,7 +125,7 @@
                         <material-input
                           id="password"
                           type="password"
-                          label="Senha deve ter no mínimo 6 caracteres"
+                          :label= passwordErrorMessage
                           name="password"
                           size="lg"
                           @update:value="password = $event"
@@ -146,7 +147,7 @@
                         <material-input
                           id="password"
                           type="password"
-                          label="Senha"
+                          label="Password"
                           name="password"
                           size="lg"
                           @update:value="password = $event"
@@ -159,18 +160,18 @@
                         class="font-weight-light"
                         @update:checked="termsAccepted = $event"
                       >
-                        <span v-if="checkedError === true" style="text-decoration: underline; "> Eu concordo com os </span>
-                        <span v-if="checkedError === false"> Eu concordo com os </span>
+                        <span v-if="checkedError === true" style="text-decoration: underline; "> {{ $t('Eu concordo com os ') }} </span>
+                        <span v-if="checkedError === false">{{ $t('Eu concordo com os ') }}  </span>
                         <a v-if="checkedError === true"
                           href="terms-and-conditions"
                           :style =  "{color: 'red', fontWeight: 'bold', textDecoration: 'underline'}"
-                          >Termos e Condições</a
+                          >{{$t('Termos e Condições')}}</a
                           
                         >
                         <a v-if="checkedError === false"
                           href="terms-and-conditions"
                           class="text-dark font-weight-bolder"
-                          >Termos e Condições</a
+                          >{{$t('Termos e Condições')}}</a
                           
                         >
                       </material-checkbox>
@@ -182,26 +183,28 @@
                           fullWidth
                           size="lg"
                           @click.prevent="userSignUp"
-                          >Registar</material-button
+                          >{{$t('Registar')}}</material-button
                         >
                       </div>
                     </form>
                   </div>
                   <div class="px-1 pt-0 text-center card-footer px-lg-2">
                     <p class="mx-auto mb-4 text-sm">
-                      Já tens conta?
+                      {{$t('Já tens conta')}}?
                       <router-link
                         :to="{ name: 'SignIn' }"
                         class="text-info text-gradient font-weight-bold"
-                        >LogIn</router-link
+                        >{{$t('Inicia ')}}{{$t('Sessão')}}</router-link
                       >
                     </p>
                   </div>
                 </div>
+                
               </div>
             </div>
           </div>
         </div>
+        
       </section>
     </main>
   </div>
@@ -217,8 +220,9 @@ import { mapMutations } from "vuex";
 import { userStore } from "@/store/userStore";
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
+import { useI18n } from 'vue-i18n';
 
-import Configurator from "@/examples/ConfiguratorV2.vue";
+
 
 export default {
   name: "sign-up",
@@ -226,9 +230,10 @@ export default {
     MaterialInput,
     MaterialCheckbox,
     MaterialButton,
-    Configurator,
   },
   setup() {
+    const { t } = useI18n();
+
     const router = useRouter(); 
     const store = userStore();
     const email = ref('');
@@ -239,6 +244,7 @@ export default {
     const nameError = ref(null);
     const emailError = ref(null);
     const passwordError = ref(null);
+    const passwordErrorMessage = ref(null);
     const emailErrorStore = ref(null);
     const checkedError = ref(false);
 
@@ -273,11 +279,12 @@ export default {
 
       if (!password.value) {
         passwordError.value = true;
+        passwordErrorMessage.value =  `${t('Passwords devem ter no mínimo')} 6 ${t('caracteres')}`;
         isValid = false;
       } else {
         passwordError.value = false;
       }
-      // alert("passdone" + passwordError.value)
+      alert("FALTA AQUI UMA COISA!")
       emailErrorStore.value = "Erro de email";
 
       if (!isValid) {
@@ -325,22 +332,23 @@ export default {
       nameError,
       emailError,
       passwordError,
+      passwordErrorMessage,
       emailErrorStore,
       checkedError,
+      t,
     };
   },
   beforeMount() {
     this.toggleEveryDisplay();
-    this.toggleHideConfig();
     body.classList.remove("bg-gray-100");
   },
   beforeUnmount() {
     this.toggleEveryDisplay();
-    this.toggleHideConfig();
+    //this.toggleHideConfig();
     body.classList.add("bg-gray-100");
   },
   methods: {
-    ...mapMutations(["toggleEveryDisplay", "toggleHideConfig"]),
+    ...mapMutations(["toggleEveryDisplay"]),
   },
 };
 </script>

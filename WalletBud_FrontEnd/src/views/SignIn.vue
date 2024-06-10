@@ -28,7 +28,7 @@
                   <material-input
                     id="email"
                     type="email"
-                    label="Email"
+                    label="Email incorreto"
                     name="email"
                     @update:value="email = $event"
                     error
@@ -144,22 +144,37 @@ export default {
     const emailError = ref(null);
     const passwordError = ref(null);
     
+    function validarEmail(email) {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailRegex.test(email);
+    }
 
     const login = async () => {
       //teste
       // router.push({ name: "Home" });
+      let isValid = true;
 
       if (!email.value) {
         emailError.value = true;
-
+        isValid = false;
       } else {
-        emailError.value = false;
+        if (!validarEmail(email.value)) {
+          emailError.value = true;
+          isValid = false;
+        } else {
+          emailError.value = false;
+        }
       }
 
       if (!password.value) {
         passwordError.value = true;
+        isValid = false;
       } else {
         passwordError.value = false;
+      }
+
+      if (!isValid) {
+        return;
       }
 
       const credentials = {
@@ -170,6 +185,8 @@ export default {
       try {
         await store.logUser(credentials);
         alert("Login efetuado com sucesso");
+        // buscar os dados do user
+        await store.getUser();
         router.push({ name: "Home" });
       } catch (err) {
         alert(err.message);

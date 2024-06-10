@@ -248,6 +248,11 @@ export default {
     const emailErrorStore = ref(null);
     const checkedError = ref(false);
 
+    function validarEmail(email) {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailRegex.test(email);
+    }
+
     watch(locale, () => {
       passwordErrorMessage.value =  `${t('Passwords devem ter no mínimo')} 6 ${t('caracteres')}`;
     });
@@ -278,7 +283,13 @@ export default {
         emailError.value = true;
         isValid = false;
       } else {
-        emailError.value = false;
+        if (!validarEmail(email.value)) {
+          emailError.value = true;
+          emailErrorStore.value = "Email inválido";
+          isValid = false;
+        } else {
+          emailError.value = false;
+        }
       }
 
       if (!password.value) {
@@ -286,7 +297,12 @@ export default {
         passwordErrorMessage.value =  `${t('Passwords devem ter no mínimo')} 6 ${t('caracteres')}`;
         isValid = false;
       } else {
+        if(password.value.length < 6){
+          passwordError.value = true;
+          isValid = false;
+        }else{
         passwordError.value = false;
+        }
       }
       alert("FALTA AQUI UMA COISA!")
       emailErrorStore.value = "Erro de email";

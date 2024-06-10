@@ -104,7 +104,8 @@ export default {
     const showErrorEmail = ref(false);
     const editedInfo = ref({ username: '' , email: '', password: ''});
 
-    const maskPassword = computed(() => '*'.repeat(password.value.length));
+    // const maskPassword = computed(() => '*'.repeat(password.value.length));
+    const maskPassword = computed(() => '*'.repeat(6));
 
     const editProfile = () => {
       editMode.value = true;

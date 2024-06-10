@@ -4,9 +4,18 @@
       <div class="col-md-8 mx-auto">
         <div class="card mt-4">
           <div class="card-header p-3">
-            <h2 class="mb-0">{{ $t('Termos e Condições')}}</h2>
+            <h2 class="mb-0">{{ $t('Termos e Condições')}}
+                <material-button
+                class="float-end"
+                variant="gradient"
+                color="info"
+                @click="toSignUp">
+                {{ $t('Voltar')}}
+                </material-button> 
+            </h2>
           </div>
           <div class="card-body p-3 pb-0">
+            
             <p>
                 {{ $t('Estes Termos e Condições regem o uso deste Serviço fornecido pelo Grupo de Trabalho')}} nº7.
             <br>
@@ -54,13 +63,34 @@
   
 <script>
 import { useI18n } from 'vue-i18n';
+import { mapMutations } from "vuex";
+import { useRouter } from 'vue-router';
+import MaterialButton from "@/components/MaterialButton.vue";
 
 export default {
     name: "Terms&Conditions",
+    components: {
+        MaterialButton,
+    },
     setup() {
         const { t } = useI18n();
-        return { t };
-    }
+        const router = useRouter();
+
+        const toSignUp = () => {
+            router.push('/sign-up');
+        };
+
+        return { t, toSignUp };
+    },
+    beforeMount() {
+        this.toggleEveryDisplay();
+    },
+    beforeUnmount() {
+        this.toggleEveryDisplay();
+    },
+    methods: {
+        ...mapMutations(["toggleEveryDisplay"]),
+    },
 };
 </script>
 

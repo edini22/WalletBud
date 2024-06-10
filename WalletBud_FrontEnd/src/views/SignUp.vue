@@ -243,9 +243,9 @@ export default {
     const error = ref(null);
     const nameError = ref(null);
     const emailError = ref(null);
+    const emailErrorStore = ref(null);
     const passwordError = ref(null);
     const passwordErrorMessage = ref(null);
-    const emailErrorStore = ref(null);
     const checkedError = ref(false);
 
     function validarEmail(email) {
@@ -255,6 +255,7 @@ export default {
 
     watch(locale, () => {
       passwordErrorMessage.value =  `${t('Passwords devem ter no mínimo')} 6 ${t('caracteres')}`;
+      emailErrorStore.value = `${t('Email não pode estar vazio')}`;
     });
 
     const userSignUp = async () => {
@@ -279,12 +280,15 @@ export default {
         nameError.value = false;
       }
 
+      //validar mail
       if (!email.value) {
         emailError.value = true;
+        emailErrorStore.value = `${t('Email não pode estar vazio')}`;
         isValid = false;
       } else {
         if (!validarEmail(email.value)) {
           emailError.value = true;
+          //valido
           emailErrorStore.value = "Email inválido";
           isValid = false;
         } else {
@@ -304,16 +308,10 @@ export default {
         passwordError.value = false;
         }
       }
-      alert("FALTA AQUI UMA COISA!")
-      emailErrorStore.value = "Erro de email";
 
       if (!isValid) {
-        //error.value = "Preencha todos os campos";
-        //alert(error.value);
         return;
       }
-
-
 
       const newUser = {
         email: email.value,
@@ -327,14 +325,17 @@ export default {
         alert("Registado com sucesso");
         router.push({ name: "SignIn" }); // Redireciona para a página de login após registro
       } catch (error) {
+        alert("FALTA AQUI UMA COISA!")
         // Tratamento de erro específico para "Email Já registado!"
         if (error.message === "Email Já registado!") {
           alert("Este email já está registado. Utilize outro email.");
           emailErrorStore.value = "Este email já está registado";
+          return;
           // Lógica adicional para manter o usuário na mesma página ou mostrar mensagem de erro
         } else if (error.message === "Email address is invalid") {
           alert("Email address is invalid");
           emailErrorStore.value = "Endereço de email inválido";
+          return;
           // Lógica adicional para manter o usuário na mesma página ou mostrar mensagem de erro
         } else {
           alert("Erro ao registar: " + error.message);

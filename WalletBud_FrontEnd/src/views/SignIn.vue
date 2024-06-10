@@ -149,6 +149,7 @@ export default {
       return emailRegex.test(email);
     }
 
+
     const login = async () => {
       //teste
       // router.push({ name: "Home" });

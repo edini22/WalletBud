@@ -16,7 +16,7 @@
                 class="bg-gradient-info shadow-success border-radius-lg py-3 pe-1"
               >
                 <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">
-                  Entrar
+                  {{$t('Iniciar ')}}{{$t('Sessão')}}
                 </h4>
               </div>
             </div>
@@ -59,7 +59,7 @@
                   <material-input
                     id="password"
                     type="password"
-                    label="Senha incorreta"
+                    :label="t('Password incorreta')"
                     name="password"
                     @update:value="password = $event"
                     error
@@ -80,7 +80,7 @@
                   <material-input
                     id="password"
                     type="password"
-                    label="Senha"
+                    label="Password"
                     name="password"
                     @update:value="password = $event"
                   />
@@ -93,15 +93,15 @@
                     color="info"
                     fullWidth
                     @click.prevent="login"
-                    >Entrar</material-button
+                    >{{$t('Entrar')}}</material-button
                   >
                 </div>
                 <p class="mt-4 text-sm text-center">
-                  Ainda não tens conta?
+                  {{$t('Ainda não tens conta')}}?
                   <router-link
                     :to="{ name: 'SignUp' }"
                     class="text-info text-gradient font-weight-bold"
-                    >Registar</router-link
+                    >{{$t('Registar')}}</router-link
                   >
                 </p>
               </form>
@@ -117,15 +117,15 @@
 
 
 <script>
-//import Navbar from "@/examples/PageLayout/Navbar.vue";
 import MaterialInput from "@/components/MaterialInput.vue";
-//import MaterialSwitch from "@/components/MaterialSwitch.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
 import { mapMutations } from "vuex";
 
 import { userStore } from "@/store/userStore";
 import { ref } from 'vue';
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+
 
 export default {
   name: "sign-in",
@@ -134,6 +134,8 @@ export default {
     MaterialButton,
   },
   setup() {
+    const { t } = useI18n();
+
     const router = useRouter(); 
     const store = userStore();
     const email = ref('');
@@ -141,6 +143,7 @@ export default {
     const error = ref(null);
     const emailError = ref(null);
     const passwordError = ref(null);
+    
 
     const login = async () => {
       //teste
@@ -179,19 +182,20 @@ export default {
       login,
       error,
       emailError,
-      passwordError
+      passwordError,
+      t,
     }
   },
   beforeMount() {
     this.toggleEveryDisplay();
-    this.toggleHideConfig();
+    //this.toggleHideConfig();
   },
   beforeUnmount() {
     this.toggleEveryDisplay();
-    this.toggleHideConfig();
+    //this.toggleHideConfig();
   },
   methods: {
-    ...mapMutations(["toggleEveryDisplay", "toggleHideConfig"]),
+    ...mapMutations(["toggleEveryDisplay"]),
   },
 };
 </script>

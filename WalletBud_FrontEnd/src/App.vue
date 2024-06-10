@@ -31,7 +31,7 @@ Coded by www.creative-tim.com
     <router-view />
     <app-footer v-show="showFooter" />
     <configuratorV2
-      v-if = "inSingUp"
+      v-if = "inSingUp || inSingIn || inTermsAndConditions"
       :toggle="toggleConfigurator"
       :class="[showConfig ? 'show' : '', hideConfigButton ? 'd-none' : '']"
     />
@@ -82,6 +82,9 @@ export default {
     },
     inSingIn() {
       return this.$route.path === "/sign-in";
+    },
+    inTermsAndConditions() {
+      return this.$route.path === "/terms-and-conditions";
     },
   },
 

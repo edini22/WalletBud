@@ -57,7 +57,7 @@ const routes = [
   },
   {
     path: "/terms-and-conditions",
-    name: "TermsAndConditions",
+    name: "Terms&Conditions",
     component: TermsAndConditions,
   },
 ];

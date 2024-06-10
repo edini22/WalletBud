@@ -194,7 +194,7 @@
                       <router-link
                         :to="{ name: 'SignIn' }"
                         class="text-info text-gradient font-weight-bold"
-                        >{{$t('Inicia ')}}{{$t('Sessão')}}</router-link
+                        >{{$t('Iniciar ')}}{{$t('Sessão')}}</router-link
                       >
                     </p>
                   </div>
@@ -218,7 +218,7 @@ const body = document.getElementsByTagName("body")[0];
 import { mapMutations } from "vuex";
 
 import { userStore } from "@/store/userStore";
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
 
@@ -232,7 +232,7 @@ export default {
     MaterialButton,
   },
   setup() {
-    const { t } = useI18n();
+    const { t , locale } = useI18n();
 
     const router = useRouter(); 
     const store = userStore();
@@ -247,6 +247,10 @@ export default {
     const passwordErrorMessage = ref(null);
     const emailErrorStore = ref(null);
     const checkedError = ref(false);
+
+    watch(locale, () => {
+      passwordErrorMessage.value =  `${t('Passwords devem ter no mínimo')} 6 ${t('caracteres')}`;
+    });
 
     const userSignUp = async () => {
       //teste

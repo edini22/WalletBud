@@ -59,7 +59,7 @@
                   <material-input
                     id="password"
                     type="password"
-                    label="Senha"
+                    label="Senha incorreta"
                     name="password"
                     @update:value="password = $event"
                     error
@@ -112,6 +112,9 @@
     </div>
   </div>
 </template>
+
+<!--Falta verificação de email inválido-->
+
 
 <script>
 //import Navbar from "@/examples/PageLayout/Navbar.vue";

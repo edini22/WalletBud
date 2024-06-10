@@ -37,7 +37,8 @@
                         <material-input
                           id="name"
                           type="text"
-                          label="Nome"
+                          label="Nome não poder ser nulo"
+                          labelColor="red"
                           name="name"
                           size="lg"
                           @update:value="name = $event"
@@ -68,7 +69,7 @@
                       </div>
                       
                       <!--Email-->
-                      <div v-if="emailError === true" class="mb-3">
+                      <div v-if="emailError === true && emailErrorStore === null" class="mb-3">
                         <material-input
                           
                           id="email"
@@ -80,7 +81,20 @@
                           error
                         />
                       </div>
-                      <div v-if="emailError === false" class="mb-3">
+                      <div v-if="emailError === true && emailErrorStore !== null " class="mb-3">
+                        <material-input
+                          
+                          id="email"
+                          type="email"
+                          :label= emailErrorStore
+                          name="email"
+                          size="lg"
+                          @update:value="email = $event"
+                          error
+                          
+                        />
+                      </div>
+                      <div v-if="emailError === false " class="mb-3">
                         <material-input
                           id="email"
                           type="email"
@@ -92,8 +106,7 @@
                           success
                         />
                       </div>
-                      <!--Posso por label-->
-                      <div v-if="emailError === null" class="mb-3">
+                      <div v-if="emailError === null " class="mb-3">
                         <material-input
                           id="email"
                           type="email"
@@ -111,7 +124,7 @@
                         <material-input
                           id="password"
                           type="password"
-                          label="Senha"
+                          label="Senha deve ter no mínimo 6 caracteres"
                           name="password"
                           size="lg"
                           @update:value="password = $event"
@@ -145,13 +158,20 @@
                         id="flexCheckDefault"
                         class="font-weight-light"
                         @update:checked="termsAccepted = $event"
-
                       >
-                        Eu concordo com os
-                        <a
-                          href="../../../pages/privacy.html"
+                        <span v-if="checkedError === true" style="text-decoration: underline; "> Eu concordo com os </span>
+                        <span v-if="checkedError === false"> Eu concordo com os </span>
+                        <a v-if="checkedError === true"
+                          href="terms-and-conditions"
+                          :style =  "{color: 'red', fontWeight: 'bold', textDecoration: 'underline'}"
+                          >Termos e Condições</a
+                          
+                        >
+                        <a v-if="checkedError === false"
+                          href="terms-and-conditions"
                           class="text-dark font-weight-bolder"
                           >Termos e Condições</a
+                          
                         >
                       </material-checkbox>
                       <div class="text-center">
@@ -219,19 +239,22 @@ export default {
     const nameError = ref(null);
     const emailError = ref(null);
     const passwordError = ref(null);
+    const emailErrorStore = ref(null);
+    const checkedError = ref(false);
 
     const userSignUp = async () => {
       //teste
       //router.push({ name: "SignIn" });
 
-      alert("email: " + email.value + " password: " + password.value + " name: " + name.value + " termsAccepted: " + termsAccepted.value)
+      //alert("email: " + email.value + " password: " + password.value + " name: " + name.value + " termsAccepted: " + termsAccepted.value)
 
       let isValid = true;
 
       if (!termsAccepted.value) {
-        error.value = "Tem de aceitar os termos e condições";
-        alert(error.value);
-        return;
+        checkedError.value = true;
+        isValid = false;
+      }else{
+        checkedError.value = false;
       }
 
       if (!name.value) {
@@ -255,17 +278,15 @@ export default {
         passwordError.value = false;
       }
       // alert("passdone" + passwordError.value)
+      emailErrorStore.value = "Erro de email";
 
       if (!isValid) {
-        error.value = "Preencha todos os campos";
-        alert(error.value);
+        //error.value = "Preencha todos os campos";
+        //alert(error.value);
         return;
       }
 
-      
 
-
-      error.value = null;
 
       const newUser = {
         email: email.value,
@@ -282,9 +303,11 @@ export default {
         // Tratamento de erro específico para "Email Já registado!"
         if (error.message === "Email Já registado!") {
           alert("Este email já está registado. Utilize outro email.");
+          emailErrorStore.value = "Este email já está registado";
           // Lógica adicional para manter o usuário na mesma página ou mostrar mensagem de erro
         } else if (error.message === "Email address is invalid") {
           alert("Email address is invalid");
+          emailErrorStore.value = "Endereço de email inválido";
           // Lógica adicional para manter o usuário na mesma página ou mostrar mensagem de erro
         } else {
           alert("Erro ao registar: " + error.message);
@@ -302,6 +325,8 @@ export default {
       nameError,
       emailError,
       passwordError,
+      emailErrorStore,
+      checkedError,
     };
   },
   beforeMount() {
@@ -319,3 +344,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.term-error {
+  color: red;
+}
+</style>

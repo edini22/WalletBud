@@ -4,9 +4,9 @@ import { defineStore } from "pinia";
 export const userStore = defineStore('user', {
   state: () => ({
     //user que está logged
-    username: 'teste',
-    email: 'teste@teste',
-    password: '123456',
+    username: '',
+    email: '',
+    password: '',
   }),
 
   actions: {
@@ -16,8 +16,14 @@ export const userStore = defineStore('user', {
       this.password = editedUser.senha;
     },
 
+    setUser(user){
+      this.username = user.name;
+      this.email = user.email;
+      this.password = user.senha;
+    },
+
     async registUser(newUser){
-      
+
       const newUserJSON = JSON.stringify(newUser);
       const url = "http://localhost:8080/WalletBud-1.0-SNAPSHOT/api/register";
       const request = {
@@ -43,14 +49,12 @@ export const userStore = defineStore('user', {
         throw new Error("Email address is invalid");
       }
 
-      // Adiciona o novo usuário aos dados do store (se necessário)
-      this.users.push(data); // Não sei se você precisa disso aqui
-
-      return data; // Retorna os dados do usuário registrado (se necessário)
+      this.setUser(data); // Adiciona o novo usuário aos dados do store
       
     },
 
     async logUser(user) {
+
     const newUserJSON = JSON.stringify(user);
       const url = "http://localhost:8080/WalletBud-1.0-SNAPSHOT/api/login";
       const request = {
@@ -80,11 +84,7 @@ export const userStore = defineStore('user', {
         localStorage.setItem('token', data.token);
       }
 
-      // Adiciona o novo usuário aos dados do store (se necessário)
-      //this.users.push(data); 
-
-
-      return data; // Retorna os dados do usuário registrado (se necessário)
+      this.setUser(data); // Adiciona o novo usuário aos dados do store
       
     },
 

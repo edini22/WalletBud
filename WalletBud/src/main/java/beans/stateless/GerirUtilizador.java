@@ -68,6 +68,39 @@ public class GerirUtilizador {
         }
     }
 
+    public boolean editUser(String name, String password, String email, String idioma) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+
+            User u = getUserByEmail(email);
+
+            if (u == null) {
+                return false;
+            }
+            if (name != null) u.setName(name);
+            if (password != null) {
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                byte[] encodedhash = digest.digest(
+                        password.getBytes(StandardCharsets.UTF_8));
+                String hashedPassword = bytesToHex(encodedhash);
+
+                u.setPassword(hashedPassword);
+            }
+            if (idioma != null) u.setIdioma(idioma);
+
+
+            UserDAO.save(u);
+
+            t.commit();
+            System.out.println("User editado!");
+            return true;
+        } catch (Exception e) {
+            t.rollback();
+            System.out.println("User não editado!");
+            return false;
+        }
+    }
+
     public int verifyUser(String email, String password) throws PersistentException {
 
         try {

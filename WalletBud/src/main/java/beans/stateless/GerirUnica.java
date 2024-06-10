@@ -4,8 +4,7 @@ package beans.stateless;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.json.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+
 import org.orm.PersistentException;
 import org.orm.PersistentTransaction;
 import wb.walletbud.*;

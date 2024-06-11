@@ -1,18 +1,18 @@
-// userStore.js
 import { defineStore } from "pinia";
 
 export const userStore = defineStore("user", {
-  state: () => ({
-    //user que está logged
-    username: "",
-    email: "",
-    password: "",
-    id: 0,
-    saldo : 0,
-    idioma: "",
-
-  }),
-
+  state: () => {
+    return {
+      username: "",
+      email: "",
+      password: "",
+      id: 0,
+      saldo : 0,
+      idioma: "",
+    }
+  },
+  persist: true,
+  
   actions: {
     updateUser(editedUser) {
       this.username = editedUser.username;
@@ -58,7 +58,6 @@ export const userStore = defineStore("user", {
         throw new Error("Email address is invalid");
       }
 
-      // this.setUser(data); // Adiciona o novo usuário aos dados do store
     },
 
     async logUser(user) {
@@ -91,10 +90,9 @@ export const userStore = defineStore("user", {
         localStorage.setItem("token", data.token);
       }
       this.password = user.password;
+     
+    },
 
-      },
-
-      // this.setUser(data); // Adiciona o novo usuário aos dados do store
     
 
     async getUser() {
@@ -182,6 +180,7 @@ export const userStore = defineStore("user", {
       this.saldo = 0;
       this.idioma = "";
     },
+    
   },
   }
 );

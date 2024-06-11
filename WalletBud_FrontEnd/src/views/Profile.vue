@@ -21,9 +21,10 @@
         </div>
         <div class="col-auto my-auto">
           <div class="h-100">
-            <h5 class="mb-1"> 
+            <h3 class="mb-1"> 
                {{ profileInfo.username }}
-            </h5>
+            </h3>
+            
           </div>
         </div>
       </div>

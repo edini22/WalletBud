@@ -16,8 +16,7 @@ export default createStore({
     showFooter: false,
     showMain: true,
     isDarkMode: false,
-    navbarFixed:
-      "position-sticky blur shadow-blur left-auto top-1 z-index-sticky px-0 mx-4",
+    navbarFixed: "position-sticky blur shadow-blur left-auto top-1 z-index-sticky px-0 mx-4",
     absolute: "position-absolute px-4 mx-0 w-100 z-index-2",
   },
   mutations: {

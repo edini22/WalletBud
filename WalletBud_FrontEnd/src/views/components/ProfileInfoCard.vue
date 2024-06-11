@@ -20,15 +20,15 @@
             color="info"
             size="sm"
             @click="editPasswordFunc">
-            {{$t('Editar Password')}}
+            {{$t('Alterar Password')}}
             <i data-bs-toggle="tooltip" data-bs-placement="top" :title="action.tooltip"></i>
           </material-button>
 
 
         </div>
         <p></p>
-        <div class="col-md-8 d-flex align-items-center">
-          <h6 class="mb-0">{{ $t('Informação do Perfil') }}</h6>
+        <div class="col-md-8 d-flex align-items-center ">
+          <h5 class="mb-0">{{ $t('Informação do Perfil') }}</h5>
         </div>
       </div>
     </div>
@@ -72,16 +72,16 @@
           <strong v-if="!editMode" class="text-dark">Password:</strong>
           <strong v-if="editMode && editPassword" class="text-dark">{{ $t('Nova') }} Password:</strong>
           <span v-if="!editMode">*********</span>
-          <input v-else-if="showError" class="input-error" v-model="editedInfo.senha1" />
-          <input v-else-if="showError2" class="input-error" v-model="editedInfo.senha1" />
-          <input v-else-if="editMode && editPassword" v-model="editedInfo.senha1" class="full_width3"/>
+          <input v-else-if="showError" class="input-error" v-model="editedInfo.senha1" type="password"/>
+          <input v-else-if="showError2" class="input-error" v-model="editedInfo.senha1" type="password"/>
+          <input v-else-if="editMode && editPassword" v-model="editedInfo.senha1" type="password" class="full_width3"/>
         </li>
         
         <li class="text-sm border-0 list-group-item ps-0" v-if="editMode && editPassword">
           <strong class="text-dark">{{ $t('Confirmar Password') }}:</strong>
-          <input v-if="showError" class="input-error" v-model="editedInfo.senha2" />
-          <input v-else-if="showError2" class="input-error" v-model="editedInfo.senha2" />
-          <input v-else-if="editMode && editPassword" v-model="editedInfo.senha2" class="full_width4"/>
+          <input v-if="showError" class="input-error" v-model="editedInfo.senha2" type="password"/>
+          <input v-else-if="showError2" class="input-error" v-model="editedInfo.senha2" type="password"/>
+          <input v-else-if="editMode && editPassword" v-model="editedInfo.senha2" type="password" class="full_width4"/>
         </li>
       
 
@@ -231,7 +231,7 @@ export default {
         }
 
         // store.updateUser(editedInfo.value);
-        alert(editedInfo.value.username + ' : ' + editedInfo.value.email + ' : ' + editedInfo.value.password)
+        //alert(editedInfo.value.username + ' : ' + editedInfo.value.email + ' : ' + editedInfo.value.password)
         editMode.value = false;
         editPassword.value = false;
       }
@@ -250,7 +250,7 @@ export default {
 
         //mandar para a API
         try {
-          alert(editedInfo.value.username + ' : ' + editedInfo.value.email + ' : ' + editedInfo.value.password)
+          //alert(editedInfo.value.username + ' : ' + editedInfo.value.email + ' : ' + editedInfo.value.password)
           await store.updateEditedUser(user);
           // Se o registro for bem-sucedido, você pode mostrar uma mensagem ou redirecionar se necessário
           alert("Editado com sucesso");

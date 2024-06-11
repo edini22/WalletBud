@@ -16,8 +16,8 @@
     "Income":"Receita",
     "Add":"Adicionar",
     "Close":"Fechar",
-    "Confirm Password":"Confirmar Senha",
-    "Passwords do not match":"As senhas não coincidem",
+    "Confirm Password":"Confirmar Password",
+    "Passwords do not match":"Passwords não coincidem",
     "Passwords must have at least":"As senhas devem ter no mínimo",
     "characters":"caracteres",
     "Change language":"Mudar idioma",
@@ -69,6 +69,10 @@
     "This email is already in use": "Este email já está em uso",
     "Invalid email": "Email inválido",
     "Incorrect email": "Email incorreto",
-    "Email does not exist": "Email não existe"
+    "Email does not exist": "Email não existe",
+    "Edit": "Editar",
+    "Save": "Guardar",
+    "Back": "Voltar",
+    "New": "Nova"
 
 }

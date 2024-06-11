@@ -127,7 +127,42 @@ export const userStore = defineStore("user", {
       };
 
       this.setUser(user); // Adiciona o novo usuário aos dados do store
-    }
+    },
+
+    async updateEditedUser(editedUser){
+
+      const newUserJSON = JSON.stringify(editedUser);
+      const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/user/set";
+      const token = localStorage.getItem('token');
+      const request = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+        body: newUserJSON,
+      };
+
+
+      const response = await fetch(url, request);
+
+      // Verifica se a resposta não é OK
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+
+      const data = await response.json();
+
+      this.setUser(data); // Adiciona o novo usuário aos dados do store
+
+      //chamar o login para atualizar o token
+      
+      this.logUser(editedUser);
+
+
+    },
+
   },
   }
 );

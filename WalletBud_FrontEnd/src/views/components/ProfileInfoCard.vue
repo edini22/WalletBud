@@ -1,67 +1,131 @@
 <template>
   <div class="h-100">
     <div class="p-3 pb-0 card-header">
-      <div class="row">
+      <div class="row align-items-center">
+        
+        <div>
+          <material-button v-if="!editMode"
+            class="mt-0"
+            variant="gradient"
+            color="info"
+            size="sm"
+            @click="editProfile">
+            {{$t('Editar Perfil')}}
+            <i data-bs-toggle="tooltip" data-bs-placement="top" :title="action.tooltip"></i>
+          </material-button>
+          &nbsp;
+          <material-button v-if="!editMode"
+            class="mt-0"
+            variant="gradient"
+            color="info"
+            size="sm"
+            @click="editPasswordFunc">
+            {{$t('Editar Password')}}
+            <i data-bs-toggle="tooltip" data-bs-placement="top" :title="action.tooltip"></i>
+          </material-button>
+
+
+        </div>
+        <p></p>
         <div class="col-md-8 d-flex align-items-center">
           <h6 class="mb-0">{{ $t('Informação do Perfil') }}</h6>
-        </div>
-        <div class="col-md-4 d-flex justify-content-end">
-          <button class="btn-edit" v-if="!editMode" @click="editProfile">
-            <i class="text-sm fas fa-user-edit text-secondary" data-bs-toggle="tooltip" data-bs-placement="top" :title="action.tooltip"></i>
-          </button>
-          <button class="btn-edit" v-else @click="saveChanges">
-            💾
-          </button>
         </div>
       </div>
     </div>
     <div class="p-3 card-body">
       <ul class="list-group">
-
+      <div v-if="!editPassword">
         <li class="pt-0 text-sm border-0 list-group-item ps-0">
           <div v-if="showErrorNome">
             <p class="error-pass">{{ $t('Nome não pode ser nulo') }}</p>
           </div>
 
-          <strong class="text-dark">{{ $t('Nome') }}:</strong>
+          <strong v-if="!editMode || !editPassword" class="text-dark">{{ $t('Nome') }}:</strong>
           <span v-if="!editMode">{{ username }} </span>
           <input v-else-if="showErrorNome" class="input-error" v-model="editedInfo.username" />
-          <input v-else v-model="editedInfo.username" class="full_width1"/>
+          <input v-else-if="editMode && !editPassword" v-model="editedInfo.username" class="full_width1"/>
         </li>
 
         <li class="text-sm border-0 list-group-item ps-0">
           <div v-if="showErrorEmail">
             <p class="error-pass">{{ $t('Email não pode ser nulo') }}</p>
           </div>
+          <div v-if="showErrorEmail2">
+            <p class="error-pass">{{ $t('Email inválido') }}</p>
+          </div>
           
-          <strong class="text-dark">{{ $t('Email') }}:</strong>
-          <span v-if="!editMode">{{ email }}</span>
+          <strong v-if="!editMode || !editPassword" class="text-dark">{{ $t('Email') }}:</strong>
+          <span v-if="!editMode ">{{ email }}</span>
           <input v-else-if="showErrorEmail" class="input-error" v-model="editedInfo.email" />
-          <input v-else v-model="editedInfo.email" class="full_width2" />
+          <input v-else-if="editMode && !editPassword" v-model="editedInfo.email" class="full_width2" />
         </li>
-        
+      </div>
+      
+      
         <li class="text-sm border-0 list-group-item ps-0">
           <div v-if="showError">
-            <p class="error-pass">{{ $t('Senhas não coincidem') }}</p>
+            <p class="error-pass">{{ $t('Passwords não coincidem') }}</p>
           </div>
           <div v-if="showError2">
             <p class="error-pass">{{ $t('Passwords devem ter no mínimo') }} 6 {{ $t('caracteres') }}</p>
           </div>
-          <strong class="text-dark">{{ $t('Senha') }}:</strong>
-          <span v-if="!editMode">{{ maskPassword }}</span>
+          <strong v-if="!editMode" class="text-dark">Password:</strong>
+          <strong v-if="editMode && editPassword" class="text-dark">{{ $t('Nova') }} Password:</strong>
+          <span v-if="!editMode">*********</span>
           <input v-else-if="showError" class="input-error" v-model="editedInfo.senha1" />
           <input v-else-if="showError2" class="input-error" v-model="editedInfo.senha1" />
-          <input v-else v-model="editedInfo.senha1" class="full_width3"/>
+          <input v-else-if="editMode && editPassword" v-model="editedInfo.senha1" class="full_width3"/>
         </li>
         
-        <li class="text-sm border-0 list-group-item ps-0" v-if="editMode">
-          <strong class="text-dark">{{ $t('Confirmar Senha') }}:</strong>
+        <li class="text-sm border-0 list-group-item ps-0" v-if="editMode && editPassword">
+          <strong class="text-dark">{{ $t('Confirmar Password') }}:</strong>
           <input v-if="showError" class="input-error" v-model="editedInfo.senha2" />
           <input v-else-if="showError2" class="input-error" v-model="editedInfo.senha2" />
-          <input v-else v-model="editedInfo.senha2" class="full_width4"/>
+          <input v-else-if="editMode && editPassword" v-model="editedInfo.senha2" class="full_width4"/>
         </li>
+      
 
       </ul>
+      <div class="d-flex justify-content-between" v-if="editMode && editPassword">
+        <material-button
+          class="mt-4"
+          variant="gradient"
+          color="info"
+          size="sm"
+          @click="goBack"
+        >
+          {{$t('Voltar')}}
+        </material-button>
+
+        <material-button
+          class="mt-4"
+          variant="gradient"
+          color="success"
+          size="sm"
+          @click="saveNewPassword"
+        >
+          {{$t('Guardar')}}
+        </material-button>
+      </div>
+      <div class="d-flex justify-content-between" v-if="editMode && !editPassword">
+        <material-button
+          class="mt-4"
+          variant="gradient"
+          color="info"
+          size="sm"
+          @click="goBack"
+        >
+          {{$t('Voltar')}}
+        </material-button>
+
+        <material-button
+        class="mt-4"
+        variant="gradient"
+        color="success"
+        size="sm"
+        @click= "saveChanges"
+        >{{$t('Guardar')}}</material-button>
+      </div>
     </div>
   </div>
 </template>
@@ -69,7 +133,8 @@
 <!--Popups necessários-->
 <script>
 import { userStore } from "@/store/userStore";
-import { ref, computed } from "vue";
+import { ref } from "vue";
+import MaterialButton from "@/components/MaterialButton.vue";
 
 export default {
   name: "ProfileInfoCard",
@@ -82,19 +147,20 @@ export default {
       })
     }
   },
+  components: {
+    MaterialButton
+  },
   setup(){
     const store = userStore();
 
     // Definindo as propriedades da store como ref
     const username = ref('');
     const email = ref('');
-    const password = ref('');
 
     // Verificar se a store está definida antes de atribuir seus valores
     if (store) {
       username.value = store.username;
       email.value = store.email;
-      password.value = store.password;
     }
 
     const editMode = ref(false);
@@ -102,27 +168,92 @@ export default {
     const showError2 = ref(false);
     const showErrorNome = ref(false);
     const showErrorEmail = ref(false);
+    const showErrorEmail2 = ref(false);
     const editedInfo = ref({ username: '' , email: '', password: ''});
+    const editPassword = ref(false);
 
-    // const maskPassword = computed(() => '*'.repeat(password.value.length));
-    const maskPassword = computed(() => '*'.repeat(6));
+    function validarEmail(email) {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailRegex.test(email);
+    }
+
+    const editPasswordFunc = () => {
+      editPassword.value = true;
+      editMode.value = true;
+      editedInfo.value.senha1 = '';
+      editedInfo.value.senha2 = '';
+    };
 
     const editProfile = () => {
       editMode.value = true;
-      editedInfo.value.senha1 = maskPassword.value;
-      editedInfo.value.senha2 = maskPassword.value;
+      editPassword.value = false;
+      
       editedInfo.value.username = username.value;
       editedInfo.value.email = email.value;
     };
 
-    const saveChanges = () => {
-      if(checkUsername() && checkEmail() && checkPasswordsMatch()){
-        password.value = editedInfo.value.senha1;
+    const goBack = () => {
+      showError.value = false;
+      showError2.value = false;
+      showErrorEmail.value = false;
+      showErrorEmail2.value = false;
+      showErrorNome.value = false;
+
+      editMode.value = false;
+      editPassword.value = false;
+    };
+
+    const saveNewPassword = async () => {
+      if(checkPasswordsMatch()){
+        editedInfo.value.password = editedInfo.value.senha1;
         editedInfo.value.senha1 = '';
         editedInfo.value.senha2 = '';
 
-        email.value = editedInfo.value.email;
-        username.value = editedInfo.value.username;
+        editedInfo.value.username = username.value;
+        editedInfo.value.email = email.value;
+        
+        const user = {
+          password: editedInfo.value.password,
+        };
+
+        //mandar para a API
+        try {
+          await store.updateEditedUser(user);
+          // Se o registro for bem-sucedido, você pode mostrar uma mensagem ou redirecionar se necessário
+          alert("pass com sucesso");
+        } catch (error) {
+          alert("Erro: " + error.message);
+        }
+
+        store.updateUser(editedInfo.value);
+        alert(editedInfo.value.username + ' : ' + editedInfo.value.email + ' : ' + editedInfo.value.password)
+        editMode.value = false;
+        editPassword.value = false;
+      }
+    };
+    
+    const saveChanges = async () => {
+     
+      if(checkUsername() && checkEmail()){
+        //email.value = editedInfo.value.email;
+        //username.value = editedInfo.value.username;
+        
+        const user = {
+          username: editedInfo.value.username,
+          email: editedInfo.value.email,
+        };
+
+        //mandar para a API
+        try {
+          alert(editedInfo.value.username + ' : ' + editedInfo.value.email + ' : ' + editedInfo.value.password)
+          await store.updateEditedUser(user);
+          // Se o registro for bem-sucedido, você pode mostrar uma mensagem ou redirecionar se necessário
+          alert("Editado com sucesso");
+        } catch (error) {
+          
+          alert("Erro: " + error.message);
+          
+        }
         
         store.updateUser(editedInfo.value);
         editMode.value = false; 
@@ -130,10 +261,15 @@ export default {
     };
 
     const checkEmail = () => {
+      if (!validarEmail(editedInfo.value.email)) {
+        showErrorEmail2.value = true;
+        return false;
+      } 
       if(editedInfo.value.email.length == 0){
         showErrorEmail.value = true;
         return false;
       }
+      showErrorEmail2.value = false;
       showErrorEmail.value = false;
       return true;
     };
@@ -166,18 +302,27 @@ export default {
       return true;
     };
 
+    
+
     return {
       editMode,
       showError,
       showError2,
       showErrorEmail,
+      showErrorEmail2,
       showErrorNome,
       editedInfo,
-      maskPassword,
       editProfile,
       saveChanges,
       username,
       email,
+      goBack,
+      saveNewPassword,
+      checkPasswordsMatch,
+      checkEmail,
+      checkUsername,
+      editPasswordFunc,
+      editPassword,
     };
   },
  
@@ -195,11 +340,11 @@ export default {
 }
 
 .full_width3{
-  width: 14.7rem;
+  width: 11.2rem;
 }
 
 .full_width4{
-  width: 10.5rem;
+  width: 9.3rem;
 }
 
 .btn-edit {

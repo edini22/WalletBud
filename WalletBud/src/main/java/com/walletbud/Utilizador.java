@@ -101,6 +101,11 @@ public class Utilizador {
         try{idioma = jsonObject.getString("idioma");}catch(java.lang.NullPointerException en) {idioma=null;}
         try{new_email = jsonObject.getString("email");}catch(java.lang.NullPointerException en) {new_email=null;}
 
+        if(new_email != null){
+            if(new_email.equals(email_user)){
+                new_email = null;
+            }
+        }
 
         try {
             if(gerirUtilizador.editUser(username, password, email_user, idioma,new_email) ){

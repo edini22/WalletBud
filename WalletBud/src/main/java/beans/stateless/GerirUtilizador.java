@@ -75,6 +75,7 @@ public class GerirUtilizador {
             User u = getUserByEmail(email);
 
             if (u == null) {
+                System.out.println("email do token errado!");
                 return false;
             }
             if (name != null) u.setName(name);

@@ -1,0 +1,54 @@
+### POST request to register
+POST http://localhost:8080/WalletBud-1.0-SNAPSHOT/api/register
+Content-Type: application/json
+
+{
+  "username": "Zeca Galhão",
+  "email": "zg@gmail.com",
+  "password": "password"
+}
+
+### POST request to register
+POST http://localhost:8080/WalletBud-1.0-SNAPSHOT/api/login
+Content-Type: application/json
+
+{
+  "email": "zg@gmail.com",
+  "password": "password"
+}
+
+### GET request with Bearer token
+GET http://localhost:8080/WalletBud-1.0-SNAPSHOT/api/hello-world
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ6Z0BnbWFpbC5jb20iLCJleHAiOjE3MTc3OTQyNDh9.wQltzvi8qor6KD-H30aGlsjImZC2ta899tNDG14vY14
+
+### POST add receita unica
+POST http://localhost:8080/WalletBud-1.0-SNAPSHOT/api/receitaunica/add
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ6Z0BnbWFpbC5jb20iLCJleHAiOjE3MTc3ODU2MTh9.NDo25NhPcrHSs4CFegUfqE0fre5kXA83JPVK0qYsk9g
+Content-Type: application/json
+
+{
+  "name" : "Droga",
+  "value" : "20.00",
+  "descricao" : "maconha",
+  "IdCategoria" : 5,
+  "local" : "favela",
+  "date" : "2023-06-07 10:15:30"
+}
+
+### GET list receita unica
+GET http://localhost:8080/WalletBud-1.0-SNAPSHOT/api/receitaunica/list
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ6Z0BnbWFpbC5jb20iLCJleHAiOjE3MTc3OTA2NjF9.JeOVbkONYLg0r8zMyaJ_LiebVBPDNy9cPkPNbL87q_M
+
+### GET get receita unica
+GET http://localhost:8080/WalletBud-1.0-SNAPSHOT/api/receitaunica/get/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ6Z0BnbWFpbC5jb20iLCJleHAiOjE3MTc3ODU2MTh9.NDo25NhPcrHSs4CFegUfqE0fre5kXA83JPVK0qYsk9g
+
+### POST add receita unica
+POST http://localhost:8080/WalletBud-1.0-SNAPSHOT/api/receitaunica/set
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ6Z0BnbWFpbC5jb20iLCJleHAiOjE3MTc3ODkzOTB9.96g5HWHBX0EKEXOrRwONvXHyp1nydLGuleLCtNyPPSc
+Content-Type: application/json
+
+{
+  "IdTransacao": 1,
+  "name" : "droguinha"
+}

@@ -42,6 +42,8 @@ public class Comentario {
 	
 	private String descrição;
 	
+	private java.sql.Timestamp data;
+	
 	private void setId_comentario(int value) {
 		this.id_comentario = value;
 	}
@@ -60,6 +62,14 @@ public class Comentario {
 	
 	public String getDescrição() {
 		return descrição;
+	}
+	
+	public void setData(java.sql.Timestamp value) {
+		this.data = value;
+	}
+	
+	public java.sql.Timestamp getData() {
+		return data;
 	}
 	
 	public void setTransacaoId_transacao(wb.walletbud.Transacao value) {

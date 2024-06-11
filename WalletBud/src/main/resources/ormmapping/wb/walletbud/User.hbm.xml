@@ -16,7 +16,7 @@ License Type: Evaluation
 		<property name="saldo" column="Saldo" type="float" not-null="true" lazy="false"/>
 		<property name="idioma" column="Idioma" type="string" length="255" not-null="false" lazy="false"/>
 		<set name="ORM_Transacaos" lazy="true" cascade="save-update,lock" inverse="true">
-			<key column="UserId_user" not-null="true"/>
+			<key column="UserId_user" not-null="false"/>
 			<one-to-many class="wb.walletbud.Transacao"/>
 		</set>
 		<set name="ORM_Notificacao" lazy="true" cascade="save-update,lock" inverse="true">

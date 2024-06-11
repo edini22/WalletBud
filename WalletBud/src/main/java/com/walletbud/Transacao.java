@@ -47,6 +47,7 @@ public class Transacao {
             LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
             Timestamp timestamp = Timestamp.valueOf(dateTime);
             JsonArray usersArray = jsonObject.getJsonArray("users");
+            JsonArray comentarios = jsonObject.getJsonArray("comentarios");
 
             String value_str = jsonObject.getString("value");
             float value = Float.parseFloat(value_str);
@@ -57,7 +58,7 @@ public class Transacao {
 
                 cond = gerirFixa.createFixa(name, value, descricao, local, tipo, IdCategoria, timestamp, repeticao, email, usersArray);
             } else if (transacao.equals("unica")) {
-                cond = gerirUnica.createUnica(name, value, descricao, local, tipo, IdCategoria, timestamp, email, usersArray);
+                cond = gerirUnica.createUnica(name, value, descricao, local, tipo, IdCategoria, timestamp, email, usersArray, comentarios);
             } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")

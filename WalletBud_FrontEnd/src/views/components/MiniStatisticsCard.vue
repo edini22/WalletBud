@@ -1,31 +1,25 @@
 <template>
   <div class="card mb-2 mini-statistics-card" :class="directionReverse ? reverseDirection : ''">
     <div class="card-header p-3 pt-2">
-      <div
-        class="icon icon-lg icon-shape shadow text-center border-radius-xl mt-n4 position-absolute"
-        :class="`bg-gradient-${icon.background} shadow-${icon.background}`"
-      >
-        <i
-          class="material-icons opacity-10"
-          :class="icon.color"
-          aria-hidden="true"
-          >{{ icon.name }}</i
-        >
+      <div class="icon icon-lg icon-shape shadow text-center border-radius-xl mt-n4 position-absolute"
+        :class="`bg-gradient-${icon.background} shadow-${icon.background}`">
+        <i class="material-icons opacity-10" :class="icon.color" aria-hidden="true">{{ icon.name }}</i>
       </div>
-      <div class="pt-1 text-end size" >
+      <div class="pt-1 text-end size">
         <p class="text-sm mb-0 text-capitalize">{{ title.text }}</p>
         <h4 class="mb-0">{{ title.value }}</h4>
       </div>
     </div>
-    <hr class="dark horizontal my-0" />
-    <div class="card-footer p-3 size">
-      <p v-if="!show"></p>
-      <button class="btn mb-0 btn-sm null null" :class="btn_color" v-if="show">{{ btn_text }}</button>
+    <div>
+      <div class="card-footer p-3 size">
+        <p v-html="detail"></p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
   name: "MiniStatisticsCard",
   data() {
@@ -58,19 +52,7 @@ export default {
     directionReverse: {
       type: Boolean,
       default: false,
-    },
-    show: {
-      type: Boolean,
-      default: false,
-    },
-    btn_color: {
-      type: String,
-    },
-    btn_text: {
-      type: String,
     }
-  },
-  computed: {
   },
 };
 </script>
@@ -79,16 +61,20 @@ export default {
 .size {
   height: 65px;
 }
+
 .mini-statistics-card {
   min-height: 120px;
 }
+
 @media (max-width: 768px) {
   .mini-statistics-card {
     min-height: 100px;
   }
+
   .mini-statistics-card .size {
     font-size: 12px;
   }
+
   .mini-statistics-card h4 {
     font-size: 18px;
   }

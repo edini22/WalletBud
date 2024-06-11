@@ -66,7 +66,7 @@
       </ul>
     </div>
     <!-- pagination -->
-    <div class="card-footer p-3 size ">
+    <div class="card-footer p-3 size" v-if="totalPages > 1">
       <material-pagination color="info" size="sm">
         <material-pagination-item prev :disabled="currentPage === 1" @click="prevPage" />
         <material-pagination-item v-for="page in totalPages" :key="page" :label="page" :active="page === currentPage"
@@ -99,7 +99,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      itemsPerPage: 4,
+      itemsPerPage: 7,
       activeFilter: 'Últimos 30 dias',
       searchQuery: '',
       isFocused: false,
@@ -118,7 +118,6 @@ export default {
       return tStore.transactions;
     },
     filteredTransactions() {
-      console.log('Search Query:', this.searchQuery);
       return this.transactions.filter(t => {
         const search = this.searchQuery.toLowerCase();
         return (

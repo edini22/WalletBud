@@ -65,10 +65,12 @@
                         <div class="input-group input-group-outline mb-3" 
                                 :class="{'is-focused': isFocused}"
                             >
-                            <label class="form-label">Escreva uma categoria</label>
+                            <label class="form-label">{{ $t('Escreva uma categoria') }}</label>
                             <input class="form-control form-control-default" type="text" v-model="newCategoryName" @focus="handleFocus" @blur="handleBlur">
                         </div>
-                        <p v-if="showErrorAdd" class="error-category">{{ $t('Nomes de Categorias não podem ser nulos') }}</p>
+                        <MaterialAlert v-if="showErrorAdd" color="danger" class="font-weight-light">
+                            <span class="text-sm">{{ $t('Indica um nome para a categoria!') }}</span>
+                        </MaterialAlert>
                         <p class="btn btn-default bg-gradient-info mb-0" @click="addCategory">{{ $t ('Adicionar')}}</p>
                     </div>
                 </div>
@@ -83,6 +85,7 @@
 <script>
 
 import { useI18n } from 'vue-i18n';
+import MaterialAlert from "@/components/MaterialAlert.vue";
 
 export default {
     setup() {
@@ -106,13 +109,15 @@ export default {
             isFocused: false
         };
     },
+    components: {
+        MaterialAlert,
+    },
     methods: {
         handleFocus() {
             this.isFocused = true;
         },
         handleBlur() {
-            // Método chamado quando o input perde o foco (quando se clica fora dele)
-            this.isFocused = false; // Atualiza a variável para exibir a mensagem
+            this.isFocused = false;
         },
         addCategory() {
             if (this.newCategoryName.trim() === '') {
@@ -194,9 +199,6 @@ export default {
     font-weight: 400;
 }
 
-.custom-title {
-}
-
 .error-category {
     text-align: center;
     font-weight: bold;
@@ -230,6 +232,10 @@ export default {
 
 .modal-content {
     width: 100%;
+}
+
+.modal {
+  z-index: 1050; /* padrão do Bootstrap para modais */
 }
 
 .container {

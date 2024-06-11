@@ -58,10 +58,180 @@ export const useTransactionStore = defineStore('transaction', {
                 name: 'Aluguer',
                 value: 800,
                 date: '05 Maio 2024',
-                description: 'Aluguel do apartamento',
+                description: 'Aluguer do apartamento',
                 local: 'Imobiliária ABC',
                 tipo: 'Despesa',
                 categoria: 'Pessoal'
+            },
+            {
+                id: 7,
+                name: "Consulta Médica",
+                value: 120,
+                date: "10 Maio 2024",
+                description: "Consulta com o Dr. Silva",
+                local: "Clínica São José",
+                tipo: "Despesa",
+                categoria: "Saúde"
+            },
+            {
+                id: 8,
+                name: "Supermercado",
+                value: 250,
+                date: "12 Maio 2024",
+                description: "Compras do mês",
+                local: "Supermercado XYZ",
+                tipo: "Despesa",
+                categoria: "Alimentação"
+            },
+            {
+                id: 9,
+                name: "Mensalidade pacote tv",
+                value: 100,
+                date: "15 Maio 2024",
+                description: "Mensalidade de maio",
+                local: "Vodafone",
+                tipo: "Despesa",
+                categoria: "Pessoal"
+            },
+            {
+                id: 10,
+                name: "Roupas",
+                value: 200,
+                date: "18 Maio 2024",
+                description: "Compras de roupas",
+                local: "Loja de Roupas Moda",
+                tipo: "Despesa",
+                categoria: "Familiar"
+            },
+            {
+                id: 11,
+                name: "Cinema",
+                value: 50,
+                date: "20 Maio 2024",
+                description: "Ida ao cinema",
+                local: "BragaParque",
+                tipo: "Despesa",
+                categoria: "Entretenimento"
+            },
+            {
+                id: 12,
+                name: "Remédios",
+                value: 80,
+                date: "27 Maio 2024",
+                description: "Compra de remédios",
+                local: "Farmácia ABC",
+                tipo: "Despesa",
+                categoria: "Saúde"
+            },
+            {
+                id: 13,
+                name: "Restaurante",
+                value: 100,
+                date: "30 Maio 2024",
+                description: "Jantar fora",
+                local: "Restaurante Bom Sabor",
+                tipo: "Despesa",
+                categoria: "Alimentação"
+            },
+            {
+                id: 14,
+                name: "Seguro de Vida",
+                value: 200,
+                date: "01 Junho 2024",
+                description: "Pagamento do seguro",
+                local: "Seguradora Vida",
+                tipo: "Despesa",
+                categoria: "Pessoal"
+            },
+            {
+                id: 15,
+                name: "Material Escolar",
+                value: 150,
+                date: "05 Junho 2024",
+                description: "Compra de material escolar",
+                local: "Papelaria Estudante",
+                tipo: "Despesa",
+                categoria: "Familiar"
+            },
+            {
+                id: 16,
+                name: "Assinatura Netflix",
+                value: 40,
+                date: "10 Junho 2024",
+                description: "Assinatura mensal",
+                local: "Netflix",
+                tipo: "Despesa",
+                categoria: "Entretenimento"
+            },
+            {
+                id: 17,
+                name: "Exames Médicos",
+                value: 500,
+                date: "20 Junho 2024",
+                description: "Exames de rotina",
+                local: "Laboratório São Paulo",
+                tipo: "Despesa",
+                categoria: "Saúde"
+            },
+            {
+                id: 18,
+                name: "Mercado",
+                value: 300,
+                date: "25 Junho 2024",
+                description: "Compras de alimentos",
+                local: "Mercado Central",
+                tipo: "Despesa",
+                categoria: "Alimentação"
+            },
+            {
+                id: 19,
+                name: "Cabeleireiro",
+                value: 70,
+                date: "30 Junho 2024",
+                description: "Corte de cabelo",
+                local: "Salão Beleza",
+                tipo: "Despesa",
+                categoria: "Pessoal"
+            },
+            {
+                id: 20,
+                name: "Parque de Diversões",
+                value: 150,
+                date: "05 Julho 2024",
+                description: "Passeio no parque",
+                local: "Parque Diversão Feliz",
+                tipo: "Despesa",
+                categoria: "Entretenimento"
+            },
+            {
+                id: 21,
+                name: "Jogo de Futebol",
+                value: 80,
+                date: "10 Julho 2024",
+                description: "Bilhetess para o jogo",
+                local: "Estádio Nacional",
+                tipo: "Despesa",
+                categoria: "Entretenimento"
+            },
+            {
+                id: 22,
+                name: "Salário",
+                value: 3000,
+                date: "30 Maio 2024",
+                description: "Recebimento de salário",
+                local: "Empresa ABC",
+                tipo: "Receita",
+                categoria: "Salário"
+            },
+            {
+                id: 23,
+                name: "Aluguer Recebido",
+                value: 1500,
+                date: "05 Junho 2024",
+                description: "Recebimento de aluguer",
+                local: "Inquilino João",
+                tipo: "Receita",
+                categoria: "Renda"
             }
         ]
     }),

@@ -159,9 +159,10 @@ export default {
 
     // Verificar se a store está definida antes de atribuir seus valores
     if (store) {
-      username.value = store.username;
-      email.value = store.email;
+      username.value = store.$state.username;
+      email.value = store.$state.email;
     }
+    
 
     const editMode = ref(false);
     const showError = ref(false);
@@ -221,11 +222,15 @@ export default {
           await store.updateEditedUser(user);
           // Se o registro for bem-sucedido, você pode mostrar uma mensagem ou redirecionar se necessário
           alert("pass com sucesso");
+          if (store) {
+            username.value = store.$state.username;
+            email.value = store.$state.email;
+          }
         } catch (error) {
           alert("Erro: " + error.message);
         }
 
-        store.updateUser(editedInfo.value);
+        // store.updateUser(editedInfo.value);
         alert(editedInfo.value.username + ' : ' + editedInfo.value.email + ' : ' + editedInfo.value.password)
         editMode.value = false;
         editPassword.value = false;
@@ -249,13 +254,17 @@ export default {
           await store.updateEditedUser(user);
           // Se o registro for bem-sucedido, você pode mostrar uma mensagem ou redirecionar se necessário
           alert("Editado com sucesso");
+          if (store) {
+            username.value = store.$state.username;
+            email.value = store.$state.email;
+          }
         } catch (error) {
           
           alert("Erro: " + error.message);
           
         }
         
-        store.updateUser(editedInfo.value);
+        // store.updateUser(editedInfo.value);
         editMode.value = false; 
       }
     };

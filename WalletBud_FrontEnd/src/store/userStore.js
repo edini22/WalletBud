@@ -90,6 +90,7 @@ export const userStore = defineStore("user", {
       if (data.token) {
         localStorage.setItem("token", data.token);
       }
+      this.password = user.password;
 
       },
 
@@ -123,7 +124,7 @@ export const userStore = defineStore("user", {
         id: data.id,
         saldo: data.balanco,
         idioma: data.idioma,
-        password: "fffffffff"
+        password: this.password
       };
 
       this.setUser(user); // Adiciona o novo usuário aos dados do store
@@ -132,6 +133,7 @@ export const userStore = defineStore("user", {
     async updateEditedUser(editedUser){
 
       const newUserJSON = JSON.stringify(editedUser);
+      alert(newUserJSON);
       const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/user/set";
       const token = localStorage.getItem('token');
       const request = {
@@ -152,15 +154,23 @@ export const userStore = defineStore("user", {
         throw new Error(errorData.message);
       }
 
-      const data = await response.json();
-
-      this.setUser(data); // Adiciona o novo usuário aos dados do store
-
-      //chamar o login para atualizar o token
-      
-      this.logUser(editedUser);
-
-
+      if(editedUser.email && editedUser.email != this.email){
+        let user = {
+          email: editedUser.email,
+          password: this.password,
+        };
+        this.email = editedUser.email;
+        this.logUser(user);
+      }
+      if(editedUser.password && editedUser.password != this.password){
+        this.password = editedUser.password;
+      }
+      if(editedUser.idioma && editedUser.idioma != this.idioma){
+        this.idioma = editedUser.idioma;
+      }
+      if(editedUser.username && editedUser.username != this.username){
+        this.username = editedUser.username;
+      }
     },
 
   },

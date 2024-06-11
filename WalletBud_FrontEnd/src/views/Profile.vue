@@ -37,23 +37,6 @@
               :info="profileInfo" 
               @saveProfile="saveProfile" 
             />
-
-            <hr class="vertical dark" />
-          </div>
-          
-
-          <div class="col-12 col-md-6 col-xl-4 position-relative">
-            
-              <div class="p-3 pb-0 card-header">
-                <h6 class="mb-0">{{ $t ('Configurações de Movimentos') }}</h6>
-              </div>
-              <div class="p-3 card-body">
-                <p class="btn btn-default bg-gradient-info mb-1" data-bs-toggle="modal" data-bs-target="#categoryModal" style="background-color: #007bff; color: white;">
-                  {{ $t ('Gerir Categorias')}}
-                </p>
-                <PopUpGerirCategorias />
-              </div>
-            <hr class="vertical dark" />
           </div>
 
         </div>
@@ -64,7 +47,6 @@
 
 <script>
 import ProfileInfoCard from "./components/ProfileInfoCard.vue";
-import PopUpGerirCategorias from "./components/PopUpGerirCategorias.vue";
 
 import setNavPills from "@/assets/js/nav-pills.js";
 import setTooltip from "@/assets/js/tooltip.js";
@@ -77,7 +59,6 @@ export default {
   name: "profile-overview",
   components: {
     ProfileInfoCard,
-    PopUpGerirCategorias,
   },
   setup() {
     const { t } = useI18n();

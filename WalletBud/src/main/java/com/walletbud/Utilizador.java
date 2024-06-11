@@ -94,15 +94,16 @@ public class Utilizador {
 
         System.out.println("Received JSON: " + jsonObject.toString());
 
-        String username, password, idioma;
+        String username, password, idioma,new_email;
 
         try{username = jsonObject.getString("username");}catch(java.lang.NullPointerException en) {username=null;}
         try{password = jsonObject.getString("password");}catch(java.lang.NullPointerException en) {password=null;}
         try{idioma = jsonObject.getString("idioma");}catch(java.lang.NullPointerException en) {idioma=null;}
+        try{new_email = jsonObject.getString("email");}catch(java.lang.NullPointerException en) {new_email=null;}
 
 
         try {
-            if(gerirUtilizador.editUser(username, password, email_user, idioma) ){
+            if(gerirUtilizador.editUser(username, password, email_user, idioma,new_email) ){
 
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "User edited successfully")

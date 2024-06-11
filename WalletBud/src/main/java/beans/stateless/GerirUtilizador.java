@@ -68,7 +68,7 @@ public class GerirUtilizador {
         }
     }
 
-    public boolean editUser(String name, String password, String email, String idioma) throws PersistentException {
+    public boolean editUser(String name, String password, String email, String idioma,String new_email) throws PersistentException {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
 
@@ -87,6 +87,14 @@ public class GerirUtilizador {
                 u.setPassword(hashedPassword);
             }
             if (idioma != null) u.setIdioma(idioma);
+            if (new_email != null) {
+                //verifica se existe algum ‘user’ com o endereço eletrónico
+                User us = getUserByEmail(new_email);
+                if (us != null) {
+                    return false;
+                }
+                u.setEmail(new_email);
+            }
 
 
             UserDAO.save(u);

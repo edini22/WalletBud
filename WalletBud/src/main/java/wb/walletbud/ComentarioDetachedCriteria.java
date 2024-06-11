@@ -25,6 +25,7 @@ public class ComentarioDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression transacaoId_transacaoId;
 	public final AssociationExpression transacaoId_transacao;
 	public final StringExpression descrição;
+	public final TimestampExpression data;
 	
 	public ComentarioDetachedCriteria() {
 		super(wb.walletbud.Comentario.class, wb.walletbud.ComentarioCriteria.class);
@@ -34,6 +35,7 @@ public class ComentarioDetachedCriteria extends AbstractORMDetachedCriteria {
 		transacaoId_transacaoId = new IntegerExpression("transacaoId_transacao.id_transacao", this.getDetachedCriteria());
 		transacaoId_transacao = new AssociationExpression("transacaoId_transacao", this.getDetachedCriteria());
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
+		data = new TimestampExpression("data", this.getDetachedCriteria());
 	}
 	
 	public ComentarioDetachedCriteria(DetachedCriteria aDetachedCriteria) {
@@ -44,6 +46,7 @@ public class ComentarioDetachedCriteria extends AbstractORMDetachedCriteria {
 		transacaoId_transacaoId = new IntegerExpression("transacaoId_transacao.id_transacao", this.getDetachedCriteria());
 		transacaoId_transacao = new AssociationExpression("transacaoId_transacao", this.getDetachedCriteria());
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
+		data = new TimestampExpression("data", this.getDetachedCriteria());
 	}
 	
 	public wb.walletbud.UserDetachedCriteria createUserId_userCriteria() {

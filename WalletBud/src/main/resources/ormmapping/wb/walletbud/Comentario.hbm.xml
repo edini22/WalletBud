@@ -15,5 +15,6 @@ License Type: Evaluation
 		<many-to-one name="transacaoId_transacao" cascade="lock" column="TransacaoId_transacao" class="wb.walletbud.Transacao" not-null="true" lazy="proxy" access="field">
 		</many-to-one>
 		<property name="descrição" column="Descrição" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="data" column="Data" type="timestamp" not-null="false" lazy="false"/>
 	</class>
 </hibernate-mapping>

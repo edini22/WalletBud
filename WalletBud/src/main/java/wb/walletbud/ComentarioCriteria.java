@@ -25,6 +25,7 @@ public class ComentarioCriteria extends AbstractORMCriteria {
 	public final IntegerExpression transacaoId_transacaoId;
 	public final AssociationExpression transacaoId_transacao;
 	public final StringExpression descrição;
+	public final TimestampExpression data;
 	
 	public ComentarioCriteria(Criteria criteria) {
 		super(criteria);
@@ -34,6 +35,7 @@ public class ComentarioCriteria extends AbstractORMCriteria {
 		transacaoId_transacaoId = new IntegerExpression("transacaoId_transacao.id_transacao", this);
 		transacaoId_transacao = new AssociationExpression("transacaoId_transacao", this);
 		descrição = new StringExpression("descrição", this);
+		data = new TimestampExpression("data", this);
 	}
 	
 	public ComentarioCriteria(PersistentSession session) {

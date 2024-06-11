@@ -28,7 +28,7 @@
                   <material-input
                     id="email"
                     type="email"
-                    label="Email incorreto"
+                    :label= emailErrorMessages
                     name="email"
                     @update:value="email = $event"
                     error
@@ -122,7 +122,7 @@ import MaterialButton from "@/components/MaterialButton.vue";
 import { mapMutations } from "vuex";
 
 import { userStore } from "@/store/userStore";
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 
@@ -134,7 +134,7 @@ export default {
     MaterialButton,
   },
   setup() {
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
 
     const router = useRouter(); 
     const store = userStore();
@@ -142,30 +142,39 @@ export default {
     const password = ref('');
     const error = ref(null);
     const emailError = ref(null);
+    const emailErrorMessages = ref(null);
     const passwordError = ref(null);
+    const passwordErrorMessages = ref(null);
     
+    let state = false;
+
     function validarEmail(email) {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       return emailRegex.test(email);
     }
 
+    watch(locale, () => {
+      emailErrorMessages.value = `${t('Email inválido')}`;
+      if (state){
+        emailErrorMessages.value = `${t('Email não existe')}`;
+        passwordErrorMessages.value = `${t('Password incorreta')}`;
+      }
+    });
 
     const login = async () => {
       //teste
       // router.push({ name: "Home" });
       let isValid = true;
 
-      if (!email.value) {
+      
+      if (!validarEmail(email.value)) {
         emailError.value = true;
+        emailErrorMessages.value = `${t('Email inválido')}`;
         isValid = false;
       } else {
-        if (!validarEmail(email.value)) {
-          emailError.value = true;
-          isValid = false;
-        } else {
-          emailError.value = false;
-        }
+        emailError.value = false;
       }
+      
 
       if (!password.value) {
         passwordError.value = true;
@@ -190,6 +199,17 @@ export default {
         await store.getUser();
         router.push({ name: "Home" });
       } catch (err) {
+        if (err.message === "Email does not exist!"){
+          emailError.value = true;
+          emailErrorMessages.value = `${t('Email não existe')}`;
+          state = true;
+          return;
+        } else if (err.message === "password does not match!"){
+          passwordError.value = true;
+          passwordErrorMessages.value = `${t('Password incorreta')}`;
+          state = true;
+          return;
+        }
         alert(err.message);
       }
 
@@ -202,6 +222,8 @@ export default {
       emailError,
       passwordError,
       t,
+      emailErrorMessages,
+      state,
     }
   },
   beforeMount() {

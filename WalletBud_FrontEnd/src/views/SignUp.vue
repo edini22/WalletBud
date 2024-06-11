@@ -248,6 +248,8 @@ export default {
     const passwordErrorMessage = ref(null);
     const checkedError = ref(false);
 
+    let state = false;
+
     function validarEmail(email) {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       return emailRegex.test(email);
@@ -255,14 +257,13 @@ export default {
 
     watch(locale, () => {
       passwordErrorMessage.value =  `${t('Passwords devem ter no mínimo')} 6 ${t('caracteres')}`;
-      emailErrorStore.value = `${t('Email não pode estar vazio')}`;
+      emailErrorStore.value = `${t('Email inválido')}`;
+      if(state){
+        emailErrorStore.value = `${t('Este email já está em uso')}`;
+      }
     });
 
     const userSignUp = async () => {
-      //teste
-      //router.push({ name: "SignIn" });
-
-      //alert("email: " + email.value + " password: " + password.value + " name: " + name.value + " termsAccepted: " + termsAccepted.value)
 
       let isValid = true;
 
@@ -281,20 +282,14 @@ export default {
       }
 
       //validar mail
-      if (!email.value) {
+      if (!validarEmail(email.value)) {
         emailError.value = true;
-        emailErrorStore.value = `${t('Email não pode estar vazio')}`;
+        emailErrorStore.value = `${t('Email inválido')}`;
         isValid = false;
       } else {
-        if (!validarEmail(email.value)) {
-          emailError.value = true;
-          //valido
-          emailErrorStore.value = "Email inválido";
-          isValid = false;
-        } else {
-          emailError.value = false;
-        }
+        emailError.value = false;
       }
+      
 
       if (!password.value) {
         passwordError.value = true;
@@ -302,10 +297,11 @@ export default {
         isValid = false;
       } else {
         if(password.value.length < 6){
+          passwordErrorMessage.value =  `${t('Passwords devem ter no mínimo')} 6 ${t('caracteres')}`;
           passwordError.value = true;
           isValid = false;
         }else{
-        passwordError.value = false;
+          passwordError.value = false;
         }
       }
 
@@ -325,16 +321,13 @@ export default {
         alert("Registado com sucesso");
         router.push({ name: "SignIn" }); // Redireciona para a página de login após registro
       } catch (error) {
-        alert("FALTA AQUI UMA COISA!")
+        
         // Tratamento de erro específico para "Email Já registado!"
         if (error.message === "Email Já registado!") {
-          alert("Este email já está registado. Utilize outro email.");
-          emailErrorStore.value = "Este email já está registado";
-          return;
-          // Lógica adicional para manter o usuário na mesma página ou mostrar mensagem de erro
-        } else if (error.message === "Email address is invalid") {
-          alert("Email address is invalid");
-          emailErrorStore.value = "Endereço de email inválido";
+          emailErrorStore.value = `${t('Este email já está em uso')}`;
+          emailError.value = true;
+          state = true;
+          //alert("Este email já está registado. Utilize outro email.");
           return;
           // Lógica adicional para manter o usuário na mesma página ou mostrar mensagem de erro
         } else {
@@ -357,6 +350,7 @@ export default {
       emailErrorStore,
       checkedError,
       t,
+      state,
     };
   },
   beforeMount() {

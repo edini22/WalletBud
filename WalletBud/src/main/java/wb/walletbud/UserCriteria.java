@@ -31,6 +31,7 @@ public class UserCriteria extends AbstractORMCriteria {
 	public final CollectionExpression comentario;
 	public final CollectionExpression categoria;
 	public final CollectionExpression user_categoria;
+	public final CollectionExpression transacaoFixa;
 	
 	public UserCriteria(Criteria criteria) {
 		super(criteria);
@@ -46,6 +47,7 @@ public class UserCriteria extends AbstractORMCriteria {
 		comentario = new CollectionExpression("ORM_Comentario", this);
 		categoria = new CollectionExpression("ORM_Categoria", this);
 		user_categoria = new CollectionExpression("ORM_User_categoria", this);
+		transacaoFixa = new CollectionExpression("ORM_TransacaoFixa", this);
 	}
 	
 	public UserCriteria(PersistentSession session) {
@@ -78,6 +80,10 @@ public class UserCriteria extends AbstractORMCriteria {
 	
 	public wb.walletbud.TransacaoPartilhadaCriteria createUser_categoriaCriteria() {
 		return new wb.walletbud.TransacaoPartilhadaCriteria(createCriteria("ORM_User_categoria"));
+	}
+	
+	public wb.walletbud.TransacaoFixaCriteria createTransacaoFixaCriteria() {
+		return new wb.walletbud.TransacaoFixaCriteria(createCriteria("ORM_TransacaoFixa"));
 	}
 	
 	public User uniqueUser() {

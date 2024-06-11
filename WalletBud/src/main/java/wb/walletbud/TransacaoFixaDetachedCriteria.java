@@ -24,6 +24,7 @@ public class TransacaoFixaDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final AssociationExpression transacaofixa_ID;
 	public final TimestampExpression dataPagamento;
 	public final TimestampExpression dataAtual;
+	public final CollectionExpression userId_user;
 	
 	public TransacaoFixaDetachedCriteria() {
 		super(wb.walletbud.TransacaoFixa.class, wb.walletbud.TransacaoFixaCriteria.class);
@@ -32,6 +33,7 @@ public class TransacaoFixaDetachedCriteria extends AbstractORMDetachedCriteria {
 		transacaofixa_ID = new AssociationExpression("transacaofixa_ID", this.getDetachedCriteria());
 		dataPagamento = new TimestampExpression("dataPagamento", this.getDetachedCriteria());
 		dataAtual = new TimestampExpression("dataAtual", this.getDetachedCriteria());
+		userId_user = new CollectionExpression("ORM_UserId_user", this.getDetachedCriteria());
 	}
 	
 	public TransacaoFixaDetachedCriteria(DetachedCriteria aDetachedCriteria) {
@@ -41,10 +43,15 @@ public class TransacaoFixaDetachedCriteria extends AbstractORMDetachedCriteria {
 		transacaofixa_ID = new AssociationExpression("transacaofixa_ID", this.getDetachedCriteria());
 		dataPagamento = new TimestampExpression("dataPagamento", this.getDetachedCriteria());
 		dataAtual = new TimestampExpression("dataAtual", this.getDetachedCriteria());
+		userId_user = new CollectionExpression("ORM_UserId_user", this.getDetachedCriteria());
 	}
 	
 	public wb.walletbud.FixaDetachedCriteria createTransacaofixa_IDCriteria() {
 		return new wb.walletbud.FixaDetachedCriteria(createCriteria("transacaofixa_ID"));
+	}
+	
+	public wb.walletbud.UserDetachedCriteria createUserId_userCriteria() {
+		return new wb.walletbud.UserDetachedCriteria(createCriteria("ORM_UserId_user"));
 	}
 	
 	public TransacaoFixa uniqueTransacaoFixa(PersistentSession session) {

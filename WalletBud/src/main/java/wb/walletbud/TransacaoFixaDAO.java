@@ -303,6 +303,10 @@ public class TransacaoFixaDAO {
 				transacaoFixa.getTransacaofixa_ID().fixa.remove(transacaoFixa);
 			}
 			
+			wb.walletbud.User[] lUserId_users = transacaoFixa.userId_user.toArray();
+			for(int i = 0; i < lUserId_users.length; i++) {
+				lUserId_users[i].transacaoFixa.remove(transacaoFixa);
+			}
 			return delete(transacaoFixa);
 		}
 		catch(Exception e) {
@@ -316,6 +320,10 @@ public class TransacaoFixaDAO {
 				transacaoFixa.getTransacaofixa_ID().fixa.remove(transacaoFixa);
 			}
 			
+			wb.walletbud.User[] lUserId_users = transacaoFixa.userId_user.toArray();
+			for(int i = 0; i < lUserId_users.length; i++) {
+				lUserId_users[i].transacaoFixa.remove(transacaoFixa);
+			}
 			try {
 				session.delete(transacaoFixa);
 				return true;

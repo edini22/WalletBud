@@ -31,6 +31,7 @@ public class UserDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final CollectionExpression comentario;
 	public final CollectionExpression categoria;
 	public final CollectionExpression user_categoria;
+	public final CollectionExpression transacaoFixa;
 	
 	public UserDetachedCriteria() {
 		super(wb.walletbud.User.class, wb.walletbud.UserCriteria.class);
@@ -46,6 +47,7 @@ public class UserDetachedCriteria extends AbstractORMDetachedCriteria {
 		comentario = new CollectionExpression("ORM_Comentario", this.getDetachedCriteria());
 		categoria = new CollectionExpression("ORM_Categoria", this.getDetachedCriteria());
 		user_categoria = new CollectionExpression("ORM_User_categoria", this.getDetachedCriteria());
+		transacaoFixa = new CollectionExpression("ORM_TransacaoFixa", this.getDetachedCriteria());
 	}
 	
 	public UserDetachedCriteria(DetachedCriteria aDetachedCriteria) {
@@ -62,6 +64,7 @@ public class UserDetachedCriteria extends AbstractORMDetachedCriteria {
 		comentario = new CollectionExpression("ORM_Comentario", this.getDetachedCriteria());
 		categoria = new CollectionExpression("ORM_Categoria", this.getDetachedCriteria());
 		user_categoria = new CollectionExpression("ORM_User_categoria", this.getDetachedCriteria());
+		transacaoFixa = new CollectionExpression("ORM_TransacaoFixa", this.getDetachedCriteria());
 	}
 	
 	public wb.walletbud.TransacaoDetachedCriteria createTransacaosCriteria() {
@@ -86,6 +89,10 @@ public class UserDetachedCriteria extends AbstractORMDetachedCriteria {
 	
 	public wb.walletbud.TransacaoPartilhadaDetachedCriteria createUser_categoriaCriteria() {
 		return new wb.walletbud.TransacaoPartilhadaDetachedCriteria(createCriteria("ORM_User_categoria"));
+	}
+	
+	public wb.walletbud.TransacaoFixaDetachedCriteria createTransacaoFixaCriteria() {
+		return new wb.walletbud.TransacaoFixaDetachedCriteria(createCriteria("ORM_TransacaoFixa"));
 	}
 	
 	public User uniqueUser(PersistentSession session) {

@@ -540,4 +540,104 @@ public class Transacao {
 
     }
 
+    @POST
+    @Path("/pay")
+    @Secured
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response payTransaction(@PathParam("transacao") String transacao, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+
+        JsonReader reader = Json.createReader(new StringReader(jsonString));
+        JsonObject jsonObject = reader.readObject();
+        reader.close();
+        try {
+
+            int IdTransacao = jsonObject.getInt("IdTransacao");
+            String dateNow = jsonObject.getString("dateNow");
+            String date = jsonObject.getString("date");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime dateTime = LocalDateTime.parse(dateNow, formatter);
+            Timestamp time_dateNow = Timestamp.valueOf(dateTime);
+
+            dateTime = LocalDateTime.parse(date, formatter);
+            Timestamp time_date = Timestamp.valueOf(dateTime);
+
+
+            int cond = -1;
+
+            if (transacao.equals("fixa")) {
+                cond = gerirFixa.payFixa(email, IdTransacao, time_dateNow, time_date);
+            }else {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Tipo de Transacao nao existe!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            if (cond == 0) {
+                JsonObject jsonResponse = null;
+
+                jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Transacao paga com sucesso!")
+                        .build();
+
+                return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if (cond == -1) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Algo de errado nao esta certo!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if (cond == -2) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Não pode pagar uma transacao que nao seja o criador!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if (cond == -3) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Email nao registado!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if (cond == -4) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Não pode pagar pagar uma transacao nao confirmada!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+
+        } catch (NumberFormatException e) {
+            JsonObject jsonResponse = Json.createObjectBuilder()
+                    .add("message", "Formato invalido do IdTransacao!")
+                    .build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(jsonResponse.toString())
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
 }

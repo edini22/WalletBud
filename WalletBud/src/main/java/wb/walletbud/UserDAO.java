@@ -323,6 +323,10 @@ public class UserDAO {
 			for(int i = 0; i < lUser_categorias.length; i++) {
 				lUser_categorias[i].setUserId_user(null);
 			}
+			wb.walletbud.TransacaoFixa[] lTransacaoFixas = user.transacaoFixa.toArray();
+			for(int i = 0; i < lTransacaoFixas.length; i++) {
+				lTransacaoFixas[i].userId_user.remove(user);
+			}
 			return delete(user);
 		}
 		catch(Exception e) {
@@ -355,6 +359,10 @@ public class UserDAO {
 			wb.walletbud.TransacaoPartilhada[] lUser_categorias = user.user_categoria.toArray();
 			for(int i = 0; i < lUser_categorias.length; i++) {
 				lUser_categorias[i].setUserId_user(null);
+			}
+			wb.walletbud.TransacaoFixa[] lTransacaoFixas = user.transacaoFixa.toArray();
+			for(int i = 0; i < lTransacaoFixas.length; i++) {
+				lTransacaoFixas[i].userId_user.remove(user);
 			}
 			try {
 				session.delete(user);

@@ -14,5 +14,10 @@ License Type: Evaluation
 		</many-to-one>
 		<property name="dataPagamento" column="DataPagamento" type="timestamp" not-null="false" lazy="false"/>
 		<property name="dataAtual" column="DataAtual" type="timestamp" not-null="false" lazy="false"/>
+		<set name="ORM_UserId_user" table="User_TransacaoFixa" lazy="true" cascade="save-update,lock" inverse="true">
+			<key column="TransacaoFixaID" not-null="true"/>
+			<many-to-many column="UserId_user" class="wb.walletbud.User">
+			</many-to-many>
+		</set>
 	</class>
 </hibernate-mapping>

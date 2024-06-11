@@ -117,7 +117,7 @@ public class GerirUnica {
                     //TODO: eliminar todas as notificacoes referentes a esta transacao
                 }
 
-                //iterar pelos users todos partilhados a alterar
+                //iterar pelos ‘users’ todos partilhados a alterar
                 condition = "TransacaoId_transacao = " + unica.getId_transacao();
                 TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
 
@@ -265,14 +265,14 @@ public class GerirUnica {
 
             condition = "TransacaoId_transacao = " + id;
             TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
-            //verificar se o owner o se com quem esta transacao esta partilhada corresponde ao user que esta a pedir, senao se verificar return vazio
+            //verificar se o owner o se com quem está transacao esta partilhada corresponde ao ‘user’ que pede, senao se verificar return vazio
             if (!(unica.getOwner_id() == user || checkTransationAcess(user, tp))) {
                 return Json.createObjectBuilder()
                         .build();
             }
             User Owner = unica.getOwner_id();
-            //ver com quem esta partilhada a transacao
-            // Construir o JsonArray para a lista de usuários
+            //ver com quem está partilhada a transacao
+            // Construir o JsonArray para a lista de utilizadores
             JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
             JsonObject userJs = Json.createObjectBuilder()
                     .add("id", Owner.getId_user())

@@ -542,4 +542,62 @@ public class GerirFixa {
         return 0;
     }
 
+    public int payFixa(String email, int id_fixa, Timestamp dateNow, Timestamp date) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = gerirUtilizador.getUserByEmail(email);
+            if (user == null) {
+                return -3;
+            }
+
+            Fixa fixa = FixaDAO.getFixaByORMID(id_fixa);
+            if (fixa == null ) {
+                return -1;
+            }
+
+            if (fixa.getOwner_id() != user) {
+                return -2;
+            }
+
+            if (!fixa.getStatus()) {
+                return -4;
+            }
+
+            String condition = "TransacaoId_transacao = " + fixa.getId_transacao();
+            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+
+            TransacaoFixa tf = TransacaoFixaDAO.createTransacaoFixa();
+            tf.setTransacaofixa_ID(fixa);
+            tf.setDataAtual(dateNow);
+            tf.setDataPagamento(date);
+
+            TransacaoFixaDAO.save(tf);
+
+            //owner
+            user.transacaoFixa.add(tf);
+            //atualizar saldos
+            if (fixa.getTipo().equals("receita")) {
+                user.setSaldo(user.getSaldo() + fixa.getShareValue());
+            } else {
+                user.setSaldo(user.getSaldo() - fixa.getShareValue());
+            }
+            UserDAO.save(user);
+            for (TransacaoPartilhada tp : tps) {
+                User u = tp.getUserId_user();
+                u.transacaoFixa.add(tf);
+                if (fixa.getTipo().equals("receita")) {
+                    u.setSaldo(u.getSaldo() + fixa.getShareValue());
+                } else {
+                    u.setSaldo(u.getSaldo() - fixa.getShareValue());
+                }
+                UserDAO.save(u);
+            }
+
+            t.commit();
+        } catch (Exception e){
+            t.rollback();
+        }
+        return 0;
+    }
+
 }

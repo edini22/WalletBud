@@ -24,6 +24,7 @@ public class TransacaoFixaCriteria extends AbstractORMCriteria {
 	public final AssociationExpression transacaofixa_ID;
 	public final TimestampExpression dataPagamento;
 	public final TimestampExpression dataAtual;
+	public final CollectionExpression userId_user;
 	
 	public TransacaoFixaCriteria(Criteria criteria) {
 		super(criteria);
@@ -32,6 +33,7 @@ public class TransacaoFixaCriteria extends AbstractORMCriteria {
 		transacaofixa_ID = new AssociationExpression("transacaofixa_ID", this);
 		dataPagamento = new TimestampExpression("dataPagamento", this);
 		dataAtual = new TimestampExpression("dataAtual", this);
+		userId_user = new CollectionExpression("ORM_UserId_user", this);
 	}
 	
 	public TransacaoFixaCriteria(PersistentSession session) {
@@ -44,6 +46,10 @@ public class TransacaoFixaCriteria extends AbstractORMCriteria {
 	
 	public FixaCriteria createTransacaofixa_IDCriteria() {
 		return new FixaCriteria(createCriteria("transacaofixa_ID"));
+	}
+	
+	public wb.walletbud.UserCriteria createUserId_userCriteria() {
+		return new wb.walletbud.UserCriteria(createCriteria("ORM_UserId_user"));
 	}
 	
 	public TransacaoFixa uniqueTransacaoFixa() {

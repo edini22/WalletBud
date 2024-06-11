@@ -39,5 +39,10 @@ License Type: Evaluation
 			<key column="UserId_user" not-null="true"/>
 			<one-to-many class="wb.walletbud.TransacaoPartilhada"/>
 		</set>
+		<set name="ORM_TransacaoFixa" table="User_TransacaoFixa" lazy="true" cascade="save-update,lock">
+			<key column="UserId_user" not-null="true"/>
+			<many-to-many column="TransacaoFixaID" class="wb.walletbud.TransacaoFixa">
+			</many-to-many>
+		</set>
 	</class>
 </hibernate-mapping>

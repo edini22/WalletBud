@@ -2,14 +2,11 @@ package beans.stateless;
 
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
-import jakarta.json.Json;
+
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
-import org.orm.PersistentException;
-import org.orm.PersistentTransaction;
+
 import wb.walletbud.*;
 
 @Stateless

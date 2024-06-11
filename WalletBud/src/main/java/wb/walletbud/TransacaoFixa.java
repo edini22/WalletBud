@@ -17,6 +17,14 @@ public class TransacaoFixa {
 	public TransacaoFixa() {
 	}
 	
+	private java.util.Set this_getSet (int key) {
+		if (key == wb.walletbud.ORMConstants.KEY_TRANSACAOFIXA_USERID_USER) {
+			return ORM_userId_user;
+		}
+		
+		return null;
+	}
+	
 	private void this_setOwner(Object owner, int key) {
 		if (key == wb.walletbud.ORMConstants.KEY_TRANSACAOFIXA_TRANSACAOFIXA_ID) {
 			this.transacaofixa_ID = (wb.walletbud.Fixa) owner;
@@ -24,6 +32,10 @@ public class TransacaoFixa {
 	}
 	
 	org.orm.util.ORMAdapter _ormAdapter = new org.orm.util.AbstractORMAdapter() {
+		public java.util.Set getSet(int key) {
+			return this_getSet(key);
+		}
+		
 		public void setOwner(Object owner, int key) {
 			this_setOwner(owner, key);
 		}
@@ -37,6 +49,8 @@ public class TransacaoFixa {
 	private java.sql.Timestamp dataPagamento;
 	
 	private java.sql.Timestamp dataAtual;
+	
+	private java.util.Set ORM_userId_user = new java.util.HashSet();
 	
 	private void setID(int value) {
 		this.ID = value;
@@ -65,6 +79,16 @@ public class TransacaoFixa {
 	public java.sql.Timestamp getDataAtual() {
 		return dataAtual;
 	}
+	
+	private void setORM_UserId_user(java.util.Set value) {
+		this.ORM_userId_user = value;
+	}
+	
+	private java.util.Set getORM_UserId_user() {
+		return ORM_userId_user;
+	}
+	
+	public final wb.walletbud.UserSetCollection userId_user = new wb.walletbud.UserSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_TRANSACAOFIXA_USERID_USER, wb.walletbud.ORMConstants.KEY_USER_TRANSACAOFIXA, wb.walletbud.ORMConstants.KEY_MUL_MANY_TO_MANY);
 	
 	public void setTransacaofixa_ID(wb.walletbud.Fixa value) {
 		if (transacaofixa_ID != null) {

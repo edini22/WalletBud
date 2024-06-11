@@ -36,6 +36,9 @@ public class User {
 		else if (key == wb.walletbud.ORMConstants.KEY_USER_USER_CATEGORIA) {
 			return ORM_user_categoria;
 		}
+		else if (key == wb.walletbud.ORMConstants.KEY_USER_TRANSACAOFIXA) {
+			return ORM_transacaoFixa;
+		}
 		
 		return null;
 	}
@@ -70,6 +73,8 @@ public class User {
 	private java.util.Set ORM_categoria = new java.util.HashSet();
 	
 	private java.util.Set ORM_user_categoria = new java.util.HashSet();
+	
+	private java.util.Set ORM_transacaoFixa = new java.util.HashSet();
 	
 	private void setId_user(int value) {
 		this.id_user = value;
@@ -182,6 +187,16 @@ public class User {
 	}
 	
 	public final wb.walletbud.TransacaoPartilhadaSetCollection user_categoria = new wb.walletbud.TransacaoPartilhadaSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_USER_USER_CATEGORIA, wb.walletbud.ORMConstants.KEY_TRANSACAOPARTILHADA_USERID_USER, wb.walletbud.ORMConstants.KEY_MUL_ONE_TO_MANY);
+	
+	private void setORM_TransacaoFixa(java.util.Set value) {
+		this.ORM_transacaoFixa = value;
+	}
+	
+	private java.util.Set getORM_TransacaoFixa() {
+		return ORM_transacaoFixa;
+	}
+	
+	public final wb.walletbud.TransacaoFixaSetCollection transacaoFixa = new wb.walletbud.TransacaoFixaSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_USER_TRANSACAOFIXA, wb.walletbud.ORMConstants.KEY_TRANSACAOFIXA_USERID_USER, wb.walletbud.ORMConstants.KEY_MUL_MANY_TO_MANY);
 	
 	public int getId() {
 		//TODO: Implement Method

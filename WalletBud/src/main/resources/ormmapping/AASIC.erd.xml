@@ -511,6 +511,32 @@
       <UserTypes/>
     </Column>
   </Entity>
+  <Entity name="User_TransacaoFixa" Unlogged="false" PKClustered="0" Temporal="false" TemporalStartTimeColumn="null" TemporalEndTimeColumn="null" TemporalHistoryTable="null">
+    <Column name="UserId_user">
+      <PrimaryKey>true</PrimaryKey>
+      <ForeignKey>true</ForeignKey>
+      <ReferencedColumn>WB.WalletBud.User.Id_user</ReferencedColumn>
+      <Type>9</Type>
+      <Length>10</Length>
+      <Nullable>false</Nullable>
+      <IDGenerator>assigned</IDGenerator>
+      <Unique>false</Unique>
+      <Index>false</Index>
+      <UserTypes/>
+    </Column>
+    <Column name="TransacaoFixaID">
+      <PrimaryKey>true</PrimaryKey>
+      <ForeignKey>true</ForeignKey>
+      <ReferencedColumn>WB.WalletBud.TransacaoFixa.ID</ReferencedColumn>
+      <Type>9</Type>
+      <Length>10</Length>
+      <Nullable>false</Nullable>
+      <IDGenerator>assigned</IDGenerator>
+      <Unique>false</Unique>
+      <Index>false</Index>
+      <UserTypes/>
+    </Column>
+  </Entity>
   <ForeignKey name="FKTransacaoF591731">
     <ReferenceTable>TransacaoFixa</ReferenceTable>
     <ReferencedTable>Transacao</ReferencedTable>
@@ -609,6 +635,26 @@
     </Columns>
     <RefColumns>
       <Column>Id_user</Column>
+    </RefColumns>
+  </ForeignKey>
+  <ForeignKey name="FKUser_Trans929330">
+    <ReferenceTable>User_TransacaoFixa</ReferenceTable>
+    <ReferencedTable>User</ReferencedTable>
+    <Columns>
+      <Column>UserId_user</Column>
+    </Columns>
+    <RefColumns>
+      <Column>Id_user</Column>
+    </RefColumns>
+  </ForeignKey>
+  <ForeignKey name="FKUser_Trans367446">
+    <ReferenceTable>User_TransacaoFixa</ReferenceTable>
+    <ReferencedTable>TransacaoFixa</ReferencedTable>
+    <Columns>
+      <Column>TransacaoFixaID</Column>
+    </Columns>
+    <RefColumns>
+      <Column>ID</Column>
     </RefColumns>
   </ForeignKey>
 </Model>

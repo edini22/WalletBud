@@ -13,7 +13,7 @@ public class CreateAASICData {
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : confirma, userId_user, usertransacaoId
 			wb.walletbud.TransacaoPartilhadaDAO.save(wBWalletBudTransacaoPartilhada);
 			wb.walletbud.User wBWalletBudUser = wb.walletbud.UserDAO.createUser();
-			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : user_categoria, categoria, comentario, objetivo, notificacao, transacaos, saldo
+			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : transacaoFixa, user_categoria, categoria, comentario, objetivo, notificacao, transacaos, saldo
 			wb.walletbud.UserDAO.save(wBWalletBudUser);
 			wb.walletbud.Transacao wBWalletBudTransacao = wb.walletbud.TransacaoDAO.createTransacao();
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : transacao, comentario, status, shareValue, value, categoriaId_categoria, owner_id
@@ -31,7 +31,7 @@ public class CreateAASICData {
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : transacao, userId_user
 			wb.walletbud.CategoriaDAO.save(wBWalletBudCategoria);
 			wb.walletbud.TransacaoFixa wBWalletBudTransacaoFixa = wb.walletbud.TransacaoFixaDAO.createTransacaoFixa();
-			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : transacaofixa_ID
+			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : userId_user, transacaofixa_ID
 			wb.walletbud.TransacaoFixaDAO.save(wBWalletBudTransacaoFixa);
 			wb.walletbud.Fixa wBWalletBudFixa = wb.walletbud.FixaDAO.createFixa();
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : fixa

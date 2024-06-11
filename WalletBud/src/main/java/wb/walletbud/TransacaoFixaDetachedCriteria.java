@@ -24,6 +24,7 @@ public class TransacaoFixaDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final AssociationExpression transacaofixa_ID;
 	public final TimestampExpression dataPagamento;
 	public final TimestampExpression dataAtual;
+	public final FloatExpression payvalue;
 	public final CollectionExpression userId_user;
 	
 	public TransacaoFixaDetachedCriteria() {
@@ -33,6 +34,7 @@ public class TransacaoFixaDetachedCriteria extends AbstractORMDetachedCriteria {
 		transacaofixa_ID = new AssociationExpression("transacaofixa_ID", this.getDetachedCriteria());
 		dataPagamento = new TimestampExpression("dataPagamento", this.getDetachedCriteria());
 		dataAtual = new TimestampExpression("dataAtual", this.getDetachedCriteria());
+		payvalue = new FloatExpression("payvalue", this.getDetachedCriteria());
 		userId_user = new CollectionExpression("ORM_UserId_user", this.getDetachedCriteria());
 	}
 	
@@ -43,6 +45,7 @@ public class TransacaoFixaDetachedCriteria extends AbstractORMDetachedCriteria {
 		transacaofixa_ID = new AssociationExpression("transacaofixa_ID", this.getDetachedCriteria());
 		dataPagamento = new TimestampExpression("dataPagamento", this.getDetachedCriteria());
 		dataAtual = new TimestampExpression("dataAtual", this.getDetachedCriteria());
+		payvalue = new FloatExpression("payvalue", this.getDetachedCriteria());
 		userId_user = new CollectionExpression("ORM_UserId_user", this.getDetachedCriteria());
 	}
 	

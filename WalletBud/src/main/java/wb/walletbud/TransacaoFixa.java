@@ -50,6 +50,8 @@ public class TransacaoFixa {
 	
 	private java.sql.Timestamp dataAtual;
 	
+	private float payvalue;
+	
 	private java.util.Set ORM_userId_user = new java.util.HashSet();
 	
 	private void setID(int value) {
@@ -78,6 +80,14 @@ public class TransacaoFixa {
 	
 	public java.sql.Timestamp getDataAtual() {
 		return dataAtual;
+	}
+	
+	public void setPayvalue(float value) {
+		this.payvalue = value;
+	}
+	
+	public float getPayvalue() {
+		return payvalue;
 	}
 	
 	private void setORM_UserId_user(java.util.Set value) {

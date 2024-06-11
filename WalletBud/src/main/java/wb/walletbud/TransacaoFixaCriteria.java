@@ -24,6 +24,7 @@ public class TransacaoFixaCriteria extends AbstractORMCriteria {
 	public final AssociationExpression transacaofixa_ID;
 	public final TimestampExpression dataPagamento;
 	public final TimestampExpression dataAtual;
+	public final FloatExpression payvalue;
 	public final CollectionExpression userId_user;
 	
 	public TransacaoFixaCriteria(Criteria criteria) {
@@ -33,6 +34,7 @@ public class TransacaoFixaCriteria extends AbstractORMCriteria {
 		transacaofixa_ID = new AssociationExpression("transacaofixa_ID", this);
 		dataPagamento = new TimestampExpression("dataPagamento", this);
 		dataAtual = new TimestampExpression("dataAtual", this);
+		payvalue = new FloatExpression("payvalue", this);
 		userId_user = new CollectionExpression("ORM_UserId_user", this);
 	}
 	

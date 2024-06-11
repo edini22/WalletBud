@@ -640,4 +640,42 @@ public class Transacao {
 
     }
 
+    @GET
+    @Path("/payments")
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTransactionPay(@PathParam("transacao") String transacao, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+        try {
+            JsonObject payments;
+            if (transacao.equals("fixa")) {
+                payments = gerirFixa.getJsonPaymentFixa(email);
+            } else {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Tipo de Transacao nao existe!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            if (payments.isEmpty()) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Transacoes não encontradas!")
+                        .build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            return Response.ok(payments.toString(), MediaType.APPLICATION_JSON).build();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

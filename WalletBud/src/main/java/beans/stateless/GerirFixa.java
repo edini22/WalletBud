@@ -12,6 +12,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import java.util.Iterator;
+
 @Stateless
 public class GerirFixa {
 
@@ -61,7 +63,6 @@ public class GerirFixa {
             t.commit();
         } catch (Exception e) {
             t.rollback();
-            e.printStackTrace();
             return -2;
         }
 
@@ -129,7 +130,6 @@ public class GerirFixa {
             t.commit();
         } catch (Exception e) {
             t.rollback();
-            e.printStackTrace();
             return -2;
         }
         return 0;
@@ -214,7 +214,6 @@ public class GerirFixa {
                     .build();
 
         } catch (Exception e) {
-            e.printStackTrace();
             return Json.createObjectBuilder()
                     .build();
         }
@@ -271,7 +270,7 @@ public class GerirFixa {
             JsonArray userArray = userArrayBuilder.build();
 
 
-            JsonObject fixaJson = Json.createObjectBuilder()
+            return Json.createObjectBuilder()
                     .add("id", fixa.getId_transacao())
                     .add("name", fixa.getName())
                     .add("value", fixa.getValue())
@@ -286,8 +285,6 @@ public class GerirFixa {
                     .add("status", fixa.getStatus())
                     .add("users", userArray)
                     .build();
-
-            return fixaJson;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -339,8 +336,9 @@ public class GerirFixa {
 
             }
 
-            float nSValue = fixa.getShareValue() / (nUsers + 1);
+            float nSValue = fixa.getValue() / (nUsers + 1);
             fixa.setShareValue(nSValue);
+            FixaDAO.save(fixa);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -368,8 +366,6 @@ public class GerirFixa {
 
             String condition = "TransacaoId_transacao = " + fixa.getId_transacao();
             TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
-
-            int oldUsers = tps.length + 1;
 
             if (tps.length == 0 && option == -1) {
                 return -4;
@@ -411,12 +407,7 @@ public class GerirFixa {
                         tpu.setConfirma(0);
                         TransacaoPartilhadaDAO.save(tpu);
                     }
-                    if (transacoesPart.length == 0) {
-//                        confirmFixa(fixa);
-                        fixa.setStatus(true);
-                    } else {
-                        fixa.setStatus(false);
-                    }
+                    fixa.setStatus(transacoesPart.length == 0);
                 }
                 fixa.setShareValue(nSValue);
                 FixaDAO.save(fixa);
@@ -524,9 +515,12 @@ public class GerirFixa {
 
 
             }
-            if (ready_to_confirm && (!remove || users.size() == 0)) {
+            if (ready_to_confirm && (!remove || users.isEmpty())) {
                 System.out.println("confirmaUnica");
                 fixa.setStatus(true);
+                int nUsers = users.size() + 1;
+                float nSValue = fixa.getValue() / nUsers;
+                fixa.setShareValue(nSValue);
                 FixaDAO.save(fixa);
                 // chamar função para confirmar e atualizar saldos
                 // confirmUnica(fixa);
@@ -570,6 +564,7 @@ public class GerirFixa {
             tf.setTransacaofixa_ID(fixa);
             tf.setDataAtual(dateNow);
             tf.setDataPagamento(date);
+            tf.setPayvalue(fixa.getShareValue());
 
             TransacaoFixaDAO.save(tf);
 
@@ -591,6 +586,10 @@ public class GerirFixa {
                     u.setSaldo(u.getSaldo() - fixa.getShareValue());
                 }
                 UserDAO.save(u);
+
+                //TODO: notificar todos os utilizadores (u) que uma despes/receita fixa foi paga
+                // NOTA: não esquecer de enviar notificação para toda os utilizadores e o proprio
+                // owner 3 dias antes
             }
 
             t.commit();
@@ -598,6 +597,48 @@ public class GerirFixa {
             t.rollback();
         }
         return 0;
+    }
+
+    public JsonObject getJsonPaymentFixa(String email) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = gerirUtilizador.getUserByEmail(email);
+            if (user == null) {
+                return Json.createObjectBuilder()
+                        .build();
+            }
+
+            JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
+
+            for (Iterator it = user.transacaoFixa.getIterator(); it.hasNext();) {
+                TransacaoFixa tf = (TransacaoFixa) it.next();
+
+                JsonObject userJson = Json.createObjectBuilder()
+                        .add("id", tf.getTransacaofixa_ID().getId_transacao())
+                        .add("name", tf.getTransacaofixa_ID().getName())
+                        .add("value", tf.getPayvalue())
+                        .add("descricao", tf.getTransacaofixa_ID().getDescrição())
+                        .add("descricao", tf.getTransacaofixa_ID().getDescrição())
+                        .add("categoria", tf.getTransacaofixa_ID().getCategoriaId_categoria().getName())
+                        .add("repeticao", tf.getTransacaofixa_ID().getRepeticao())
+                        .add("tipo", tf.getTransacaofixa_ID().getTipo())
+                        .add("local", tf.getTransacaofixa_ID().getLocal())
+                        .build();
+                userArrayBuilder.add(userJson);
+
+            }
+            JsonArray response = userArrayBuilder.build();
+
+
+            return Json.createObjectBuilder()
+                    .add("transacoes", response)
+                    .build();
+
+        } catch (Exception e) {
+            return Json.createObjectBuilder()
+                    .build();
+        }
+
     }
 
 }

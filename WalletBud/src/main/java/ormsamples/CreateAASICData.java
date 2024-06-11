@@ -31,7 +31,7 @@ public class CreateAASICData {
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : transacao, userId_user
 			wb.walletbud.CategoriaDAO.save(wBWalletBudCategoria);
 			wb.walletbud.TransacaoFixa wBWalletBudTransacaoFixa = wb.walletbud.TransacaoFixaDAO.createTransacaoFixa();
-			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : userId_user, transacaofixa_ID
+			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : userId_user, payvalue, transacaofixa_ID
 			wb.walletbud.TransacaoFixaDAO.save(wBWalletBudTransacaoFixa);
 			wb.walletbud.Fixa wBWalletBudFixa = wb.walletbud.FixaDAO.createFixa();
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : fixa

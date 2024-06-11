@@ -360,6 +360,7 @@ public class GerirUnica {
 
             float nSValue = unica.getShareValue() / (nUsers + 1);
             unica.setShareValue(nSValue);
+            UnicaDAO.save(unica);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -678,4 +678,76 @@ public class Transacao {
         }
     }
 
+    @DELETE
+    @Path("/{idTransacao}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteUser(@PathParam("idTransacao") int idTransacao, @PathParam("transacao") String transacao, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+
+        try{
+            int cond;
+            if (transacao.equals("fixa")) {
+                cond = gerirFixa.giveUpTransactionFixa(email,idTransacao);
+            } else if (transacao.equals("unica")) {
+                cond = gerirUnica.giveUpTransactionUnica(email,idTransacao);
+            } else {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Tipo de Transacao nao existe!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+            if (cond == 0) {
+                JsonObject jsonResponse = null;
+
+                jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Transacao paga com sucesso!")
+                        .build();
+
+                return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if (cond == -1) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Algo de errado nao esta certo!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if (cond == -2) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Nao pode eliminar uma transacao unica sem ser o criador!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if (cond == -3) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Email nao registado!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if (cond == -4) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Nao pode desistir de uma transacao ao qual nao pertence!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (Exception e){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

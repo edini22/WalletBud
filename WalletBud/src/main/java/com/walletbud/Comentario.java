@@ -4,13 +4,15 @@ import beans.stateless.GerirComentario;
 import beans.stateless.GerirUtilizador;
 import jakarta.ejb.EJB;
 import jakarta.json.Json;
-import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.orm.PersistentException;
+import org.orm.PersistentTransaction;
+import wb.walletbud.AASICPersistentManager;
 import wb.walletbud.Transacao;
 import wb.walletbud.TransacaoDAO;
 import wb.walletbud.User;
@@ -40,8 +42,8 @@ public class Comentario {
         reader.close();
 
         try {
-            int IdTransacao = jsonObject.getInt("IdTransacao");
-            JsonArray comentarios = jsonObject.getJsonArray("comentarios");
+            int IdTransacao = jsonObject.getInt("idTransacao");
+            String comentario = jsonObject.getString("comentario");
 
             User user = gerirUtilizador.getUserByEmail(email);
 
@@ -55,8 +57,16 @@ public class Comentario {
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-            
-            int status = gerirComentario.createComentario(comentarios, user, transacao);
+            PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+            int status = 0;
+            try {
+                status = gerirComentario.createComentario(comentario, user, transacao);
+                t.commit();
+            }
+            catch (PersistentException pe) {
+                t.rollback();
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
 
             if (status == 0) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
@@ -81,21 +91,15 @@ public class Comentario {
         }
     }
 
-    @POST
-    @Path("/list")
+    @GET
+    @Path("/list/{id}")
     @Secured
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listComments(String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listComments(@PathParam("id") int IdTransacao, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
-
-        JsonReader reader = Json.createReader(new StringReader(jsonString));
-        JsonObject jsonObject = reader.readObject();
-        reader.close();
-
+        System.out.println("Email: " + email);
         try {
-            int IdTransacao = jsonObject.getInt("IdTransacao");
 
             JsonObject comentarios = gerirComentario.getComentariosByTransaction(IdTransacao, email);
 
@@ -117,22 +121,15 @@ public class Comentario {
 
     }
 
-    @POST
-    @Path("/remove")
+    @DELETE
+    @Path("/remove/{id}")
     @Secured
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteComment(String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response deleteComment(@PathParam("id") int IdComentario, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
-        JsonReader reader = Json.createReader(new StringReader(jsonString));
-        JsonObject jsonObject = reader.readObject();
-        reader.close();
-
         try {
-            int IdComentario = jsonObject.getInt("IdComentario");
-
             int status = gerirComentario.deleteComentario(IdComentario, email);
 
             if (status == 0) {
@@ -180,7 +177,7 @@ public class Comentario {
 
             if (status == 0) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
-                        .add("message", "Comentario removido com sucesso!")
+                        .add("message", "Comentario editado com sucesso!")
                         .build();
                 return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)

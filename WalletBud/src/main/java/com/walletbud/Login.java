@@ -18,7 +18,7 @@ import java.util.Date;
 import java.io.StringReader;
 
 @Path("/login")
-public class login {
+public class Login {
 
     @EJB
     private GerirUtilizador gerirUtilizador;

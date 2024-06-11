@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Path("/register")
-public class register {
+public class Register {
 
     @EJB
     private GerirUtilizador gerirUtilizador;

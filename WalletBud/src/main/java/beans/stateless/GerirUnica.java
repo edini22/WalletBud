@@ -28,7 +28,7 @@ public class GerirUnica {
     @EJB
     private GerirComentario gerirComentario;
 
-    public int createUnica(String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, String email, JsonArray usersArray, JsonArray comentarios) throws PersistentException {
+    public int createUnica(String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, String email, JsonArray usersArray, String comentario) throws PersistentException {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = gerirUtilizador.getUserByEmail(email);
@@ -67,8 +67,8 @@ public class GerirUnica {
                 }
             }
 
-            if (comentarios.isEmpty()) {
-                gerirComentario.createComentario(comentarios, user, unica);
+            if (!comentario.isEmpty()) {
+                gerirComentario.createComentario(comentario, user, unica);
             }
 
             UnicaDAO.save(unica);

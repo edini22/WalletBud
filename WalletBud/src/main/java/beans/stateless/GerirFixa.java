@@ -26,7 +26,10 @@ public class GerirFixa {
     @EJB
     private GerirTransacaoPartilhada gerirTransacaoPartilhada;
 
-    public int createFixa(String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, int repeticao, String email, JsonArray usersArray) throws PersistentException {
+    @EJB
+    private GerirComentario gerirComentario;
+
+    public int createFixa(String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, int repeticao, String email, JsonArray usersArray, String comentario) throws PersistentException {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = gerirUtilizador.getUserByEmail(email);
@@ -55,6 +58,10 @@ public class GerirFixa {
                     System.out.println("status: " + status);
                     return status;
                 }
+            }
+
+            if (!comentario.isEmpty()) {
+                gerirComentario.createComentario(comentario, user, fixa);
             }
 
             FixaDAO.save(fixa);
@@ -671,8 +678,19 @@ public class GerirFixa {
                     // NOTA: não esquecer de enviar notificação para toda os utilizadores(pedir para se querem continuar mas agora vao pagar/receber (nSValue)) e o proprio a dizer que disistiu
                 }
 
-                //mudar o owner para null para assim "eliminar" a transacao
-                fixa.setOwner_id(null);
+                //verificar se existem pagamentos associados
+                condition = "TransacaoId_transacao = " + fixa.getId_transacao();
+                TransacaoFixa[] tpfixas = TransacaoFixaDAO.listTransacaoFixaByQuery(condition, null);
+
+                if(tpfixas.length == 0){
+                    FixaDAO.deleteAndDissociate(fixa);
+                } else{
+                    //mudar o owner para null para assim "eliminar" a transacao
+                    fixa.setOwner_id(null);
+                    FixaDAO.save(fixa);
+                }
+
+
                 //TODO: notificar o owner (user) eliminou esta  transacao
 
             } else{
@@ -690,20 +708,21 @@ public class GerirFixa {
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao();
                 TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
 
+                if(tps.length != 0){
+                    for (TransacaoPartilhada tp : tps) {
+                        tp.setConfirma(0);
+                        TransacaoPartilhadaDAO.save(tp);
 
-                for (TransacaoPartilhada tp : tps) {
-                    tp.setConfirma(0);
-                    TransacaoPartilhadaDAO.save(tp);
-
-//                    User u = tp.getUserId_user();
-//                    float nSValue = fixa.getValue()/tps.length;
-                    //TODO: notificar todos os utilizadores (u) que um user desistiu da despesa/receita fixa
-                    // NOTA: não esquecer de enviar notificação para toda os utilizadores(pedir para se querem continuar mas agora vao pagar/receber (nSValue)) e o proprio a dizer que disistiu
+    //                    User u = tp.getUserId_user();
+    //                    float nSValue = fixa.getValue()/tps.length;
+                        //TODO: notificar todos os utilizadores (u) que um user desistiu da despesa/receita fixa
+                        // NOTA: não esquecer de enviar notificação para toda os utilizadores(pedir para se querem continuar mas agora vao pagar/receber (nSValue)) e o proprio a dizer que disistiu
+                    }
+                    fixa.setStatus(false);
+                    FixaDAO.save(fixa);
                 }
 
             }
-            fixa.setStatus(false);
-            FixaDAO.save(fixa);
 
             t.commit();
         } catch (Exception e){

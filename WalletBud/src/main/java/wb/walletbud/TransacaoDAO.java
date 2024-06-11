@@ -298,12 +298,12 @@ public class TransacaoDAO {
 	}
 	
 	public static boolean deleteAndDissociate(wb.walletbud.Transacao transacao)throws PersistentException {
-		if (transacao instanceof WB.WalletBud.Fixa) {
-			return WB.WalletBud.FixaDAO.deleteAndDissociate((WB.WalletBud.Fixa) transacao);
+		if (transacao instanceof wb.walletbud.Fixa) {
+			return wb.walletbud.FixaDAO.deleteAndDissociate((wb.walletbud.Fixa) transacao);
 		}
 		
-		if (transacao instanceof WB.WalletBud.Unica) {
-			return WB.WalletBud.UnicaDAO.deleteAndDissociate((WB.WalletBud.Unica) transacao);
+		if (transacao instanceof wb.walletbud.Unica) {
+			return wb.walletbud.UnicaDAO.deleteAndDissociate((wb.walletbud.Unica) transacao);
 		}
 		
 		try {
@@ -331,12 +331,12 @@ public class TransacaoDAO {
 	}
 	
 	public static boolean deleteAndDissociate(wb.walletbud.Transacao transacao, org.orm.PersistentSession session)throws PersistentException {
-		if (transacao instanceof WB.WalletBud.Fixa) {
-			return WB.WalletBud.FixaDAO.deleteAndDissociate((WB.WalletBud.Fixa) transacao, session);
+		if (transacao instanceof wb.walletbud.Fixa) {
+			return wb.walletbud.FixaDAO.deleteAndDissociate((wb.walletbud.Fixa) transacao, session);
 		}
 		
-		if (transacao instanceof WB.WalletBud.Unica) {
-			return WB.WalletBud.UnicaDAO.deleteAndDissociate((WB.WalletBud.Unica) transacao, session);
+		if (transacao instanceof wb.walletbud.Unica) {
+			return wb.walletbud.UnicaDAO.deleteAndDissociate((wb.walletbud.Unica) transacao, session);
 		}
 		
 		try {

@@ -173,6 +173,15 @@ export const userStore = defineStore("user", {
       }
     },
 
+    async logOut(){
+      localStorage.removeItem('token');
+      this.username = "";
+      this.email = "";
+      this.password = "";
+      this.id = 0;
+      this.saldo = 0;
+      this.idioma = "";
+    },
   },
   }
 );

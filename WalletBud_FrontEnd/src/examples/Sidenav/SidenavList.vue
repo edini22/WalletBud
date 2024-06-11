@@ -109,21 +109,38 @@
         <a
           class="btn mt-4 w-100"
           :class="`bg-gradient-${this.$store.state.color}`"
-          href="https://www.creative-tim.com/product/vue-material-dashboard-2-pro"
-          >Upgrade to pro</a
+          @click="logOut"
+          >{{ $t('Sign Out') }}</a
         >
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import SidenavCollapse from "./SidenavCollapse.vue";
+import { userStore } from "@/store/userStore";
+import { useRouter } from "vue-router";
 
 export default {
   name: "SidenavList",
   props: {
     cardBg: String,
   },
+  setup(){
+    const store = userStore();
+    const router = useRouter();
+
+    const logOut = async () => {
+      await store.logOut();
+      router.push({ name: "SignIn" });
+    };
+    return {
+      logOut,
+    };
+
+  },
+  
   data() {
     return {
       title: "Soft UI Dashboard PRO",
@@ -133,6 +150,7 @@ export default {
   },
   components: {
     SidenavCollapse,
+
   },
 };
 </script>

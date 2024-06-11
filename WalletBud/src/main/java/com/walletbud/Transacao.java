@@ -30,7 +30,7 @@ public class Transacao {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response addTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -42,23 +42,23 @@ public class Transacao {
             String descricao = jsonObject.getString("descricao");
             String local = jsonObject.getString("local");
             int IdCategoria = jsonObject.getInt("IdCategoria");
-            String dateStr  = jsonObject.getString("date");
+            String dateStr = jsonObject.getString("date");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
             Timestamp timestamp = Timestamp.valueOf(dateTime);
             JsonArray usersArray = jsonObject.getJsonArray("users");
-            
+
             String value_str = jsonObject.getString("value");
             float value = Float.parseFloat(value_str);
-            int cond = - 1;
+            int cond = -1;
 
-            if(transacao.equals("fixa")){
+            if (transacao.equals("fixa")) {
                 int repeticao = jsonObject.getInt("repeticao");
 
-                cond = gerirFixa.createFixa(name, value, descricao, local, tipo, IdCategoria, timestamp, repeticao,email);
-            } else if(transacao.equals("unica")){
+                cond = gerirFixa.createFixa(name, value, descricao, local, tipo, IdCategoria, timestamp, repeticao, email, usersArray);
+            } else if (transacao.equals("unica")) {
                 cond = gerirUnica.createUnica(name, value, descricao, local, tipo, IdCategoria, timestamp, email, usersArray);
-            } else{
+            } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
@@ -68,14 +68,14 @@ public class Transacao {
                         .build();
             }
 
-            if(cond == 0){
+            if (cond == 0) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", tipo + " registada com sucesso!")
                         .build();
                 return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -1){
+            } else if (cond == -1) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
@@ -83,7 +83,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -3){
+            } else if (cond == -3) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email nao registado!")
                         .build();
@@ -91,7 +91,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -4){
+            } else if (cond == -4) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Categoria nao encontrada!")
                         .build();
@@ -99,7 +99,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else{
+            } else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 
@@ -111,7 +111,7 @@ public class Transacao {
                     .entity(jsonResponse.toString())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -123,7 +123,7 @@ public class Transacao {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response setTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response setTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -136,35 +136,63 @@ public class Transacao {
             Timestamp timestamp;
 
             int IdTransacao = jsonObject.getInt("IdTransacao");
-            try {name = jsonObject.getString("name");} catch (java.lang.NullPointerException en) {name = null;}
-            try {descricao = jsonObject.getString("descricao");} catch (java.lang.NullPointerException en) {descricao = null;}
-            try {local = jsonObject.getString("local");} catch (java.lang.NullPointerException en) {local = null;}
-            try {IdCategoria = jsonObject.getInt("IdCategoria");} catch (java.lang.NullPointerException en) {IdCategoria = -1;}
-            try {dateStr  = jsonObject.getString("date");} catch (java.lang.NullPointerException en) {dateStr = null;}
+            try {
+                name = jsonObject.getString("name");
+            } catch (java.lang.NullPointerException en) {
+                name = null;
+            }
+            try {
+                descricao = jsonObject.getString("descricao");
+            } catch (java.lang.NullPointerException en) {
+                descricao = null;
+            }
+            try {
+                local = jsonObject.getString("local");
+            } catch (java.lang.NullPointerException en) {
+                local = null;
+            }
+            try {
+                IdCategoria = jsonObject.getInt("IdCategoria");
+            } catch (java.lang.NullPointerException en) {
+                IdCategoria = -1;
+            }
+            try {
+                dateStr = jsonObject.getString("date");
+            } catch (java.lang.NullPointerException en) {
+                dateStr = null;
+            }
             if (dateStr != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
                 timestamp = Timestamp.valueOf(dateTime);
-            }else {
+            } else {
                 timestamp = null;
             }
 
             String value_str;
             float value;
-            try {value_str = jsonObject.getString("value");} catch (java.lang.NullPointerException en) {value_str = null;}
+            try {
+                value_str = jsonObject.getString("value");
+            } catch (java.lang.NullPointerException en) {
+                value_str = null;
+            }
             if (value_str != null) value = Float.parseFloat(value_str);
             else value = -1;
 
-            int cond = - 1;
+            int cond = -1;
 
-            if(transacao.equals("fixa")){
+            if (transacao.equals("fixa")) {
                 int repeticao;
-                try {repeticao = jsonObject.getInt("repeticao");} catch (java.lang.NullPointerException en) {repeticao = -1;}
+                try {
+                    repeticao = jsonObject.getInt("repeticao");
+                } catch (java.lang.NullPointerException en) {
+                    repeticao = -1;
+                }
 
-                cond = gerirFixa.editFixa(IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp,repeticao,email);
-            } else if(transacao.equals("unica")){
-                cond = gerirUnica.editUnica(IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp,email);
-            } else{
+                cond = gerirFixa.editFixa(IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp, repeticao, email);
+            } else if (transacao.equals("unica")) {
+                cond = gerirUnica.editUnica(IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp, email);
+            } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
@@ -174,14 +202,14 @@ public class Transacao {
                         .build();
             }
 
-            if(cond == 0){
+            if (cond == 0) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", tipo + " editada com sucesso!")
                         .build();
                 return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -1){
+            } else if (cond == -1) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
@@ -189,7 +217,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -3){
+            } else if (cond == -3) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email nao registado!")
                         .build();
@@ -197,7 +225,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -4){
+            } else if (cond == -4) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Categoria nao encontrada!")
                         .build();
@@ -205,7 +233,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else{
+            } else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 
@@ -217,7 +245,7 @@ public class Transacao {
                     .entity(jsonResponse.toString())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -228,17 +256,17 @@ public class Transacao {
     @Path("/{tipo}/list")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listTransactionsUser(@PathParam("transacao") String transacao,@PathParam("tipo") String tipo,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listTransactionsUser(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
-        try{
+        try {
             JsonObject unicas;
-            if(transacao.equals("fixa")){
+            if (transacao.equals("fixa")) {
                 unicas = gerirFixa.getFixas(email, tipo);
-            } else if(transacao.equals("unica")){
+            } else if (transacao.equals("unica")) {
                 unicas = gerirUnica.getUnicas(email, tipo);
-            } else{
+            } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
@@ -250,7 +278,7 @@ public class Transacao {
 
             if (unicas.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
-                        .add("message", "Nenhuma "+ tipo +" única encontrada!")
+                        .add("message", "Nenhuma " + tipo + " única encontrada!")
                         .build();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
@@ -271,16 +299,16 @@ public class Transacao {
     @Path("/{tipo}/get/{id}")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo,@PathParam("id") int id, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response getTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, @PathParam("id") int id, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
         try {
             JsonObject unica;
-            if(transacao.equals("fixa")){
-                unica = gerirFixa.getJsonFixaById(id,email,tipo);
-            } else if(transacao.equals("unica")){
-                unica = gerirUnica.getJsonUnicaById(id,email,tipo);
-            } else{
+            if (transacao.equals("fixa")) {
+                unica = gerirFixa.getJsonFixaById(id, email, tipo);
+            } else if (transacao.equals("unica")) {
+                unica = gerirUnica.getJsonUnicaById(id, email, tipo);
+            } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
@@ -306,12 +334,13 @@ public class Transacao {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+
     @POST
     @Path("/share")
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response shareTransaction(@PathParam("transacao") String transacao, String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response shareTransaction(@PathParam("transacao") String transacao, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -324,7 +353,7 @@ public class Transacao {
             int option = jsonObject.getInt("option");
             String email_shared = jsonObject.getString("email_shared");
 
-            if(email.equals(email_shared)){
+            if (email.equals(email_shared)) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Nao pode partilhar consigo mesmo!")
                         .build();
@@ -336,20 +365,11 @@ public class Transacao {
 
             int cond = -1;
 
-            if(transacao.equals("fixa")){
-
-                //TODO: ...
-
-                JsonObject jsonResponse = Json.createObjectBuilder()
-                        .add("message", "...")
-                        .build();
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(jsonResponse.toString())
-                        .type(MediaType.APPLICATION_JSON)
-                        .build();
-            } else if(transacao.equals("unica")){
+            if (transacao.equals("fixa")) {
+                cond = gerirFixa.editUsersFixa(email, IdTransacao, option, email_shared);
+            } else if (transacao.equals("unica")) {
                 cond = gerirUnica.editUsersUnica(email, IdTransacao, option, email_shared);
-            } else{
+            } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
@@ -359,21 +379,21 @@ public class Transacao {
                         .build();
             }
 
-            if(cond == 0){
+            if (cond == 0) {
                 JsonObject jsonResponse = null;
-                if (option == 1){
+                if (option == 1) {
                     jsonResponse = Json.createObjectBuilder()
-                            .add("message",  "Transacao partilhada confirmada com sucesso!")
+                            .add("message", "Transacao partilhada confirmada com sucesso!")
                             .build();
                 } else if (option == -1) {
                     jsonResponse = Json.createObjectBuilder()
-                            .add("message",  "Transacao partilhada recusada com sucesso!")
+                            .add("message", "Transacao partilhada recusada com sucesso!")
                             .build();
                 }
                 return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -1){
+            } else if (cond == -1) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
@@ -381,7 +401,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -2){
+            } else if (cond == -2) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Nao tem permissoes para fazer tais operações!")
                         .build();
@@ -389,7 +409,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            }else if(cond == -3){
+            } else if (cond == -3) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email nao registado!")
                         .build();
@@ -397,7 +417,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else{
+            } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "erro indefinido!")
                         .build();
@@ -415,7 +435,7 @@ public class Transacao {
                     .entity(jsonResponse.toString())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -427,7 +447,7 @@ public class Transacao {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response confirmSharedTransaction(@PathParam("transacao") String transacao, String jsonString,@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response confirmSharedTransaction(@PathParam("transacao") String transacao, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -441,20 +461,11 @@ public class Transacao {
 
             int cond = -1;
 
-            if(transacao.equals("fixa")){
-
-                //TODO: ...
-
-                JsonObject jsonResponse = Json.createObjectBuilder()
-                        .add("message", "...")
-                        .build();
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(jsonResponse.toString())
-                        .type(MediaType.APPLICATION_JSON)
-                        .build();
-            } else if(transacao.equals("unica")){
+            if (transacao.equals("fixa")) {
+                cond = gerirFixa.handleFixa(email, IdTransacao, option);
+            } else if (transacao.equals("unica")) {
                 cond = gerirUnica.handleUnica(email, IdTransacao, option);
-            } else{
+            } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
@@ -464,21 +475,21 @@ public class Transacao {
                         .build();
             }
 
-            if(cond == 0){
+            if (cond == 0) {
                 JsonObject jsonResponse = null;
-                if (option == 1){
+                if (option == 1) {
                     jsonResponse = Json.createObjectBuilder()
-                            .add("message",  "Transacao partilhada confirmada com sucesso!")
+                            .add("message", "Transacao partilhada confirmada com sucesso!")
                             .build();
                 } else if (option == -1) {
                     jsonResponse = Json.createObjectBuilder()
-                            .add("message",  "Transacao partilhada recusada com sucesso!")
+                            .add("message", "Transacao partilhada recusada com sucesso!")
                             .build();
                 }
                 return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -1){
+            } else if (cond == -1) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
@@ -486,7 +497,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -2){
+            } else if (cond == -2) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Não pode recusar uma transacao já confirmada!")
                         .build();
@@ -494,7 +505,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            }else if(cond == -3){
+            } else if (cond == -3) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email nao registado!")
                         .build();
@@ -502,7 +513,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else if(cond == -4){
+            } else if (cond == -4) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Não pode remover um utilizador não associado!")
                         .build();
@@ -510,7 +521,7 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else{
+            } else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 
@@ -522,7 +533,7 @@ public class Transacao {
                     .entity(jsonResponse.toString())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

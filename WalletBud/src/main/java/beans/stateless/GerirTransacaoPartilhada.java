@@ -24,7 +24,7 @@ public class GerirTransacaoPartilhada {
     @EJB
     private GerirUtilizador gerirUtilizador;
 
-    public int shareTransaction(String transacao, int IdTransacao, String email, JsonArray usersArray, Unica unica) {
+    public int shareTransaction(String transacao, String email, JsonArray usersArray, Unica unica, Fixa fixa) {
 
         try {
 
@@ -35,28 +35,17 @@ public class GerirTransacaoPartilhada {
                 System.out.println("User Email: " + userEmail);
             }
             int cond;
-            if(transacao.equals("fixa")){
-                cond = -1;//gerirFixa.shareFixa(IdTransacao, usersArray, email);
-            } else if(transacao.equals("unica")){
-                cond = gerirUnica.shareUnica(IdTransacao, usersArray, email, unica);
+            if (transacao.equals("fixa")) {
+                cond = gerirFixa.shareFixa(usersArray, email, fixa);
+            } else if (transacao.equals("unica")) {
+                cond = gerirUnica.shareUnica(usersArray, email, unica);
                 System.out.println("Cond: " + cond);
-            } else{
+            } else {
                 return -1;
             }
+            return cond;
 
-            if(cond == 0){
-                return 0;
-            } else if(cond == -1){
-                return -2;
-            } else if(cond == -2){
-                return -3;
-            } else if(cond == -3){
-                return -4;
-            } else{
-                return -5;
-            }
-
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return -7;
         }

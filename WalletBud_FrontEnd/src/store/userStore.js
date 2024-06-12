@@ -179,6 +179,7 @@ export const userStore = defineStore("user", {
       this.id = 0;
       this.saldo = 0;
       this.idioma = "";
+
     },
     
   },

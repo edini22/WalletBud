@@ -73,7 +73,7 @@
         </div>
       </div>
     </div>
-    <PopUpGerirCategorias />
+    <PopUpGerirCategorias :key="componentKey" @forceRerender="forceRerender"/>
     <PopUpAddTransaction />
   </div>
 </template>
@@ -92,7 +92,13 @@ export default {
   name: "home",
   data() {
     return {
+      componentKey: 0,
     };
+  },
+  methods: {
+      forceRerender() {
+        this.componentKey += 1;
+      }
   },
   components: {
     //ChartHolderCard,

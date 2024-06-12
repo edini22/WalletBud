@@ -168,11 +168,9 @@ export default {
   methods: {
     showModal() {
       this.isModalVisible = true;
-      alert("Show Modal");
     },
     handleCancel() {
       this.isModalVisible = false;
-      alert("Cancel");
     },
   },
 };

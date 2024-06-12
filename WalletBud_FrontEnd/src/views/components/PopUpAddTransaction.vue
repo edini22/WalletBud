@@ -12,16 +12,17 @@
                     <div class="form-group form-row">
                         <label for="description" class="form-label">{{ $t('Nome') }}</label>
                         <div v-if="descriptionError === true" class="form-input mb-3">
-                            <material-input class="material-input" id="description" type="text" label="Indique o nome"
-                                name="description" @update:value="Description = $event" error />
+                            <material-input class="material-input" id="description" type="text"
+                                :label="$t('Indique o nome')" name="description" @update:value="Description = $event"
+                                error />
                         </div>
                         <div v-if="descriptionError === false" class="form-input mb-3">
                             <material-input class="material-input" id="description" type="text" name="description"
                                 :value="Description" @update:value="Description = $event" success />
                         </div>
                         <div v-if="descriptionError === null" class="form-input mb-3">
-                            <material-input class="material-input" id="description" type="text" label="Indique o nome"
-                                name="description" @update:value="Description = $event" />
+                            <material-input class="material-input" id="description" type="text"
+                                :label="$t('Indique o nome')" name="description" @update:value="Description = $event" />
                         </div>
                     </div>
 
@@ -30,16 +31,16 @@
                         <label for="value" class="form-label">{{ $t('Montante') }}:
                         </label>
                         <div v-if="valueError === true" class="form-input mb-3">
-                            <material-input class="material-input" id="value" type="number" label="Indique um montante"
-                                name="value" @update:value="Value = $event" error />
+                            <material-input class="material-input" id="value" type="number"
+                                :label=ValueLabel name="value" @update:value="Value = $event" error />
                         </div>
                         <div v-if="valueError === false" class="form-input mb-3">
                             <material-input class="material-input" id="value" type="number" name="value" :value="Value"
                                 @update:value="Value = $event" success />
                         </div>
                         <div v-if="valueError === null" class="form-input mb-3">
-                            <material-input class="material-input" id="value" type="number" label="Indique um montante"
-                                name="value" @update:value="Value = $event" />
+                            <material-input class="material-input" id="value" type="number"
+                                :label=ValueLabel name="value" @update:value="Value = $event" />
                         </div>
                     </div>
 
@@ -48,10 +49,16 @@
                         <label for="date" class="form-label">
                             {{ $t('Data do Movimento') }}:
                         </label>
-                        <div v-if="DateError === true" class="form-input mb-3">
-                            <material-input class="material-input" :class="{ 'is-focused': isFocused }" id="date"
-                                type="date" name="date" @update:value="DateM = $event" error @focus="handleFocus"
-                                @blur="handleBlur" />
+                        <div v-if="DateError === true" class="form-input mb-3 date-input-wrapper" :class="{ 'dropdown-focused-error': isDateFocused, 'border': SetBorder }" style="position: relative;">
+                            <material-input 
+                                class="material-input"
+                                id="date"
+                                type="date" 
+                                name="date" 
+                                @update:value="DateM = $event" error
+                                @focus="handleDateFocus"
+                                @blur="handleDateBlur"
+                            />
                         </div>
                         <div v-if="DateError === false" class="form-input mb-3">
                             <material-input class="material-input" :class="{ 'is-focused': isFocused }" id="date"
@@ -60,47 +67,136 @@
                         </div>
                         <div v-if="DateError === null" class="form-input mb-3  date-input-wrapper">
                             <material-input class="material-input" :class="{ 'is-focused': isFocused }" id="date"
-                                type="text" name="date" label="Indique a data" @update:value="DateM = $event"
+                                type="date" name="date" @update:value="DateM = $event"
                                 @focus="handleFocus" @blur="handleBlur" />
                             <i class="material-icons date-icon">date_range</i>
                         </div>
                     </div>
 
                     <!-- Tipo -->
-                    <div class="form-group form-row">
-                        <label for="categoryType" class="form-label">
-                            {{ $t('Tipo de movimento') }}:
-                        </label>
-                        <div class="input-group input-group-outline form-input mb-3" style="border-radius: 0.375rem;">
-                            <select v-model="Type" class="form-control form-control-default material-input"
-                                id="categoryType">
-                                <option value="Despesa">{{ $t('Despesa') }}</option>
-                                <option value="Receita">{{ $t('Receita') }}</option>
-                            </select>
-                            <i class="material-icons arrow-icon">keyboard_arrow_down</i>
+                    <div class="dropdown" ref="typeDropdown">
+                        <div class="form-group form-row">
+                            <label for="categoryType" class="form-label">{{ $t('Tipo de movimento:') }}</label>
+
+                            <div v-if="TypeError === null || TypeError === false"
+                                class="input-group input-group-outline form-input mb-3"
+                                style="border-radius: 0.375rem;">
+                                <button class="cursor-pointer form-control form-control-default material-input"
+                                    :class="{ 'dropdown-focused-null': isTypeFocused }" id="dropdownTable"
+                                    data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                    @focus="handleTypeFocus">
+                                    {{ Type || $t('Selecione o tipo') }}
+                                </button>
+                                <i class="material-icons arrow-icon">keyboard_arrow_down</i>
+                                <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                    <li>
+                                        <a class="dropdown-item border-radius-md" href="javascript:;"
+                                            @click="selectType('Despesa')">
+                                            {{ $t('Despesa') }}
+                                        </a>
+                                    </li>
+                                    <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                            @click="selectType('Receita')">
+                                            {{ $t('Receita') }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div v-if="TypeError === true"
+                                class="input-group input-group-outline form-input mb-3 is-invalid"
+                                style="border-radius: 0.375rem;">
+                                <button class="cursor-pointer form-control form-control-default material-input"
+                                    :class="{ 'dropdown-focused-error': isTypeFocused }" id="dropdownTable"
+                                    data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                    @focus="handleTypeFocus">
+                                    {{ Type || $t('Selecione o tipo') }}
+                                </button>
+                                <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                    <li>
+                                        <a class="dropdown-item border-radius-md" href="javascript:;"
+                                            @click="selectType('Despesa')">
+                                            {{ $t('Despesa') }}
+                                        </a>
+                                    </li>
+                                    <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                            @click="selectType('Receita')">
+                                            {{ $t('Receita') }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Categoria -->
-                    <div class="form-group form-row">
-                        <label for="category" class="form-label">
-                            {{ $t('Categoria do Movimento') }}:
-                        </label>
-                        <div class="input-group input-group-outline form-input mb-3" style="border-radius: 0.375rem;">
-                            <select v-model="Category" class="form-control form-control-default material-input"
-                                id="category">
-                                <option v-for='(category, index) in displayCategories' :key="index">{{ category }}
-                                </option>
-                            </select>
-                            <i class="material-icons arrow-icon">keyboard_arrow_down</i>
+                    <div class="dropdown" ref="categoryDropdown">
+                        <div class="form-group form-row">
+                            <label for="category" class="form-label">{{ $t('Categoria') }}</label>
+                            <div v-if="CategoryError === null || CategoryError === false"
+                                class="input-group input-group-outline form-input mb-3"
+                                style="border-radius: 0.375rem;">
+                                <button v-if="displayCategories.length > 0"
+                                    class="cursor-pointer form-control form-control-default material-input"
+                                    :class="{ 'dropdown-focused-null': isCategoryFocused }" id="dropdownTable"
+                                    data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                    @focus="handleCategoryFocus">
+                                    {{ Category || $t('Selecione a categoria') }}
+                                </button>
+                                <!-- show this button if type has not been chosen -->
+                                <button v-else class="cursor-pointer form-control form-control-default material-input"
+                                    :class="{ 'dropdown-focused-null': isCategoryFocused }" id="dropdownTable"
+                                    style="text-align:left; color: #7b809a" @click="alert">
+                                    {{ Category || $t('Selecione a categoria') }}
+                                </button>
+                                <i class="material-icons arrow-icon">keyboard_arrow_down</i>
+                                <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                    <li v-for='(category, index) in displayCategories' :key="index">
+                                        <a class="dropdown-item border-radius-md" href="javascript:;"
+                                            @click="selectCategory(category)">
+                                            {{ category }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div v-if="CategoryError === true"
+                                class="input-group input-group-outline form-input mb-3 is-invalid"
+                                style="border-radius: 0.375rem;">
+                                <button v-if="displayCategories.length > 0"
+                                    class="cursor-pointer form-control form-control-default material-input"
+                                    :class="{ 'dropdown-focused-error': isCategoryFocused }" id="dropdownTable"
+                                    data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                    @focus="handleCategoryFocus">
+                                    {{ Category || $t('Selecione a categoria') }}
+                                </button>
+                                <!-- show this button if type has not been chosen -->
+                                <button v-else class="cursor-pointer form-control form-control-default material-input"
+                                    :class="{ 'dropdown-focused-error': isCategoryFocused }" id="dropdownTable"
+                                    style="text-align:left; color: #7b809a" @click="alert">
+                                    {{ Category || $t('Selecione a categoria') }}
+                                </button>
+                                <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                    <li v-for='(category, index) in displayCategories' :key="index">
+                                        <a class="dropdown-item border-radius-md" href="javascript:;"
+                                            @click="selectCategory(category)">
+                                            {{ category }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
+
+                    <MaterialAlert v-if="showAlert" color="danger" class="font-weight-light" dismissible @click="alert">
+                        <span class="text-sm">{{ $t('Escolha o tipo de movimento') }}</span>
+                    </MaterialAlert>
 
                     <!-- Local -->
                     <div class="form-group form-row">
                         <label for="place" class="form-label">{{ $t('Local') }}</label>
                         <div v-if="PlaceError === true" class="form-input mb-3">
-                            <material-input class="material-input" id="place" type="text" label="Indique o local"
+                            <material-input class="material-input" id="place" type="text" :label="$t('Indique o local')"
                                 name="place" @update:value="Place = $event" error />
                         </div>
                         <div v-if="PlaceError === false" class="form-input mb-3">
@@ -108,24 +204,31 @@
                                 @update:value="Place = $event" success />
                         </div>
                         <div v-if="PlaceError === null" class="form-input mb-3">
-                            <material-input class="material-input" id="place" type="text" label="Indique o local"
+                            <material-input class="material-input" id="place" type="text" :label="$t('Indique o local')"
                                 name="place" @update:value="Place = $event" />
                         </div>
                     </div>
 
-                    <div class="dropdown float-lg-end">
+                    <!-- Shared expense -->
+                    <div class="dropdown" ref="userDropdown" v-if="Type == 'Despesa'">
                         <div class="form-group form-row">
-                            <label for="place" class="form-label">{{ $t('Local') }}</label>
-                            <div class="input-group input-group-outline form-input mb-3"
+                            <label for="sharedExpense" class="form-label">{{ $t('Partilhar Despesa') }}</label>
+                            <div
+                                class="input-group input-group-outline form-input mb-3"
                                 style="border-radius: 0.375rem;">
-                                <button class="cursor-pointer form-control form-control-default material-input"
-                                    id="dropdownTable" data-bs-toggle="dropdown">
+                                <button
+                                    class="cursor-pointer form-control form-control-default material-input"
+                                    :class="{ 'dropdown-focused-null': isSharedExpFocused }" id="dropdownTable"
+                                    data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                    @focus="handleSharedExpFocus">
+                                    {{ User || $t('Pesquise um utilizador') }}
                                 </button>
                                 <i class="material-icons arrow-icon">keyboard_arrow_down</i>
-                                <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                                    <li v-for='(category, index) in displayCategories' :key="index">
-                                        <a class="dropdown-item border-radius-md" href="javascript:;">
-                                            {{ category }}
+                                <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                    <li v-for='(user, index) in users' :key="index">
+                                        <a class="dropdown-item border-radius-md" href="javascript:;"
+                                            @click="selectUser(user)">
+                                            {{ user }}
                                         </a>
                                     </li>
                                 </ul>
@@ -135,36 +238,22 @@
 
 
 
+
+
                 </div>
                 <div class="modal-footer">
-                    <div class="modal-body">
-                        <h5>{{ $t('Adicionar Categoria') }}</h5>
-                        <label for="categoryType" style="color: black;">{{ $t('Selecionar o tipo de movimento') }}:
-                        </label>
-                        <div class="input-group input-group-outline mb-2"
-                            style="position: relative;  border-radius: 0.375rem;">
-                            <select v-model="newCategoryType" class="form-control form-control-default"
-                                id="categoryType">
-                                <option value="Despesa">{{ $t('Despesa') }}</option>
-                                <option value="Receita">{{ $t('Receita') }}</option>
-                            </select>
-                            <i class="material-icons arrow-icon">keyboard_arrow_down</i>
-                        </div>
-
-                        <div class="input-group input-group-outline mb-3" :class="{ 'is-focused': isFocused }">
-                            <label class="form-label">{{ $t('Escreva uma categoria') }}</label>
-                            <input class="form-control form-control-default" type="text" v-model="newCategoryName"
-                                @focus="handleFocus" @blur="handleBlur">
-                        </div>
-                        <MaterialAlert v-if="showErrorAdd" color="danger" class="font-weight-light">
-                            <span class="text-sm">{{ $t('Indica um nome para a categoria!') }}</span>
-                        </MaterialAlert>
-
+                    <div class="row">
+                        <i class="material-icons ">insert_comment_outlined</i>
+                        <h5>{{ $t('Comentário') }}</h5>
+                        <material-input class="material-input" id="comment" type="text"
+                            :label="$t('Escreva o seu comentário')" name="comment"
+                            @update:value="Place = $event"></material-input>
                     </div>
                 </div>
                 <div class="modal-footer mt-0">
                     <p class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Adicionar') }}</p>
-                    <p class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal">{{ $t('Cancelar') }}</p>
+                    <p class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal" @click="cancel">{{
+                        $t('Cancelar') }}</p>
                 </div>
             </div>
         </div>
@@ -188,10 +277,13 @@ export default {
         const valueError = ref(null);
         const DateM = ref('');
         const DateError = ref(null);
-        const Category = ref('');
-        const CategoryError = ref(null);
+        const ValueLabel = ref('Indique um montante')
         const Place = ref('');
         const PlaceError = ref(null);
+        const Category = ref('');
+        const CategoryError = ref(null);
+        const Type = ref('');
+        const TypeError = ref(null);
 
         const add = function () {
             if (!Description.value) {
@@ -204,7 +296,11 @@ export default {
             if (!Value.value) {
                 valueError.value = true;
 
-            } else {
+            } else if(Value.value < 0){
+                valueError.value = true;
+                ValueLabel.value = 'Indique um montante positivo'
+            }
+            else {
                 valueError.value = false;
             }
 
@@ -215,6 +311,13 @@ export default {
                 DateError.value = false;
             }
 
+            if (!Place.value) {
+                PlaceError.value = true;
+
+            } else {
+                PlaceError.value = false;
+            }
+
             if (!Category.value) {
                 CategoryError.value = true;
 
@@ -222,11 +325,11 @@ export default {
                 CategoryError.value = false;
             }
 
-            if (!Place.value) {
-                PlaceError.value = true;
+            if (!Type.value) {
+                TypeError.value = true;
 
             } else {
-                PlaceError.value = false;
+                TypeError.value = false;
             }
         }
 
@@ -239,17 +342,19 @@ export default {
             valueError,
             DateM,
             DateError,
+            Place,
+            PlaceError,
             Category,
             CategoryError,
-            Place,
-            PlaceError
+            Type,
+            TypeError,
+            ValueLabel
         };
     },
     data() {
         return {
             expenseCategories: ['Pessoal', 'Alimentação', 'Familiar', 'Casa', 'Entretenimento'],
             incomeCategories: ['Rendas', 'Salários'],
-            Type: 'Despesa',
             Shared: false,
             Coment: '',
             isEditing: [],
@@ -261,29 +366,85 @@ export default {
             showErrorAdd: false,
             errorTimeout: null,
             isFocused: false,
+            isCategoryFocused: false,
+            isTypeFocused: false,
+            isDateFocused: false,
+            SetBorder: true,
+            showAlert: false
         };
     },
     components: {
         MaterialAlert,
         MaterialInput,
     },
+    mounted() {
+        document.addEventListener('click', this.handleClickOutsideCategory);
+        document.addEventListener('click', this.handleClickOutsideType);
+    },
     computed: {
         displayCategories() {
             if (this.Type == 'Despesa')
                 return this.expenseCategories;
-            else
+            else if (this.Type == 'Receita')
                 return this.incomeCategories;
+            else
+                return '';
+        },
+    },
+    watch: {
+        Type() {
+            this.Category = '';
+            this.isCategoryFocused = false;
         },
     },
     methods: {
-        handleFocus(event) {
-            event.target.type = 'date';
+        alert() {
+            this.showAlert = !this.showAlert;
+        },
+        selectType(type) {
+            this.Type = type;
+        },
+        selectCategory(category) {
+            this.Category = category;
+        },
+        handleCategoryFocus() {
+            console.log("antes" + this.isCategoryFocused);
+            this.isCategoryFocused = true;
+            console.log("depois" + this.isCategoryFocused);
+        },
+        handleClickOutsideCategory(event) {
+            const dropdown = this.$refs.categoryDropdown;
+            if (dropdown && !dropdown.contains(event.target)) {
+                if (this.Category == '')
+                    this.isCategoryFocused = false;
+            }
+        },
+        handleClickOutsideType(event) {
+            const dropdown = this.$refs.typeDropdown;
+            if (dropdown && !dropdown.contains(event.target)) {
+                if (this.Type == '')
+                    this.isTypeFocused = false;
+            }
+        },
+        handleTypeFocus() {
+            this.isTypeFocused = true;
+        },
+        handleDateFocus(){
+            this.isDateFocused = true;
+            this.SetBorder = false;
+        },
+        handleDateBlur(){
+            this.isDateFocused = false;
+            this.SetBorder = true;
+        },
+        handleFocus() {
+            //event.target.type = 'date';
             this.isFocused = true;
             if (this.DateError !== null)
                 this.DateError = null;
         },
-        handleBlur(event) {
-            event.target.type = 'text';
+        handleBlur() {
+            //event.target.type = 'text';
             if (this.DateM == '')
                 this.isFocused = false;
         },
@@ -380,6 +541,53 @@ export default {
     /* Ajuste a cor conforme necessário */
 }
 
+.invalid-icon {
+    position: absolute;
+    right: 10px;
+    /* Ajuste conforme necessário */
+    pointer-events: none;
+    color: #fd5c6f;
+    font-size: medium;
+    /* Ajuste a cor conforme necessário */
+}
+
+.dropdown-focused-null {
+    border-color: #1a73e8 !important;
+    box-shadow: inset 0 1px #1a73e8,
+        inset 1px 0 #1a73e8,
+        inset -1px 0 #1a73e8,
+        inset 0 -1px #1a73e8 !important;
+}
+
+.dropdown-focused-error {
+    border: 1px solid #f44335 !important;
+    box-shadow: inset 0 1px #f44335,
+        inset 1px 0 #f44335,
+        inset -1px 0 #f44335,
+        inset 0 -1px #f44335 !important;
+    border-radius: 0.375rem;
+}
+
+.dropdown-menu {
+    background-image: linear-gradient(195deg, #49a3f1 0%, #1a73e8 100%);
+    color: white;
+}
+
+.dropdown .dropdown-menu:before {
+    color: #3d96ef;
+}
+
+.dropdown-item {
+    margin-top: 3px;
+    color: #eeeeee;
+    background-color: #ffffff14;
+}
+
+.dropdown-item:hover {
+    background-color: #ffffff;
+    color: #495057
+}
+
 .form-row {
     display: flex;
     align-items: center;
@@ -388,7 +596,7 @@ export default {
 
 .form-label {
     flex: 1;
-    color: black;
+    color: #344767;
     margin-right: 10px;
     text-align: left;
     /* Alinha as labels à direita */
@@ -400,6 +608,7 @@ export default {
 
 .material-input {
     width: 100%;
+    position: relative;
 }
 
 /* Estilização adicional para garantir que os inputs tenham a mesma altura e aparência */
@@ -437,8 +646,17 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
-    /* Garante que o ícone não bloqueie a interação com o campo */
     color: #1a73e8;
-    /* Cor do ícone */
+    z-index: 2;
+    background-color: white !important;
+}
+
+.row {
+    align-content: center;
+}
+
+.border {
+    border: 1px solid #d2d6da;
+    border-radius: 0.375rem;
 }
 </style>

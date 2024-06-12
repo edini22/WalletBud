@@ -1,5 +1,6 @@
 <template>
   <div
+    name="div"
     class="input-group"
     :class="`input-group-${variant} ${getStatus(error, success)}`"
   >
@@ -100,6 +101,13 @@ export default {
   mounted() {
     setMaterialInput();
   },
+  watch: {
+    value(newValue) {
+      if (newValue === '') {
+        this.removeEmptyClass();
+      }
+    }
+  },
   methods: {
     getClasses: (size) => {
       let sizeValue;
@@ -121,6 +129,13 @@ export default {
 
       return isValidValue;
     },
+    removeEmptyClass() {
+      const elements = document.getElementsByName('div');
+
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].classList.remove('is-filled');
+      }
+    }
   },
 };
 </script>

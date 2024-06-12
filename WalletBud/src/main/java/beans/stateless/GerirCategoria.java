@@ -220,4 +220,34 @@ public class GerirCategoria {
 
         return 0;
     }
+
+    public int deleteCategoria(int id, String email) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+
+        try {
+            User user = gerirUtilizador.getUserByEmail(email);
+
+            if(user == null) return -3;
+
+            String condition = "id_categoria = '" + id + "' AND Userid_user = '" + user.getId_user() + "'";
+            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(condition, null);
+
+            if (categorias.length == 0) {
+                t.rollback();
+                return -3;
+            }
+
+            Categoria categoria = categorias[0];
+
+            CategoriaDAO.deleteAndDissociate(categoria);
+
+            t.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -2;
+        }
+
+        return 0;
+    }
+
 }

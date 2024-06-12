@@ -29,9 +29,6 @@ public class Categoria {
     public Response AddCategoriaUser(String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
-//        System.out.println("email: " + email);
-//
-//        System.out.println("emailllll: " + userBean.getEmail());
 
         try{
             // Verificar se o email foi corretamente recuperado
@@ -93,7 +90,6 @@ public class Categoria {
     public Response listCategorias(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
-
         try{
             JsonObject categorias = gerirCategoria.getCategorias(email);
 
@@ -209,5 +205,44 @@ public class Categoria {
         }
     }
 
+    @DELETE
+    @Path("/{id}")
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCategoria(@PathParam("id") int id, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+
+        try{
+            if (email == null) {
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+
+            int cond = gerirCategoria.deleteCategoria(id, email);
+
+            if(cond == 0){
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Categoria eliminada com sucesso!")
+                        .build();
+                return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else if(cond == -3){
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Categoria nao existe ou nao pertence a esse user!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            } else{
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+
+        }catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }

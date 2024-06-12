@@ -15,13 +15,13 @@ License Type: Evaluation
 		</many-to-one>
 		<many-to-one name="categoriaId_categoria" cascade="lock" column="CategoriaId_categoria" class="wb.walletbud.Categoria" not-null="true" lazy="proxy" access="field">
 		</many-to-one>
-		<property name="name" column="Name" type="string" length="255" not-null="false" lazy="false"/>
+		<property name="name" column="Name" type="string" length="255" not-null="true" lazy="false"/>
 		<property name="value" column="Value" type="float" not-null="true" lazy="false"/>
 		<property name="shareValue" column="ShareValue" type="float" not-null="true" lazy="false"/>
-		<property name="date" column="`Date`" type="timestamp" not-null="false" lazy="false"/>
+		<property name="date" column="`Date`" type="timestamp" not-null="true" lazy="false"/>
 		<property name="descrição" column="Descrição" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="local" column="Local" type="string" length="255" not-null="false" lazy="false"/>
-		<property name="tipo" column="Tipo" type="string" length="255" not-null="false" lazy="false">
+		<property name="tipo" column="Tipo" type="string" length="255" not-null="true" lazy="false">
 			<meta attribute="field-description">
 				receita ou despesa
 			</meta>

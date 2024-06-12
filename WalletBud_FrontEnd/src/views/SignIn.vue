@@ -197,6 +197,7 @@ export default {
         alert("Login efetuado com sucesso");
         // buscar os dados do user
         await store.getUser();
+        
         router.push({ name: "Home" });
       } catch (err) {
         if (err.message === "Email does not exist!"){

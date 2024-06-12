@@ -104,15 +104,26 @@
         </sidenav-collapse>
       </li>
     </ul>
+    
     <div class="sidenav-footer position-absolute w-100 bottom-0">
-      <div class="mx-3">
+      <div class="mx-3" v-if="!isModalVisible">
         <a
           class="btn mt-4 w-100"
           :class="`bg-gradient-${this.$store.state.color}`"
-          @click="logOut"
+          @click="showModal"
           >{{ $t('Sign Out') }}</a
         >
       </div>
+      <div>
+        <confirm 
+        :isVisible="isModalVisible" 
+        message="Tem a certeza?" 
+        @confirm="logOut"
+        @cancel="handleCancel"/>
+      </div>
+
+      
+
     </div>
   </div>
 </template>
@@ -122,6 +133,7 @@ import SidenavCollapse from "./SidenavCollapse.vue";
 import { userStore } from "@/store/userStore";
 import { categoriesStore } from "@/store/categoriesStore";
 import { useRouter } from "vue-router";
+import confirm from "@/views/components/ActionConfirm.vue";
 
 export default {
   name: "SidenavList",
@@ -148,11 +160,20 @@ export default {
       title: "Soft UI Dashboard PRO",
       controls: "dashboardsExamples",
       isActive: "active",
+      isModalVisible: false,
     };
   },
   components: {
     SidenavCollapse,
-
+    confirm,
+  },
+  methods: {
+    showModal() {
+      this.isModalVisible = true;
+    },
+    handleCancel() {
+      this.isModalVisible = false;
+    },
   },
 };
 </script>

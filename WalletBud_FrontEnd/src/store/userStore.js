@@ -131,7 +131,7 @@ export const userStore = defineStore("user", {
     async updateEditedUser(editedUser){
 
       const newUserJSON = JSON.stringify(editedUser);
-      alert(newUserJSON);
+      //alert(newUserJSON);
       const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/user/set";
       const token = localStorage.getItem('token');
       const request = {
@@ -152,6 +152,11 @@ export const userStore = defineStore("user", {
         throw new Error(errorData.message);
       }
 
+      //idioma
+      if(editedUser.idioma != this.idioma){
+        this.idioma = editedUser.idioma;
+      }
+
       if(editedUser.email && editedUser.email != this.email){
         let user = {
           email: editedUser.email,
@@ -170,6 +175,7 @@ export const userStore = defineStore("user", {
         this.username = editedUser.username;
       }
     },
+
 
     async logOut(){
       localStorage.removeItem('token');

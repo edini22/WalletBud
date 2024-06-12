@@ -10,27 +10,54 @@
 
 <script>
 import { useI18n } from 'vue-i18n';
+import { userStore } from '@/store/userStore';
 
 export default {
   setup() {
     const { locale, t } = useI18n();
-
-    locale.value = 'pt'; // Idioma padrão
-
+    const store = userStore();
+    
+    //locale.value === Idioma padrão
+    locale.value = store.idioma;
+    
     const changeLanguage = (language) => {
+
       locale.value = language;
+      const user = {
+        idioma: language,
+      };
+
+      updateLang(user);
+      store.idioma = language;
     };
+
+    const updateLang = async (user) => {
+      try {
+        await store.updateEditedUser(user);
+        await store.getUser();
+        if (store){
+          locale.value = store.$state.idioma;
+        }
+      } catch (err) {
+        alert(err.message);
+      }
+    };
+
+    const getLanguages = () => {
+      if (store.$state.idioma === 'en') {
+        return ['English', 'Português'];
+      } else {
+        return ['Português', 'English'];
+      }
+    }
+
+    const languages = getLanguages();
 
     return {
       t,
-      changeLanguage
+      changeLanguage,
+      languages,
     };
-  },
-
-  computed: {
-    languages() {
-      return ['Português', 'English']; // Lista de idiomas disponíveis
-    }
   },
   methods: {
     languageSelected(event) {

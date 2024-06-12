@@ -13,15 +13,15 @@
                         <label for="description" class="form-label">{{ $t('Nome') }}</label>
                         <div v-if="descriptionError === true" class="form-input mb-3">
                             <material-input class="material-input" id="description" type="text"
-                                :label="$t('Indique o nome')" name="description" @update:value="Description = $event"
-                                error />
+                                :label="$t('Indique o nome')" name="description" @update:value="Description = $event" 
+                                :value="Description" error />
                         </div>
                         <div v-if="descriptionError === false" class="form-input mb-3">
                             <material-input class="material-input" id="description" type="text" name="description"
                                 :value="Description" @update:value="Description = $event" success />
                         </div>
                         <div v-if="descriptionError === null" class="form-input mb-3">
-                            <material-input class="material-input" id="description" type="text"
+                            <material-input class="material-input" id="description" type="text" :value="Description"
                                 :label="$t('Indique o nome')" name="description" @update:value="Description = $event" />
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                         <label for="value" class="form-label">{{ $t('Montante') }}:
                         </label>
                         <div v-if="valueError === true" class="form-input mb-3">
-                            <material-input class="material-input" id="value" type="number"
+                            <material-input class="material-input" id="value" type="number" :value="Value"
                                 :label=ValueLabel name="value" @update:value="Value = $event" error />
                         </div>
                         <div v-if="valueError === false" class="form-input mb-3">
@@ -39,7 +39,7 @@
                                 @update:value="Value = $event" success />
                         </div>
                         <div v-if="valueError === null" class="form-input mb-3">
-                            <material-input class="material-input" id="value" type="number"
+                            <material-input class="material-input" id="value" type="number" :value="Value"
                                 :label=ValueLabel name="value" @update:value="Value = $event" />
                         </div>
                     </div>
@@ -54,7 +54,8 @@
                                 class="material-input"
                                 id="date"
                                 type="date" 
-                                name="date" 
+                                name="date"
+                                :value="DateM"
                                 @update:value="DateM = $event" error
                                 @focus="handleDateFocus"
                                 @blur="handleDateBlur"
@@ -67,7 +68,7 @@
                         </div>
                         <div v-if="DateError === null" class="form-input mb-3  date-input-wrapper">
                             <material-input class="material-input" :class="{ 'is-focused': isFocused }" id="date"
-                                type="date" name="date" @update:value="DateM = $event"
+                                type="date" name="date" @update:value="DateM = $event" :value="DateM"
                                 @focus="handleFocus" @blur="handleBlur" />
                             <i class="material-icons date-icon">date_range</i>
                         </div>
@@ -197,7 +198,7 @@
                         <label for="place" class="form-label">{{ $t('Local') }}</label>
                         <div v-if="PlaceError === true" class="form-input mb-3">
                             <material-input class="material-input" id="place" type="text" :label="$t('Indique o local')"
-                                name="place" @update:value="Place = $event" error />
+                                name="place" :value="Place" @update:value="Place = $event" error />
                         </div>
                         <div v-if="PlaceError === false" class="form-input mb-3">
                             <material-input class="material-input" id="place" type="text" name="place" :value="Place"
@@ -205,55 +206,37 @@
                         </div>
                         <div v-if="PlaceError === null" class="form-input mb-3">
                             <material-input class="material-input" id="place" type="text" :label="$t('Indique o local')"
-                                name="place" @update:value="Place = $event" />
+                                name="place" :value="Place" @update:value="Place = $event" />
                         </div>
                     </div>
 
                     <!-- Shared expense -->
-                    <div class="dropdown" ref="userDropdown" v-if="Type == 'Despesa'">
-                        <div class="form-group form-row">
-                            <label for="sharedExpense" class="form-label">{{ $t('Partilhar Despesa') }}</label>
-                            <div
-                                class="input-group input-group-outline form-input mb-3"
-                                style="border-radius: 0.375rem;">
-                                <button
-                                    class="cursor-pointer form-control form-control-default material-input"
-                                    :class="{ 'dropdown-focused-null': isSharedExpFocused }" id="dropdownTable"
-                                    data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
-                                    @focus="handleSharedExpFocus">
-                                    {{ User || $t('Pesquise um utilizador') }}
-                                </button>
-                                <i class="material-icons arrow-icon">keyboard_arrow_down</i>
-                                <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
-                                    <li v-for='(user, index) in users' :key="index">
-                                        <a class="dropdown-item border-radius-md" href="javascript:;"
-                                            @click="selectUser(user)">
-                                            {{ user }}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                    <div v-if="Type == 'Despesa'" class="form-group form-row">
+                        <label for="sharedExpense" class="form-label">{{ $t('Partilhar Despesa') }}</label>
+                        <div class="form-input mb-3">
+                            <material-input class="material-input" id="sharedExp" type="text" :label="$t('Indique o email do utilizador')"
+                                name="sharedExp" :value="ShareUser" @update:value="ShareUser = $event" />
                         </div>
                     </div>
-
-
-
-
-
+                    
                 </div>
-                <div class="modal-footer">
-                    <div class="row">
-                        <i class="material-icons ">insert_comment_outlined</i>
+                <div class="modal-footer d-block justify-content-center">
+                    <div class="align-items-center text-center">
+                        <i class="material-icons align-self-center" style="max-width: 24px; color: #344767">insert_comment_outlined</i>
                         <h5>{{ $t('Comentário') }}</h5>
-                        <material-input class="material-input" id="comment" type="text"
-                            :label="$t('Escreva o seu comentário')" name="comment"
-                            @update:value="Place = $event"></material-input>
+
+                            <div class="form-input mb-3">
+                            <material-input class="material-input" id="comment" type="text" :value="Comment"
+                            :label="$t('Escreva o seu comentário')" @update:value="Comment = $event" />
+                        </div>
                     </div>
                 </div>
+
                 <div class="modal-footer mt-0">
                     <p class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Adicionar') }}</p>
-                    <p class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal" @click="cancel">{{
-                        $t('Cancelar') }}</p>
+                    <p class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal" @click="cancel"
+                        >{{ $t('Cancelar') }}
+                    </p>
                 </div>
             </div>
         </div>
@@ -265,6 +248,7 @@
 import { useI18n } from 'vue-i18n';
 import MaterialAlert from "@/components/MaterialAlert.vue";
 import MaterialInput from "@/components/MaterialInput.vue";
+//import { transactionStore } from "@/store/transactionStore.js";
 import { ref } from 'vue';
 
 
@@ -284,6 +268,8 @@ export default {
         const CategoryError = ref(null);
         const Type = ref('');
         const TypeError = ref(null);
+        const Comment = ref(null);
+        const ShareUser = ref(null);
 
         const add = function () {
             if (!Description.value) {
@@ -333,11 +319,34 @@ export default {
             }
         }
 
+        const cancel = function () {
+            console.log(Description.value);
+            
+            descriptionError.value = null;
+            Description.value = '';
+
+            valueError.value = null;
+            Value.value = '';
+
+            DateError.value = null;
+            DateM.value = '';
+
+            TypeError.value = null;
+            Type.value = '';
+
+            CategoryError.value = null;
+            Category.value = '';
+
+            PlaceError.value = null;
+            Place.value = '';
+        }
+
         return {
             t,
             add,
             descriptionError,
             Description,
+            Comment,
             Value,
             valueError,
             DateM,
@@ -348,7 +357,9 @@ export default {
             CategoryError,
             Type,
             TypeError,
-            ValueLabel
+            ValueLabel,
+            ShareUser,
+            cancel
         };
     },
     data() {
@@ -356,7 +367,6 @@ export default {
             expenseCategories: ['Pessoal', 'Alimentação', 'Familiar', 'Casa', 'Entretenimento'],
             incomeCategories: ['Rendas', 'Salários'],
             Shared: false,
-            Coment: '',
             isEditing: [],
             isEditingIncome: [],
             editedCategory: '',

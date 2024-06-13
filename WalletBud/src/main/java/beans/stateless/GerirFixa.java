@@ -9,6 +9,7 @@ import org.orm.PersistentTransaction;
 import wb.walletbud.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -345,8 +346,17 @@ public class GerirFixa {
 
                 User us = gerirUtilizador.getUserByEmail(userEmail);
                 if (us == null) {
-                    continue;
+                    return -5;
                 }
+
+                //verificar se o user ja esta naquela transacao
+                String condition = "TransacaoId_transacao = " + fixa.getId_transacao() + " AND UserId_user = " + user.getId_user();
+                TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                if(tpcheck.length != 0){
+                    return -5;
+                }
+
+
                 nUsers++;
                 TransacaoPartilhada tp = TransacaoPartilhadaDAO.createTransacaoPartilhada();
                 tp.setUserId_user(us);
@@ -649,6 +659,8 @@ public class GerirFixa {
                         .add("id", tf.getTransacaofixa_ID().getId_transacao())
                         .add("name", tf.getTransacaofixa_ID().getName())
                         .add("value", tf.getPayvalue())
+                        .add("Data",tf.getDataAtual().toString())
+                        .add("Data Pagamento",tf.getDataPagamento().toString())
                         .add("descricao", tf.getTransacaofixa_ID().getDescrição())
                         .add("descricao", tf.getTransacaofixa_ID().getDescrição())
                         .add("categoria", tf.getTransacaofixa_ID().getCategoriaId_categoria().getName())
@@ -806,15 +818,26 @@ public class GerirFixa {
                 } else {
                     System.out.println(tfs[0].getDataPagamento());
                     time = new Timestamp(tfs[0].getDataPagamento().getTime());
-                    if (fixa.getRepeticao() == 1) { //diariamente
-                        time.setDate(time.getDate() + 1);
-                    } else if (fixa.getRepeticao() == 2) { // semanalmente
-                        time.setDate(time.getDate() + 7);
-                    } else if (fixa.getRepeticao() == 3) { //Mensalmente
-                        time.setMonth(time.getMonth() + 1);
-                    } else if (fixa.getRepeticao() == 4) { //Anualmente
-                        time.setYear(time.getYear() + 1);
+                    LocalDateTime adjustedDateTime = time.toLocalDateTime();
+
+                    // Adicionar a repetição apropriada
+                    switch (fixa.getRepeticao()) {
+                        case 1: // Diariamente
+                            adjustedDateTime = adjustedDateTime.plusDays(1);
+                            break;
+                        case 2: // Semanalmente
+                            adjustedDateTime = adjustedDateTime.plusWeeks(1);
+                            break;
+                        case 3: // Mensalmente
+                            adjustedDateTime = adjustedDateTime.plusMonths(1);
+                            break;
+                        case 4: // Anualmente
+                            adjustedDateTime = adjustedDateTime.plusYears(1);
+                            break;
                     }
+
+                    // Converter de volta para Timestamp
+                    time = Timestamp.valueOf(adjustedDateTime);
                 }
 
                 boolean first = true;
@@ -836,15 +859,25 @@ public class GerirFixa {
                     lateArrayBuilder.add(lateJson);
 
                     first = false;
-                    if (fixa.getRepeticao() == 1) { //diariamente
-                        time.setDate(time.getDate() + 1);
-                    } else if (fixa.getRepeticao() == 2) { // semanalmente
-                        time.setDate(time.getDate() + 7);
-                    } else if (fixa.getRepeticao() == 3) { //Mensalmente
-                        time.setMonth(time.getMonth() + 1);
-                    } else if (fixa.getRepeticao() == 4) { //Anualmente
-                        time.setYear(time.getYear() + 1);
+                    LocalDateTime adjustedDateTime = time.toLocalDateTime();
+
+                    // Adicionar a repetição apropriada
+                    switch (fixa.getRepeticao()) {
+                        case 1: // Diariamente
+                            adjustedDateTime = adjustedDateTime.plusDays(1);
+                            break;
+                        case 2: // Semanalmente
+                            adjustedDateTime = adjustedDateTime.plusWeeks(1);
+                            break;
+                        case 3: // Mensalmente
+                            adjustedDateTime = adjustedDateTime.plusMonths(1);
+                            break;
+                        case 4: // Anualmente
+                            adjustedDateTime = adjustedDateTime.plusYears(1);
+                            break;
                     }
+
+                    time = Timestamp.valueOf(adjustedDateTime);
                 }
                 System.out.println();
 
@@ -852,7 +885,7 @@ public class GerirFixa {
 
             t.commit();
             return Json.createObjectBuilder()
-                    .add("leite", lateArrayBuilder)
+                    .add("atrasos", lateArrayBuilder)
                     .build();
         } catch (Exception e) {
             t.rollback();

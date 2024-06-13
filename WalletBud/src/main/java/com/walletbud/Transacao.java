@@ -103,7 +103,15 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
-            } else {
+            }else if (cond == -5) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Algum user que inseriu ja pertence ou nao existe!")
+                        .build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }  else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 
@@ -850,7 +858,6 @@ public class Transacao {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
-        //TODO: verificar o ano e mes se sao aceitaveis
         if(mes < 1 || mes > 12){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

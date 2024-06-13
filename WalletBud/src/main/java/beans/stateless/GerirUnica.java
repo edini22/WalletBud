@@ -49,7 +49,7 @@ public class GerirUnica {
 
             if (usersArray.isEmpty()) {
                 unica.setStatus(true);
-
+                unica.setShareValue(value);
                 float saldo = user.getSaldo();
                 if (tipo.equals("receita")) {
                     saldo += value;
@@ -368,8 +368,15 @@ public class GerirUnica {
 
                 User us = gerirUtilizador.getUserByEmail(userEmail);
                 if (us == null) {
-                    continue;
+                    return -5;
                 }
+                //verificar se o user ja esta naquela transacao
+                String condition = "TransacaoId_transacao = " + unica.getId_transacao() + " AND UserId_user = " + user.getId_user();
+                TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                if(tpcheck.length != 0){
+                    return -5;
+                }
+
                 nUsers++;
                 TransacaoPartilhada tp = TransacaoPartilhadaDAO.createTransacaoPartilhada();
                 tp.setUserId_user(us);
@@ -378,7 +385,7 @@ public class GerirUnica {
 
             }
 
-            float nSValue = unica.getShareValue() / (nUsers + 1);
+            float nSValue = unica.getValue() / (nUsers + 1);
             unica.setShareValue(nSValue);
             UnicaDAO.save(unica);
 

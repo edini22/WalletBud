@@ -62,7 +62,10 @@ public class GerirCategoria {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
 
-            if(user == null) return -3;
+            if(user == null){
+                t.rollback();
+                return -3;
+            }
 
             String condition = "tipo = '" + tipo + "' AND name = '" + nome + "' AND Userid_user = '" + user.getId_user() + "'";
             Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(condition, null);
@@ -93,6 +96,7 @@ public class GerirCategoria {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -101,6 +105,7 @@ public class GerirCategoria {
             Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(condition, null);
 
             if (categorias.length == 0) {
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -112,10 +117,12 @@ public class GerirCategoria {
                     .add("tipo", categoria.getTipo())
                     .build();
 
+            t.commit();
 
             return categoriaJson;
 
         } catch (Exception e) {
+            t.rollback();
             e.printStackTrace();
             return Json.createObjectBuilder()
                     .build();
@@ -124,7 +131,6 @@ public class GerirCategoria {
     }
 
     public Categoria getCategoriaById(int id, String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
@@ -153,6 +159,7 @@ public class GerirCategoria {
         try{
             User user = gerirUtilizador.getUserByEmail(email);
             if(user == null){
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -172,11 +179,14 @@ public class GerirCategoria {
                 arrayBuilder.add(categoriaJson);
             }
 
+            t.commit();
+
             return Json.createObjectBuilder()
                     .add("categorias", arrayBuilder.build())
                     .build();
 
         } catch (Exception e) {
+            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
@@ -189,7 +199,10 @@ public class GerirCategoria {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
 
-            if(user == null) return -3;
+            if(user == null){
+                t.rollback();
+                return -3;
+            }
 
             String condition = "id_categoria = '" + id + "' AND Userid_user = '" + user.getId_user() + "'";
             Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(condition, null);
@@ -214,6 +227,7 @@ public class GerirCategoria {
 
             t.commit();
         } catch (Exception e) {
+            t.rollback();
             e.printStackTrace();
             return -2;
         }
@@ -227,7 +241,10 @@ public class GerirCategoria {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
 
-            if(user == null) return -3;
+            if(user == null){
+                t.rollback();
+                return -3;
+            }
 
             String condition = "id_categoria = '" + id + "' AND Userid_user = '" + user.getId_user() + "'";
             Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(condition, null);
@@ -243,6 +260,7 @@ public class GerirCategoria {
 
             t.commit();
         } catch (Exception e) {
+            t.rollback();
             e.printStackTrace();
             return -2;
         }

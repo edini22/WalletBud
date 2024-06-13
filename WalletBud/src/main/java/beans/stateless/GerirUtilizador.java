@@ -38,6 +38,7 @@ public class GerirUtilizador {
             User u = getUserByEmail(email);
 
             if (u != null) {
+                t.rollback();
                 return false;
             }
 
@@ -56,6 +57,7 @@ public class GerirUtilizador {
 
             if(gerirCategoria.createDefaultCategorias(user) != 0){
                 t.rollback();
+                return false;
             }
 
             t.commit();
@@ -76,6 +78,7 @@ public class GerirUtilizador {
 
             if (u == null) {
                 System.out.println("email do token errado!");
+                t.rollback();
                 return false;
             }
             if (name != null) u.setName(name);
@@ -111,11 +114,12 @@ public class GerirUtilizador {
     }
 
     public int verifyUser(String email, String password) throws PersistentException {
-
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = getUserByEmail(email);
 
             if (user == null) {
+                t.rollback();
                 return -3;
             }
 
@@ -129,8 +133,10 @@ public class GerirUtilizador {
             User[] users = UserDAO.listUserByQuery(condition, null);
 
             if (users.length == 0) {
+                t.rollback();
                 return -1;
             } else {
+                t.commit();
                 return 0;
             }
 
@@ -148,11 +154,13 @@ public class GerirUtilizador {
             User[] users = UserDAO.listUserByQuery(condition, null);
 
             if (users.length == 0) {
+                t.rollback();
                 return null;
             }
-
+            t.commit();
             return users[0];
         } catch (Exception e) {
+            t.rollback();
             e.printStackTrace();
             return null;
         }
@@ -164,6 +172,7 @@ public class GerirUtilizador {
             User user = getUserByEmail(email);
 
             if (user == null) {
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -175,10 +184,11 @@ public class GerirUtilizador {
                     .add("balanco", user.getSaldo())
                     .add("idioma", user.getIdioma())
                     .build();
-
+            t.commit();
             return userJson;
         } catch (Exception e) {
             e.printStackTrace();
+            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }

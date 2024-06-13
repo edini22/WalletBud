@@ -764,7 +764,7 @@ public class GerirFixa {
         return 0;
     }
 
-    public void getLatePayments(String email) throws PersistentException {//Em processo de construcao
+    public JsonObject getLatePayments(String email) throws PersistentException {//Em processo de construcao
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = gerirUtilizador.getUserByEmail(email);
@@ -813,6 +813,12 @@ public class GerirFixa {
                 }
 
                 if (fixa.getRepeticao() == 1) {
+                    Timestamp time = tfs[0].getDataPagamento();
+                    time.setDate(time.getDate() + 1);
+
+                    if (curTime.after(time)) {
+
+                    }
                 }
 
             }
@@ -822,17 +828,11 @@ public class GerirFixa {
         } catch (Exception e) {
             t.rollback();
             e.printStackTrace();
-            //return Json.createObjectBuilder()
-            //        .build();
+            return Json.createObjectBuilder()
+                    .build();
         }
-        //return Json.createObjectBuilder()
-        //        .build();
+        return Json.createObjectBuilder()
+                .build();
     }
 
-    public GerirFixa () {}
-
-    public static void main(String[] args) throws PersistentException {
-        GerirFixa gf = new GerirFixa();
-        gf.getLatePayments("jl@gmail.com");
-    }
 }

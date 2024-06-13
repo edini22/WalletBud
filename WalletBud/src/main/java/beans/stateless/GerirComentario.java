@@ -55,6 +55,7 @@ public class GerirComentario {
             User user = gerirUtilizador.getUserByEmail(email);
 
             if (user == null) {
+                t.rollback();
                 return -3;
             }
 
@@ -62,11 +63,13 @@ public class GerirComentario {
             Comentario[] comentarios = ComentarioDAO.listComentarioByQuery(condition, null);
 
             if (comentarios.length == 0) {
+                t.rollback();
                 return -1;
             }
             Comentario comentario = comentarios[0];
 
             if (comentario.getUserId_user() != user) {
+                t.rollback();
                 return -2;
             }
 
@@ -88,6 +91,7 @@ public class GerirComentario {
             User user = gerirUtilizador.getUserByEmail(email);
 
             if (user == null) {
+                t.rollback();
                 return -3;
             }
 
@@ -95,12 +99,14 @@ public class GerirComentario {
             Comentario[] comentarios = ComentarioDAO.listComentarioByQuery(condition, null);
 
             if (comentarios.length == 0) {
+                t.rollback();
                 return -1;
             }
 
             Comentario comentario = comentarios[0];
 
             if (comentario.getUserId_user() != user && comentario.getTransacaoId_transacao().getOwner_id() != user) {
+                t.rollback();
                 return -2;
             }
 
@@ -119,6 +125,7 @@ public class GerirComentario {
             User user = gerirUtilizador.getUserByEmail(email);
 
             if (user == null) {
+                t.commit();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -126,11 +133,13 @@ public class GerirComentario {
             Transacao transacao = TransacaoDAO.getTransacaoByORMID(id_transacao);
 
             if (transacao == null) {
+                t.commit();
                 return Json.createObjectBuilder()
                         .build();
             }
 
             if (!checkUserPermission(user, transacao)) {
+                t.commit();
                 return Json.createObjectBuilder()
                         .build();
             }

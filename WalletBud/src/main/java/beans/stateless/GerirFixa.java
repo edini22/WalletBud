@@ -764,4 +764,75 @@ public class GerirFixa {
         return 0;
     }
 
+    public void getLatePayments(String email) throws PersistentException {//Em processo de construcao
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = gerirUtilizador.getUserByEmail(email);
+
+            String condition = "UserId_user = '" + user.getId_user();
+
+            Fixa[] fixas = FixaDAO.listFixaByQuery(condition, null);
+
+            condition = "UserId_user = " + user.getId_user();
+            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            ArrayList<Fixa> transacoes_id = new ArrayList<>(Arrays.asList(fixas));
+
+            for (TransacaoPartilhada transacaoPartilhada : transacoes_partilhada) {
+                try {
+                    Fixa f = FixaDAO.getFixaByORMID(transacaoPartilhada.getUsertransacaoId().getId_transacao());
+
+                    if (f != null) {
+                        transacoes_id.add(f);
+                    }
+                } catch (Exception e) {
+                    //nao era fixa
+                }
+            }
+
+            /*
+            * 1- todos os dias
+            * 2- todas as semanas
+            * 3- todos os meses
+            * 4- todos os anos
+            * */
+
+            //dataatual pagou e datapagamento tinha de pagar
+            String orederby = "";
+            Timestamp curTime = new Timestamp(System.currentTimeMillis());
+            System.out.println("Date: " + curTime.getDate());
+
+
+            for (Fixa fixa : transacoes_id) {
+                condition = "TransacaoId_transacao = " + fixa.getId_transacao();
+                orederby = "DataPagamento DESC LIMIT 1";
+
+                TransacaoFixa[] tfs = TransacaoFixaDAO.listTransacaoFixaByQuery(condition, orederby);
+
+                if (tfs.length == 0) {
+                    continue;
+                }
+
+                if (fixa.getRepeticao() == 1) {
+                }
+
+            }
+
+
+            t.commit();
+        } catch (Exception e) {
+            t.rollback();
+            e.printStackTrace();
+            //return Json.createObjectBuilder()
+            //        .build();
+        }
+        //return Json.createObjectBuilder()
+        //        .build();
+    }
+
+    public GerirFixa () {}
+
+    public static void main(String[] args) throws PersistentException {
+        GerirFixa gf = new GerirFixa();
+        gf.getLatePayments("jl@gmail.com");
+    }
 }

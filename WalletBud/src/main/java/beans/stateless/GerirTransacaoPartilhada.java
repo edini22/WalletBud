@@ -114,4 +114,64 @@ public class GerirTransacaoPartilhada {
 
     }
 
+    public JsonObject getMovimentosDays(String email, int days) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = gerirUtilizador.getUserByEmail(email);
+
+            if (user == null) {
+                t.rollback();
+                return Json.createObjectBuilder()
+                        .build();
+            }
+
+            List<Map<String, Object>> transacoes = TransacaoDAO.queryTransacoesByUserIdandDays(user.getId_user(), days);
+
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+            for(Map<String, Object> transacao : transacoes) {
+                if(transacao.get("Discriminator").equals("Unica")){
+                    Unica unica = UnicaDAO.getUnicaByORMID((int) transacao.get("Id"));
+                    JsonObject unicaJson = Json.createObjectBuilder()
+                            .add("id", unica.getId_transacao())
+                            .add("name", unica.getName())
+                            .add("value", unica.getShareValue())
+                            .add("date", unica.getDate().toString())
+                            .add("descricao", unica.getDescrição())
+                            .add("categoria", unica.getCategoriaId_categoria().getName())
+                            .add("tipo", unica.getTipo())
+                            .add("local", unica.getLocal())
+                            .build();
+                    arrayBuilder.add(unicaJson);
+                } else{
+                    TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID((int) transacao.get("Id"));
+                    Fixa fixa = tf.getTransacaofixa_ID();
+                    JsonObject unicaJson = Json.createObjectBuilder()
+                            .add("id", fixa.getId_transacao())
+                            .add("name", fixa.getName())
+                            .add("value", tf.getPayvalue())
+                            .add("date", tf.getDataAtual().toString())
+                            .add("datePagamento",tf.getDataPagamento().toString())
+                            .add("descricao", fixa.getDescrição())
+                            .add("categoria", fixa.getCategoriaId_categoria().getName())
+                            .add("repeticao", fixa.getRepeticao())
+                            .add("tipo", fixa.getTipo())
+                            .add("local", fixa.getLocal())
+                            .build();
+                    arrayBuilder.add(unicaJson);
+
+                }
+            }
+            t.commit();
+            return Json.createObjectBuilder()
+                    .add("movimentos", arrayBuilder)
+                    .build();
+
+        } catch (Exception e) {
+            t.rollback();
+            return Json.createObjectBuilder()
+                    .build();
+        }
+
+    }
+
 }

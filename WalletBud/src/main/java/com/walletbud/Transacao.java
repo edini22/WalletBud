@@ -767,7 +767,7 @@ public class Transacao {
             movimentos = gerirTransacaoPartilhada.getMovimentos(email);
             if (movimentos.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
-                        .add("message", "Nenhuma movimento encontrado!")
+                        .add("message", "Nenhum movimento encontrado!")
                         .build();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
@@ -784,6 +784,35 @@ public class Transacao {
     }
 
     @GET
+    @Path("/movimentos/{dias}")
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listMovimentos(@PathParam("dias") int dias, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+
+        try {
+            JsonObject movimentos;
+            movimentos = gerirTransacaoPartilhada.getMovimentosDays(email,dias);
+            if (movimentos.isEmpty()) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "User nao encontrado!")
+                        .build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            return Response.ok(movimentos.toString(), MediaType.APPLICATION_JSON).build();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
+    @GET//Em processo de construcao
     @Path("/fixa/transacoesAtraso") //pagamentos/recibos em atraso das transacoes fixas
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
@@ -826,7 +855,7 @@ public class Transacao {
 
     }
 
-    @GET
+    @GET//Em processo de construcao
     @Path("/timeline/{ano}/{mes}") //timeline da do mes em que esta o user das transacoes! | deve ter que levar o mes e ano pela rota
     @Secured
     @Produces(MediaType.APPLICATION_JSON)

@@ -80,11 +80,17 @@ public class GerirFixa {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = gerirUtilizador.getUserByEmail(email);
-            if (user == null) return -3;
+            if (user == null) {
+                t.rollback();
+                return -3;
+            }
             Categoria cat = null;
             if (categoria != -1) {
                 cat = gerirCategoria.getCategoriaById(categoria, email);
-                if (cat == null) return -4;
+                if (cat == null){
+                    t.rollback();
+                    return -4;
+                }
             }
 
             String condition = "Id_transacao = '" + id + "' AND UserId_user = '" + user.getId_user() + "'";
@@ -143,9 +149,11 @@ public class GerirFixa {
     }
 
     public JsonObject getFixas(String email, String tipo) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -215,12 +223,13 @@ public class GerirFixa {
                         .build();
                 arrayBuilder.add(unicaJson);
             }
-
+            t.commit();
             return Json.createObjectBuilder()
                     .add(tipo + "s", arrayBuilder.build())
                     .build();
 
         } catch (Exception e) {
+            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
@@ -232,6 +241,7 @@ public class GerirFixa {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -241,6 +251,7 @@ public class GerirFixa {
 
 
             if (fixas.length == 0) {
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -276,7 +287,7 @@ public class GerirFixa {
             }
             JsonArray userArray = userArrayBuilder.build();
 
-
+            t.commit();
             return Json.createObjectBuilder()
                     .add("id", fixa.getId_transacao())
                     .add("name", fixa.getName())
@@ -294,6 +305,7 @@ public class GerirFixa {
                     .build();
 
         } catch (Exception e) {
+            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
@@ -357,15 +369,18 @@ public class GerirFixa {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return -3;
             }
 
             Fixa fixa = FixaDAO.getFixaByORMID(id_fixa);
             if (fixa == null) {
+                t.rollback();
                 return -1;
             }
 
             if (fixa.getOwner_id() != user) {
+                t.rollback();
                 return -2;
             }
 
@@ -373,6 +388,7 @@ public class GerirFixa {
             TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
 
             if (tps.length == 0 && option == -1) {
+                t.rollback();
                 return -4;
             }
 
@@ -441,15 +457,18 @@ public class GerirFixa {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return -3;
             }
 
             Fixa fixa = FixaDAO.getFixaByORMID(id_fixa);
             if (fixa == null || fixa.getStatus()) {
+                t.rollback();
                 return -1;
             }
 
             if (fixa.getOwner_id() == user) {
+                t.rollback();
                 return -2;
             }
 
@@ -457,12 +476,14 @@ public class GerirFixa {
             TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
 
             if (tps.length == 0) {
+                t.rollback();
                 return -5;
             }
 
             condition = "TransacaoId_transacao = " + fixa.getId_transacao() + " AND UserId_user = " + user.getId_user();
             TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
             if(tpcheck.length == 0){
+                t.rollback();
                 return -4;
             }
 
@@ -476,6 +497,7 @@ public class GerirFixa {
 
                     if (option == -1) {
                         if (tp.getConfirma() == 1) {
+                            t.rollback();
                             return -2;
                         }
                         remove = true;
@@ -492,6 +514,7 @@ public class GerirFixa {
                 }
             }
             if (option == -1 && !remove) {
+                t.rollback();
                 return -4;
             } else if (remove) {
                 //dados novos para a notificacao
@@ -543,19 +566,23 @@ public class GerirFixa {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return -3;
             }
 
             Fixa fixa = FixaDAO.getFixaByORMID(id_fixa);
             if (fixa == null ) {
+                t.rollback();
                 return -1;
             }
 
             if (fixa.getOwner_id() != user) {
+                t.rollback();
                 return -2;
             }
 
             if (!fixa.getStatus()) {
+                t.rollback();
                 return -4;
             }
 
@@ -607,6 +634,7 @@ public class GerirFixa {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -632,12 +660,13 @@ public class GerirFixa {
             }
             JsonArray response = userArrayBuilder.build();
 
-
+            t.commit();
             return Json.createObjectBuilder()
                     .add("transacoes", response)
                     .build();
 
         } catch (Exception e) {
+            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
@@ -650,11 +679,13 @@ public class GerirFixa {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return -3;
             }
 
             Fixa fixa = FixaDAO.getFixaByORMID(idTransacao);
             if (fixa == null ) {
+                t.rollback();
                 return -1;
             }
 
@@ -698,6 +729,7 @@ public class GerirFixa {
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao() + " AND UserId_user = " + user.getId_user();
                 TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
                 if(tpcheck.length == 0){
+                    t.rollback();
                     return -4;
                 }
                 //remove a subscricao

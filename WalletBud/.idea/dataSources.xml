@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="WalletBudDB@localhost" uuid="74e198ea-ed74-478a-8426-e75e9cbbe9ec">
+    <data-source source="LOCAL" name="WalletBudDB@localhost" uuid="af37def6-b41b-4924-b240-345c81a949c3">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>

@@ -2,6 +2,7 @@ package com.walletbud;
 
 
 import beans.stateless.GerirFixa;
+import beans.stateless.GerirTransacaoPartilhada;
 import beans.stateless.GerirUnica;
 import jakarta.ejb.EJB;
 import jakarta.json.*;
@@ -15,8 +16,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.io.StringReader;
-
-@Path("/{transacao}")
+@Path("")
 public class Transacao {
 
     @EJB
@@ -25,8 +25,11 @@ public class Transacao {
     @EJB
     private GerirFixa gerirFixa;
 
+    @EJB
+    private GerirTransacaoPartilhada gerirTransacaoPartilhada;
+
     @POST
-    @Path("/{tipo}/add")
+    @Path("/{transacao}/{tipo}/add")
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -120,7 +123,7 @@ public class Transacao {
     }
 
     @POST
-    @Path("/{tipo}/set")
+    @Path("/{transacao}/{tipo}/set")
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -254,7 +257,7 @@ public class Transacao {
     }
 
     @GET
-    @Path("/{tipo}/list")
+    @Path("/{transacao}/{tipo}/list")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
     public Response listTransactionsUser(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
@@ -297,7 +300,7 @@ public class Transacao {
     }
 
     @GET
-    @Path("/{tipo}/get/{id}")
+    @Path("/{transacao}/{tipo}/get/{id}")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, @PathParam("id") int id, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
@@ -337,7 +340,7 @@ public class Transacao {
     }
 
     @POST
-    @Path("/share")
+    @Path("/{transacao}/share")
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -444,7 +447,7 @@ public class Transacao {
     }
 
     @POST
-    @Path("/confirm")
+    @Path("/{transacao}/confirm")
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -542,7 +545,7 @@ public class Transacao {
     }
 
     @POST
-    @Path("/pay")
+    @Path("/{transacao}/pay")
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -642,7 +645,7 @@ public class Transacao {
     }
 
     @GET
-    @Path("/payments")
+    @Path("/{transacao}/payments")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTransactionPay(@PathParam("transacao") String transacao, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
@@ -680,7 +683,7 @@ public class Transacao {
     }
 
     @DELETE
-    @Path("/{idTransacao}")
+    @Path("/{transacao}/{idTransacao}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUser(@PathParam("idTransacao") int idTransacao, @PathParam("transacao") String transacao, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
@@ -749,6 +752,123 @@ public class Transacao {
         } catch (Exception e){
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GET
+    @Path("/movimentos") //movimentos todos feitos pelo user
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listMovimentos( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+
+        try {
+            JsonObject movimentos;
+            movimentos = gerirTransacaoPartilhada.getMovimentos(email);
+            if (movimentos.isEmpty()) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Nenhuma movimento encontrado!")
+                        .build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            return Response.ok(movimentos.toString(), MediaType.APPLICATION_JSON).build();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
+    @GET
+    @Path("/fixa/transacoesAtraso") //pagamentos/recibos em atraso das transacoes fixas
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listTransacoesAtraso( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+
+        try {
+//            JsonObject unicas;
+//            if (transacao.equals("fixa")) {
+//                unicas = gerirFixa.getFixas(email, tipo);
+//            } else if (transacao.equals("unica")) {
+//                unicas = gerirUnica.getUnicas(email, tipo);
+//            } else {
+//                JsonObject jsonResponse = Json.createObjectBuilder()
+//                        .add("message", "Tipo de Transacao nao existe!")
+//                        .build();
+//                return Response.status(Response.Status.BAD_REQUEST)
+//                        .entity(jsonResponse.toString())
+//                        .type(MediaType.APPLICATION_JSON)
+//                        .build();
+//            }
+//
+//            if (unicas.isEmpty()) {
+//                JsonObject jsonResponse = Json.createObjectBuilder()
+//                        .add("message", "Nenhuma " + tipo + " única encontrada!")
+//                        .build();
+//                return Response.status(Response.Status.NOT_FOUND)
+//                        .entity(jsonResponse.toString())
+//                        .type(MediaType.APPLICATION_JSON)
+//                        .build();
+//            }
+
+            return Response.ok("hello", MediaType.APPLICATION_JSON).build();
+////
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
+    @GET
+    @Path("/timeline/{ano}/{mes}") //timeline da do mes em que esta o user das transacoes! | deve ter que levar o mes e ano pela rota
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listTimeline(@PathParam("ano") int ano, @PathParam("mes") String mes, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+
+        //TODO: verificar o ano e mes se sao aceitaveis
+
+        try {
+//            JsonObject unicas;
+//            if (transacao.equals("fixa")) {
+//                unicas = gerirFixa.getFixas(email, tipo);
+//            } else if (transacao.equals("unica")) {
+//                unicas = gerirUnica.getUnicas(email, tipo);
+//            } else {
+//                JsonObject jsonResponse = Json.createObjectBuilder()
+//                        .add("message", "Tipo de Transacao nao existe!")
+//                        .build();
+//                return Response.status(Response.Status.BAD_REQUEST)
+//                        .entity(jsonResponse.toString())
+//                        .type(MediaType.APPLICATION_JSON)
+//                        .build();
+//            }
+//
+//            if (unicas.isEmpty()) {
+//                JsonObject jsonResponse = Json.createObjectBuilder()
+//                        .add("message", "Nenhuma " + tipo + " única encontrada!")
+//                        .build();
+//                return Response.status(Response.Status.NOT_FOUND)
+//                        .entity(jsonResponse.toString())
+//                        .type(MediaType.APPLICATION_JSON)
+//                        .build();
+//            }
+
+            return Response.ok("hello", MediaType.APPLICATION_JSON).build();
+////
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
     }
 
 }

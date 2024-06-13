@@ -13,10 +13,12 @@
  */
 package wb.walletbud;
 
+import org.hibernate.transform.Transformers;
 import org.orm.*;
 import org.hibernate.Query;
-import org.hibernate.LockMode;
+
 import java.util.List;
+import java.util.Map;
 
 public class TransacaoDAO {
 	public static Transacao loadTransacaoByORMID(int id_transacao) throws PersistentException {
@@ -91,6 +93,33 @@ public class TransacaoDAO {
 			return (Transacao) session.get(wb.walletbud.Transacao.class, Integer.valueOf(id_transacao), lockMode);
 		}
 		catch (Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+
+	public static List<Map<String, Object>> queryTransacoesByUserId(int userId) throws PersistentException {
+		try {
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
+			String sqlQuery =
+					"(SELECT t.Id_transacao AS Id, t.Date AS Date, 'Unica' AS Discriminator " +
+							"FROM Transacao t " +
+							"LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao " +
+							"WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId) " +
+							"AND t.Status = 1 " +
+							"AND t.Discriminator = 'Unica') " +
+							"UNION ALL " +
+							"(SELECT tf.ID AS Id, tf.DataAtual AS Date, 'Fixa' AS Discriminator " +
+							"FROM User_TransacaoFixa utf " +
+							"JOIN TransacaoFixa tf ON utf.TransacaoFixaID = tf.ID " +
+							"WHERE utf.UserId_user = :userId) " +
+							"ORDER BY Date";
+
+			Query query = session.createSQLQuery(sqlQuery)
+					.setParameter("userId", userId)
+					.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+            return query.list();
+		} catch (Exception e) {
 			throw new PersistentException(e);
 		}
 	}

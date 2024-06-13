@@ -87,11 +87,17 @@ public class GerirUnica {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = gerirUtilizador.getUserByEmail(email);
-            if (user == null) return -3;
+            if (user == null) {
+                t.rollback();
+                return -3;
+            }
             Categoria cat = null;
             if (categoria != -1) {
                 cat = gerirCategoria.getCategoriaById(categoria, email);
-                if (cat == null) return -4;
+                if (cat == null) {
+                    t.rollback();
+                    return -4;
+                }
             }
 
             String condition = "Id_transacao = '" + id + "' AND UserId_user = '" + user.getId_user() + "'";
@@ -167,9 +173,11 @@ public class GerirUnica {
 
 
     public JsonObject getUnicas(String email, String tipo) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -238,13 +246,14 @@ public class GerirUnica {
                         .build();
                 arrayBuilder.add(unicaJson);
             }
-
+            t.commit();
             return Json.createObjectBuilder()
                     .add(tipo + "s", arrayBuilder.build())
                     .build();
 
         } catch (Exception e) {
             e.printStackTrace();
+            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
@@ -255,6 +264,7 @@ public class GerirUnica {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -264,6 +274,7 @@ public class GerirUnica {
 
 
             if (unicas.length == 0) {
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -274,6 +285,7 @@ public class GerirUnica {
             TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
             //verificar se o owner o se com quem está transacao esta partilhada corresponde ao ‘user’ que pede, senao se verificar return vazio
             if (!(unica.getOwner_id() == user || checkTransationAcess(user, tp))) {
+                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -314,11 +326,12 @@ public class GerirUnica {
                     .add("status", unica.getStatus())
                     .add("users", userArray)
                     .build();
-
+            t.commit();
             return unicaJson;
 
         } catch (Exception e) {
             e.printStackTrace();
+            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
@@ -381,15 +394,18 @@ public class GerirUnica {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return -3;
             }
 
             Unica unica = UnicaDAO.getUnicaByORMID(id_unica);
             if (unica == null) {
+                t.rollback();
                 return -1;
             }
 
             if (unica.getOwner_id() != user) {
+                t.rollback();
                 return -2;
             }
 
@@ -399,6 +415,7 @@ public class GerirUnica {
             int oldUsers = tps.length + 1;
 
             if (tps.length == 0 && option == -1) {
+                t.rollback();
                 return -4;
             }
 
@@ -479,6 +496,7 @@ public class GerirUnica {
                 // novo valor por quanto vai ficar (nSValue)
 
             } else {
+                t.rollback();
                 return -4;
             }
 
@@ -496,15 +514,18 @@ public class GerirUnica {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return -3;
             }
 
             Unica unica = UnicaDAO.getUnicaByORMID(id_unica);
             if (unica == null || unica.getStatus()) {
+                t.rollback();
                 return -1;
             }
 
             if (unica.getOwner_id() == user) {
+                t.rollback();
                 return -2;
             }
 
@@ -514,12 +535,14 @@ public class GerirUnica {
             int oldUsers = tps.length + 1;
 
             if (tps.length == 0) {
+                t.rollback();
                 return -5;
             }
 
             condition = "TransacaoId_transacao = " + unica.getId_transacao() + " AND UserId_user = " + user.getId_user();
             TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
             if(tpcheck.length == 0){
+                t.rollback();
                 return -4;
             }
 
@@ -533,6 +556,7 @@ public class GerirUnica {
 
                     if (option == -1) {
                         if (tp.getConfirma() == 1) {
+                            t.rollback();
                             return -2;
                         }
                         remove = true;
@@ -559,6 +583,7 @@ public class GerirUnica {
                 }
             }
             if (option == -1 && !remove) {
+                t.rollback();
                 return -4;
             } else if (remove) {
                 //dados novos para a notificacao
@@ -658,11 +683,13 @@ public class GerirUnica {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
             if (user == null) {
+                t.rollback();
                 return -3;
             }
 
             Unica unica = UnicaDAO.getUnicaByORMID(idTransacao);
             if (unica == null ) {
+                t.rollback();
                 return -1;
             }
 
@@ -707,6 +734,7 @@ public class GerirUnica {
 
 
             } else{
+                t.rollback();
                 return -2;
             }
 

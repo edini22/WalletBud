@@ -1,5 +1,4 @@
 <template>
-  <!--<navbar btnBackground="bg-gradient-success" /> -->
   <div
     class="page-header align-items-start min-vh-100"
     style="
@@ -96,7 +95,14 @@
                     >{{$t('Entrar')}}</material-button
                   >
                 </div>
-                <p class="mt-4 text-sm text-center">
+                <div class="text-center">
+                  <router-link
+                    :to="{ name: 'Home' }"
+                    class="mt-4 text-sm text-info text-gradient"
+                    >{{$t('Esqueceu-se da password')}}?</router-link
+                  >
+                </div>
+                <p class="mt-2 text-sm text-center">
                   {{$t('Ainda não tens conta')}}?
                   <router-link
                     :to="{ name: 'SignUp' }"
@@ -110,28 +116,43 @@
         </div>
       </div>
     </div>
+    <div class="position-fixed top-1 end-1 z-index-2">
+      <material-snackbar
+        v-if="snackbar === 'success'"
+        title="Iniciar Sessão"
+        date="now"
+        description="LogIn efetuado com sucesso!"
+        :icon="{ component: 'done', color: 'white' }"
+        color="success"
+        :close-handler="closeSnackbar"/>
+      <material-snackbar
+        v-if="snackbar === 'error'"
+        title="Iniciar Sessão"
+        date="now"
+        description="Erro ao efetuar o logIn!"
+        :icon="{ component: 'campaign', color: 'white' }"
+        color="danger"
+        :close-handler="closeSnackbar"/>
+    </div>
   </div>
 </template>
-
-<!--Falta verificação de email inválido-->
-
 
 <script>
 import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
+import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 import { mapMutations } from "vuex";
-
 import { userStore } from "@/store/userStore";
 import { ref, watch } from 'vue';
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-
 
 export default {
   name: "sign-in",
   components: {
     MaterialInput,
     MaterialButton,
+    MaterialSnackbar,
   },
   setup() {
     const { t, locale } = useI18n();
@@ -145,6 +166,8 @@ export default {
     const emailErrorMessages = ref(null);
     const passwordError = ref(null);
     const passwordErrorMessages = ref(null);
+
+    const snackbar = ref(null);
     
     let state = false;
 
@@ -162,10 +185,8 @@ export default {
     });
 
     const login = async () => {
-      //teste
-      // router.push({ name: "Home" });
+  
       let isValid = true;
-
       
       if (!validarEmail(email.value)) {
         emailError.value = true;
@@ -184,6 +205,10 @@ export default {
       }
 
       if (!isValid) {
+        snackbar.value = 'error';
+        setTimeout(() => {
+          snackbar.value = null;
+        }, 2000);
         return;
       }
 
@@ -194,26 +219,40 @@ export default {
 
       try {
         await store.logUser(credentials);
-        alert("Login efetuado com sucesso");
-        // buscar os dados do user
         await store.getUser();
         
-        router.push({ name: "Home" });
+        snackbar.value = 'success';
+        
+        setTimeout(() => {
+          router.push({ name: "Home" });
+        }, 2000);
+    
       } catch (err) {
         if (err.message === "Email does not exist!"){
           emailError.value = true;
           emailErrorMessages.value = `${t('Email não existe')}`;
+          
+          snackbar.value = 'error';
+          setTimeout(() => {
+            snackbar.value = null;
+          }, 2000);
+
           state = true;
           return;
         } else if (err.message === "password does not match!"){
           passwordError.value = true;
           passwordErrorMessages.value = `${t('Password incorreta')}`;
+          
+          snackbar.value = 'error';
+          setTimeout(() => {
+            snackbar.value = null;
+          }, 2000);
+          
           state = true;
           return;
         }
         alert(err.message);
       }
-
     }
     return{
       email,
@@ -225,15 +264,14 @@ export default {
       t,
       emailErrorMessages,
       state,
+      snackbar,
     }
   },
   beforeMount() {
     this.toggleEveryDisplay();
-    //this.toggleHideConfig();
   },
   beforeUnmount() {
     this.toggleEveryDisplay();
-    //this.toggleHideConfig();
   },
   methods: {
     ...mapMutations(["toggleEveryDisplay"]),

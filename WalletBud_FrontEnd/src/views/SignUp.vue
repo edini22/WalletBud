@@ -1,6 +1,5 @@
 <template>
   <div class="bg-white">
-    
     <main class="mt-0 main-content">
       <section>
         <div class="page-header min-vh-100">
@@ -199,14 +198,30 @@
                     </p>
                   </div>
                 </div>
-                
               </div>
             </div>
           </div>
         </div>
-        
       </section>
     </main>
+    <div class="position-fixed top-1 end-1 z-index-2">
+      <material-snackbar
+        v-if="snackbar === 'success'"
+        title="Registo"
+        date="now"
+        description="Registo efetuado com sucesso!"
+        :icon="{ component: 'done', color: 'white' }"
+        color="success"
+        :close-handler="closeSnackbar"/>
+      <material-snackbar
+        v-if="snackbar === 'error'"
+        title="Registo"
+        date="now"
+        description="Erro ao efetuar o registo!"
+        :icon="{ component: 'campaign', color: 'white' }"
+        color="danger"
+        :close-handler="closeSnackbar"/>
+    </div>
   </div>
 </template>
 
@@ -214,15 +229,13 @@
 import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialCheckbox from "@/components/MaterialCheckbox.vue";
 import MaterialButton from "@/components/MaterialButton.vue";
+import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 const body = document.getElementsByTagName("body")[0];
 import { mapMutations } from "vuex";
-
 import { userStore } from "@/store/userStore";
 import { ref, watch } from 'vue';
 import { useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
-
-
 
 export default {
   name: "sign-up",
@@ -230,6 +243,7 @@ export default {
     MaterialInput,
     MaterialCheckbox,
     MaterialButton,
+    MaterialSnackbar,
   },
   setup() {
     const { t , locale } = useI18n();
@@ -248,6 +262,8 @@ export default {
     const passwordErrorMessage = ref(null);
     const checkedError = ref(false);
 
+    const snackbar = ref(null);
+
     let state = false;
 
     function validarEmail(email) {
@@ -264,7 +280,6 @@ export default {
     });
 
     const userSignUp = async () => {
-
       let isValid = true;
 
       if (!termsAccepted.value) {
@@ -281,7 +296,6 @@ export default {
         nameError.value = false;
       }
 
-      //validar mail
       if (!validarEmail(email.value)) {
         emailError.value = true;
         emailErrorStore.value = `${t('Email inválido')}`;
@@ -289,7 +303,6 @@ export default {
       } else {
         emailError.value = false;
       }
-      
 
       if (!password.value) {
         passwordError.value = true;
@@ -306,6 +319,10 @@ export default {
       }
 
       if (!isValid) {
+        snackbar.value = 'error';
+        setTimeout(() => {
+          snackbar.value = null;
+        }, 2000);
         return;
       }
 
@@ -317,19 +334,24 @@ export default {
 
       try {
         await store.registUser(newUser);
-        // Se o registro for bem-sucedido, você pode mostrar uma mensagem ou redirecionar se necessário
-        alert("Registado com sucesso");
-        router.push({ name: "SignIn" }); // Redireciona para a página de login após registro
+        snackbar.value = 'success';
+
+        setTimeout(() => {
+          router.push({ name: "SignIn" });
+        }, 2000); 
+
       } catch (error) {
-        
-        // Tratamento de erro específico para "Email Já registado!"
         if (error.message === "Email Já registado!") {
           emailErrorStore.value = `${t('Este email já está em uso')}`;
           emailError.value = true;
+
+          snackbar.value = 'error';
+          setTimeout(() => {
+            snackbar.value = null;
+          }, 2000);
+          
           state = true;
-          //alert("Este email já está registado. Utilize outro email.");
           return;
-          // Lógica adicional para manter o usuário na mesma página ou mostrar mensagem de erro
         } else {
           alert("Erro ao registar: " + error.message);
         }
@@ -351,6 +373,7 @@ export default {
       checkedError,
       t,
       state,
+      snackbar,
     };
   },
   beforeMount() {
@@ -359,7 +382,6 @@ export default {
   },
   beforeUnmount() {
     this.toggleEveryDisplay();
-    //this.toggleHideConfig();
     body.classList.add("bg-gray-100");
   },
   methods: {
@@ -369,7 +391,7 @@ export default {
 </script>
 
 <style scoped>
-.term-error {
-  color: red;
-}
+  .term-error {
+    color: red;
+  }
 </style>

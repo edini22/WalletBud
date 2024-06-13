@@ -134,7 +134,7 @@
         </div>
       </div>
     </div>
-    <div class="position-fixed bottom-1 end-1 z-index-2">
+    <div class="position-fixed top-5 end-1 z-index-2">
       <material-snackbar
         v-if="snackbar === 'success'"
         title="Material Dashboard"

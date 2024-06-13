@@ -92,8 +92,7 @@
           variant="gradient"
           color="info"
           size="sm"
-          @click="goBack"
-        >
+          @click="goBack">
           {{$t('Voltar')}}
         </material-button>
 
@@ -102,39 +101,58 @@
           variant="gradient"
           color="success"
           size="sm"
-          @click="saveNewPassword"
-        >
+          @click="saveNewPassword">
           {{$t('Guardar')}}
         </material-button>
       </div>
+
       <div class="d-flex justify-content-between" v-if="editMode && !editPassword">
         <material-button
           class="mt-4"
           variant="gradient"
           color="info"
           size="sm"
-          @click="goBack"
-        >
+          @click="goBack">
           {{$t('Voltar')}}
         </material-button>
 
         <material-button
-        class="mt-4"
-        variant="gradient"
-        color="success"
-        size="sm"
-        @click= "saveChanges"
-        >{{$t('Guardar')}}</material-button>
+          class="mt-4"
+          variant="gradient"
+          color="success"
+          size="sm"
+          @click= "saveChanges">
+          {{$t('Guardar')}}
+        </material-button>
       </div>
+    </div>
+
+    <div class="position-fixed top-1 end-1 z-index-2">
+      <material-snackbar
+        v-if="snackbar === 'success'"
+        title="Editar Perfil"
+        date="now"
+        description="Alterações guardadas com sucesso!"
+        :icon="{ component: 'done', color: 'white' }"
+        color="success"
+        :close-handler="closeSnackbar"/>
+      <material-snackbar
+        v-if="snackbar === 'error'"
+        title="Editar Perfil"
+        date="now"
+        description="Erro a guardar alterações!"
+        :icon="{ component: 'campaign', color: 'white' }"
+        color="danger"
+        :close-handler="closeSnackbar"/>
     </div>
   </div>
 </template>
 
-<!--Popups necessários-->
 <script>
 import { userStore } from "@/store/userStore";
 import { ref } from "vue";
 import MaterialButton from "@/components/MaterialButton.vue";
+import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 
 export default {
   name: "ProfileInfoCard",
@@ -148,21 +166,18 @@ export default {
     }
   },
   components: {
-    MaterialButton
+    MaterialButton,
+    MaterialSnackbar,
   },
   setup(){
     const store = userStore();
-
-    // Definindo as propriedades da store como ref
     const username = ref('');
     const email = ref('');
 
-    // Verificar se a store está definida antes de atribuir seus valores
     if (store) {
       username.value = store.$state.username;
       email.value = store.$state.email;
     }
-    
 
     const editMode = ref(false);
     const showError = ref(false);
@@ -172,6 +187,8 @@ export default {
     const showErrorEmail2 = ref(false);
     const editedInfo = ref({ username: '' , email: '', password: ''});
     const editPassword = ref(false);
+
+    const snackbar = ref(null);
 
     function validarEmail(email) {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -209,7 +226,6 @@ export default {
         editedInfo.value.password = editedInfo.value.senha1;
         editedInfo.value.senha1 = '';
         editedInfo.value.senha2 = '';
-
         editedInfo.value.username = username.value;
         editedInfo.value.email = email.value;
         
@@ -217,11 +233,14 @@ export default {
           password: editedInfo.value.password,
         };
 
-        //mandar para a API
         try {
           await store.updateEditedUser(user);
-          // Se o registro for bem-sucedido, você pode mostrar uma mensagem ou redirecionar se necessário
-          alert("pass com sucesso");
+          
+          snackbar.value = 'success';
+          setTimeout(() => {
+            snackbar.value = null;
+          }, 2000);
+
           if (store) {
             username.value = store.$state.username;
             email.value = store.$state.email;
@@ -230,42 +249,45 @@ export default {
           alert("Erro: " + error.message);
         }
 
-        // store.updateUser(editedInfo.value);
-        //alert(editedInfo.value.username + ' : ' + editedInfo.value.email + ' : ' + editedInfo.value.password)
         editMode.value = false;
         editPassword.value = false;
+      }else{
+        snackbar.value = 'error';
+        setTimeout(() => {
+          snackbar.value = null;
+        }, 2000);
       }
     };
     
     const saveChanges = async () => {
-     
       if(checkUsername() && checkEmail()){
-        //email.value = editedInfo.value.email;
-        //username.value = editedInfo.value.username;
         
         const user = {
           username: editedInfo.value.username,
           email: editedInfo.value.email,
         };
 
-        //mandar para a API
         try {
-          //alert(editedInfo.value.username + ' : ' + editedInfo.value.email + ' : ' + editedInfo.value.password)
           await store.updateEditedUser(user);
-          // Se o registro for bem-sucedido, você pode mostrar uma mensagem ou redirecionar se necessário
-          alert("Editado com sucesso");
+          
+          snackbar.value = 'success';
+          setTimeout(() => {
+            snackbar.value = 'null';
+          }, 2000);
           if (store) {
             username.value = store.$state.username;
             email.value = store.$state.email;
           }
         } catch (error) {
-          
           alert("Erro: " + error.message);
-          
         }
         
-        // store.updateUser(editedInfo.value);
         editMode.value = false; 
+      }else{
+        snackbar.value = 'error';
+        setTimeout(() => {
+          snackbar.value = null;
+        }, 2000);
       }
     };
 
@@ -311,8 +333,6 @@ export default {
       return true;
     };
 
-    
-
     return {
       editMode,
       showError,
@@ -332,57 +352,56 @@ export default {
       checkUsername,
       editPasswordFunc,
       editPassword,
+      snackbar,
     };
   },
- 
 };
 </script>
 
-
 <style scoped>
-.full_width1{
-  width: 14.9rem;
-}
+  .full_width1{
+    width: 14.9rem;
+  }
 
-.full_width2{
-  width: 15rem;
-}
+  .full_width2{
+    width: 15rem;
+  }
 
-.full_width3{
-  width: 11.2rem;
-}
+  .full_width3{
+    width: 11.2rem;
+  }
 
-.full_width4{
-  width: 9.3rem;
-}
+  .full_width4{
+    width: 9.3rem;
+  }
 
-.btn-edit {
-  background-color: lightblue;
-  color: white;
-  border: none;
-  border-radius: 4px;  
-}
+  .btn-edit {
+    background-color: lightblue;
+    color: white;
+    border: none;
+    border-radius: 4px;  
+  }
 
-.btn-edit:hover {
-  background-color: #0056b3;
-}
+  .btn-edit:hover {
+    background-color: #0056b3;
+  }
 
-input{
-  margin-left: auto;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+  input{
+    margin-left: auto;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
 
-.text-dark {
-  margin-right: 10px;
-}
+  .text-dark {
+    margin-right: 10px;
+  }
 
-.error-pass{
-  color: red;
-}
+  .error-pass{
+    color: red;
+  }
 
-.input-error{
-  border: 1px solid red;
-}
+  .input-error{
+    border: 1px solid red;
+  }
 </style>

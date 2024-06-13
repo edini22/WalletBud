@@ -8,7 +8,7 @@
 
 Coded by www.creative-tim.com
 
- =========================================================
+=========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
@@ -42,13 +42,12 @@ Coded by www.creative-tim.com
     />
   </main>
 </template>
+
 <script>
 import Sidenav from "./examples/Sidenav";
 import Configurator from "@/examples/Configurator.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
-import AppFooter from "@/examples/Footer.vue";
 import { mapMutations, mapState } from "vuex";
-
 import ConfiguratorV2 from "@/examples/ConfiguratorV2.vue";
 
 export default {
@@ -57,7 +56,6 @@ export default {
     Sidenav,
     Configurator,
     Navbar,
-    AppFooter,
     ConfiguratorV2,
   },
   methods: {

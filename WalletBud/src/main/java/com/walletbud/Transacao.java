@@ -821,33 +821,20 @@ public class Transacao {
         String email = JWTUtil.getEmailFromToken(token);
 
         try {
-//            JsonObject unicas;
-//            if (transacao.equals("fixa")) {
-//                unicas = gerirFixa.getFixas(email, tipo);
-//            } else if (transacao.equals("unica")) {
-//                unicas = gerirUnica.getUnicas(email, tipo);
-//            } else {
-//                JsonObject jsonResponse = Json.createObjectBuilder()
-//                        .add("message", "Tipo de Transacao nao existe!")
-//                        .build();
-//                return Response.status(Response.Status.BAD_REQUEST)
-//                        .entity(jsonResponse.toString())
-//                        .type(MediaType.APPLICATION_JSON)
-//                        .build();
-//            }
-//
-//            if (unicas.isEmpty()) {
-//                JsonObject jsonResponse = Json.createObjectBuilder()
-//                        .add("message", "Nenhuma " + tipo + " única encontrada!")
-//                        .build();
-//                return Response.status(Response.Status.NOT_FOUND)
-//                        .entity(jsonResponse.toString())
-//                        .type(MediaType.APPLICATION_JSON)
-//                        .build();
-//            }
+            JsonObject leite =  gerirFixa.getLatePayments(email);
 
-            return Response.ok("hello", MediaType.APPLICATION_JSON).build();
-////
+
+            if (leite.isEmpty()) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Nao tem pagamentos em atraso!")
+                        .build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            return Response.ok(leite.toString(), MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

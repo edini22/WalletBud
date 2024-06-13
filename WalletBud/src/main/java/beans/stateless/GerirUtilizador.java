@@ -148,19 +148,15 @@ public class GerirUtilizador {
     }
 
     public User getUserByEmail(String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             String condition = "email = '" + email + "'";
             User[] users = UserDAO.listUserByQuery(condition, null);
 
             if (users.length == 0) {
-                t.rollback();
                 return null;
             }
-            t.commit();
             return users[0];
         } catch (Exception e) {
-            t.rollback();
             e.printStackTrace();
             return null;
         }

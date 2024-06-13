@@ -40,12 +40,24 @@ public class Comentario {
         JsonReader reader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonObject = reader.readObject();
         reader.close();
-
+        
         try {
             int IdTransacao = jsonObject.getInt("idTransacao");
             String comentario = jsonObject.getString("comentario");
 
+            PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
             User user = gerirUtilizador.getUserByEmail(email);
+
+            if(user == null){
+                t.rollback();
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "User nao existe!")
+                        .build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
 
             Transacao transacao = TransacaoDAO.getTransacaoByORMID(IdTransacao);
             if (transacao == null) {
@@ -57,7 +69,6 @@ public class Comentario {
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-            PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
             int status = 0;
             try {
                 status = gerirComentario.createComentario(comentario, user, transacao);

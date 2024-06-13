@@ -76,6 +76,9 @@ public class UserSetCollection extends org.orm.util.ORMSet {
 	 * <li>email</li>
 	 * <li>saldo</li>
 	 * <li>idioma</li>
+	 * <li>objetivo</li>
+	 * <li>token</li>
+	 * <li>expToken</li>
 	 * </ul>
 	 * @return The persistent objects sorted array
 	 */
@@ -92,6 +95,9 @@ public class UserSetCollection extends org.orm.util.ORMSet {
 	 * <li>email</li>
 	 * <li>saldo</li>
 	 * <li>idioma</li>
+	 * <li>objetivo</li>
+	 * <li>token</li>
+	 * <li>expToken</li>
 	 * </ul>
 	 * @param ascending true for ascending, false for descending
 	 * @return The persistent objects sorted array

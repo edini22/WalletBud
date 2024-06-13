@@ -34,6 +34,7 @@ public class FixaCriteria extends AbstractORMCriteria {
 	public final BooleanExpression status;
 	public final CollectionExpression comentario;
 	public final CollectionExpression transacao;
+	public final CollectionExpression notificacao;
 	public final IntegerExpression repeticao;
 	public final CollectionExpression fixa;
 	
@@ -54,6 +55,7 @@ public class FixaCriteria extends AbstractORMCriteria {
 		status = new BooleanExpression("status", this);
 		comentario = new CollectionExpression("ORM_Comentario", this);
 		transacao = new CollectionExpression("ORM_Transacao", this);
+		notificacao = new CollectionExpression("ORM_Notificacao", this);
 		repeticao = new IntegerExpression("repeticao", this);
 		fixa = new CollectionExpression("ORM_Fixa", this);
 	}
@@ -84,6 +86,10 @@ public class FixaCriteria extends AbstractORMCriteria {
 	
 	public wb.walletbud.TransacaoPartilhadaCriteria createTransacaoCriteria() {
 		return new wb.walletbud.TransacaoPartilhadaCriteria(createCriteria("ORM_Transacao"));
+	}
+	
+	public wb.walletbud.NotificacaoCriteria createNotificacaoCriteria() {
+		return new wb.walletbud.NotificacaoCriteria(createCriteria("ORM_Notificacao"));
 	}
 	
 	public Fixa uniqueFixa() {

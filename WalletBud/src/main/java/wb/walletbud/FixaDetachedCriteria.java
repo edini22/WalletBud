@@ -34,6 +34,7 @@ public class FixaDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final BooleanExpression status;
 	public final CollectionExpression comentario;
 	public final CollectionExpression transacao;
+	public final CollectionExpression notificacao;
 	public final IntegerExpression repeticao;
 	public final CollectionExpression fixa;
 	
@@ -54,6 +55,7 @@ public class FixaDetachedCriteria extends AbstractORMDetachedCriteria {
 		status = new BooleanExpression("status", this.getDetachedCriteria());
 		comentario = new CollectionExpression("ORM_Comentario", this.getDetachedCriteria());
 		transacao = new CollectionExpression("ORM_Transacao", this.getDetachedCriteria());
+		notificacao = new CollectionExpression("ORM_Notificacao", this.getDetachedCriteria());
 		repeticao = new IntegerExpression("repeticao", this.getDetachedCriteria());
 		fixa = new CollectionExpression("ORM_Fixa", this.getDetachedCriteria());
 	}
@@ -75,6 +77,7 @@ public class FixaDetachedCriteria extends AbstractORMDetachedCriteria {
 		status = new BooleanExpression("status", this.getDetachedCriteria());
 		comentario = new CollectionExpression("ORM_Comentario", this.getDetachedCriteria());
 		transacao = new CollectionExpression("ORM_Transacao", this.getDetachedCriteria());
+		notificacao = new CollectionExpression("ORM_Notificacao", this.getDetachedCriteria());
 		repeticao = new IntegerExpression("repeticao", this.getDetachedCriteria());
 		fixa = new CollectionExpression("ORM_Fixa", this.getDetachedCriteria());
 	}
@@ -97,6 +100,10 @@ public class FixaDetachedCriteria extends AbstractORMDetachedCriteria {
 	
 	public wb.walletbud.TransacaoPartilhadaDetachedCriteria createTransacaoCriteria() {
 		return new wb.walletbud.TransacaoPartilhadaDetachedCriteria(createCriteria("ORM_Transacao"));
+	}
+	
+	public wb.walletbud.NotificacaoDetachedCriteria createNotificacaoCriteria() {
+		return new wb.walletbud.NotificacaoDetachedCriteria(createCriteria("ORM_Notificacao"));
 	}
 	
 	public Fixa uniqueFixa(PersistentSession session) {

@@ -34,6 +34,7 @@ public class TransacaoCriteria extends AbstractORMCriteria {
 	public final BooleanExpression status;
 	public final CollectionExpression comentario;
 	public final CollectionExpression transacao;
+	public final CollectionExpression notificacao;
 	
 	public TransacaoCriteria(Criteria criteria) {
 		super(criteria);
@@ -52,6 +53,7 @@ public class TransacaoCriteria extends AbstractORMCriteria {
 		status = new BooleanExpression("status", this);
 		comentario = new CollectionExpression("ORM_Comentario", this);
 		transacao = new CollectionExpression("ORM_Transacao", this);
+		notificacao = new CollectionExpression("ORM_Notificacao", this);
 	}
 	
 	public TransacaoCriteria(PersistentSession session) {
@@ -76,6 +78,10 @@ public class TransacaoCriteria extends AbstractORMCriteria {
 	
 	public wb.walletbud.TransacaoPartilhadaCriteria createTransacaoCriteria() {
 		return new wb.walletbud.TransacaoPartilhadaCriteria(createCriteria("ORM_Transacao"));
+	}
+	
+	public wb.walletbud.NotificacaoCriteria createNotificacaoCriteria() {
+		return new wb.walletbud.NotificacaoCriteria(createCriteria("ORM_Notificacao"));
 	}
 	
 	public Transacao uniqueTransacao() {

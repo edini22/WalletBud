@@ -299,6 +299,10 @@ public class NotificacaoDAO {
 	
 	public static boolean deleteAndDissociate(wb.walletbud.Notificacao notificacao)throws PersistentException {
 		try {
+			if (notificacao.getTransacaoId_transacao() != null) {
+				notificacao.getTransacaoId_transacao().notificacao.remove(notificacao);
+			}
+			
 			if (notificacao.getUserId_user() != null) {
 				notificacao.getUserId_user().notificacao.remove(notificacao);
 			}
@@ -312,6 +316,10 @@ public class NotificacaoDAO {
 	
 	public static boolean deleteAndDissociate(wb.walletbud.Notificacao notificacao, org.orm.PersistentSession session)throws PersistentException {
 		try {
+			if (notificacao.getTransacaoId_transacao() != null) {
+				notificacao.getTransacaoId_transacao().notificacao.remove(notificacao);
+			}
+			
 			if (notificacao.getUserId_user() != null) {
 				notificacao.getUserId_user().notificacao.remove(notificacao);
 			}

@@ -13,7 +13,7 @@ public class CreateAASICData {
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : confirma, userId_user, usertransacaoId
 			wb.walletbud.TransacaoPartilhadaDAO.save(wBWalletBudTransacaoPartilhada);
 			wb.walletbud.User wBWalletBudUser = wb.walletbud.UserDAO.createUser();
-			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : transacaoFixa, user_categoria, categoria, comentario, objetivo, notificacao, idioma, saldo, email, password, name
+			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : transacaoFixa, user_categoria, categoria, comentario, notificacao, objetivo, idioma, saldo, email, password, name
 			wb.walletbud.UserDAO.save(wBWalletBudUser);
 			wb.walletbud.Transacao wBWalletBudTransacao = wb.walletbud.TransacaoDAO.createTransacao();
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : transacao, comentario, status, tipo, date, shareValue, value, name, categoriaId_categoria
@@ -21,9 +21,6 @@ public class CreateAASICData {
 			wb.walletbud.Notificacao wBWalletBudNotificacao = wb.walletbud.NotificacaoDAO.createNotificacao();
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : userId_user
 			wb.walletbud.NotificacaoDAO.save(wBWalletBudNotificacao);
-			wb.walletbud.Objetivo wBWalletBudObjetivo = wb.walletbud.ObjetivoDAO.createObjetivo();
-			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : value, userId_user
-			wb.walletbud.ObjetivoDAO.save(wBWalletBudObjetivo);
 			wb.walletbud.Comentario wBWalletBudComentario = wb.walletbud.ComentarioDAO.createComentario();
 			// TODO Initialize the properties of the persistent object here, the following properties must be initialized before saving : data, descrição, transacaoId_transacao, userId_user
 			wb.walletbud.ComentarioDAO.save(wBWalletBudComentario);

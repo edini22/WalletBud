@@ -315,6 +315,10 @@ public class UnicaDAO {
 			for(int i = 0; i < lTransacaos.length; i++) {
 				lTransacaos[i].setUsertransacaoId(null);
 			}
+			wb.walletbud.Notificacao[] lNotificacaos = unica.notificacao.toArray();
+			for(int i = 0; i < lNotificacaos.length; i++) {
+				lNotificacaos[i].setTransacaoId_transacao(null);
+			}
 			return delete(unica);
 		}
 		catch(Exception e) {
@@ -339,6 +343,10 @@ public class UnicaDAO {
 			wb.walletbud.TransacaoPartilhada[] lTransacaos = unica.transacao.toArray();
 			for(int i = 0; i < lTransacaos.length; i++) {
 				lTransacaos[i].setUsertransacaoId(null);
+			}
+			wb.walletbud.Notificacao[] lNotificacaos = unica.notificacao.toArray();
+			for(int i = 0; i < lNotificacaos.length; i++) {
+				lNotificacaos[i].setTransacaoId_transacao(null);
 			}
 			try {
 				session.delete(unica);

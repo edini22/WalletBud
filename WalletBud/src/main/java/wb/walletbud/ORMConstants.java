@@ -24,9 +24,9 @@ public interface ORMConstants extends org.orm.util.ORMBaseConstants {
 	
 	final int KEY_FIXA_FIXA = -1662104513;
 	
-	final int KEY_NOTIFICACAO_USERID_USER = -862092193;
+	final int KEY_NOTIFICACAO_TRANSACAOID_TRANSACAO = -444681369;
 	
-	final int KEY_OBJETIVO_USERID_USER = 824932801;
+	final int KEY_NOTIFICACAO_USERID_USER = -862092193;
 	
 	final int KEY_TRANSACAOFIXA_TRANSACAOFIXA_ID = 1027019601;
 	
@@ -40,6 +40,8 @@ public interface ORMConstants extends org.orm.util.ORMBaseConstants {
 	
 	final int KEY_TRANSACAO_COMENTARIO = 155533352;
 	
+	final int KEY_TRANSACAO_NOTIFICACAO = 2025284531;
+	
 	final int KEY_TRANSACAO_OWNER_ID = 252730414;
 	
 	final int KEY_TRANSACAO_TRANSACAO = 279247185;
@@ -49,8 +51,6 @@ public interface ORMConstants extends org.orm.util.ORMBaseConstants {
 	final int KEY_USER_COMENTARIO = -1305129803;
 	
 	final int KEY_USER_NOTIFICACAO = -305600314;
-	
-	final int KEY_USER_OBJETIVO = 940505360;
 	
 	final int KEY_USER_TRANSACAOFIXA = 1323032624;
 	

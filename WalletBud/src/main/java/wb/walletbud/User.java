@@ -24,9 +24,6 @@ public class User {
 		else if (key == wb.walletbud.ORMConstants.KEY_USER_NOTIFICACAO) {
 			return ORM_notificacao;
 		}
-		else if (key == wb.walletbud.ORMConstants.KEY_USER_OBJETIVO) {
-			return ORM_objetivo;
-		}
 		else if (key == wb.walletbud.ORMConstants.KEY_USER_COMENTARIO) {
 			return ORM_comentario;
 		}
@@ -62,11 +59,15 @@ public class User {
 	
 	private String idioma = "portugues";
 	
+	private float objetivo;
+	
+	private String token;
+	
+	private java.sql.Timestamp expToken;
+	
 	private java.util.Set ORM_transacaos = new java.util.HashSet();
 	
 	private java.util.Set ORM_notificacao = new java.util.HashSet();
-	
-	private java.util.Set ORM_objetivo = new java.util.HashSet();
 	
 	private java.util.Set ORM_comentario = new java.util.HashSet();
 	
@@ -128,6 +129,30 @@ public class User {
 		return idioma;
 	}
 	
+	public void setObjetivo(float value) {
+		this.objetivo = value;
+	}
+	
+	public float getObjetivo() {
+		return objetivo;
+	}
+	
+	public void setToken(String value) {
+		this.token = value;
+	}
+	
+	public String getToken() {
+		return token;
+	}
+	
+	public void setExpToken(java.sql.Timestamp value) {
+		this.expToken = value;
+	}
+	
+	public java.sql.Timestamp getExpToken() {
+		return expToken;
+	}
+	
 	private void setORM_Transacaos(java.util.Set value) {
 		this.ORM_transacaos = value;
 	}
@@ -147,16 +172,6 @@ public class User {
 	}
 	
 	public final wb.walletbud.NotificacaoSetCollection notificacao = new wb.walletbud.NotificacaoSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_USER_NOTIFICACAO, wb.walletbud.ORMConstants.KEY_NOTIFICACAO_USERID_USER, wb.walletbud.ORMConstants.KEY_MUL_ONE_TO_MANY);
-	
-	private void setORM_Objetivo(java.util.Set value) {
-		this.ORM_objetivo = value;
-	}
-	
-	private java.util.Set getORM_Objetivo() {
-		return ORM_objetivo;
-	}
-	
-	public final wb.walletbud.ObjetivoSetCollection objetivo = new wb.walletbud.ObjetivoSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_USER_OBJETIVO, wb.walletbud.ORMConstants.KEY_OBJETIVO_USERID_USER, wb.walletbud.ORMConstants.KEY_MUL_ONE_TO_MANY);
 	
 	private void setORM_Comentario(java.util.Set value) {
 		this.ORM_comentario = value;

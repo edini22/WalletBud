@@ -812,7 +812,7 @@ public class Transacao {
 
     }
 
-    @GET//Em processo de construcao
+    @GET
     @Path("/fixa/transacoesAtraso") //pagamentos/recibos em atraso das transacoes fixas
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
@@ -826,7 +826,7 @@ public class Transacao {
 
             if (leite.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
-                        .add("message", "Nao tem pagamentos em atraso!")
+                        .add("message", "Algo de errado nao esta certo!")
                         .build();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
@@ -846,40 +846,30 @@ public class Transacao {
     @Path("/timeline/{ano}/{mes}") //timeline da do mes em que esta o user das transacoes! | deve ter que levar o mes e ano pela rota
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listTimeline(@PathParam("ano") int ano, @PathParam("mes") String mes, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listTimeline(@PathParam("ano") int ano, @PathParam("mes") int mes, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
         //TODO: verificar o ano e mes se sao aceitaveis
+        if(mes < 1 || mes > 12){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         try {
-//            JsonObject unicas;
-//            if (transacao.equals("fixa")) {
-//                unicas = gerirFixa.getFixas(email, tipo);
-//            } else if (transacao.equals("unica")) {
-//                unicas = gerirUnica.getUnicas(email, tipo);
-//            } else {
-//                JsonObject jsonResponse = Json.createObjectBuilder()
-//                        .add("message", "Tipo de Transacao nao existe!")
-//                        .build();
-//                return Response.status(Response.Status.BAD_REQUEST)
-//                        .entity(jsonResponse.toString())
-//                        .type(MediaType.APPLICATION_JSON)
-//                        .build();
-//            }
-//
-//            if (unicas.isEmpty()) {
-//                JsonObject jsonResponse = Json.createObjectBuilder()
-//                        .add("message", "Nenhuma " + tipo + " única encontrada!")
-//                        .build();
-//                return Response.status(Response.Status.NOT_FOUND)
-//                        .entity(jsonResponse.toString())
-//                        .type(MediaType.APPLICATION_JSON)
-//                        .build();
-//            }
+            JsonObject timeline = gerirTransacaoPartilhada.getTimeline(email,ano,mes);
 
-            return Response.ok("hello", MediaType.APPLICATION_JSON).build();
-////
+            if (timeline.isEmpty()) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Algo de errado nao esta certo!")
+                        .build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            return Response.ok(timeline.toString(), MediaType.APPLICATION_JSON).build();
+
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

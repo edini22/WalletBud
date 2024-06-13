@@ -765,7 +765,7 @@ public class GerirFixa {
         return 0;
     }
 
-    public JsonObject getLatePayments(String email) throws PersistentException {//Em processo de construcao
+    public JsonObject getLatePayments(String email) throws PersistentException {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = gerirUtilizador.getUserByEmail(email);

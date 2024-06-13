@@ -21,9 +21,6 @@ public class RetrieveAndUpdateAASICData {
 			wb.walletbud.Notificacao wBWalletBudNotificacao = wb.walletbud.NotificacaoDAO.loadNotificacaoByQuery(null, null);
 			// Update the properties of the persistent object
 			wb.walletbud.NotificacaoDAO.save(wBWalletBudNotificacao);
-			wb.walletbud.Objetivo wBWalletBudObjetivo = wb.walletbud.ObjetivoDAO.loadObjetivoByQuery(null, null);
-			// Update the properties of the persistent object
-			wb.walletbud.ObjetivoDAO.save(wBWalletBudObjetivo);
 			wb.walletbud.Comentario wBWalletBudComentario = wb.walletbud.ComentarioDAO.loadComentarioByQuery(null, null);
 			// Update the properties of the persistent object
 			wb.walletbud.ComentarioDAO.save(wBWalletBudComentario);
@@ -71,12 +68,6 @@ public class RetrieveAndUpdateAASICData {
 		// Please uncomment the follow line and fill in parameter(s)
 		//wBWalletBudNotificacaoCriteria.id_notificacao.eq();
 		System.out.println(wBWalletBudNotificacaoCriteria.uniqueNotificacao());
-		
-		System.out.println("Retrieving Objetivo by ObjetivoCriteria");
-		wb.walletbud.ObjetivoCriteria wBWalletBudObjetivoCriteria = new wb.walletbud.ObjetivoCriteria();
-		// Please uncomment the follow line and fill in parameter(s)
-		//wBWalletBudObjetivoCriteria.id_objetivo.eq();
-		System.out.println(wBWalletBudObjetivoCriteria.uniqueObjetivo());
 		
 		System.out.println("Retrieving Comentario by ComentarioCriteria");
 		wb.walletbud.ComentarioCriteria wBWalletBudComentarioCriteria = new wb.walletbud.ComentarioCriteria();

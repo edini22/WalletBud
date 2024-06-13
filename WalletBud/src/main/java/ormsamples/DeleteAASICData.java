@@ -21,9 +21,6 @@ public class DeleteAASICData {
 			wb.walletbud.Notificacao wBWalletBudNotificacao = wb.walletbud.NotificacaoDAO.loadNotificacaoByQuery(null, null);
 			// Delete the persistent object
 			wb.walletbud.NotificacaoDAO.delete(wBWalletBudNotificacao);
-			wb.walletbud.Objetivo wBWalletBudObjetivo = wb.walletbud.ObjetivoDAO.loadObjetivoByQuery(null, null);
-			// Delete the persistent object
-			wb.walletbud.ObjetivoDAO.delete(wBWalletBudObjetivo);
 			wb.walletbud.Comentario wBWalletBudComentario = wb.walletbud.ComentarioDAO.loadComentarioByQuery(null, null);
 			// Delete the persistent object
 			wb.walletbud.ComentarioDAO.delete(wBWalletBudComentario);

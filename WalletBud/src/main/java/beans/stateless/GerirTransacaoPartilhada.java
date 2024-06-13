@@ -9,6 +9,7 @@ import org.orm.PersistentException;
 import org.orm.PersistentTransaction;
 import wb.walletbud.*;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -172,6 +173,105 @@ public class GerirTransacaoPartilhada {
                     .build();
         }
 
+    }
+
+    public JsonObject getTimeline(String email,int ano, int mes) throws PersistentException {//Em processo de construcao
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = gerirUtilizador.getUserByEmail(email);
+
+            //TODO: ainda nao fiz nada, mas o objetivo e apresentar as fixas e unicas ao qual o user pagou/tem a pagar e as unicas que pagou (status = true)
+
+            String condition = "UserId_user = " + user.getId_user();
+
+            Fixa[] fixas = FixaDAO.listFixaByQuery(condition, null);
+
+            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            ArrayList<Fixa> transacoes_id = new ArrayList<>(Arrays.asList(fixas));
+
+            for (TransacaoPartilhada transacaoPartilhada : transacoes_partilhada) {
+                try {
+                    Fixa f = FixaDAO.getFixaByORMID(transacaoPartilhada.getUsertransacaoId().getId_transacao());
+
+                    if (f != null) {
+                        transacoes_id.add(f);
+                    }
+                } catch (Exception e) {
+                    //nao era fixa
+                }
+            }
+
+            String orederby = "";
+            Timestamp curTime = new Timestamp(System.currentTimeMillis());
+
+            JsonArrayBuilder lateArrayBuilder = Json.createArrayBuilder();
+
+            for (Fixa fixa : transacoes_id) {
+                condition = "TransacaoId_transacao = " + fixa.getId_transacao();
+                orederby = "DataPagamento DESC";
+
+                TransacaoFixa[] tfs = TransacaoFixaDAO.listTransacaoFixaByQuery(condition, orederby);
+                Timestamp time ;
+                if (tfs.length == 0) {
+                    System.out.println(fixa.getDate());
+                    time = new Timestamp(fixa.getDate().getTime());
+                } else {
+                    System.out.println(tfs[0].getDataPagamento());
+                    time = new Timestamp(tfs[0].getDataPagamento().getTime());
+                    if (fixa.getRepeticao() == 1) { //diariamente
+                        time.setDate(time.getDate() + 1);
+                    } else if (fixa.getRepeticao() == 2) { // semanalmente
+                        time.setDate(time.getDate() + 7);
+                    } else if (fixa.getRepeticao() == 3) { //Mensalmente
+                        time.setMonth(time.getMonth() + 1);
+                    } else if (fixa.getRepeticao() == 4) { //Anualmente
+                        time.setYear(time.getYear() + 1);
+                    }
+                }
+
+                boolean first = true;
+                while(curTime.after(time)){
+                    System.out.println();
+                    JsonObject lateJson = Json.createObjectBuilder()
+                            .add("id",fixa.getId_transacao())
+                            .add("name", fixa.getName())
+                            .add("value", fixa.getShareValue())
+                            .add("descricao", fixa.getDescrição())
+                            .add("categoria", fixa.getCategoriaId_categoria().getName())
+                            .add("repeticao", fixa.getRepeticao())
+                            .add("tipo", fixa.getTipo())
+                            .add("local", fixa.getLocal())
+                            .add("data_pagamento", time.toString())
+                            .add("status",first)
+                            .build();
+
+                    lateArrayBuilder.add(lateJson);
+
+                    first = false;
+                    if (fixa.getRepeticao() == 1) { //diariamente
+                        time.setDate(time.getDate() + 1);
+                    } else if (fixa.getRepeticao() == 2) { // semanalmente
+                        time.setDate(time.getDate() + 7);
+                    } else if (fixa.getRepeticao() == 3) { //Mensalmente
+                        time.setMonth(time.getMonth() + 1);
+                    } else if (fixa.getRepeticao() == 4) { //Anualmente
+                        time.setYear(time.getYear() + 1);
+                    }
+                }
+                System.out.println();
+
+            }
+
+            t.commit();
+            return Json.createObjectBuilder()
+                    .add("leite", lateArrayBuilder)
+                    .build();
+        } catch (Exception e) {
+            t.rollback();
+            e.printStackTrace();
+            return Json.createObjectBuilder()
+                    .build();
+        }
     }
 
 }

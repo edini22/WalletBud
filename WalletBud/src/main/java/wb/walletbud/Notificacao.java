@@ -21,6 +21,10 @@ public class Notificacao {
 		if (key == wb.walletbud.ORMConstants.KEY_NOTIFICACAO_USERID_USER) {
 			this.userId_user = (wb.walletbud.User) owner;
 		}
+		
+		else if (key == wb.walletbud.ORMConstants.KEY_NOTIFICACAO_TRANSACAOID_TRANSACAO) {
+			this.transacaoId_transacao = (wb.walletbud.Transacao) owner;
+		}
 	}
 	
 	org.orm.util.ORMAdapter _ormAdapter = new org.orm.util.AbstractORMAdapter() {
@@ -31,6 +35,8 @@ public class Notificacao {
 	};
 	
 	private int id_notificacao;
+	
+	private wb.walletbud.Transacao transacaoId_transacao;
 	
 	private wb.walletbud.User userId_user;
 	
@@ -88,6 +94,30 @@ public class Notificacao {
 	
 	private wb.walletbud.User getORM_UserId_user() {
 		return userId_user;
+	}
+	
+	public void setTransacaoId_transacao(wb.walletbud.Transacao value) {
+		if (transacaoId_transacao != null) {
+			transacaoId_transacao.notificacao.remove(this);
+		}
+		if (value != null) {
+			value.notificacao.add(this);
+		}
+	}
+	
+	public wb.walletbud.Transacao getTransacaoId_transacao() {
+		return transacaoId_transacao;
+	}
+	
+	/**
+	 * This method is for internal use only.
+	 */
+	public void setORM_TransacaoId_transacao(wb.walletbud.Transacao value) {
+		this.transacaoId_transacao = value;
+	}
+	
+	private wb.walletbud.Transacao getORM_TransacaoId_transacao() {
+		return transacaoId_transacao;
 	}
 	
 	public int getId() {

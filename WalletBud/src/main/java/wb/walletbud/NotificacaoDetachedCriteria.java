@@ -20,6 +20,8 @@ import org.orm.criteria.*;
 
 public class NotificacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final IntegerExpression id_notificacao;
+	public final IntegerExpression transacaoId_transacaoId;
+	public final AssociationExpression transacaoId_transacao;
 	public final IntegerExpression userId_userId;
 	public final AssociationExpression userId_user;
 	public final TimestampExpression date;
@@ -28,6 +30,8 @@ public class NotificacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public NotificacaoDetachedCriteria() {
 		super(wb.walletbud.Notificacao.class, wb.walletbud.NotificacaoCriteria.class);
 		id_notificacao = new IntegerExpression("id_notificacao", this.getDetachedCriteria());
+		transacaoId_transacaoId = new IntegerExpression("transacaoId_transacao.id_transacao", this.getDetachedCriteria());
+		transacaoId_transacao = new AssociationExpression("transacaoId_transacao", this.getDetachedCriteria());
 		userId_userId = new IntegerExpression("userId_user.id_user", this.getDetachedCriteria());
 		userId_user = new AssociationExpression("userId_user", this.getDetachedCriteria());
 		date = new TimestampExpression("date", this.getDetachedCriteria());
@@ -37,10 +41,16 @@ public class NotificacaoDetachedCriteria extends AbstractORMDetachedCriteria {
 	public NotificacaoDetachedCriteria(DetachedCriteria aDetachedCriteria) {
 		super(aDetachedCriteria, wb.walletbud.NotificacaoCriteria.class);
 		id_notificacao = new IntegerExpression("id_notificacao", this.getDetachedCriteria());
+		transacaoId_transacaoId = new IntegerExpression("transacaoId_transacao.id_transacao", this.getDetachedCriteria());
+		transacaoId_transacao = new AssociationExpression("transacaoId_transacao", this.getDetachedCriteria());
 		userId_userId = new IntegerExpression("userId_user.id_user", this.getDetachedCriteria());
 		userId_user = new AssociationExpression("userId_user", this.getDetachedCriteria());
 		date = new TimestampExpression("date", this.getDetachedCriteria());
 		descrição = new StringExpression("descrição", this.getDetachedCriteria());
+	}
+	
+	public wb.walletbud.TransacaoDetachedCriteria createTransacaoId_transacaoCriteria() {
+		return new wb.walletbud.TransacaoDetachedCriteria(createCriteria("transacaoId_transacao"));
 	}
 	
 	public wb.walletbud.UserDetachedCriteria createUserId_userCriteria() {

@@ -41,14 +41,6 @@ public class ListAASICData {
 		}
 		System.out.println(length + " record(s) retrieved.");
 		
-		System.out.println("Listing Objetivo...");
-		wb.walletbud.Objetivo[] wBWalletBudObjetivos = wb.walletbud.ObjetivoDAO.listObjetivoByQuery(null, null);
-		length = Math.min(wBWalletBudObjetivos.length, ROW_COUNT);
-		for (int i = 0; i < length; i++) {
-			System.out.println(wBWalletBudObjetivos[i]);
-		}
-		System.out.println(length + " record(s) retrieved.");
-		
 		System.out.println("Listing Comentario...");
 		wb.walletbud.Comentario[] wBWalletBudComentarios = wb.walletbud.ComentarioDAO.listComentarioByQuery(null, null);
 		length = Math.min(wBWalletBudComentarios.length, ROW_COUNT);
@@ -139,18 +131,6 @@ public class ListAASICData {
 			 System.out.println(wBWalletBudNotificacaos[i]);
 		}
 		System.out.println(length + " Notificacao record(s) retrieved."); 
-		
-		System.out.println("Listing Objetivo by Criteria...");
-		wb.walletbud.ObjetivoCriteria wBWalletBudObjetivoCriteria = new wb.walletbud.ObjetivoCriteria();
-		// Please uncomment the follow line and fill in parameter(s) 
-		//wBWalletBudObjetivoCriteria.id_objetivo.eq();
-		wBWalletBudObjetivoCriteria.setMaxResults(ROW_COUNT);
-		wb.walletbud.Objetivo[] wBWalletBudObjetivos = wBWalletBudObjetivoCriteria.listObjetivo();
-		length =wBWalletBudObjetivos== null ? 0 : Math.min(wBWalletBudObjetivos.length, ROW_COUNT); 
-		for (int i = 0; i < length; i++) {
-			 System.out.println(wBWalletBudObjetivos[i]);
-		}
-		System.out.println(length + " Objetivo record(s) retrieved."); 
 		
 		System.out.println("Listing Comentario by Criteria...");
 		wb.walletbud.ComentarioCriteria wBWalletBudComentarioCriteria = new wb.walletbud.ComentarioCriteria();

@@ -307,10 +307,6 @@ public class UserDAO {
 			for(int i = 0; i < lNotificacaos.length; i++) {
 				lNotificacaos[i].setUserId_user(null);
 			}
-			wb.walletbud.Objetivo[] lObjetivos = user.objetivo.toArray();
-			for(int i = 0; i < lObjetivos.length; i++) {
-				lObjetivos[i].setUserId_user(null);
-			}
 			wb.walletbud.Comentario[] lComentarios = user.comentario.toArray();
 			for(int i = 0; i < lComentarios.length; i++) {
 				lComentarios[i].setUserId_user(null);
@@ -343,10 +339,6 @@ public class UserDAO {
 			wb.walletbud.Notificacao[] lNotificacaos = user.notificacao.toArray();
 			for(int i = 0; i < lNotificacaos.length; i++) {
 				lNotificacaos[i].setUserId_user(null);
-			}
-			wb.walletbud.Objetivo[] lObjetivos = user.objetivo.toArray();
-			for(int i = 0; i < lObjetivos.length; i++) {
-				lObjetivos[i].setUserId_user(null);
 			}
 			wb.walletbud.Comentario[] lComentarios = user.comentario.toArray();
 			for(int i = 0; i < lComentarios.length; i++) {

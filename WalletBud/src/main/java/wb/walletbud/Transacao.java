@@ -24,6 +24,9 @@ public class Transacao {
 		else if (key == wb.walletbud.ORMConstants.KEY_TRANSACAO_TRANSACAO) {
 			return ORM_transacao;
 		}
+		else if (key == wb.walletbud.ORMConstants.KEY_TRANSACAO_NOTIFICACAO) {
+			return ORM_notificacao;
+		}
 		
 		return null;
 	}
@@ -74,6 +77,8 @@ public class Transacao {
 	private java.util.Set ORM_comentario = new java.util.HashSet();
 	
 	private java.util.Set ORM_transacao = new java.util.HashSet();
+	
+	private java.util.Set ORM_notificacao = new java.util.HashSet();
 	
 	private void setId_transacao(int value) {
 		this.id_transacao = value;
@@ -224,6 +229,16 @@ public class Transacao {
 	private wb.walletbud.User getORM_Owner_id() {
 		return owner_id;
 	}
+	
+	private void setORM_Notificacao(java.util.Set value) {
+		this.ORM_notificacao = value;
+	}
+	
+	private java.util.Set getORM_Notificacao() {
+		return ORM_notificacao;
+	}
+	
+	public final wb.walletbud.NotificacaoSetCollection notificacao = new wb.walletbud.NotificacaoSetCollection(this, _ormAdapter, wb.walletbud.ORMConstants.KEY_TRANSACAO_NOTIFICACAO, wb.walletbud.ORMConstants.KEY_NOTIFICACAO_TRANSACAOID_TRANSACAO, wb.walletbud.ORMConstants.KEY_MUL_ONE_TO_MANY);
 	
 	public int getId() {
 		//TODO: Implement Method

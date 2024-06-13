@@ -16,7 +16,7 @@ package wb.walletbud;
 import org.hibernate.transform.Transformers;
 import org.orm.*;
 import org.hibernate.Query;
-
+import org.hibernate.LockMode;
 import java.util.List;
 import java.util.Map;
 
@@ -96,33 +96,6 @@ public class TransacaoDAO {
 			throw new PersistentException(e);
 		}
 	}
-
-	public static List<Map<String, Object>> queryTransacoesByUserId(int userId) throws PersistentException {
-		try {
-			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
-			String sqlQuery =
-					"(SELECT t.Id_transacao AS Id, t.Date AS Date, 'Unica' AS Discriminator " +
-							"FROM Transacao t " +
-							"LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao " +
-							"WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId) " +
-							"AND t.Status = 1 " +
-							"AND t.Discriminator = 'Unica') " +
-							"UNION ALL " +
-							"(SELECT tf.ID AS Id, tf.DataAtual AS Date, 'Fixa' AS Discriminator " +
-							"FROM User_TransacaoFixa utf " +
-							"JOIN TransacaoFixa tf ON utf.TransacaoFixaID = tf.ID " +
-							"WHERE utf.UserId_user = :userId) " +
-							"ORDER BY Date DESC";
-
-			Query query = session.createSQLQuery(sqlQuery)
-					.setParameter("userId", userId)
-					.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-
-            return query.list();
-		} catch (Exception e) {
-			throw new PersistentException(e);
-		}
-	}
 	
 	public static List queryTransacao(String condition, String orderBy) throws PersistentException {
 		try {
@@ -130,36 +103,6 @@ public class TransacaoDAO {
 			return queryTransacao(session, condition, orderBy);
 		}
 		catch (Exception e) {
-			throw new PersistentException(e);
-		}
-	}
-
-	public static List<Map<String, Object>> queryTransacoesByUserIdandDays(int userId, int days) throws PersistentException {
-		try {
-			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
-			String sqlQuery =
-					"(SELECT t.Id_transacao AS Id, t.Date AS date, 'Unica' AS Discriminator " +
-							"FROM Transacao t " +
-							"LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao " +
-							"WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId) " +
-							"AND t.Status = 1 " +
-							"AND t.Discriminator = 'Unica' " +
-							"AND t.Date >= DATE_SUB(CURDATE(), INTERVAL :days DAY)) " +
-							"UNION ALL " +
-							"(SELECT tf.ID AS Id, tf.DataAtual AS date, 'Fixa' AS Discriminator " +
-							"FROM User_TransacaoFixa utf " +
-							"JOIN TransacaoFixa tf ON utf.TransacaoFixaID = tf.ID " +
-							"WHERE utf.UserId_user = :userId " +
-							"AND tf.DataAtual >= DATE_SUB(CURDATE(), INTERVAL :days DAY)) " +
-							"ORDER BY date DESC";
-
-			Query query = session.createSQLQuery(sqlQuery)
-					.setParameter("userId", userId)
-					.setParameter("days", days)
-					.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-
-			return query.list();
-		} catch (Exception e) {
 			throw new PersistentException(e);
 		}
 	}
@@ -241,6 +184,63 @@ public class TransacaoDAO {
 			return (Transacao[]) list.toArray(new Transacao[list.size()]);
 		}
 		catch (Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+
+	public static List<Map<String, Object>> queryTransacoesByUserId(int userId) throws PersistentException {
+		try {
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
+			String sqlQuery =
+					"(SELECT t.Id_transacao AS Id, t.Date AS Date, 'Unica' AS Discriminator " +
+							"FROM Transacao t " +
+							"LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao " +
+							"WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId) " +
+							"AND t.Status = 1 " +
+							"AND t.Discriminator = 'Unica') " +
+							"UNION ALL " +
+							"(SELECT tf.ID AS Id, tf.DataAtual AS Date, 'Fixa' AS Discriminator " +
+							"FROM User_TransacaoFixa utf " +
+							"JOIN TransacaoFixa tf ON utf.TransacaoFixaID = tf.ID " +
+							"WHERE utf.UserId_user = :userId) " +
+							"ORDER BY Date DESC";
+
+			Query query = session.createSQLQuery(sqlQuery)
+					.setParameter("userId", userId)
+					.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+
+	public static List<Map<String, Object>> queryTransacoesByUserIdandDays(int userId, int days) throws PersistentException {
+		try {
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
+			String sqlQuery =
+					"(SELECT t.Id_transacao AS Id, t.Date AS date, 'Unica' AS Discriminator " +
+							"FROM Transacao t " +
+							"LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao " +
+							"WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId) " +
+							"AND t.Status = 1 " +
+							"AND t.Discriminator = 'Unica' " +
+							"AND t.Date >= DATE_SUB(CURDATE(), INTERVAL :days DAY)) " +
+							"UNION ALL " +
+							"(SELECT tf.ID AS Id, tf.DataAtual AS date, 'Fixa' AS Discriminator " +
+							"FROM User_TransacaoFixa utf " +
+							"JOIN TransacaoFixa tf ON utf.TransacaoFixaID = tf.ID " +
+							"WHERE utf.UserId_user = :userId " +
+							"AND tf.DataAtual >= DATE_SUB(CURDATE(), INTERVAL :days DAY)) " +
+							"ORDER BY date DESC";
+
+			Query query = session.createSQLQuery(sqlQuery)
+					.setParameter("userId", userId)
+					.setParameter("days", days)
+					.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+			return query.list();
+		} catch (Exception e) {
 			throw new PersistentException(e);
 		}
 	}
@@ -382,6 +382,10 @@ public class TransacaoDAO {
 			for(int i = 0; i < lTransacaos.length; i++) {
 				lTransacaos[i].setUsertransacaoId(null);
 			}
+			wb.walletbud.Notificacao[] lNotificacaos = transacao.notificacao.toArray();
+			for(int i = 0; i < lNotificacaos.length; i++) {
+				lNotificacaos[i].setTransacaoId_transacao(null);
+			}
 			return delete(transacao);
 		}
 		catch(Exception e) {
@@ -414,6 +418,10 @@ public class TransacaoDAO {
 			wb.walletbud.TransacaoPartilhada[] lTransacaos = transacao.transacao.toArray();
 			for(int i = 0; i < lTransacaos.length; i++) {
 				lTransacaos[i].setUsertransacaoId(null);
+			}
+			wb.walletbud.Notificacao[] lNotificacaos = transacao.notificacao.toArray();
+			for(int i = 0; i < lNotificacaos.length; i++) {
+				lNotificacaos[i].setTransacaoId_transacao(null);
 			}
 			try {
 				session.delete(transacao);

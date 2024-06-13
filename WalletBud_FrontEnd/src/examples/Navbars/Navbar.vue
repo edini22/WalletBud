@@ -19,7 +19,7 @@
         <ul class="navbar-nav justify-content-end">
           <li class="nav-item d-flex align-items-center">
             <router-link
-              :to="{ name: 'SignIn' }"
+              :to="{ name: 'Profile' }"
               class="px-0 nav-link font-weight-bold lh-1"
               :class="color ? color : 'text-body'"
             >
@@ -42,19 +42,9 @@
               </div>
             </a>
           </li>
-          <li class="px-3 nav-item d-flex align-items-center">
-            <a
-              class="p-0 nav-link lh-1"
-              @click="toggleConfigurator"
-              :class="color ? color : 'text-body'"
-            >
-              <i class="material-icons fixed-plugin-button-nav cursor-pointer">
-                settings
-              </i>
-            </a>
-          </li>
+          
           <li
-            class="nav-item dropdown d-flex align-items-center pe-2"
+            class="nav-item dropdown d-flex align-items-center pe-2 px-2"
           >
             <a
               href="#"

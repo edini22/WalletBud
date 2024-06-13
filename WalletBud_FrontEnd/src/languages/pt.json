@@ -74,8 +74,17 @@
     "Save": "Guardar",
     "Back": "Voltar",
     "New": "Nova",
-    "Sign Out": "Terminar Sessão",
+    "Sign": "Terminar",
+    "Out ":"Sessão",
     "Edit Profile": "Editar Perfil",
-    "Change Password": "Alterar Password"
+    "Change Password": "Alterar Password",
+    "Schedule": "Agenda",
+    "Notifications" : "Notificações",
+    "Profile": "Perfil",
+    "Account Pages": "Páginas da Conta",
+    "Statistics": "Estatísticas",
+    "Confirm your action": "Confirme a sua ação",
+    "Are tou sure?": "Tem certeza?",
+    "Exit": "Sair"
 
 }

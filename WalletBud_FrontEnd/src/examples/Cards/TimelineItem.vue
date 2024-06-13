@@ -7,17 +7,17 @@
     </span>
     <div class="timeline-content">
       <h6
-        class="mb-0 text-sm font-weight-bold"
+        class="mb-0 text-sm font-weight-bold justify-content-between d-flex"
         :class="$parent.darkMode ? 'text-white' : 'text-dark'"
       >
-        {{ title }}
+        {{ title }} &nbsp;&nbsp;&nbsp;&nbsp; {{ value }}
       </h6>
-      <p class="mt-1 mb-0 text-xs text-secondary font-weight-normal">
+      <p class="mt-1 mb-0 text-xs text-secondary font-weight-bold">
         {{ dateTime }}
       </p>
       <p
         v-if="description"
-        class="mt-3 mb-2 text-sm"
+        class="mt-2 mb-0 text-sm"
         :class="$parent.darkMode ? 'text-white' : 'text-dark'"
       >
         {{ description }}
@@ -48,6 +48,10 @@ export default {
       default: "",
     },
     description: {
+      type: String,
+      default: "",
+    },
+    value: {
       type: String,
       default: "",
     },

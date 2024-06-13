@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
-import Tables from "../views/Tables.vue";
+import Schedule from "../views/Schedule.vue";
 import Billing from "../views/Billing.vue";
 import RTL from "../views/Rtl.vue";
 import Notifications from "../views/Notifications.vue";
@@ -28,9 +28,9 @@ const routes = [
     //meta: { requiresAuth: true },
   },
   {
-    path: "/tables",
-    name: "Tables",
-    component: Tables,
+    path: "/schedule",
+    name: "Schedule",
+    component: Schedule,
     //meta: { requiresAuth: true },
   },
   {

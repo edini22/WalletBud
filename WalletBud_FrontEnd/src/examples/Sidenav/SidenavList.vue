@@ -22,8 +22,8 @@
           url="#"
           :aria-controls="''"
           v-bind:collapse="false"
-          collapseRef="tables"
-          navText="Tables"
+          collapseRef="schedule"
+          :navText= "$t('Agenda')"
         >
           <template v-slot:icon>
             <i class="material-icons-round opacity-10 fs-5">table_view</i>
@@ -36,7 +36,7 @@
           :aria-controls="''"
           v-bind:collapse="false"
           collapseRef="billing"
-          navText="Billing"
+          :navText="$t('Estatísticas')"
         >
           <template v-slot:icon>
             <i class="material-icons-round opacity-10 fs-5">receipt_long</i>
@@ -49,7 +49,7 @@
           :aria-controls="''"
           v-bind:collapse="false"
           collapseRef="notifications"
-          navText="Notifications"
+          :navText= "$t('Notificações')"
         >
           <template v-slot:icon>
             <i class="material-icons-round opacity-10 fs-5">notifications</i>
@@ -61,7 +61,7 @@
           class="text-xs ps-4 text-uppercase font-weight-bolder text-white"
           :class="$store.state.isRTL ? 'me-4' : 'ms-2'"
         >
-          ACCOUNT PAGES
+        {{ $t('Páginas da Conta') }}
         </h6>
       </li>
       <li class="nav-item">
@@ -70,36 +70,10 @@
           :aria-controls="''"
           v-bind:collapse="false"
           collapseRef="profile"
-          navText="Profile"
+          :navText= "$t('Perfil')"
         >
           <template v-slot:icon>
             <i class="material-icons-round opacity-10 fs-5">person</i>
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse
-          url="#"
-          :aria-controls="''"
-          v-bind:collapse="false"
-          collapseRef="sign-in"
-          navText="SignIn"
-        >
-          <template v-slot:icon>
-            <i class="material-icons-round opacity-10 fs-5">login</i>
-          </template>
-        </sidenav-collapse>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse
-          url="#"
-          :aria-controls="''"
-          v-bind:collapse="false"
-          collapseRef="sign-up"
-          navText="SignUp"
-        >
-          <template v-slot:icon>
-            <i class="material-icons-round opacity-10 fs-5">assignment</i>
           </template>
         </sidenav-collapse>
       </li>
@@ -111,13 +85,13 @@
           class="btn mt-4 w-100"
           :class="`bg-gradient-${this.$store.state.color}`"
           @click="showModal"
-          >{{ $t('Sign Out') }}</a
+          >{{ $t('Terminar') }} {{ $t('Sessão ') }}</a
         >
       </div>
       <div>
         <confirm 
         :isVisible="isModalVisible" 
-        message="Tem a certeza?" 
+        :message="$t('Tem a certeza?')"
         @confirm="logOut"
         @cancel="handleCancel"/>
       </div>
@@ -134,6 +108,7 @@ import { userStore } from "@/store/userStore";
 import { categoriesStore } from "@/store/categoriesStore";
 import { useRouter } from "vue-router";
 import confirm from "@/views/components/ActionConfirm.vue";
+import { useI18n } from "vue-i18n";
 
 export default {
   name: "SidenavList",
@@ -143,6 +118,7 @@ export default {
   setup(){
     const store = userStore();
     const router = useRouter();
+    const { t } = useI18n();
 
     const logOut = async () => {
       await store.logOut();
@@ -151,6 +127,7 @@ export default {
     };
     return {
       logOut,
+      t,
     };
 
   },

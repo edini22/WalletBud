@@ -1,41 +1,96 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col">
-        <div class = "col scroll-container">
-          <timeline-list title="Timeline">
+      <div class="col ">
+
+        <div class="col">
+
+          <div class="row">
+            <div class="timeline-header">
+              <h4>Hoje</h4>
+            </div>
+            <div class="col">
+
+              <timeline-list >
+                <div class="row">
+                  <div class="col">
+                    <timeline-item
+                      color="warning"
+                      :icon="{ component: 'notifications', class: 'text-white text-sm' }"
+                      title="Pagar Spotify"
+                      value="2400€"
+                      date-time="22 DEC 7:20 PM"
+                    />
+                  </div>
+                  
+                  <div class="col">
+                    <timeline-item
+                      color="warning"
+                      :icon="{ component: 'notifications', class: 'text-white text-sm' }"
+                      title="Pagar Spotify"
+                      value="2400€"
+                      date-time="22 DEC 7:20 PM"
+                    />
+                  </div>
+                  <div class="col">
+                    <timeline-item
+                      color="warning"
+                      :icon="{ component: 'notifications', class: 'text-white text-sm' }"
+                      title="Pagar Spotify"
+                      value="2400€"
+                      date-time="22 DEC 7:20 PM"
+                    />
+                  </div>
+                  
+                </div>
+              </timeline-list>
+            </div>
+          </div>
+        </div>
+        
+        <!--timeline next days-->
+        <div class = "col pt-4">
+          <div class="timeline-header">
+            <h5>Próximos Eventos</h5>
+          </div>
+          <timeline-list class="scroll-container">
             <timeline-item
               color="success"
               :icon="{ component: 'notifications', class: 'text-white text-sm' }"
-              title="$2400 Design changes"
+              title="Design changes"
+              value="2400€"
               date-time="22 DEC 7:20 PM"
               description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of."
             />
             <TimelineItem
               color="danger"
               :icon="{ component: 'code', class: 'text-white text-sm' }"
-              title="New order #1832412"
+              title="Design changes"
+              value="2400€"
               date-time="21 DEC 11 PM"
               description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of."
             />
             <TimelineItem
               color="info"
               :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
-              title="Server payments for April"
+              title="Design changes"
+              value="2400€"
               date-time="21 DEC 9:34 PM"
               description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of."
             />
             <TimelineItem
               color="info"
               :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
-              title="Server payments for April"
+              title="Design changes"
+              value="2400€"
               date-time="21 DEC 9:34 PM"
               description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of."
             />
             <TimelineItem
               color="info"
               :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
-              title="Server payments for April"
+              title="Design changes"
+              value="2400€"
               date-time="21 DEC 9:34 PM"
               description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of."
             />
@@ -86,16 +141,9 @@
                       </thead>
                       <tbody >
                           
-                        <tr v-for="n in 5" :key="n">
+                        <tr v-for="n in 10" :key="n">
                           <td>
-                            <div class="d-flex px-2">
-                              <div>
-                                <img
-                                  src="../assets/img/small-logos/github.svg"
-                                  class="avatar avatar-sm rounded-circle me-2"
-                                  alt="invision"
-                                />
-                              </div>
+                            <div class="d-flex px-3">
                               <div class="my-auto">
                                 <h6 class="mb-0 text-sm">Github</h6>
                               </div>
@@ -108,7 +156,7 @@
                             <span class="text-xs font-weight-bold">20/06/2024</span>
                           </td>
                           <td>
-                            <span class="text-sm font-weight-bold">13.9€</span>
+                            <span class="text-md font-weight-bold">13.9€</span>
                           </td>
                         </tr>
                       </tbody>
@@ -164,14 +212,7 @@
                           
                         <tr v-for="n in 10" :key="n" >
                           <td>
-                            <div class="d-flex px-2">
-                              <div>
-                                <img
-                                  src="../assets/img/small-logos/github.svg"
-                                  class="avatar avatar-sm rounded-circle me-2"
-                                  alt="invision"
-                                />
-                              </div>
+                            <div class="d-flex px-3">
                               <div class="my-auto">
                                 <h6 class="mb-0 text-sm">Github</h6>
                               </div>
@@ -184,7 +225,7 @@
                             <span class="text-xs font-weight-bold">20/06/2024</span>
                           </td>
                           <td>
-                            <span class="text-sm font-weight-bold">13.9€</span>
+                            <span class="text-md font-weight-bold">13.9€</span>
                           </td>
                         </tr>
                       </tbody>
@@ -205,14 +246,14 @@ import TimelineList from "@/examples/Cards/TimelineList.vue";
 import TimelineItem from "@/examples/Cards/TimelineItem.vue";
 
 export default {
-  name: "tables",
+  name: "schedule",
   components: { TimelineList, TimelineItem },
 };
 </script>
 
 <style scoped>
   .scroll-container {
-    max-height: 86vh; 
+    max-height: 57vh; 
     overflow-y: auto;
   }
 

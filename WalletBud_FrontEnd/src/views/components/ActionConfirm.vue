@@ -4,18 +4,18 @@
             <div class="card modal-content ">
                 <div class="card-header card-header-primary text-center">
                     <h5 class="card-title">{{ message }}</h5>
-                    <p class="card-category ">Confirme a sua ação.</p>
+                    <p class="card-category ">{{ $t('Confirme a sua ação') }}.</p>
                 </div>
                 <div class="card-footer d-flex justify-content-between ">
                     <MaterialButton
                         color="info" 
                         size="sm" 
                         @click="cancelAction">
-                        Voltar</MaterialButton>
+                        {{ $t('Voltar') }}</MaterialButton>
                     <MaterialButton
-                        color="danger" 
+                        color="primary" 
                         @click="confirmAction">
-                        Sair</MaterialButton>
+                        {{ $t('Sair') }}</MaterialButton>
                 </div>
             </div>
         </div>
@@ -24,10 +24,15 @@
 
 <script>
 import MaterialButton from "@/components/MaterialButton.vue";
+import { useI18n } from "vue-i18n";
 
 export default {
     components: {
         MaterialButton
+    },
+    setup() {
+        const { t } = useI18n();
+        return { t };
     },
     props: {
         isVisible: {

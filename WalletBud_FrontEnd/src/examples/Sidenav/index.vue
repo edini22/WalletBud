@@ -12,7 +12,7 @@
         aria-hidden="true"
         id="iconSidenav"
       ></i>
-      <a class="m-0 navbar-brand" href="/">
+      <a class="m-5 navbar-brand d-flex justify-content-center align-items-start" href="/">
         <img
           :src="
             sidebarType === 'bg-white' ||
@@ -20,22 +20,20 @@
               ? logoDark
               : logo
           "
-          class="navbar-brand-img h-100"
+          class="navbar-brand-img"
           alt="main_logo"
         />
-        <span class="ms-2 font-weight-bold text-white"
-          >Material Dashboard 2</span
-        >
       </a>
     </div>
     <hr class="horizontal light mt-0 mb-2" />
     <sidenav-list />
   </aside>
 </template>
+
 <script>
 import SidenavList from "./SidenavList.vue";
-import logo from "@/assets/img/logo-ct.png";
-import logoDark from "@/assets/img/logo-ct-dark.png";
+import logoDark from "@/assets/img/logos/WalletBud_logo2.png";
+import logo from "@/assets/img/logos/WalletBud_logo1.png";
 import { mapState } from "vuex";
 
 export default {
@@ -54,3 +52,13 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.navbar-vertical .navbar-brand-img {
+  max-width: 150%;
+  max-height: 100rem;
+  margin-top: -4rem;
+}
+
+</style>

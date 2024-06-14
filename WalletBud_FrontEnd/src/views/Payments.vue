@@ -35,43 +35,36 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="n in 20" :key="n" class="padding-row">
+                                      <template v-if="store && store.proximosPagamentos && store.proximosPagamentos.length > 0">
+                                          <tr v-for="(p, index) in store.proximosPagamentos" :key="index">
                                             <td>
-                                                <div class="d-flex px-3">
-                                                    <div class="my-auto">
-                                                        <h6 class="mb-0 text-sm">
-                                                            Github
-                                                        </h6>
-                                                    </div>
+                                              <div class="d-flex px-3">
+                                                <div class="my-auto">
+                                                  <h6 class="mb-0 text-sm">{{ p.name }}</h6>
                                                 </div>
+                                              </div>
                                             </td>
                                             <td>
-                                                <p class="text-xs font-weight-bold mb-0">
-                                                    Anual
-                                                </p>
+                                              <p class="text-xs font-weight-bold mb-0">{{ getRepetitionText(p.repeticao) }}</p>
                                             </td>
                                             <td>
-                                                <span class="text-xs font-weight-bold">
-                                                    20/06/2024
-                                                </span>
+                                              <span class="text-xs font-weight-bold">{{ p.date }}</span>
                                             </td>
                                             <td>
-                                                <span class="text-md font-weight-bold">
-                                                    13.9€
-                                                </span>
+                                              <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
                                             </td>
                                             <td>
-                                                <material-button
-                                                    variant="gradient"
-                                                    color="secondary"
-                                                    class="btn btn-sm small-button"
-                                                    @click="popup = true">
-                                                    {{$t('Abrir')}}
-                                                </material-button>
-
-                                                
+                                              <material-button
+                                                variant="gradient"
+                                                color="secondary"
+                                                class="btn btn-sm small-button"
+                                                @click="openPopup(p.id)"
+                                              >
+                                                {{ $t('Abrir') }}
+                                              </material-button>
                                             </td>
-                                        </tr>
+                                          </tr>
+                                        </template>
                                     </tbody>
                                 </table>
                             </div>
@@ -79,7 +72,6 @@
                     </div>
                 </div>
             </div>
-            
 
             <div class="col">
                 <div class="container-fluid py-0">
@@ -210,43 +202,65 @@
     </div>
 
     <!--PopUp 1-->
-    <div v-if="popup" class="modal fade show"   style="display: block;">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header d-flex justify-content-between align-items-center">
-                    <h5 class="modal-title">Deseja proceder com o pagamento?</h5>
-                    <material-button
-                        variant="gradient"
-                        color="secondary"
-                        class="btn btn-sm small-button"
-                        @click="popup = false">
-                        {{$t('Voltar')}}
-                    </material-button>
-                </div>
-                <div class="modal-body">
-                    <h6>Descrição:</h6>
-                    <h6>Valor: </h6>
-                    <h6>Data expiração: </h6>
-                </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <material-button
-                        variant="gradient"
-                        color="danger"
-                        class="btn btn-md "
-                        @click="popupReject = true; popup = false">
-                        {{$t('Eliminar')}}
-                    </material-button>
-                    <material-button
-                        variant="gradient"
-                        color="info"
-                        class="btn btn-md "
-                        @click="popupAccept = true; popup = false">
-                        {{$t('Pagar')}}
-                    </material-button>
-                </div>
-            </div>
+    <div v-if="popup" class="modal fade show" style="display: block;">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header d-flex justify-content-between align-items-center">
+          <h5 class="modal-title">Informações da Transacao</h5>
+          <material-button
+            variant="gradient"
+            color="secondary"
+            class="btn btn-sm small-button"
+            @click="popup = false">
+            {{$t('Voltar')}}
+          </material-button>
         </div>
+        <div class="modal-body">
+          <div v-if="transa">
+            <h6>Descrição: {{ transa.descricao }}</h6>
+            <h6>Valor Total: {{ transa.value }}€</h6>
+            <h6 v-if="transa.value != transa.shareValue">Valor Partilhado: {{ transa.shareValue }}€</h6>
+            <h6>Periodicidade: {{ getRepetitionText(transa.repeticao) }}</h6>
+            <h6>Data: {{ transa.date }}</h6>
+            <h6>Categoria: {{ transa.categoria }}</h6>
+            <h6>Status: {{ transa.status }}</h6>
+            <h6>Tipo: {{ transa.tipo }}</h6>
+            <h6>Local: {{ transa.local }}</h6>
+            <h6>Utilizadores: {{ transa.users }}</h6>
+          </div>
+        </div>
+        <div v-if="acceptorRejectPendenteButton2()" class="modal-footer d-flex justify-content-between">
+          <div v-if="transa && transa.users && transa.users.length > 0">
+            <div v-if="transa.users[0].id == user.id">
+              <material-button
+                variant="gradient"
+                color="danger"
+                class="btn btn-md"
+                @click="popupReject = true; popup = false">
+                {{$t('Eliminar')}}
+              </material-button>
+              <material-button
+                variant="gradient"
+                color="info"
+                class="btn btn-md"
+                @click="popupAccept = true; popup = false">
+                {{$t('Pagar')}}
+              </material-button>
+            </div>
+            <div v-else>
+              <material-button
+                variant="gradient"
+                color="danger"
+                class="btn btn-md"
+                @click="PIKAPAU">
+                {{$t('Sair')}}
+              </material-button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
     <!--PopUp Rejeitar-->
     <div v-if="popupReject" class="modal fade show" style="display: block;">
@@ -493,6 +507,7 @@ export default {
     const store = fixaStore();
     const user = userStore();
     const selectedPendenteId = ref(null);
+    const transa = ref(null);
 
     const loadPendentes = async () => {
       try {
@@ -507,6 +522,14 @@ export default {
       try {
         await store.loadPorPagar();
         console.log("Por pagar carregados:", store.porPagar);
+      } catch (err) {
+        alert("Erro -> " + err.message);
+      }
+    };
+    const loadProximosPagamentos = async () => {
+      try {
+        await store.loadProximosPagamentos();
+        console.log("Proximos pagamentos :", store.proximosPagamentos);
       } catch (err) {
         alert("Erro -> " + err.message);
       }
@@ -578,6 +601,54 @@ export default {
       }
     };
 
+    const openPopup = async (id) => {
+      popup.value = true;
+      const t = store.proximosPagamentos.find(p => p.id === id);
+
+      const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/fixa/"+ t.tipo + "/get/" + t.id;
+      const token = localStorage.getItem('token');
+
+      const request = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': "Bearer " + token
+        },
+      };
+
+      try {
+        const response = await fetch(url, request);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message);
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        // Mapear os dados recebidos para o formato de categorias desejado
+        transa.value = data;
+
+      } catch (error) {
+        console.error('Erro ao carregar pendentes:', error.message);
+        throw error;
+      }
+    };
+
+    const acceptorRejectPendenteButton2 = () => {
+      if(transa.value && transa.value.users.length){
+        for (let i = 0; i < transa.value.users.length; i++) {
+          if (transa.value.users[i].id === user.id && user.id === transa.value.users[0].id) {
+            return true;
+          } else{
+            return false;
+          }
+
+        }
+      }
+      return false;
+    };
 
     const closeSnackbar = () => {
       snackbar.value = false;
@@ -589,6 +660,7 @@ export default {
       
       loadPendentes();
       loadPorPagar(); //TODO: fazer isto tambem quando se pagar algo ao lado!!
+      loadProximosPagamentos();
     });
 
     return {
@@ -605,12 +677,16 @@ export default {
       getRepetitionText,
       store,
       user,
+      transa,
       selectedPendenteId,
       openDetailsPopup,
       selectedPendente,
       acceptorRejectPendenteButton,
+      acceptorRejectPendenteButton2,
       deletePendente,
       acceptorReject,
+      loadProximosPagamentos,
+      openPopup,
     };
   },
 };
@@ -618,7 +694,7 @@ export default {
   
 <style scoped>
     .scroll-container {
-      max-height: 77vh; 
+      height: 77vh; 
       overflow-y: auto;
     }
   
@@ -636,7 +712,7 @@ export default {
     }
   
     .scroll-container2 {
-      max-height: 32vh;
+      height: 32vh;
       overflow-y: auto;
     }
   
@@ -667,5 +743,7 @@ export default {
         overflow: hidden;
         outline: 0;
         background-color: rgba(0, 0, 0, 0.5);
+        transition-duration: 0.2s;
     }
+
 </style>

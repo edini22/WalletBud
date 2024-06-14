@@ -86,7 +86,7 @@
                         <!-- Tipo -->
                         <div class="dropdown" ref="typeDropdown">
                             <div class="form-group form-row">
-                                <label for="categoryType" class="form-label">{{ $t('Tipo de movimento:') }}</label>
+                                <label for="Type" class="form-label">{{ $t('Tipo de movimento:') }}</label>
 
                                 <div v-if="TypeError === null || TypeError === false"
                                     class="input-group input-group-outline form-input mb-3"
@@ -132,6 +132,138 @@
                                         <li> <a class="dropdown-item border-radius-md" href="javascript:;"
                                                 @click="selectType('Receita')">
                                                 {{ $t('Receita') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recorrência -->
+                        <div class="dropdown" ref="recorrenceDropdown">
+                            <div class="form-group form-row">
+                                <label for="recorrence" class="form-label">{{ $t('Recorrência:') }}</label>
+
+                                <div v-if="recorrenceError === null || recorrenceError === false"
+                                    class="input-group input-group-outline form-input mb-3"
+                                    style="border-radius: 0.375rem;">
+                                    <button class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-null': isRecorrenceFocused }" id="dropdownTable"
+                                        data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                        @focus="handleRecorrenceFocus">
+                                        {{ Recorrence || $t('Selecione a recorrência do movimento') }}
+                                    </button>
+                                    <i class="material-icons arrow-icon">keyboard_arrow_down</i>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                        <li>
+                                            <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRecorrence('Única (Não Fixa)')">
+                                                {{ $t('Única (Não Fixa)') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRecorrence('Recorrente (Fixa)')">
+                                                {{ $t('Recorrente (Fixa)') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div v-if="recorrenceError === true"
+                                    class="input-group input-group-outline form-input mb-3 is-invalid"
+                                    style="border-radius: 0.375rem;">
+                                    <button class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-error': isRecorrenceFocused }" id="dropdownTable"
+                                        data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                        @focus="handleRecorrenceFocus">
+                                        {{ Recorrence || $t('Selecione a recorrência do movimento') }}
+                                    </button>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                        <li>
+                                            <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRecorrence('Única (Não Fixa)')">
+                                                {{ $t('Única (Não Fixa)') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRecorrence('Recorrente (Fixa)')">
+                                                {{ $t('Recorrente (Fixa)') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Repetição -->
+                        <div v-if="Recorrence == 'Recorrente (Fixa)'" class="dropdown" ref="repeatDropdown">
+                            <div class="form-group form-row">
+                                <label for="Repetition" class="form-label">{{ $t('Repetição') }}</label>
+                                <div v-if="repetitionError === null || repetitionError === false"
+                                    class="input-group input-group-outline form-input mb-3"
+                                    style="border-radius: 0.375rem;">
+                                    <button
+                                        class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-null': isRepetitionFocused }" id="dropdownTable"
+                                        data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                        @focus="handleRepetitionFocus">
+                                        {{ Repetition || $t('Selecione a repetição') }}
+                                    </button>
+                                    <i class="material-icons arrow-icon">repeat</i>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition('Todos os dias')">
+                                                {{ $t('Todos os dias') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition('Todas as semanas')">
+                                                {{ $t('Todas as semanas') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition('Todos os meses')">
+                                                {{ $t('Todos os meses') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition('Todos os anos')">
+                                                {{ $t('Todos os anos') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div v-if="repetitionError === true"
+                                    class="input-group input-group-outline form-input mb-3 is-invalid"
+                                    style="border-radius: 0.375rem;">
+                                    <button
+                                        class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-error': isRepetitionFocused }" id="dropdownTable"
+                                        data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                        @focus="handleRepetitionFocus">
+                                        {{ Repetition ||  $t('Selecione a repetição') }}
+                                    </button>
+                                    
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition('Todos os dias')">
+                                                {{ $t('Todos os dias') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition('Todas as semanas')">
+                                                {{ $t('Todas as semanas') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition('Todos os meses')">
+                                                {{ $t('Todos os meses') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition('Todos os anos')">
+                                                {{ $t('Todos os anos') }}
                                             </a>
                                         </li>
                                     </ul>
@@ -208,16 +340,7 @@
                         <!-- Local -->
                         <div class="form-group form-row">
                             <label for="place" class="form-label">{{ $t('Local') }}</label>
-                            <div v-if="PlaceError === true" class="form-input mb-3">
-                                <material-input class="material-input" id="place" type="text"
-                                    :label="$t('Indique o local')" name="place" :value="Place"
-                                    @update:value="Place = $event" error />
-                            </div>
-                            <div v-if="PlaceError === false" class="form-input mb-3">
-                                <material-input class="material-input" id="place" type="text" name="place"
-                                    :value="Place" @update:value="Place = $event" success />
-                            </div>
-                            <div v-if="PlaceError === null" class="form-input mb-3">
+                            <div class="form-input mb-3">
                                 <material-input class="material-input" id="place" type="text"
                                     :label="$t('Indique o local')" name="place" :value="Place"
                                     @update:value="Place = $event" />
@@ -308,7 +431,7 @@
                     <p v-if="Type == 'Despesa' && showShareTab == false" class="btn btn-default bg-gradient-info mb-1"
                         @click="showTab(1)">{{ $t('Próximo') }}</p>
                     <p v-else class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Adicionar') }}</p>
-                    <p class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal" @click="cancel">{{
+                    <p id="cancelButton" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal" @click="cancel">{{
                         $t('Cancelar') }}
                     </p>
                 </div>
@@ -339,11 +462,15 @@ export default {
         const DateError = ref(null);
         const ValueLabel = ref('Indique um montante')
         const Place = ref('');
-        const PlaceError = ref(null);
         const Category = ref('');
         const CategoryError = ref(null);
         const Type = ref('');
         const TypeError = ref(null);
+        const Repetition = ref('');
+        const SendRepetition = ref(0);
+        const repetitionError = ref(null);
+        const Recorrence = ref('');
+        const recorrenceError = ref(null);
         const Comment = ref(null);
         const newUserEmail = ref('');
         const sharedUsers = reactive([]);
@@ -370,10 +497,16 @@ export default {
             }
         }
 
-        function convertToTimestamp(dateString) {
-            const dateObject = new Date(dateString);
+        function padNumber(num) {
+            return num.toString().padStart(2, '0');
+        }   
 
-            return dateObject.getTime();
+        function convertToTimestamp(dateString) {
+            const date = new Date(dateString);
+
+            const formattedDateTime = `${date.getFullYear()}-${padNumber(date.getMonth() + 1)}-${padNumber(date.getDate())} ${padNumber(date.getHours())}:${padNumber(date.getMinutes())}:${padNumber(date.getSeconds())}`;
+
+            return formattedDateTime
         }
 
         const addUser = async () => {
@@ -433,11 +566,6 @@ export default {
             else
                 DateError.value = false;
 
-            if (!Place.value.trim())
-                PlaceError.value = true;
-            else
-                PlaceError.value = false;
-
             if (!Category.value)
                 CategoryError.value = true;
             else
@@ -448,47 +576,36 @@ export default {
             else
                 TypeError.value = false;
 
+            if (!Recorrence.value)
+                recorrenceError.value = true;
+            else
+                recorrenceError.value = false;
+            
+            if(Recorrence.value == 'Recorrente (Fixa)'){
+                if (!Repetition.value)
+                    repetitionError.value = true;
+                else
+                    repetitionError.value = false;
+            }
         }
 
         const goToShare = function () {
             checkInputs();
             if (TypeError.value == false && descriptionError.value == false && DateError.value == false
-                && valueError.value == false && PlaceError.value == false && CategoryError.value == false)
-                return true;
-            else
+                && valueError.value == false && CategoryError.value == false && recorrenceError.value == false){
+                if(Recorrence.value == 'Recorrente (Fixa)'){
+                    if(repetitionError.value == false)
+                        return true;
+                    else
+                        return false
+                }else{
+                    return true;
+                }        
+            }else
                 return false;
         }
 
-        const add = function () {
-
-            if(Type.value == 'Receita' || Type.value == ''){
-                checkInputs();
-
-                if (TypeError.value == false && descriptionError.value == false && DateError.value == false
-                && valueError.value == false && PlaceError.value == false && CategoryError.value == false){
-                    
-                    timestamp.value = convertToTimestamp(DateM.value);
-                    console.log("data: " + DateM.value);
-                    console.log("timestamp: " + timestamp.value);
-                    //POST da Receita
-                }
-
-            }else{
-                if(showAlertUsers.value == true)
-                    showAlertUsers.value = false;
-
-                if (ShareExpense.value == true && sharedUsers.length === 0) {
-                    console.log("sharedExpense:" + ShareExpense.value)
-                    console.log("sharedUsers length:" + sharedUsers.length)
-                    showAlertUsers.value = true;
-                }else{
-                    //date to timestamp
-                    //POST da Despesa
-                }
-
-            }
-        }
-
+        
         const clearSharedUsers = function() {
             if (sharedUsers.length > 0) {
                 console.log('Before clearing:', sharedUsers.value);
@@ -514,10 +631,15 @@ export default {
             TypeError.value = null;
             Type.value = '';
 
+            recorrenceError.value = null;
+            Recorrence.value = '';
+
+            repetitionError.value = null;
+            Repetition.value = '';
+
             CategoryError.value = null;
             Category.value = '';
 
-            PlaceError.value = null;
             Place.value = '';
 
             resetTab.value = true;
@@ -528,7 +650,145 @@ export default {
                 clearSharedUsers();
                 console.log("after cleared:" + sharedUsers.value);
                 newUserEmail.value = '';
+            }
+        }
 
+        function transformRepetition(repetition) {
+            if(repetition == 'Todos os dias'){
+                return 1;
+            }else if(repetition == 'Todas as semanas'){
+                return 2;
+            }else if(repetition == 'Todos os meses'){
+                return 3;
+            }else if(repetition == 'Todos os anos'){
+                return 4;
+            }
+        }
+
+        const add = function () {
+
+            if(Type.value == 'Receita' || Type.value == ''){
+                checkInputs();
+
+                if (TypeError.value == false && descriptionError.value == false && DateError.value == false
+                && valueError.value == false && CategoryError.value == false && recorrenceError.value == false){
+
+                    if(Recorrence.value == 'Recorrente (Fixa)'){
+                        if(repetitionError.value == false){
+                            //faz post de receita fixa
+                            timestamp.value = convertToTimestamp(DateM.value);
+                            SendRepetition.value = transformRepetition(Repetition.value.trim());
+
+                            console.log("data: " + DateM.value);
+                            console.log("timestamp: " + timestamp.value);
+                            console.log(Repetition.value + ": " + SendRepetition.value);
+                            //POST da Receita Não Fixa
+
+                            console.log("post da receita fixa");
+
+                            alert("Receita adicionada com sucesso!");
+
+                            const cancelButton = document.getElementById('cancelButton');
+                            cancelButton.click();
+                        }
+                    }else{
+                        //post de receita não fixa
+                        timestamp.value = convertToTimestamp(DateM.value);
+                        console.log("data: " + DateM.value);
+                        console.log("timestamp: " + timestamp.value);
+                        //POST da Receita Não Fixa
+
+                        console.log("post da receita não fixa");
+
+                        alert("Receita adicionada com sucesso!");
+
+                        const cancelButton = document.getElementById('cancelButton');
+                        cancelButton.click();
+                    }                                     
+                }
+
+            }else{
+                if(showAlertUsers.value == true)
+                    showAlertUsers.value = false;
+
+                if (ShareExpense.value == true && sharedUsers.length === 0) {
+                    console.log("sharedExpense:" + ShareExpense.value)
+                    console.log("sharedUsers length:" + sharedUsers.length)
+                    showAlertUsers.value = true;
+                }else if(ShareExpense.value == true && sharedUsers.length > 0){
+
+                    if(Recorrence.value == 'Recorrente (Fixa)'){
+                        if(repetitionError.value == false){
+
+                            timestamp.value = convertToTimestamp(DateM.value);
+                            SendRepetition.value = transformRepetition(Repetition.value.trim());
+                        
+                            console.log("data: " + DateM.value);
+                            console.log("timestamp: " + timestamp.value);
+                            console.log(Repetition.value + ": " + SendRepetition.value);
+
+                            console.log("post com partilha de despesa");
+
+                            //POST da Despesa
+                            alert("Despesa Fixa Partilhada adicionada com sucesso!")
+                            const cancelButton = document.getElementById('cancelButton');
+                            cancelButton.click();
+                        }
+                    }else{
+                        
+                        timestamp.value = convertToTimestamp(DateM.value);
+                    
+                        console.log("data: " + DateM.value);
+                        console.log("timestamp: " + timestamp.value);
+
+                        console.log("post com partilha de despesa");
+
+                        //POST da Despesa
+                        alert("Despesa Não Fixa Partilhada adicionada com sucesso!")
+                        const cancelButton = document.getElementById('cancelButton');
+                        cancelButton.click();
+                    }
+
+                }else{
+
+                    if(Recorrence.value == 'Recorrente (Fixa)'){
+                        if(repetitionError.value == false){
+                            //DESPESA NÃO PARTILHADA FIXA
+
+                            timestamp.value = convertToTimestamp(DateM.value);
+                            SendRepetition.value = transformRepetition(Repetition.value.trim());
+                        
+                            console.log("data: " + DateM.value);
+                            console.log("timestamp: " + timestamp.value);
+                            console.log(Repetition.value + ": " + SendRepetition.value);
+
+                            //POST ---
+
+                            console.log("post sem partilha de despesa");
+
+                            alert("Despesa Fixa Não Partilhada adicionada com sucesso!")
+                            //chamar cancel() após POST
+                            const cancelButton = document.getElementById('cancelButton');
+                            cancelButton.click();
+                        }
+                    }else{
+                        //DESPESA NÃO PARTILHADA Não FIXA
+                        
+                        //date to timestamp
+                        timestamp.value = convertToTimestamp(DateM.value);
+
+                        console.log("data: " + DateM.value);
+                        console.log("timestamp: " + timestamp.value);
+
+                        //POST da Despesa
+                        console.log("post sem partilha de despesa");
+
+                        alert("Despesa Não Fixa e Não Partilhada adicionada com sucesso!");
+                        //chamar cancel() após POST
+                        const cancelButton = document.getElementById('cancelButton');
+                        cancelButton.click();
+                    }
+                }
 
             }
         }
@@ -549,11 +809,14 @@ export default {
             DateM,
             DateError,
             Place,
-            PlaceError,
             Category,
             CategoryError,
             Type,
             TypeError,
+            Recorrence,
+            recorrenceError,
+            Repetition,
+            repetitionError,
             ValueLabel,
             ShareExpense,
             newUserEmail,
@@ -580,6 +843,8 @@ export default {
             isFocused: false,
             isCategoryFocused: false,
             isTypeFocused: false,
+            isRecorrenceFocused: false,
+            isRepetitionFocused: false,
             isDateFocused: false,
             SetBorder: true,
             showAlert: false,
@@ -595,6 +860,7 @@ export default {
     mounted() {
         document.addEventListener('click', this.handleClickOutsideCategory);
         document.addEventListener('click', this.handleClickOutsideType);
+        document.addEventListener('click', this.handleClickOutsideRecorrence);
     },
     computed: {
         displayCategories() {
@@ -659,6 +925,12 @@ export default {
         selectType(type) {
             this.Type = type;
         },
+        selectRecorrence(recorrence) {
+            this.Recorrence = recorrence;
+        },
+        selectRepetition(repetition) {
+            this.Repetition = repetition;
+        },
         selectCategory(category) {
             this.Category = category;
         },
@@ -681,8 +953,21 @@ export default {
                     this.isTypeFocused = false;
             }
         },
+        handleClickOutsideRecorrence(event) {
+            const dropdown = this.$refs.recorrenceDropdown;
+            if (dropdown && !dropdown.contains(event.target)) {
+                if (this.Recorrence == '')
+                    this.isRecorrenceFocused = false;
+            }
+        },
         handleTypeFocus() {
             this.isTypeFocused = true;
+        },
+        handleRecorrenceFocus() {
+            this.isRecorrenceFocused = true;
+        },
+        handleRepetitionFocus() {
+            this.isRepetitionFocused = true;
         },
         handleDateFocus() {
             this.isDateFocused = true;

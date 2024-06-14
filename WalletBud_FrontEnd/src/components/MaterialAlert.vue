@@ -12,12 +12,11 @@
       <slot />
     </span>
     <button
-      v-if="dismissible"
+      v-if="dismissible && !closeButton"
       type="button"
       class="btn-close d-flex justify-content-center align-items-center"
       data-bs-dismiss="alert"
-      aria-label="Close"
-    >
+      aria-label="Close">
       <span aria-hidden="true" class="text-lg font-weight-bold">&times;</span>
     </button>
   </div>
@@ -36,6 +35,10 @@ export default {
       default: "",
     },
     dismissible: {
+      type: Boolean,
+      default: false,
+    },
+    closeButton: {
       type: Boolean,
       default: false,
     },

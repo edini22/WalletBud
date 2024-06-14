@@ -2,12 +2,12 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Schedule from "../views/Schedule.vue";
 import Billing from "../views/Billing.vue";
-import RTL from "../views/Rtl.vue";
 import Notifications from "../views/Notifications.vue";
 import Profile from "../views/Profile.vue";
 import SignIn from "../views/SignIn.vue";
 import SignUp from "../views/SignUp.vue";
 import TermsAndConditions from "../views/TermsAndConditions.vue";
+import Payments from "../views/Payments.vue";
 
 /* Bloqueamento de Acessos
 1) Não retirar os comentários, apenas estão para não obrigar a ter que fazer login sempre
@@ -40,11 +40,6 @@ const routes = [
     //meta: { requiresAuth: true },
   },
   {
-    path: "/rtl-page",
-    name: "RTL",
-    component: RTL,
-  },
-  {
     path: "/notifications",
     name: "Notifications",
     component: Notifications,
@@ -70,6 +65,11 @@ const routes = [
     path: "/terms-and-conditions",
     name: "Terms&Conditions",
     component: TermsAndConditions,
+  },
+  {
+    path: "/payments",
+    name: "Payments",
+    component: Payments,
   },
 ];
 /*

@@ -120,7 +120,7 @@ export const userStore = defineStore("user", {
         username: data.name,
         email: data.email,
         id: data.id,
-        saldo: data.balanco,
+        saldo: parseFloat(data.balanco.toFixed(2)),
         idioma: data.idioma,
         password: this.password
       };

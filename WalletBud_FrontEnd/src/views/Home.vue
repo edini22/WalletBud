@@ -79,9 +79,6 @@
 </template>
 
 <script>
-
-//import ChartHolderCard from "./components/ChartHolderCard.vue";
-//import ReportsBarChart from "@/examples/Charts/ReportsBarChart.vue";
 import MiniStatisticsCard from "./components/MiniStatisticsCard.vue";
 import TransactionCard from "./components/TransactionCard.vue";
 import { userStore } from '@/store/userStore.js';
@@ -96,24 +93,36 @@ export default {
     };
   },
   methods: {
-      forceRerender() {
-        this.componentKey += 1;
-      }
+    forceRerender() {
+      this.componentKey += 1;
+    },
+    fetchUserData() {
+      // Chamada para a action getUser da store
+      this.user.getUser(); // Supondo que a action na store seja user.getUser
+    }
   },
   components: {
-    //ChartHolderCard,
-    //ReportsBarChart,
     MiniStatisticsCard,
     TransactionCard,
     PopUpGerirCategorias,
     PopUpAddTransaction
   },
   computed: {
-    user(){
+    user() {
       const uStore = userStore();
       return uStore;
     }
   },
+  // computed: {
+  //   user() {
+  //     return this.$store.state.user; // Acesse o estado do usuário diretamente
+  //   }
+  // },
+  mounted() {
+  //   // Assim que o componente for montado, verifique se o usuário está carregado
+  //   // if (!this.user.loaded) {
+      this.fetchUserData(); // Chame a função para carregar os dados do usuário
+  //   // }
+  }
 };
-
 </script>

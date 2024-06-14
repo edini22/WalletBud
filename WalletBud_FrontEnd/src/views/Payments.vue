@@ -156,66 +156,58 @@
                                     </div>
                                 </div>
                                 <div class=" px-0 pb-2">
-                                    <div class="table-responsive p-0 scroll-container2">
-                                        <table class="table align-items-center justify-content-center mb-0 ">
-                                            <thead class="table-head-fixed">
-                                                <tr>
-                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                        Despesa
-                                                    </th>
-                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Periodicidade
-                                                    </th>
-                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Próximo Pagamento
-                                                    </th>
-                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Valor
-                                                    </th>
-                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Detalhes
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="n in 10" :key="n" >
-                                                    <td>
-                                                        <div class="d-flex px-3">
-                                                            <div class="my-auto">
-                                                                <h6 class="mb-0 text-sm">
-                                                                    Github
-                                                                </h6>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0">
-                                                            Anual
-                                                        </p>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-xs font-weight-bold">
-                                                            20/06/2024
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-md font-weight-bold">
-                                                            13.9€
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <material-button
-                                                            variant="gradient"
-                                                            color="secondary"
-                                                            class="btn btn-sm small-button"
-                                                            @click="popupDetails = true">
-                                                            {{$t('Detalhes')}}
-                                                        </material-button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                  <div class="table-responsive p-0 scroll-container2">
+                                    <table class="table align-items-center justify-content-center mb-0">
+                                      <thead class="table-head-fixed">
+                                        <tr>
+                                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Despesa</th>
+                                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Periodicidade</th>
+                                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Próximo Pagamento</th>
+                                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Valor</th>
+                                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Detalhes</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <template v-if="store && store.pendentes && store.pendentes.length > 0">
+                                          <tr v-for="(p, index) in store.pendentes" :key="index">
+                                            <td>
+                                              <div class="d-flex px-3">
+                                                <div class="my-auto">
+                                                  <h6 class="mb-0 text-sm">{{ p.name }}</h6>
+                                                </div>
+                                              </div>
+                                            </td>
+                                            <td>
+                                              <p class="text-xs font-weight-bold mb-0">{{ getRepetitionText(p.repeticao) }}</p>
+                                            </td>
+                                            <td>
+                                              <span class="text-xs font-weight-bold">{{ p.date }}</span>
+                                            </td>
+                                            <td>
+                                              <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
+                                            </td>
+                                            <td>
+                                              <material-button
+                                                variant="gradient"
+                                                color="secondary"
+                                                class="btn btn-sm small-button"
+                                                @click="openDetailsPopup(p.id)"
+                                              >
+                                                {{ $t('Detalhes') }}
+                                              </material-button>
+                                            </td>
+                                          </tr>
+                                        </template>
+                                        <template v-else>
+                                          <tr>
+                                            <td colspan="5" class="text-center">
+                                              <p class="message">{{ $t('Sem pedidos pendentes!') }}</p>
+                                            </td>
+                                          </tr>
+                                        </template>
+                                      </tbody>
+                                    </table>
+                                  </div>
                                 </div>
                             </div>
                         </div>
@@ -339,26 +331,43 @@
                     </material-button>
                 </div>
                 <div class="modal-body">
-                    <h6>Descrição:</h6>
-                    <h6>Valor: </h6>
-                    <h6>Periodicidade: </h6>
-                    <h6>Próxima data de levantamento: </h6>
+                  <h6>Descrição: {{ selectedPendente.descricao }}</h6>
+                  <h6>Valor Total: {{ selectedPendente.value }}€</h6>
+                  <h6 v-if="selectedPendente.value != selectedPendente.shareValue">Valor Partilhado: {{ selectedPendente.shareValue }}€</h6>
+                  <h6>Periodicidade: {{ getRepetitionText(selectedPendente.repeticao) }}</h6>
+                  <h6>Data: {{ selectedPendente.date }}</h6>
+                  <h6>Categoria: {{ selectedPendente.categoria }}</h6>
+                  <h6>Status: {{ selectedPendente.status }}</h6>
+                  <h6>Tipo: {{ selectedPendente.tipo }}</h6>
+                  <h6>Local: {{ selectedPendente.local }}</h6>
+                  <h6>Utilizadores: {{ selectedPendente.users }}</h6>
                 </div>
-                <div class="modal-footer d-flex justify-content-between">
-                    <material-button
-                        variant="gradient"
-                        color="danger"
-                        class="btn btn-md "
-                        @click="popupReject2 = true; popupDetails = false">
-                        {{$t('Rejeitar')}}
-                    </material-button>
-                    <material-button
-                        variant="gradient"
-                        color="info"
-                        class="btn btn-md "
-                        @click="popupAccept2 = true; popupDetails = false">
-                        {{$t('Aceitar')}}
-                    </material-button>
+                <div v-if="acceptorRejectPendenteButton() === true" class="modal-footer d-flex justify-content-between">
+                    <div v-if="selectedPendente.users[0].id != user.id">
+                      <material-button
+                          variant="gradient"
+                          color="danger"
+                          class="btn btn-md "
+                          @click="popupReject2 = true; popupDetails = false">
+                          {{$t('Rejeitar')}}
+                      </material-button>
+                      <material-button 
+                          variant="gradient"
+                          color="info"
+                          class="btn btn-md "
+                          @click="popupAccept2 = true; popupDetails = false">
+                          {{$t('Aceitar')}}
+                      </material-button>
+                    </div>
+                    <div v-else>
+                      <material-button
+                          variant="gradient"
+                          color="danger"
+                          class="btn btn-md "
+                          @click="deletePendente()">
+                          {{$t('Eliminar')}}
+                      </material-button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -386,7 +395,7 @@
                         variant="gradient"
                         color="info"
                         class="btn btn-md "
-                        @click= "popupReject2 = false; snackbar = 'successReject2'; popupDetails = false;">
+                        @click= "acceptorReject(-1);popupReject2 = false; snackbar = 'successReject2'; popupDetails = false;">
                         {{$t('Confirmar')}}
                     </material-button>
                 </div>
@@ -416,7 +425,7 @@
                         variant="gradient"
                         color="info"
                         class="btn btn-md "
-                        @click= "popupAccept2 = false; snackbar = 'successAccept2'; popupDetails = false;">
+                        @click= "acceptorReject(1);popupAccept2 = false; snackbar = 'successAccept2'; popupDetails = false;">
                         {{$t('Confirmar')}}
                     </material-button>
                 </div>
@@ -469,41 +478,139 @@
 </template>
   
 <script>
-    import MaterialButton from "@/components/MaterialButton.vue";
-    import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
-    import { ref } from 'vue';
+import MaterialButton from "@/components/MaterialButton.vue";
+import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
+import { ref, computed, onMounted } from 'vue';
+import { fixaStore } from "@/store/fixaStore";
+import { userStore } from "@/store/userStore";
 
-    export default {
-        name: "payments",
-        components: {
-            MaterialButton,
-            MaterialSnackbar,
-        },
-        setup() {
-            const snackbar = ref(false);
-            const popup = ref(false);
-            const popupReject = ref(false);
-            const popupAccept = ref(false);
-            const popupDetails = ref(false);
-            const popupReject2 = ref(false);
-            const popupAccept2 = ref(false);
+export default {
+  name: "payments",
+  components: {
+    MaterialButton,
+    MaterialSnackbar,
+  },
+  setup() {
+    const snackbar = ref(false);
+    const popup = ref(false);
+    const popupReject = ref(false);
+    const popupAccept = ref(false);
+    const popupDetails = ref(false);
+    const popupReject2 = ref(false);
+    const popupAccept2 = ref(false);
+    const store = fixaStore();
+    const user = userStore();
+    const selectedPendenteId = ref(null);
 
-            const closeSnackbar = () => {
-                snackbar.value = false;
-            };
-
-            return {
-                snackbar,
-                closeSnackbar,
-                popup,
-                popupReject,
-                popupAccept,
-                popupDetails,
-                popupReject2,
-                popupAccept2,
-            };
-        },
+    const loadPendentes = async () => {
+      try {
+        await store.loadPendentes();
+        console.log("Pendentes carregados:", store.pendentes);
+      } catch (err) {
+        alert("Erro -> " + err.message);
+      }
     };
+
+    const getRepetitionText = (repeticao) => {
+      if (repeticao === undefined) {
+        return "Unica";
+      }
+      switch (repeticao) {
+        case 1:
+          return "Diariamente";
+        case 2:
+          return "Semanalmente";
+        case 3:
+          return "Mensalmente";
+        case 4:
+          return "Anualmente";
+        default:
+          return "Unica";
+      }
+    };
+
+    const openDetailsPopup = (id) => {
+      selectedPendenteId.value = id;
+      popupDetails.value = true;
+    };
+
+    const selectedPendente = computed(() => {
+      return store.pendentes.find(p => p.id === selectedPendenteId.value) || {};
+    });
+
+    const acceptorRejectPendenteButton = () => {
+      for (let i = 0; i < selectedPendente.value.users.length; i++) {
+        if (selectedPendente.value.users[i].id === user.id && user.id != selectedPendente.value.users[0].id ) {
+          if(!selectedPendente.value.users[i].confirma){
+            return true;
+          } else {
+              return false;
+          }
+        } else if (selectedPendente.value.users[i].id === user.id && user.id === selectedPendente.value.users[0].id) {
+          return true;
+        }
+      }
+      return true;
+    };
+
+    //eliminar
+    const deletePendente = async () => {
+      try {
+        await store.deletePendente(selectedPendenteId.value);
+        popupDetails.value = false;
+        alert("Pedido eliminado com sucesso!");
+        loadPendentes();
+        
+      } catch (err) {
+        alert("Erro -> " + err.message);
+      }
+    };
+
+    //aceitar ou recusar
+    const acceptorReject = async (state) => {
+      try {
+        await store.acceptorRejectPendente(selectedPendenteId.value,state);
+        popupDetails.value = false;
+        loadPendentes();
+      } catch (err) {
+        alert("Erro -> " + err.message);
+      }
+    };
+
+
+    const closeSnackbar = () => {
+      snackbar.value = false;
+    };
+
+    onMounted(() => {
+      // const modal = document.getElementById('categoryModal');
+      // modal.addEventListener('hidden.bs.modal', forceRerender);
+      
+      loadPendentes();
+    });
+
+    return {
+      snackbar,
+      closeSnackbar,
+      popup,
+      popupReject,
+      popupAccept,
+      popupDetails,
+      popupReject2,
+      popupAccept2,
+      loadPendentes,
+      getRepetitionText,
+      store,
+      user,
+      selectedPendenteId,
+      openDetailsPopup,
+      selectedPendente,
+      acceptorRejectPendenteButton,
+      deletePendente,
+      acceptorReject,
+    };
+  },
+};
 </script>
   
 <style scoped>

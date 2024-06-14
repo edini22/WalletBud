@@ -98,48 +98,40 @@
                                         <table class="table align-items-center justify-content-center mb-0 ">
                                             <thead class="table-head-fixed">
                                                 <tr>
-                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                                        Despesa
-                                                    </th>
-                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Periodicidade
-                                                    </th>
-                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Próximo Pagamento
-                                                    </th>
-                                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Valor
-                                                    </th>
+                                                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Despesa</th>
+                                                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Periodicidade</th>
+                                                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Data de Pagamento</th>
+                                                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Valor</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="n in 10" :key="n" >
-                                                    <td>
-                                                        <div class="d-flex px-3">
-                                                            <div class="my-auto">
-                                                                <h6 class="mb-0 text-sm">
-                                                                    Github
-                                                                </h6>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0">
-                                                            Anual
-                                                        </p>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-xs font-weight-bold">
-                                                            20/06/2024
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-md font-weight-bold">
-                                                            13.9€
-                                                        </span>
-                                                    </td>
-                                                    
+                                              <template v-if="store && store.porPagar && store.porPagar.length > 0">
+                                                <tr v-for="(p, index) in store.porPagar" :key="index">
+                                                  <td>
+                                                  <div class="d-flex px-3">
+                                                      <div class="my-auto">
+                                                      <h6 class="mb-0 text-sm">{{ p.name }}</h6>
+                                                      </div>
+                                                  </div>
+                                                  </td>
+                                                  <td>
+                                                    <p class="text-xs font-weight-bold mb-0">{{ getRepetitionText(p.repeticao) }}</p>
+                                                  </td>
+                                                  <td>
+                                                    <span class="text-xs font-weight-bold">{{ p.date }}</span>
+                                                  </td>
+                                                  <td>
+                                                    <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
+                                                  </td>
                                                 </tr>
+                                              </template>
+                                              <template v-else>
+                                                <tr>
+                                                  <td colspan="5" class="text-center">
+                                                    <p class="message">{{ $t('Sem pagamentos em atraso!') }}</p>
+                                                  </td>
+                                                </tr>
+                                              </template>
                                             </tbody>
                                         </table>
                                     </div>
@@ -511,6 +503,15 @@ export default {
       }
     };
 
+    const loadPorPagar = async () => {
+      try {
+        await store.loadPorPagar();
+        console.log("Por pagar carregados:", store.porPagar);
+      } catch (err) {
+        alert("Erro -> " + err.message);
+      }
+    };
+
     const getRepetitionText = (repeticao) => {
       if (repeticao === undefined) {
         return "Unica";
@@ -587,6 +588,7 @@ export default {
       // modal.addEventListener('hidden.bs.modal', forceRerender);
       
       loadPendentes();
+      loadPorPagar(); //TODO: fazer isto tambem quando se pagar algo ao lado!!
     });
 
     return {
@@ -599,6 +601,7 @@ export default {
       popupReject2,
       popupAccept2,
       loadPendentes,
+      loadPorPagar,
       getRepetitionText,
       store,
       user,

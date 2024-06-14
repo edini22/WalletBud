@@ -229,7 +229,7 @@
             <h6>Utilizadores: {{ transa.users }}</h6>
           </div>
         </div>
-        <div v-if="acceptorRejectPendenteButton2()" class="modal-footer d-flex justify-content-between">
+        <div class="modal-footer d-flex justify-content-between">
           <div v-if="transa && transa.users && transa.users.length > 0">
             <div v-if="transa.users[0].id == user.id">
               <material-button
@@ -636,20 +636,6 @@ export default {
       }
     };
 
-    const acceptorRejectPendenteButton2 = () => {
-      if(transa.value && transa.value.users.length){
-        for (let i = 0; i < transa.value.users.length; i++) {
-          if (transa.value.users[i].id === user.id && user.id === transa.value.users[0].id) {
-            return true;
-          } else{
-            return false;
-          }
-
-        }
-      }
-      return false;
-    };
-
     const closeSnackbar = () => {
       snackbar.value = false;
     };
@@ -682,7 +668,6 @@ export default {
       openDetailsPopup,
       selectedPendente,
       acceptorRejectPendenteButton,
-      acceptorRejectPendenteButton2,
       deletePendente,
       acceptorReject,
       loadProximosPagamentos,

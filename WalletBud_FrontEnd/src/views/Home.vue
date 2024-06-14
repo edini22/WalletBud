@@ -16,7 +16,7 @@
           <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0">
             <mini-statistics-card
               :title="{ text: 'Objetivo Poupança', value: '2,300' }"
-              detail="<button class='btn mb-0 btn-sm null null btn-outline-primary' data-bs-toggle='modal' data-bs-target='#objetivoModal'>Definir objetivo</button>"
+              detail="<button class='btn mb-0 btn-sm null null btn-outline-primary' data-bs-toggle='modal' data-bs-target='#savingsGoalModal'>Definir objetivo</button>"
               :icon="{
                 name: 'savings',
                 color: 'text-white',
@@ -74,6 +74,7 @@
     </div>
     <PopUpGerirCategorias :key="componentKey" @forceRerender="forceRerender"/>
     <PopUpAddTransaction />
+    <PopUpSavingsGoal />
   </div>
 </template>
 
@@ -83,6 +84,7 @@ import TransactionCard from "./components/TransactionCard.vue";
 import { userStore } from '@/store/userStore.js';
 import PopUpGerirCategorias from "./components/PopUpGerirCategorias.vue";
 import PopUpAddTransaction from "./components/PopUpAddTransaction.vue";
+import PopUpSavingsGoal from "./components/PopUpSavingsGoal.vue";
 
 export default {
   name: "home",
@@ -104,7 +106,8 @@ export default {
     MiniStatisticsCard,
     TransactionCard,
     PopUpGerirCategorias,
-    PopUpAddTransaction
+    PopUpAddTransaction,
+    PopUpSavingsGoal
   },
   computed: {
     user() {

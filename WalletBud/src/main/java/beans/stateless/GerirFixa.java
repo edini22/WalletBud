@@ -895,4 +895,95 @@ public class GerirFixa {
         }
     }
 
+    public JsonObject getPayments(String email) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = gerirUtilizador.getUserByEmail(email);
+
+            String condition = "UserId_user = " + user.getId_user();
+
+            Fixa[] fixas = FixaDAO.listFixaByQuery(condition, null);
+
+            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            ArrayList<Fixa> transacoes_id = new ArrayList<>(Arrays.asList(fixas));
+
+            for (TransacaoPartilhada transacaoPartilhada : transacoes_partilhada) {
+                try {
+                    Fixa f = FixaDAO.getFixaByORMID(transacaoPartilhada.getUsertransacaoId().getId_transacao());
+
+                    if (f != null) {
+                        transacoes_id.add(f);
+                    }
+                } catch (Exception e) {
+                    //nao era fixa
+                }
+            }
+
+            String orederby = "";
+
+            JsonArrayBuilder lateArrayBuilder = Json.createArrayBuilder();
+
+            for (Fixa fixa : transacoes_id) {
+                condition = "TransacaoId_transacao = " + fixa.getId_transacao();
+                orederby = "DataPagamento DESC";
+
+                TransacaoFixa[] tfs = TransacaoFixaDAO.listTransacaoFixaByQuery(condition, orederby);
+                Timestamp time ;
+                if (tfs.length == 0) {
+                    System.out.println(fixa.getDate());
+                    time = new Timestamp(fixa.getDate().getTime());
+                } else {
+                    System.out.println(tfs[0].getDataPagamento());
+                    time = new Timestamp(tfs[0].getDataPagamento().getTime());
+                    LocalDateTime adjustedDateTime = time.toLocalDateTime();
+
+                    // Adicionar a repetição apropriada
+                    switch (fixa.getRepeticao()) {
+                        case 1: // Diariamente
+                            adjustedDateTime = adjustedDateTime.plusDays(1);
+                            break;
+                        case 2: // Semanalmente
+                            adjustedDateTime = adjustedDateTime.plusWeeks(1);
+                            break;
+                        case 3: // Mensalmente
+                            adjustedDateTime = adjustedDateTime.plusMonths(1);
+                            break;
+                        case 4: // Anualmente
+                            adjustedDateTime = adjustedDateTime.plusYears(1);
+                            break;
+                    }
+
+                    // Converter de volta para Timestamp
+                    time = Timestamp.valueOf(adjustedDateTime);
+                }
+
+
+                System.out.println();
+                JsonObject lateJson = Json.createObjectBuilder()
+                        .add("id",fixa.getId_transacao())
+                        .add("name", fixa.getName())
+                        .add("value", fixa.getShareValue())
+                        .add("descricao", fixa.getDescrição())
+                        .add("categoria", fixa.getCategoriaId_categoria().getName())
+                        .add("repeticao", fixa.getRepeticao())
+                        .add("tipo", fixa.getTipo())
+                        .add("local", fixa.getLocal())
+                        .add("data_pagamento", time.toString())
+                        .build();
+
+                lateArrayBuilder.add(lateJson);
+            }
+
+            t.commit();
+            return Json.createObjectBuilder()
+                    .add("proximos_pagamentos", lateArrayBuilder)
+                    .build();
+        } catch (Exception e) {
+            t.rollback();
+            e.printStackTrace();
+            return Json.createObjectBuilder()
+                    .build();
+        }
+    }
+
 }

@@ -775,7 +775,35 @@ public class Transacao {
             movimentos = gerirTransacaoPartilhada.getMovimentos(email);
             if (movimentos.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
-                        .add("message", "Nenhum movimento encontrado!")
+                        .add("message", "Algo de errado nao esta certo!")
+                        .build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            return Response.ok(movimentos.toString(), MediaType.APPLICATION_JSON).build();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+    @GET
+    @Path("/pendentes")
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listPendentes( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+
+        try {
+            JsonObject movimentos;
+            movimentos = gerirTransacaoPartilhada.getPendentes(email);
+            if (movimentos.isEmpty()) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Algo de errado nao esta certo!")
                         .build();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
@@ -830,6 +858,36 @@ public class Transacao {
 
         try {
             JsonObject leite =  gerirFixa.getLatePayments(email);
+
+
+            if (leite.isEmpty()) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Algo de errado nao esta certo!")
+                        .build();
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
+            }
+
+            return Response.ok(leite.toString(), MediaType.APPLICATION_JSON).build();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+
+    @GET
+    @Path("/fixa/pagamentos") //pagamentos/recibos em atraso das transacoes fixas
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listPagamentos( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+        String email = JWTUtil.getEmailFromToken(token);
+
+        try {
+            JsonObject leite =  gerirFixa.getPayments(email);
 
 
             if (leite.isEmpty()) {

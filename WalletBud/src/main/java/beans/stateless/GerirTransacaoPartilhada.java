@@ -192,8 +192,6 @@ public class GerirTransacaoPartilhada {
         PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
         try {
             User user = gerirUtilizador.getUserByEmail(email);
-            // transaçoes unicas (confirmadas) + fixas (pago ou nao pago)
-            //TODO: ainda nao fiz nada, mas o objetivo e apresentar as fixas e unicas ao qual o user pagou/tem a pagar e as unicas que pagou (status = true)
 
             String condition = "UserId_user = " + user.getId_user();
 
@@ -438,4 +436,121 @@ public class GerirTransacaoPartilhada {
         return matchingDays;
     }
 
+
+    public JsonObject getPendentes(String email) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = gerirUtilizador.getUserByEmail(email);
+
+            if (user == null) {
+                t.rollback();
+                return Json.createObjectBuilder()
+                        .build();
+            }
+
+
+            List<Map<String, Object>> pendentes = TransacaoDAO.queryPendentesByUserId(user.getId_user());
+
+            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+            for(Map<String, Object> transacao : pendentes) {
+
+                if (transacao.get("Discriminator").equals("Unica")) {
+                    Unica unica = UnicaDAO.getUnicaByORMID((int) transacao.get("Id"));
+                    String condition = "TransacaoId_transacao = " + unica.getId_transacao();
+                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+
+                    User Owner = unica.getOwner_id();
+                    JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
+                    JsonObject userJs = Json.createObjectBuilder()
+                            .add("id", Owner.getId_user())
+                            .add("name", Owner.getName())
+                            .add("email", Owner.getEmail())
+                            .add("confirma", 1)
+                            .build();
+                    userArrayBuilder.add(userJs);
+
+                    for (TransacaoPartilhada tpPartilhada : tp) {
+                        User u = tpPartilhada.getUserId_user();
+                        JsonObject userJson = Json.createObjectBuilder()
+                                .add("id", u.getId_user())
+                                .add("name", u.getName())
+                                .add("email", u.getEmail())
+                                .add("cofirma", tpPartilhada.getConfirma())
+                                .build();
+                        userArrayBuilder.add(userJson);
+                    }
+                    JsonArray userArray = userArrayBuilder.build();
+                    JsonObject unicaJson = Json.createObjectBuilder()
+                            .add("id", unica.getId_transacao())
+                            .add("name", unica.getName())
+                            .add("value", unica.getValue())
+                            .add("shareValue", unica.getShareValue())
+                            .add("date", unica.getDate().toString())
+                            .add("descricao", unica.getDescrição())
+                            .add("categoria", unica.getCategoriaId_categoria().getName())
+                            .add("status", unica.getStatus())
+                            .add("tipo", unica.getTipo())
+                            .add("local", unica.getLocal())
+                            .add("status", unica.getStatus())
+                            .add("users", userArray)
+                            .build();
+                    arrayBuilder.add(unicaJson);
+                } else {
+                    Fixa fixa = FixaDAO.getFixaByORMID((int) transacao.get("Id"));
+                    User Owner = fixa.getOwner_id();
+                    JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
+                    JsonObject userJs = Json.createObjectBuilder()
+                            .add("id", Owner.getId_user())
+                            .add("name", Owner.getName())
+                            .add("email", Owner.getEmail())
+                            .add("confirma", 1)
+                            .build();
+                    userArrayBuilder.add(userJs);
+
+                    String condition = "TransacaoId_transacao = " + fixa.getId_transacao();
+                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+
+                    for (TransacaoPartilhada tpPartilhada : tp) {
+                        User u = tpPartilhada.getUserId_user();
+                        JsonObject userJson = Json.createObjectBuilder()
+                                .add("id", u.getId_user())
+                                .add("name", u.getName())
+                                .add("email", u.getEmail())
+                                .add("cofirma", tpPartilhada.getConfirma())
+                                .build();
+                        userArrayBuilder.add(userJson);
+                    }
+                    JsonArray userArray = userArrayBuilder.build();
+                    JsonObject unicaJson = Json.createObjectBuilder()
+                            .add("id", fixa.getId_transacao())
+                            .add("name", fixa.getName())
+                            .add("value", fixa.getValue())
+                            .add("shareValue", fixa.getShareValue())
+                            .add("date", fixa.getDate().toString())
+                            .add("descricao", fixa.getDescrição())
+                            .add("categoria", fixa.getCategoriaId_categoria().getName())
+                            .add("status", fixa.getStatus())
+                            .add("repeticao", fixa.getRepeticao())
+                            .add("tipo", fixa.getTipo())
+                            .add("local", fixa.getLocal())
+                            .add("status", fixa.getStatus())
+                            .add("users", userArray)
+                            .build();
+                    arrayBuilder.add(unicaJson);
+
+                }
+            }
+
+            t.commit();
+            return Json.createObjectBuilder()
+                    .add("pendentes", arrayBuilder)
+                    .build();
+
+        } catch (Exception e) {
+//            e.printStackTrace();
+            t.rollback();
+            return Json.createObjectBuilder()
+                    .build();
+        }
+    }
 }

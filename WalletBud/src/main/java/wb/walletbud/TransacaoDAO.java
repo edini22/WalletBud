@@ -278,6 +278,28 @@ public class TransacaoDAO {
 			throw new PersistentException(e);
 		}
 	}
+
+	public static List<Map<String, Object>> queryPendentesByUserId(int userId) throws PersistentException {
+		try {
+			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
+
+			String sqlQuery =
+					"SELECT t.Id_transacao AS Id, t.Date AS date, t.Discriminator AS Discriminator\n" +
+							"FROM Transacao t\n" +
+							"         LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao\n" +
+							"WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId)\n" +
+							"  AND t.Status = 0\n" +
+							"ORDER BY date;";
+
+			Query query = session.createSQLQuery(sqlQuery)
+					.setParameter("userId", userId)
+					.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new PersistentException(e);
+		}
+	}
 	
 	public static Transacao loadTransacaoByQuery(String condition, String orderBy) throws PersistentException {
 		try {

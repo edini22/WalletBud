@@ -291,14 +291,6 @@ export default {
   z-index: 1050; /* padrão do Bootstrap para modais */
 }
 
-.container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 0 auto;
-}
-
 h2, h4 {
     text-align: left;
 }

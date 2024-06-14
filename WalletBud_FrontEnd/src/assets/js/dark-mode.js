@@ -2,6 +2,11 @@
 
 export function activateDarkMode() {
   const body = document.getElementsByTagName("body")[0];
+  const modals = document.querySelectorAll(".modal-dialog.modal-dialog-centered");
+  const values = document.querySelectorAll(".form-control");
+  const configurators = document.querySelectorAll(".fixed-plugin-button");
+  const icons = document.querySelectorAll(".material-icons", "comment");
+  const inputGroups = document.querySelectorAll(".input-group");
   const hr = document.querySelectorAll("div:not(.sidenav) > hr");
   const hr_card = document.querySelectorAll("div:not(.bg-gradient-dark) hr");
   const text_btn = document.querySelectorAll("button:not(.btn) > .text-dark");
@@ -22,6 +27,37 @@ export function activateDarkMode() {
   const svg = document.querySelectorAll("g");
 
   body.classList.add("dark-version");
+  
+  modals.forEach(modal => {
+    const modalContent = modal.querySelector(".modal-content");
+
+    // Verifica se o modal tem a classe .modal-content
+    if (modalContent) {
+      modalContent.classList.add("text-white");
+      modalContent.style.backgroundColor = "#202940";
+    }
+  });
+
+  inputGroups.forEach(inputGroup => {
+    const buttons = inputGroup.querySelectorAll("button");
+
+    buttons.forEach(button => {
+      button.style.color = "rgba(255, 255, 255, 0.8)";
+    });
+  });
+
+  icons.forEach(icon => {
+    icon.classList.add("text-white");
+  });
+
+  values.forEach(value => {
+    value.classList.add("text-white");
+  });
+
+  configurators.forEach(configurator => {
+    configurator.classList.add("bg-dark");
+  });
+
   for (var i = 0; i < hr.length; i++) {
     if (hr[i].classList.contains("dark")) {
       hr[i].classList.remove("dark");
@@ -92,6 +128,11 @@ export function activateDarkMode() {
 
 export function deactivateDarkMode() {
   const body = document.getElementsByTagName("body")[0];
+  const modals = document.querySelectorAll(".modal-dialog.modal-dialog-centered");
+  const icons = document.querySelectorAll(".material-icons", "comment");
+  const values = document.querySelectorAll(".form-control");
+  const configurators = document.querySelectorAll(".fixed-plugin-button");
+  const inputGroups = document.querySelectorAll(".input-group");
   const hr = document.querySelectorAll("div:not(.sidenav) > hr");
   const hr_card = document.querySelectorAll("div:not(.bg-gradient-dark) hr");
   const text_btn = document.querySelectorAll("button:not(.btn) > .text-dark");
@@ -117,7 +158,32 @@ export function deactivateDarkMode() {
 
   body.classList.remove("dark-version");
 
-  body.classList.remove("dark-version");
+  modals.forEach(modal => {
+    const modalContent = modal.querySelector(".modal-content");
+
+    // Verifica se o modal tem a classe .modal-content
+    if (modalContent) {
+      modalContent.classList.remove("text-white");
+      modalContent.style.backgroundColor = "#fff";
+    }
+  });
+
+  inputGroups.forEach(inputGroup => {
+    const buttons = inputGroup.querySelectorAll("button");
+
+    buttons.forEach(button => {
+      button.style.color = "rgb(123, 128, 154)";
+    });
+  });
+
+  values.forEach(value => {
+    value.classList.remove("text-white");
+  });
+
+  configurators.forEach(configurator => {
+    configurator.classList.remove("bg-dark");
+  });
+
   for (var i = 0; i < hr.length; i++) {
     if (hr[i].classList.contains("light")) {
       hr[i].classList.add("dark");
@@ -191,4 +257,8 @@ export function deactivateDarkMode() {
   for (var i = 0; i < card_border_dark.length; i++) {
     card_border_dark[i].classList.remove("border-dark");
   }
+
+  icons.forEach(icon => {
+    icon.classList.remove("text-dark");
+  });
 }

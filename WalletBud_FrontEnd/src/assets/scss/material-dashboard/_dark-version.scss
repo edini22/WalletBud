@@ -199,7 +199,8 @@
     }
 
     .is-valid,
-    .is-invalid {
+    .is-invalid
+    .is-invalid-date {
       border-color: $dark-version-border-color !important;
     }
   }

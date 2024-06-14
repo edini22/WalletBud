@@ -88,7 +88,7 @@
           {{$t ('Só podes alterar o tipo de Aba em vista desktop')}}.
         </p>
 
-        <!-- Navbar Fixed -->
+        <!-- Dark Mode toggle -->
         <hr class="horizontal dark my-3" />
         <div class="mt-2 d-flex">
           <h6 class="mb-0">{{$t ('Modo Claro')}} / {{$t ('Modo Escuro')}}</h6>

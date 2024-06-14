@@ -5,40 +5,20 @@
         <a
           class="nav-link mb-0 px-0 py-1 active active"
           data-bs-toggle="tab"
-          href="#"
+          href="#tab-0"
           role="tab"
           aria-selected="true"
-          >Messages</a
+          >Informação</a
         >
       </li>
       <li class="nav-item">
         <a
           class="nav-link mb-0 px-0 py-1"
           data-bs-toggle="tab"
-          href="#"
+          href="#tab-1"
           role="tab"
           aria-selected="false"
-          >Social</a
-        >
-      </li>
-      <li class="nav-item">
-        <a
-          class="nav-link mb-0 px-0 py-1"
-          data-bs-toggle="tab"
-          href="#"
-          role="tab"
-          aria-selected="false"
-          >Notifications</a
-        >
-      </li>
-      <li class="nav-item">
-        <a
-          class="nav-link mb-0 px-0 py-1"
-          data-bs-toggle="tab"
-          href="#"
-          role="tab"
-          aria-selected="false"
-          >Backup</a
+          >Dividir Despesa</a
         >
       </li>
     </ul>

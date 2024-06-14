@@ -1,12 +1,12 @@
 <template>
-  <div
+  <div v-if="type == 'date' && error"
     name="div"
     class="input-group"
-    :class="`input-group-${variant} ${getStatus(error, success)}`"
+    :class="`input-group-${variant} ${getStatusDate(error, success)}`"
   >
     <label :class="variant === 'static' ? '' : 'form-label'">{{ label }}</label>
-    <div v-if="type == 'date' && error" class="icon-wrapper">
-      <i class="material-icons date-icon error">date_range</i>
+    <div class="icon-wrapper">
+      <i class="material-icons date-icon-error error">date_range</i>
       <input
         :id="id"
         :type="type"
@@ -23,8 +23,15 @@
         @blur="$emit('blur', $event)"
       />
     </div>
-    
-    <input v-else
+  </div>
+
+  <div v-else
+    name="div"
+    class="input-group"
+    :class="`input-group-${variant} ${getStatus(error, success)}`"
+  >
+    <label :class="variant === 'static' ? '' : 'form-label'">{{ label }}</label>
+    <input
       :id="id"
       :type="type"
       class="form-control"
@@ -40,6 +47,7 @@
       @blur="$emit('blur', $event)"
     />
   </div>
+  
 </template>
 
 <script>
@@ -129,6 +137,19 @@ export default {
 
       return isValidValue;
     },
+    getStatusDate: (error, success) => {
+      let isValidValue;
+
+      if (success) {
+        isValidValue = "is-valid";
+      } else if (error) {
+        isValidValue = "is-invalid-date";
+      } else {
+        isValidValue = null;
+      }
+
+      return isValidValue;
+    },
     removeEmptyClass() {
       const elements = document.getElementsByName('div');
 
@@ -159,12 +180,11 @@ export default {
   width: 100%;
 }
 
-.date-icon {
+.date-icon-error {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   right: 10px;
-  background-color: white !important;
   pointer-events: none;
   color: #fd5c6f;
 }
@@ -173,5 +193,12 @@ export default {
   width: 100%; /* Manter o tamanho padrão */
   padding-right: 30px; /* Ajuste o espaçamento para acomodar o ícone */
 }
+
+input[type=date] { color: transparent !important; }
+
+.is-focused input[type=date] { color: inherit !important; }
+
+.is-filled input[type=date] { color: inherit !important; }
+
 
 </style>

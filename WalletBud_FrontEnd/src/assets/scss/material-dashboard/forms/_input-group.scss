@@ -110,6 +110,19 @@
           }
         }
       }
+      &.is-invalid-date {
+        label {
+          color: $danger;
+        }
+
+        .form-control {
+          &,
+          &:focus {
+            background-image: none;
+            border-radius: 0 !important;
+          }
+        }
+      }
     }
 
     &.is-valid {
@@ -127,6 +140,16 @@
         &,
         &:focus {
           background-image: $input-background-image-invalid;
+          border-radius: 0 !important;
+        }
+      }
+    }
+
+    &.is-invalid-date {
+      .form-control {
+        &,
+        &:focus {
+          background-image: none;
           border-radius: 0 !important;
         }
       }
@@ -263,6 +286,31 @@
         background-image: escape-svg($form-feedback-icon-invalid);
         background-repeat: no-repeat;
         background-position: right $input-height-inner-quarter center;
+        background-size: $input-height-inner-half $input-height-inner-half;
+      }
+      &.is-focused,
+      &.is-filled {
+        .form-label + .form-control {
+          border-color: $danger !important;
+          box-shadow: inset 1px 0 $danger, inset -1px 0 $danger,
+            inset 0 -1px $danger;
+          border-top-color: transparent !important;
+        }
+        .form-label {
+          color: $danger;
+
+          &:before,
+          &:after {
+            border-top-color: $danger;
+            box-shadow: inset 0 1px $danger;
+          }
+        }
+      }
+    }
+
+    &.is-invalid-date {
+      .form-control {
+        background-image: none;
         background-size: $input-height-inner-half $input-height-inner-half;
       }
       &.is-focused,

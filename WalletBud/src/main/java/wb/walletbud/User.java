@@ -13,7 +13,25 @@
  */
 package wb.walletbud;
 
-public class User {
+import java.util.ArrayList;
+import java.util.List;
+
+public class User implements Observer{
+	
+	private List<Notificacao> notifications = new ArrayList<>();
+
+    @Override
+    public void notify(Notificacao notification) {
+        notification.setUserId_user(this);
+        notifications.add(notification);
+        System.out.println("Received notification: " + notification.getDescrição());
+    }
+
+
+    public List<Notificacao> getNotifications() {
+        return notifications;
+    }
+	
 	public User() {
 	}
 	

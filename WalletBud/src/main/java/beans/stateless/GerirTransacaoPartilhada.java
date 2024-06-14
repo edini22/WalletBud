@@ -450,7 +450,7 @@ public class GerirTransacaoPartilhada {
 
 
             List<Map<String, Object>> pendentes = TransacaoDAO.queryPendentesByUserId(user.getId_user());
-
+//            System.out.println("pendentes -> " + pendentes.toString());
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             for(Map<String, Object> transacao : pendentes) {
 
@@ -475,7 +475,7 @@ public class GerirTransacaoPartilhada {
                                 .add("id", u.getId_user())
                                 .add("name", u.getName())
                                 .add("email", u.getEmail())
-                                .add("cofirma", tpPartilhada.getConfirma())
+                                .add("confirma", tpPartilhada.getConfirma())
                                 .build();
                         userArrayBuilder.add(userJson);
                     }
@@ -491,7 +491,7 @@ public class GerirTransacaoPartilhada {
                             .add("status", unica.getStatus())
                             .add("tipo", unica.getTipo())
                             .add("local", unica.getLocal())
-                            .add("status", unica.getStatus())
+                            .add("transacao","unica")
                             .add("users", userArray)
                             .build();
                     arrayBuilder.add(unicaJson);
@@ -516,7 +516,7 @@ public class GerirTransacaoPartilhada {
                                 .add("id", u.getId_user())
                                 .add("name", u.getName())
                                 .add("email", u.getEmail())
-                                .add("cofirma", tpPartilhada.getConfirma())
+                                .add("confirma", tpPartilhada.getConfirma())
                                 .build();
                         userArrayBuilder.add(userJson);
                     }
@@ -533,7 +533,7 @@ public class GerirTransacaoPartilhada {
                             .add("repeticao", fixa.getRepeticao())
                             .add("tipo", fixa.getTipo())
                             .add("local", fixa.getLocal())
-                            .add("status", fixa.getStatus())
+                            .add("transacao","fixa")
                             .add("users", userArray)
                             .build();
                     arrayBuilder.add(unicaJson);

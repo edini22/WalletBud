@@ -180,6 +180,8 @@ public class GerirUtilizador {
                     .add("balanco", user.getSaldo())
                     .add("idioma", user.getIdioma())
                     .build();
+            System.out.println(userJson.toString());
+
             t.commit();
             return userJson;
         } catch (Exception e) {

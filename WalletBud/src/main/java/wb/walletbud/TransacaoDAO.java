@@ -284,7 +284,7 @@ public class TransacaoDAO {
 			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 
 			String sqlQuery =
-					"SELECT t.Id_transacao AS Id, t.Date AS date, t.Discriminator AS Discriminator\n" +
+					"SELECT DISTINCT t.Id_transacao AS Id, t.Date AS date, t.Discriminator AS Discriminator\n" +
 							"FROM Transacao t\n" +
 							"         LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao\n" +
 							"WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId)\n" +

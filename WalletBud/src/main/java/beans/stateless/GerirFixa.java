@@ -202,7 +202,7 @@ public class GerirFixa {
                             .add("id", u.getId_user())
                             .add("name", u.getName())
                             .add("email", u.getEmail())
-                            .add("cofirma", tpPartilhada.getConfirma())
+                            .add("confirma", tpPartilhada.getConfirma())
                             .build();
                     userArrayBuilder.add(userJson);
                 }
@@ -274,7 +274,7 @@ public class GerirFixa {
                     .add("id", Owner.getId_user())
                     .add("name", Owner.getName())
                     .add("email", Owner.getEmail())
-                    .add("cofirma", 1)
+                    .add("confirma", 1)
                     .build();
             userArrayBuilder.add(userJs);
             for (TransacaoPartilhada tpPartilhada : tp) {
@@ -283,7 +283,7 @@ public class GerirFixa {
                         .add("id", u.getId_user())
                         .add("name", u.getName())
                         .add("email", u.getEmail())
-                        .add("cofirma", tpPartilhada.getConfirma())
+                        .add("confirma", tpPartilhada.getConfirma())
                         .build();
                 userArrayBuilder.add(userJson);
             }
@@ -500,12 +500,14 @@ public class GerirFixa {
 
             boolean ready_to_confirm = true;
             boolean remove = false;
-            ArrayList<User> users = new ArrayList<>();
+//            ArrayList<User> users = new ArrayList<>();
+            int users = 1;
+            boolean exist = false;
 
             for (TransacaoPartilhada tp : tps) {
 
                 if (tp.getUserId_user() == user) {
-
+                    exist = true;
                     if (option == -1) {
                         if (tp.getConfirma() == 1) {
                             t.rollback();
@@ -513,18 +515,29 @@ public class GerirFixa {
                         }
                         remove = true;
                         TransacaoPartilhadaDAO.deleteAndDissociate(tp);
+                        fixa.setStatus(false);
+                        FixaDAO.save(fixa);
                     } else if (option == 1) {
-                        users.add(tp.getUserId_user());
+                        users +=1;
                         tp.setConfirma(1);
                         TransacaoPartilhadaDAO.save(tp);
                     }
                 } else if (tp.getConfirma() == 0) {
+                    users +=1;
                     ready_to_confirm = false;
                 } else {
-                    users.add(tp.getUserId_user());
+                    if(option == -1){
+                        tp.setConfirma(0);
+                        TransacaoPartilhadaDAO.save(tp);
+                    }
+                    users +=1;
                 }
             }
-            if (option == -1 && !remove) {
+            if(exist == false){
+                //user nao pertence a transacao
+                t.rollback();
+                return -1;
+            } else if (option == -1 && !remove) {
                 t.rollback();
                 return -4;
             } else if (remove) {
@@ -532,20 +545,13 @@ public class GerirFixa {
                 float aSValue = fixa.getShareValue();
                 float value = fixa.getValue();
 
-                TransacaoPartilhada[] transacoesPart = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
-                int nUsers = transacoesPart.length + 1;
-
-                float nSValue = value / nUsers;
+                float nSValue = value / users;
                 fixa.setShareValue(nSValue);
                 fixa.setStatus(false);
                 FixaDAO.save(fixa);
 
-                System.out.println("nUsers = " + nUsers);
-                System.out.println("transacoesPart = " + transacoesPart.length);
-                for (TransacaoPartilhada tpu : transacoesPart) {
-                    tpu.setConfirma(0);
-                    TransacaoPartilhadaDAO.save(tpu);
-                }
+                System.out.println("nUsers = " + users);
+
                 //TODO: gerar novas notificacoes com as novas informacoes e apaga as notificacoes antigas referidas a esta transacao
                 // destinatarios : useres que estao na lista tps(este para aceitarem ou nao) e o unica.owner(neste so avisa que um user rejeitou)
                 // quantos users desistiram
@@ -554,11 +560,10 @@ public class GerirFixa {
 
 
             }
-            if (ready_to_confirm && (!remove || users.isEmpty())) {
+            if (ready_to_confirm && (!remove || users == 1)) {
                 System.out.println("confirmaUnica");
                 fixa.setStatus(true);
-                int nUsers = users.size() + 1;
-                float nSValue = fixa.getValue() / nUsers;
+                float nSValue = fixa.getValue() / users;
                 fixa.setShareValue(nSValue);
                 FixaDAO.save(fixa);
             }
@@ -813,10 +818,8 @@ public class GerirFixa {
                 TransacaoFixa[] tfs = TransacaoFixaDAO.listTransacaoFixaByQuery(condition, orederby);
                 Timestamp time ;
                 if (tfs.length == 0) {
-                    System.out.println(fixa.getDate());
                     time = new Timestamp(fixa.getDate().getTime());
                 } else {
-                    System.out.println(tfs[0].getDataPagamento());
                     time = new Timestamp(tfs[0].getDataPagamento().getTime());
                     LocalDateTime adjustedDateTime = time.toLocalDateTime();
 
@@ -840,25 +843,21 @@ public class GerirFixa {
                     time = Timestamp.valueOf(adjustedDateTime);
                 }
 
-                boolean first = true;
                 while(curTime.after(time)){
-                    System.out.println();
+
                     JsonObject lateJson = Json.createObjectBuilder()
                             .add("id",fixa.getId_transacao())
                             .add("name", fixa.getName())
-                            .add("value", fixa.getShareValue())
-                            .add("descricao", fixa.getDescrição())
+                            .add("value", fixa.getValue())
+                            .add("shareValue", fixa.getShareValue())
                             .add("categoria", fixa.getCategoriaId_categoria().getName())
                             .add("repeticao", fixa.getRepeticao())
                             .add("tipo", fixa.getTipo())
-                            .add("local", fixa.getLocal())
-                            .add("data_pagamento", time.toString())
-                            .add("status",first)
+                            .add("date", time.toString())
                             .build();
 
                     lateArrayBuilder.add(lateJson);
 
-                    first = false;
                     LocalDateTime adjustedDateTime = time.toLocalDateTime();
 
                     // Adicionar a repetição apropriada
@@ -879,10 +878,8 @@ public class GerirFixa {
 
                     time = Timestamp.valueOf(adjustedDateTime);
                 }
-                System.out.println();
 
             }
-
             t.commit();
             return Json.createObjectBuilder()
                     .add("atrasos", lateArrayBuilder)

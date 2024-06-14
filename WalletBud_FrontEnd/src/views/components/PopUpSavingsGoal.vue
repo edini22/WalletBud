@@ -4,81 +4,32 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="categoryModalLabel">{{ $t('Adicionar Movimento') }}</h5>
+                    <h5 class="modal-title" id="categoryModalLabel">{{ $t('Definir Objetivo Poupança') }}</h5>
                 </div>
 
                 <div class="modal-body">
-                    <div v-if="Type == 'Despesa'" class="nav-wrapper position-relative end-0 mb-4">
-                        <ul class="nav nav-pills nav-fill p-1" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active tab-button" @click="showTab(0)">{{ $t('Informação') }}</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link tab-button" @click="showTab(1)">{{ $t('Dividir Despesa') }}</a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    
-
-                        <div class="mt-2 d-flex">
-                            <label for="sharedExpense" class="mb-0 form-label">{{ $t('Partilhar Despesa') }}</label>
-                            <div class="form-check form-switch ps-0 ms-auto my-auto">
-                                <input class="form-check-input mt-1 ms-auto" type="checkbox" v-model="ShareExpense" />
+                    <!-- Montante -->
+                    <div class="form-group form-row">
+                            <label for="value" class="form-label">{{ $t('Objetivo Poupança') }}:
+                            </label>
+                            <div v-if="valueError === true" class="form-input mb-3">
+                                <material-input class="material-input" id="value" type="number" :value="Value"
+                                    :label=ValueLabel name="value" @update:value="Value = $event" error />
+                            </div>
+                            <div v-if="valueError === false" class="form-input mb-3">
+                                <material-input class="material-input" id="value" type="number" name="value"
+                                    :value="Value" @update:value="Value = $event" success />
+                            </div>
+                            <div v-if="valueError === null" class="form-input mb-3">
+                                <material-input class="material-input" id="value" type="number" :value="Value"
+                                    :label=ValueLabel name="value" @update:value="Value = $event" />
                             </div>
                         </div>
-                        <hr class="horizontal dark my-sm-4" />
 
-                        <div v-if="ShareExpense">
-                            <!-- Shared expense -->
-                            <div class="form-group">
-                                <label for="sharedExpense" class="form-label mb-3">{{ $t('Partilhar despesa com:')
-                                    }}</label>
-                                <div class="form-input mb-3">
-                                    <div v-if="emailError === true && emailErrorStore === null" class="mb-3">
-                                        <material-input class="material-input mb-3" id="email" type="email" :label="$t('Indique o email do utilizador')" name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" error />
-                                    </div>
-
-                                    <div v-if="emailError === true && emailErrorStore !== null" class="mb-3">
-                                        <material-input class="material-input mb-3" id="email" type="email" :label= emailErrorStore name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" error />
-                                    </div>
-                                    
-                                    <div v-if="emailError === false" class="mb-3">
-                                        <material-input class="material-input mb-3" id="email" type="email" name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" success />
-                                    </div>
-
-                                    <div v-if="emailError === null" class="mb-3">
-                                        <material-input class="material-input mb-3" id="email" type="email" name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" :label="$t('Indique o email do utilizador')"/>
-                                    </div>
-
-                                    <p class="btn btn-default bg-gradient-info mb-1" 
-                                    @click="addUser">{{ $t('Adicionar Utilizador') }}</p>
-                                </div>
-                            </div>
-                            <hr class="horizontal dark my-sm-4" />
-                            <MaterialAlert v-if="showAlertUsers" color="danger" @click="hideAlertUsers" class="font-weight-light" dismissible>
-                                <span class="text-sm">{{ $t('Adicione utilizadores para partilhar a despesa') }}</span>
-                            </MaterialAlert>
-                            <div v-if="sharedUsers.length > 0">
-                            <div class="align-items-center text-center">
-                                <label class="form-label align-self-center mb-3"
-                                    style="font-size: large; font-weight: 600;">{{ Value }}€ a dividir com:</label>
-                            </div>
-                            <div class="form-row" v-for="(user, index) in sharedUsers" :key="index">
-                                <div class="form-row">
-                                <material-checkbox :id="'checkbox_' + index" class="font-weight-light" checked
-                                    @click="removeUser(index)">
-                                </material-checkbox>
-                                <span style="font-size: 16px; padding-left: 10px;">{{ user }} </span>
-                                </div>
-                                <span style="font-size: 16px; padding-right: 10px;">{{ calculateShare() }}</span>
-                            </div>
-                        </div>
-                        </div>
+                        <MaterialAlert v-if="showAlert" color="danger" class="font-weight-light" dismissible
+                            @click="alert">
+                            <span class="text-sm">{{ $t('Escolha o tipo de movimento') }}</span>
+                        </MaterialAlert>
                 </div>
 
 
@@ -100,610 +51,77 @@
 import { useI18n } from 'vue-i18n';
 import MaterialAlert from "@/components/MaterialAlert.vue";
 import MaterialInput from "@/components/MaterialInput.vue";
-import MaterialCheckbox from "@/components/MaterialCheckbox.vue";
 //import NavPill from './NavPill.vue';
 //import { transactionStore } from "@/store/transactionStore.js";
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 
 
 export default {
+    components: {
+        MaterialAlert,
+        MaterialInput,
+    },
     setup() {
         const { t } = useI18n();
-        const Description = ref('');
-        const descriptionError = ref(null);
+        
+        const ValueLabel = ref('Indique um valor')
+        const showAlertUsers = ref(false);
         const Value = ref('');
         const valueError = ref(null);
-        const DateM = ref('');
-        const DateError = ref(null);
-        const ValueLabel = ref('Indique um montante')
-        const Place = ref('');
-        const Category = ref('');
-        const CategoryError = ref(null);
-        const Type = ref('');
-        const TypeError = ref(null);
-        const Repetition = ref('');
-        const SendRepetition = ref(0);
-        const repetitionError = ref(null);
-        const Recorrence = ref('');
-        const recorrenceError = ref(null);
-        const Comment = ref(null);
-        const newUserEmail = ref('');
-        const sharedUsers = reactive([]);
-        const shareValue = ref(null);
-        const emailError = ref(null);
-        const emailErrorStore = ref(null);
-        const resetTab = ref(false);
-        const ShareExpense = ref(false);
-        const showAlertUsers = ref(false);
-        let timestamp = ref(null);
-        let isValid = true;
 
-        function validarEmail(email) {
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-            if (!emailRegex.test(email.value)) {
-                emailError.value = true;
-                newUserEmail.value = '';
-                emailErrorStore.value = `${t('Email inválido')}`;
-                isValid = false;
-            } else {
-                emailError.value = false;
-                isValid = true;
-            }
-        }
-
-        function padNumber(num) {
-            return num.toString().padStart(2, '0');
-        }   
-
-        function convertToTimestamp(dateString) {
-            const date = new Date(dateString);
-
-            const formattedDateTime = `${date.getFullYear()}-${padNumber(date.getMonth() + 1)}-${padNumber(date.getDate())} ${padNumber(date.getHours())}:${padNumber(date.getMinutes())}:${padNumber(date.getSeconds())}`;
-
-            return formattedDateTime
-        }
-
-        const addUser = async () => {
-
-            validarEmail(newUserEmail);
-
-            if(isValid == true){
-
-                
-                //fazer post do email para ver se existe
-                /* try {
-
-                } catch (error) {
-                    // Tratamento de erro específico para " ... "
-                    if (error.message === " error message ... ") {
-                        emailErrorStore.value = `${t('Email não registado na plataforma.')}`;
-                        emailError.value = true;
-                        state = true;
-                        alert("Não é possível partilhar despesas com utilizadores não registados!");
-                        return;
-                    } else {
-                        alert("Erro ao registar: " + error.message);
-                    }
-                }
-
-                if(!existe) {
-
-                }else{
-                    sharedUsers.push(newUserEmail);
-                    newUserEmail.value = '';
-                    emailError.value = null;
-                }*/
-
-                sharedUsers.push(newUserEmail.value);
-                newUserEmail.value = '';
-                emailError.value = null;
-            }
-        }
-
-        const checkInputs = function () {
-            if (!Description.value.trim())
-                descriptionError.value = true;
-            else
-                descriptionError.value = false;
+        const checkInput = function () {
 
             if (!Value.value)
                 valueError.value = true;
             else if (Value.value < 0) {
                 valueError.value = true;
-                ValueLabel.value = 'Indique um montante positivo'
+                ValueLabel.value = 'Indique um valor positivo'
             }
             else
                 valueError.value = false;
-
-            if (!DateM.value)
-                DateError.value = true;
-            else
-                DateError.value = false;
-
-            if (!Category.value)
-                CategoryError.value = true;
-            else
-                CategoryError.value = false;
-
-            if (!Type.value)
-                TypeError.value = true;
-            else
-                TypeError.value = false;
-
-            if (!Recorrence.value)
-                recorrenceError.value = true;
-            else
-                recorrenceError.value = false;
-            
-            if(Recorrence.value == 'Recorrente (Fixa)'){
-                if (!Repetition.value)
-                    repetitionError.value = true;
-                else
-                    repetitionError.value = false;
-            }
         }
-
-        const goToShare = function () {
-            checkInputs();
-            if (TypeError.value == false && descriptionError.value == false && DateError.value == false
-                && valueError.value == false && CategoryError.value == false && recorrenceError.value == false){
-                if(Recorrence.value == 'Recorrente (Fixa)'){
-                    if(repetitionError.value == false)
-                        return true;
-                    else
-                        return false
-                }else{
-                    return true;
-                }        
-            }else
-                return false;
-        }
-
-        
-        const clearSharedUsers = function() {
-            if (sharedUsers.length > 0) {
-                console.log('Before clearing:', sharedUsers.value);
-                sharedUsers.splice(0, sharedUsers.length); // Esvaziando o array reativamente
-                console.log('After clearing:', sharedUsers.value);
-            } else {
-                console.error("sharedUsers is undefined");
-            }
-        };
 
         const cancel = function () {
-            console.log(Description.value);
-
-            descriptionError.value = null;
-            Description.value = '';
 
             valueError.value = null;
             Value.value = '';
-
-            DateError.value = null;
-            DateM.value = '';
-
-            TypeError.value = null;
-            Type.value = '';
-
-            recorrenceError.value = null;
-            Recorrence.value = '';
-
-            repetitionError.value = null;
-            Repetition.value = '';
-
-            CategoryError.value = null;
-            Category.value = '';
-
-            Place.value = '';
-
-            resetTab.value = true;
-
-            if(ShareExpense.value == true){
-                ShareExpense.value = false;
-                console.log(sharedUsers.value);
-                clearSharedUsers();
-                console.log("after cleared:" + sharedUsers.value);
-                newUserEmail.value = '';
-            }
-        }
-
-        function transformRepetition(repetition) {
-            if(repetition == 'Todos os dias'){
-                return 1;
-            }else if(repetition == 'Todas as semanas'){
-                return 2;
-            }else if(repetition == 'Todos os meses'){
-                return 3;
-            }else if(repetition == 'Todos os anos'){
-                return 4;
-            }
+            
         }
 
         const add = function () {
 
-            if(Type.value == 'Receita' || Type.value == ''){
-                checkInputs();
-
-                if (TypeError.value == false && descriptionError.value == false && DateError.value == false
-                && valueError.value == false && CategoryError.value == false && recorrenceError.value == false){
-
-                    if(Recorrence.value == 'Recorrente (Fixa)'){
-                        if(repetitionError.value == false){
-                            //faz post de receita fixa
-                            timestamp.value = convertToTimestamp(DateM.value);
-                            SendRepetition.value = transformRepetition(Repetition.value.trim());
-
-                            console.log("data: " + DateM.value);
-                            console.log("timestamp: " + timestamp.value);
-                            console.log(Repetition.value + ": " + SendRepetition.value);
-                            //POST da Receita Não Fixa
-
-                            console.log("post da receita fixa");
-
-                            alert("Receita adicionada com sucesso!");
-
-                            const cancelButton = document.getElementById('cancelButton');
-                            cancelButton.click();
-                        }
-                    }else{
-                        //post de receita não fixa
-                        timestamp.value = convertToTimestamp(DateM.value);
-                        console.log("data: " + DateM.value);
-                        console.log("timestamp: " + timestamp.value);
-                        //POST da Receita Não Fixa
-
-                        console.log("post da receita não fixa");
-
-                        alert("Receita adicionada com sucesso!");
-
-                        const cancelButton = document.getElementById('cancelButton');
-                        cancelButton.click();
-                    }                                     
-                }
-
-            }else{
-                if(showAlertUsers.value == true)
-                    showAlertUsers.value = false;
-
-                if (ShareExpense.value == true && sharedUsers.length === 0) {
-                    console.log("sharedExpense:" + ShareExpense.value)
-                    console.log("sharedUsers length:" + sharedUsers.length)
-                    showAlertUsers.value = true;
-                }else if(ShareExpense.value == true && sharedUsers.length > 0){
-
-                    if(Recorrence.value == 'Recorrente (Fixa)'){
-                        if(repetitionError.value == false){
-
-                            timestamp.value = convertToTimestamp(DateM.value);
-                            SendRepetition.value = transformRepetition(Repetition.value.trim());
-                        
-                            console.log("data: " + DateM.value);
-                            console.log("timestamp: " + timestamp.value);
-                            console.log(Repetition.value + ": " + SendRepetition.value);
-
-                            console.log("post com partilha de despesa");
-
-                            //POST da Despesa
-                            alert("Despesa Fixa Partilhada adicionada com sucesso!")
-                            const cancelButton = document.getElementById('cancelButton');
-                            cancelButton.click();
-                        }
-                    }else{
-                        
-                        timestamp.value = convertToTimestamp(DateM.value);
-                    
-                        console.log("data: " + DateM.value);
-                        console.log("timestamp: " + timestamp.value);
-
-                        console.log("post com partilha de despesa");
-
-                        //POST da Despesa
-                        alert("Despesa Não Fixa Partilhada adicionada com sucesso!")
-                        const cancelButton = document.getElementById('cancelButton');
-                        cancelButton.click();
-                    }
-
-                }else{
-
-                    if(Recorrence.value == 'Recorrente (Fixa)'){
-                        if(repetitionError.value == false){
-                            //DESPESA NÃO PARTILHADA FIXA
-
-                            timestamp.value = convertToTimestamp(DateM.value);
-                            SendRepetition.value = transformRepetition(Repetition.value.trim());
-                        
-                            console.log("data: " + DateM.value);
-                            console.log("timestamp: " + timestamp.value);
-                            console.log(Repetition.value + ": " + SendRepetition.value);
-
-                            //POST ---
-
-                            console.log("post sem partilha de despesa");
-
-                            alert("Despesa Fixa Não Partilhada adicionada com sucesso!")
-                            //chamar cancel() após POST
-                            const cancelButton = document.getElementById('cancelButton');
-                            cancelButton.click();
-                        }
-                    }else{
-                        //DESPESA NÃO PARTILHADA Não FIXA
-                        
-                        //date to timestamp
-                        timestamp.value = convertToTimestamp(DateM.value);
-
-                        console.log("data: " + DateM.value);
-                        console.log("timestamp: " + timestamp.value);
-
-                        //POST da Despesa
-                        console.log("post sem partilha de despesa");
-
-                        alert("Despesa Não Fixa e Não Partilhada adicionada com sucesso!");
-                        //chamar cancel() após POST
-                        const cancelButton = document.getElementById('cancelButton');
-                        cancelButton.click();
-                    }
-                }
-
-            }
+            checkInput();
         }
 
         return {
             t,
             add,
             cancel,
-            checkInputs,
-            goToShare,
-            addUser,
-            clearSharedUsers,
-            descriptionError,
-            Description,
-            Comment,
+            checkInput,
             Value,
             valueError,
-            DateM,
-            DateError,
-            Place,
-            Category,
-            CategoryError,
-            Type,
-            TypeError,
-            Recorrence,
-            recorrenceError,
-            Repetition,
-            repetitionError,
             ValueLabel,
-            ShareExpense,
-            newUserEmail,
-            sharedUsers,
-            shareValue,
-            emailError,
-            emailErrorStore,
-            showAlertUsers,
-            resetTab
+            showAlertUsers
         };
     },
     data() {
         return {
-            expenseCategories: ['Pessoal', 'Alimentação', 'Familiar', 'Casa', 'Entretenimento'],
-            incomeCategories: ['Rendas', 'Salários'],
-            isEditing: [],
-            isEditingIncome: [],
-            editedCategory: '',
-            editedIncomeCategory: '',
-            showErrorExpense: false,
-            showErrorIncome: false,
-            showErrorAdd: false,
-            errorTimeout: null,
-            isFocused: false,
-            isCategoryFocused: false,
-            isTypeFocused: false,
-            isRecorrenceFocused: false,
-            isRepetitionFocused: false,
-            isDateFocused: false,
-            SetBorder: true,
             showAlert: false,
-            showShareTab: false,
-            Tab: 0,
         };
     },
-    components: {
-        MaterialAlert,
-        MaterialInput,
-        MaterialCheckbox,
-    },
     mounted() {
-        document.addEventListener('click', this.handleClickOutsideCategory);
-        document.addEventListener('click', this.handleClickOutsideType);
-        document.addEventListener('click', this.handleClickOutsideRecorrence);
     },
     computed: {
-        displayCategories() {
-            if (this.Type == 'Despesa')
-                return this.expenseCategories;
-            else if (this.Type == 'Receita')
-                return this.incomeCategories;
-            else
-                return '';
-        },
+        
     },
     watch: {
-        Type() {
-            this.Category = '';
-            this.isCategoryFocused = false;
-        },
-        resetTab() {
-            if(this.Tab !== 0)
-            this.showTab(0);
-            this.resetTab = false;
-        }
     },
     methods: {
         hideAlertUsers(){
             this.showAlertUsers = false;
         },
-        calculateShare() {
-            if (this.sharedUsers === 0) return ''; // Evita divisão por zero
-            this.shareValue = this.Value / (this.sharedUsers.length + 1);
-            return `${this.shareValue.toFixed(2)} €`; // Formata o valor com duas casas decimais
-        },
-        removeUser(index) {
-            this.sharedUsers.splice(index, 1);
-        },
-        showTab(index) {
-            this.Tab = index;
-            const tabs = document.querySelectorAll('.tab');
-            const buttons = document.querySelectorAll('.tab-button');
-
-            if (index == 1) {
-                if (this.goToShare() == true) {
-                    tabs.forEach((tab, i) => {
-                        tab.classList.toggle('active', i === index);
-                        buttons[i].classList.toggle('active', i === index);
-                    });
-                    this.showShareTab = !this.showShareTab;
-                    console.log("showShare index 1:" + this.showShareTab);
-                }
-            } else {
-                tabs.forEach((tab, i) => {
-                    tab.classList.toggle('active', i === index);
-                    buttons[i].classList.toggle('active', i === index);
-                });
-                if (this.showShareTab == true)
-                    this.showShareTab = false;
-                console.log("showShare else:" + this.showShareTab);
-            }
-        },
         alert() {
             this.showAlert = !this.showAlert;
-        },
-        selectType(type) {
-            this.Type = type;
-        },
-        selectRecorrence(recorrence) {
-            this.Recorrence = recorrence;
-        },
-        selectRepetition(repetition) {
-            this.Repetition = repetition;
-        },
-        selectCategory(category) {
-            this.Category = category;
-        },
-        handleCategoryFocus() {
-            console.log("antes" + this.isCategoryFocused);
-            this.isCategoryFocused = true;
-            console.log("depois" + this.isCategoryFocused);
-        },
-        handleClickOutsideCategory(event) {
-            const dropdown = this.$refs.categoryDropdown;
-            if (dropdown && !dropdown.contains(event.target)) {
-                if (this.Category == '')
-                    this.isCategoryFocused = false;
-            }
-        },
-        handleClickOutsideType(event) {
-            const dropdown = this.$refs.typeDropdown;
-            if (dropdown && !dropdown.contains(event.target)) {
-                if (this.Type == '')
-                    this.isTypeFocused = false;
-            }
-        },
-        handleClickOutsideRecorrence(event) {
-            const dropdown = this.$refs.recorrenceDropdown;
-            if (dropdown && !dropdown.contains(event.target)) {
-                if (this.Recorrence == '')
-                    this.isRecorrenceFocused = false;
-            }
-        },
-        handleTypeFocus() {
-            this.isTypeFocused = true;
-        },
-        handleRecorrenceFocus() {
-            this.isRecorrenceFocused = true;
-        },
-        handleRepetitionFocus() {
-            this.isRepetitionFocused = true;
-        },
-        handleDateFocus() {
-            this.isDateFocused = true;
-            this.SetBorder = false;
-        },
-        handleDateBlur() {
-            this.isDateFocused = false;
-            this.SetBorder = true;
-        },
-        handleFocus() {
-            //event.target.type = 'date';
-            this.isFocused = true;
-            if (this.DateError !== null)
-                this.DateError = null;
-        },
-        handleBlur() {
-            //event.target.type = 'text';
-            if (this.DateM == '')
-                this.isFocused = false;
-        },
-        addCategory() {
-            if (this.newCategoryName.trim() === '') {
-                this.showErrorAdd = true;
-                clearTimeout(this.errorTimeout);
-                this.errorTimeout = setTimeout(() => {
-                    this.showErrorAdd = false;
-                }, 2000);
-                return;
-            }
-            if (this.newCategoryType === 'Despesa') {
-                this.expenseCategories.push(this.newCategoryName);
-            } else {
-                this.incomeCategories.push(this.newCategoryName);
-            }
-            this.newCategoryName = '';
-        },
-        deleteCategory(type, index) {
-            if (type === 'Despesa') {
-                this.expenseCategories.splice(index, 1);
-            } else {
-                this.incomeCategories.splice(index, 1);
-            }
-        },
-        changeFilter: function (filter) {
-            this.activeFilter = filter;
-        },
-        toggleEditMode(index) {
-            this.isEditing[index] = !this.isEditing[index];
-            this.editedCategory = this.expenseCategories[index];
-        },
-
-        saveCategory(index) {
-            if (this.editedCategory.trim() === '') {
-                this.showErrorExpense = true;
-                clearTimeout(this.errorTimeout);
-                this.errorTimeout = setTimeout(() => {
-                    this.showErrorExpense = false;
-                }, 2000);
-                return;
-            }
-            this.expenseCategories[index] = this.editedCategory;
-            this.isEditing[index] = false;
-
-        },
-
-        toggleIncomeEditMode(index) {
-            this.isEditingIncome[index] = !this.isEditingIncome[index];
-            this.editedIncomeCategory = this.incomeCategories[index];
-        },
-
-        saveIncomeCategory(index) {
-            if (this.editedIncomeCategory.trim() === '') {
-                this.showErrorIncome = true;
-                clearTimeout(this.errorTimeout);
-                this.errorIncome = setTimeout(() => {
-                    this.showErrorIncome = false;
-                }, 2000);
-                return;
-            }
-            this.incomeCategories[index] = this.editedIncomeCategory;
-            this.isEditingIncome[index] = false;
         },
     }
 };

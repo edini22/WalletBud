@@ -935,7 +935,7 @@ export default {
         },
         snackbar(){
             setTimeout(() => {
-                this.snackbar = '';
+                this.snackbar = null;
             }, 2000);
         }
     },
@@ -1043,68 +1043,6 @@ export default {
             //event.target.type = 'text';
             if (this.DateM == '')
                 this.isFocused = false;
-        },
-        addCategory() {
-            if (this.newCategoryName.trim() === '') {
-                this.showErrorAdd = true;
-                clearTimeout(this.errorTimeout);
-                this.errorTimeout = setTimeout(() => {
-                    this.showErrorAdd = false;
-                }, 2000);
-                return;
-            }
-            if (this.newCategoryType === 'Despesa') {
-                this.expenseCategories.push(this.newCategoryName);
-            } else {
-                this.incomeCategories.push(this.newCategoryName);
-            }
-            this.newCategoryName = '';
-        },
-        deleteCategory(type, index) {
-            if (type === 'Despesa') {
-                this.expenseCategories.splice(index, 1);
-            } else {
-                this.incomeCategories.splice(index, 1);
-            }
-        },
-        changeFilter: function (filter) {
-            this.activeFilter = filter;
-        },
-        toggleEditMode(index) {
-            this.isEditing[index] = !this.isEditing[index];
-            this.editedCategory = this.expenseCategories[index];
-        },
-
-        saveCategory(index) {
-            if (this.editedCategory.trim() === '') {
-                this.showErrorExpense = true;
-                clearTimeout(this.errorTimeout);
-                this.errorTimeout = setTimeout(() => {
-                    this.showErrorExpense = false;
-                }, 2000);
-                return;
-            }
-            this.expenseCategories[index] = this.editedCategory;
-            this.isEditing[index] = false;
-
-        },
-
-        toggleIncomeEditMode(index) {
-            this.isEditingIncome[index] = !this.isEditingIncome[index];
-            this.editedIncomeCategory = this.incomeCategories[index];
-        },
-
-        saveIncomeCategory(index) {
-            if (this.editedIncomeCategory.trim() === '') {
-                this.showErrorIncome = true;
-                clearTimeout(this.errorTimeout);
-                this.errorIncome = setTimeout(() => {
-                    this.showErrorIncome = false;
-                }, 2000);
-                return;
-            }
-            this.incomeCategories[index] = this.editedIncomeCategory;
-            this.isEditingIncome[index] = false;
         },
     }
 };

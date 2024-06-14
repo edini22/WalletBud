@@ -6,6 +6,7 @@ export const fixaStore = defineStore('fixa', {
       pendentes: [],
       porPagar: [],
       proximosPagamentos: [],
+      timeline: [],
     }),
     persist: true,
     actions: {
@@ -13,13 +14,12 @@ export const fixaStore = defineStore('fixa', {
           this.pendentes = [];
           this.porPagar = [];
           this.proximosPagamentos = [];
+          this.timeline = [];
         },
 
-        async deletePendente(id) {
+        async deleteOrGiveUp(id,tipo) {
 
-            let transaction = this.pendentes.find(transaction => transaction.id === id);
-
-            const url = `http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/${transaction.transacao}/${id}`;
+            const url = `http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/${tipo}/${id}`;
             const token = localStorage.getItem('token');
             
             const request = {
@@ -68,6 +68,52 @@ export const fixaStore = defineStore('fixa', {
               throw new Error(errorData.message);
             }
         },
+
+        formatTimestamp(timestamp) {
+          const date = new Date(timestamp); // Cria um objeto Date com o timestamp
+    
+          // Função auxiliar para garantir dois dígitos (por exemplo, 09 em vez de 9)
+          const pad = (num) => (num < 10 ? '0' : '') + num;
+    
+          const year = date.getFullYear();
+          const month = pad(date.getMonth() + 1); // Meses em JavaScript são 0-11
+          const day = pad(date.getDate());
+    
+          const hours = pad(date.getHours());
+          const minutes = pad(date.getMinutes());
+          const seconds = pad(date.getSeconds());
+    
+          return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        },
+        async payTransaction(id,date) {
+
+          const req = {
+            IdTransacao: id,
+            date: this.formatTimestamp(date),
+          };
+          alert(req.date);
+          alert(req.IdTransacao);
+          const newtJSON = JSON.stringify(req); 
+
+          const url = `http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/fixa/pay`;
+          const token = localStorage.getItem('token');
+          const request = {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  'Authorization': `Bearer ${token}`
+                },
+              body: newtJSON
+          };
+          const response = await fetch(url, request);
+
+            // Verifica se a resposta não é OK
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(errorData.message);
+            }
+        },
+
         async loadPendentes() {
             const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/pendentes";
             const token = localStorage.getItem('token');
@@ -195,6 +241,50 @@ export const fixaStore = defineStore('fixa', {
               throw error; 
             }
           },
+          async loadTimeline(ano,mes) {
+            const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/timeline/" + ano + "/" + mes;
+            const token = localStorage.getItem('token');
+
+            const request = {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`
+              },
+            };
+          
+            try {
+              const response = await fetch(url, request);
+          
+              if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message);
+              }
+          
+              const data = await response.json();
+              console.log(data);
+          
+              // Mapear os dados recebidos para o formato de categorias desejado
+              // name, sharevalue, data, descricao, tipo, rep
+              //TODO: meter o shared value em vez do value PIKA PIKA PIKA PIKA PIKA
+              this.timeline = data.timeline.map(cat => ({
+                id: cat.id,
+                name: cat.name,
+                date: cat.date,
+                value: cat.value,
+                // shareValue: parseFloat(cat.shareValue.toFixed(2)),
+                categoria: cat.categoria,
+                tipo: cat.tipo,
+                descricao: cat.descricao,
+                repeticao: cat.repeticao,
+                status: cat.status
+              }));
+          
+            } catch (error) {
+              console.error('Erro ao carregar pendentes:', error.message);
+              throw error; 
+            }
+          },  
 
         async editCategory(editedCategory) {
 
@@ -226,4 +316,5 @@ export const fixaStore = defineStore('fixa', {
         //     return this.Categories.find(Category => Category.id === id);
         // }
     }
+    
 });

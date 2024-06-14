@@ -119,6 +119,7 @@
 import SidenavCollapse from "./SidenavCollapse.vue";
 import { userStore } from "@/store/userStore";
 import { categoriesStore } from "@/store/categoriesStore";
+import { fixaStore } from "@/store/fixaStore";
 import { useRouter } from "vue-router";
 import confirm from "@/views/components/ActionConfirm.vue";
 import { useI18n } from "vue-i18n";
@@ -136,6 +137,7 @@ export default {
     const logOut = async () => {
       await store.logOut();
       await categoriesStore().resetCategories();
+      await fixaStore().resetFixas();
       router.push({ name: "SignIn" });
     };
     return {

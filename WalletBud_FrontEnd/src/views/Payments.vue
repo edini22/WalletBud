@@ -58,7 +58,7 @@
                                                 variant="gradient"
                                                 color="secondary"
                                                 class="btn btn-sm small-button"
-                                                @click="openPopup(p.id)"
+                                                @click="openPopup(p.id,p.date)"
                                               >
                                                 {{ $t('Abrir') }}
                                               </material-button>
@@ -221,7 +221,8 @@
             <h6>Valor Total: {{ transa.value }}€</h6>
             <h6 v-if="transa.value != transa.shareValue">Valor Partilhado: {{ transa.shareValue }}€</h6>
             <h6>Periodicidade: {{ getRepetitionText(transa.repeticao) }}</h6>
-            <h6>Data: {{ transa.date }}</h6>
+            <h6>Data Criação: {{ transa.date }}</h6>
+            <h6>Data: {{ dateP }}</h6>
             <h6>Categoria: {{ transa.categoria }}</h6>
             <h6>Status: {{ transa.status }}</h6>
             <h6>Tipo: {{ transa.tipo }}</h6>
@@ -229,45 +230,48 @@
             <h6>Utilizadores: {{ transa.users }}</h6>
           </div>
         </div>
-        <div class="modal-footer d-flex justify-content-between">
-          <div v-if="transa && transa.users && transa.users.length > 0">
-            <div v-if="transa.users[0].id == user.id">
-              <material-button
-                variant="gradient"
-                color="danger"
-                class="btn btn-md"
-                @click="popupReject = true; popup = false">
-                {{$t('Eliminar')}}
-              </material-button>
-              <material-button
-                variant="gradient"
-                color="info"
-                class="btn btn-md"
-                @click="popupAccept = true; popup = false">
-                {{$t('Pagar')}}
-              </material-button>
-            </div>
-            <div v-else>
-              <material-button
-                variant="gradient"
-                color="danger"
-                class="btn btn-md"
-                @click="PIKAPAU">
-                {{$t('Sair')}}
-              </material-button>
-            </div>
+        <div v-if="transa && transa.users && transa.users.length > 0" >
+          <div v-if="transa.users[0].id == user.id" class="modal-footer d-flex justify-content-between" >
+            <material-button
+              variant="gradient"
+              color="danger"
+              class="btn btn-md"
+              @click="popupReject = true; popup = false">
+              {{$t('Eliminar')}}
+            </material-button>
+            <material-button
+              variant="gradient"
+              color="info"
+              class="btn btn-md"
+              @click="popupAccept = true; popup = false">
+              {{$t('Pagar')}}
+            </material-button>
+          </div>
+          <div v-else class="modal-footer d-flex justify-content-end">
+            <material-button
+              variant="gradient"
+              color="danger"
+              class="btn btn-md"
+              @click="popupReject = true; popup = false;leave = true">
+              {{$t('Sair')}}
+            </material-button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-    <!--PopUp Rejeitar-->
+    <!--PopUp Eliminar-->
     <div v-if="popupReject" class="modal fade show" style="display: block;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header d-flex justify-content-between align-items-center">
-                    <h5 class="modal-title">Tem a certeza que deseja eliminar o grupo?</h5>
+                    <div v-if="leave === true">
+                      <h5 class="modal-title">Tem a certeza que deseja sair do grupo?</h5>
+                    </div>
+                    <div v-else>
+                      <h5 class="modal-title">Tem a certeza que deseja eliminar o grupo?</h5>
+                    </div>
                 </div>
                 <div class="modal-body text-center">
                     <p>A sua ação é irreversível!</p>
@@ -277,14 +281,14 @@
                         variant="gradient"
                         color="secondary"
                         class="btn btn-md "
-                        @click="popupReject = false; popup = true">
+                        @click="popupReject = false; popup = true; leave = false;">
                         {{$t('Voltar')}}
                     </material-button>
                     <material-button
                         variant="gradient"
                         color="info"
                         class="btn btn-md "
-                        @click= "popupReject = false; snackbar = 'successReject'; popup = false;">
+                        @click= "deleteTransacao(); popupReject = false;  popup = false;leave = false;">
                         {{$t('Confirmar')}}
                     </material-button>
                 </div>
@@ -314,7 +318,7 @@
                         variant="gradient"
                         color="info"
                         class="btn btn-md "
-                        @click= "popupAccept = false; snackbar = 'successAccept'; popup = false;">
+                        @click= "payTransaction();popupAccept = false; popup = false;">
                         {{$t('Confirmar')}}
                     </material-button>
                 </div>
@@ -337,19 +341,39 @@
                     </material-button>
                 </div>
                 <div class="modal-body">
-                  <h6>Descrição: {{ selectedPendente.descricao }}</h6>
-                  <h6>Valor Total: {{ selectedPendente.value }}€</h6>
-                  <h6 v-if="selectedPendente.value != selectedPendente.shareValue">Valor Partilhado: {{ selectedPendente.shareValue }}€</h6>
-                  <h6>Periodicidade: {{ getRepetitionText(selectedPendente.repeticao) }}</h6>
-                  <h6>Data: {{ selectedPendente.date }}</h6>
-                  <h6>Categoria: {{ selectedPendente.categoria }}</h6>
-                  <h6>Status: {{ selectedPendente.status }}</h6>
-                  <h6>Tipo: {{ selectedPendente.tipo }}</h6>
-                  <h6>Local: {{ selectedPendente.local }}</h6>
-                  <h6>Utilizadores: {{ selectedPendente.users }}</h6>
+                  
+                  <div class="nav-wrapper position-relative end-0 mb-4">
+                    <ul class="nav nav-pills nav-fill p-1" role="tablist">
+                      <li class="nav-item">
+                          <a class="nav-link tab-button" :class="{ active: infos }" @click="infos = true; participantes = false">{{ $t('Informação') }}</a>
+                      </li>
+
+                      <li class="nav-item">
+                          <a class="nav-link tab-button" :class="{ active: participantes }" @click="participantes = true; infos = false">{{ $t('Participantes') }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div v-if="infos" >
+                    <h6>Descrição: {{ selectedPendente.name }}</h6>
+                    <h6>Valor Total: {{ selectedPendente.value }}€</h6>
+                    <h6 v-if="selectedPendente.value != selectedPendente.shareValue">Valor Partilhado: {{ selectedPendente.shareValue }}€</h6>
+                    <h6>Periodicidade: {{ getRepetitionText(selectedPendente.repeticao) }}</h6>
+                    <h6>Data: {{ selectedPendente.date }}</h6>
+                    <h6>Categoria: {{ selectedPendente.categoria }}</h6>
+                    <h6>Status: {{ selectedPendente.status }}</h6>
+                    <h6>Tipo: {{ selectedPendente.tipo }}</h6>
+                    <h6>Local: {{ selectedPendente.local }}</h6>
+                  </div>
+                  <div v-if="participantes">
+                    <div v-for="(user, index) in selectedPendente.users" :key="index">
+                      <h6>Utilizador: {{ user.name }}</h6>
+                      <h6>Email: {{ user.email }}</h6>
+                      <h6 v-if="user.confirma === 1 ">Estado: Aceite</h6>
+                      <h6 v-if="user.confirma === 0 ">Estado: Em espera</h6>
+                  </div>
                 </div>
-                <div v-if="acceptorRejectPendenteButton() === true" class="modal-footer d-flex justify-content-between">
-                    <div v-if="selectedPendente.users[0].id != user.id">
+                <div v-if="acceptorRejectPendenteButton() === true" >
+                    <div v-if="selectedPendente.users[0].id != user.id" class="modal-footer d-flex justify-content-between">
                       <material-button
                           variant="gradient"
                           color="danger"
@@ -365,7 +389,7 @@
                           {{$t('Aceitar')}}
                       </material-button>
                     </div>
-                    <div v-else>
+                    <div v-else class="modal-footer d-flex justify-content-end">
                       <material-button
                           variant="gradient"
                           color="danger"
@@ -378,6 +402,7 @@
             </div>
         </div>
     </div>
+  </div>
 
     <!--PopUp Detalhes Rejeitar-->
     <div v-if="popupReject2" class="modal fade show" style="display: block;">
@@ -504,17 +529,22 @@ export default {
     const popupDetails = ref(false);
     const popupReject2 = ref(false);
     const popupAccept2 = ref(false);
+    const infos = ref(true);
+    const participantes = ref(false);
+    const leave = ref(false);
+
     const store = fixaStore();
     const user = userStore();
     const selectedPendenteId = ref(null);
     const transa = ref(null);
+    const dateP = ref(null);
 
     const loadPendentes = async () => {
       try {
         await store.loadPendentes();
         console.log("Pendentes carregados:", store.pendentes);
       } catch (err) {
-        alert("Erro -> " + err.message);
+        alert("Erro loadPendentes-> " + err.message);
       }
     };
 
@@ -523,7 +553,7 @@ export default {
         await store.loadPorPagar();
         console.log("Por pagar carregados:", store.porPagar);
       } catch (err) {
-        alert("Erro -> " + err.message);
+        alert("Erro loadPorPagar-> " + err.message);
       }
     };
     const loadProximosPagamentos = async () => {
@@ -531,7 +561,7 @@ export default {
         await store.loadProximosPagamentos();
         console.log("Proximos pagamentos :", store.proximosPagamentos);
       } catch (err) {
-        alert("Erro -> " + err.message);
+        alert("Erro loadProximosPagamentos-> " + err.message);
       }
     };
 
@@ -580,13 +610,26 @@ export default {
     //eliminar
     const deletePendente = async () => {
       try {
-        await store.deletePendente(selectedPendenteId.value);
+        await store.deleteOrGiveUp(selectedPendenteId.value, selectedPendente.value.transacao);
         popupDetails.value = false;
-        alert("Pedido eliminado com sucesso!");
         loadPendentes();
         
       } catch (err) {
-        alert("Erro -> " + err.message);
+        alert("Erro DeletePendente-> " + err.message);
+      }
+    };
+
+    const deleteTransacao = async () => {
+      try {
+        await store.deleteOrGiveUp(transa.value.id,"fixa");
+        snackbar.value = 'successReject';
+        loadPendentes();
+        loadPorPagar();
+        loadProximosPagamentos();
+        
+      } catch (err) {
+        alert("Erro DeleteTransacao-> " + err.message);
+        // snackbar.value = 'failureReject'; //TODO: VER ISTO 
       }
     };
 
@@ -597,11 +640,26 @@ export default {
         popupDetails.value = false;
         loadPendentes();
       } catch (err) {
-        alert("Erro -> " + err.message);
+        alert("Erro acceptReject-> " + err.message);
       }
     };
 
-    const openPopup = async (id) => {
+    //aceitar ou recusar
+    const payTransaction = async () => {
+      try {
+        await store.payTransaction(transa.value.id,dateP.value);
+        popupDetails.value = false;
+        loadPendentes();
+        loadPorPagar();
+        loadProximosPagamentos();
+        snackbar.value = 'successAccept';
+      } catch (err) {
+        alert("Erro payTransaction-> " + err.message);
+      }
+    };
+
+    const openPopup = async (id,data) => {
+      dateP.value = data;
       popup.value = true;
       const t = store.proximosPagamentos.find(p => p.id === id);
 
@@ -631,8 +689,7 @@ export default {
         transa.value = data;
 
       } catch (error) {
-        console.error('Erro ao carregar pendentes:', error.message);
-        throw error;
+        alert('Erro ao carregar transacao:', error.message);
       }
     };
 
@@ -663,7 +720,9 @@ export default {
       getRepetitionText,
       store,
       user,
+      dateP,
       transa,
+      deleteTransacao,
       selectedPendenteId,
       openDetailsPopup,
       selectedPendente,
@@ -671,7 +730,11 @@ export default {
       deletePendente,
       acceptorReject,
       loadProximosPagamentos,
+      payTransaction,
       openPopup,
+      infos,
+      participantes,
+      leave,
     };
   },
 };
@@ -708,27 +771,48 @@ export default {
     }
 
     .small-button {
-        padding: 0.30rem 0.6rem;
-        font-size: 0.70rem; 
+      padding: 0.30rem 0.6rem;
+      font-size: 0.70rem; 
     }
 
     .padding-row td{
-        padding-top: 10px;
-        padding-bottom: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
     }
 
     .modal {
-        display: none;
-        position: fixed;
-        z-index: 1050;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        outline: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        transition-duration: 0.2s;
+      display: none;
+      position: fixed;
+      z-index: 1050;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      outline: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      transition-duration: 0.2s;
     }
+
+    .tab {
+    display: none;
+  }
+
+  .tab.active {
+      display: block;
+  }
+
+  .nav-pills .nav-link.active,
+  .nav-pills .show>.nav-link {
+      color: #344767;
+      background-color: #fff;
+      animation: 0.2s ease;
+  }
+
+  .nav-link {
+      display: block;
+      padding: 0.5rem 1rem;
+      transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  }
 
 </style>

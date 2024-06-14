@@ -215,7 +215,7 @@
             {{$t('Voltar')}}
           </material-button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body scroll-container3">
           <div v-if="transa">
             <h6>Descrição: {{ transa.descricao }}</h6>
             <h6>Valor Total: {{ transa.value }}€</h6>
@@ -228,6 +228,29 @@
             <h6>Tipo: {{ transa.tipo }}</h6>
             <h6>Local: {{ transa.local }}</h6>
             <h6>Utilizadores: {{ transa.users }}</h6>
+          </div>
+          <!-- <div v-if="comments && comments.length > 0" class="modal-footer d-block justify-content-center"> -->
+          <div v-if="comments" class="modal-footer d-block justify-content-center">
+            <div class="align-items-center text-center">
+              <i class="material-icons align-self-center comment"
+                  style="max-width: 24px; color: #344767">insert_comment_outlined</i>
+              <h5>{{ $t('Comentários') }}</h5>
+              
+            </div>
+          </div>
+          <div class="justify-content-left">
+            <div v-for="(c, index) in comments" :key="index" class="mb-3">
+              <h6>{{c.user_email + ' ' + c.timestamp + ' ' + c.descricao }}</h6>
+            </div>
+            <div class="row mb-3">
+              <div class="col-9">
+                <material-input class="material-input w-100" id="comment" type="text" :value="Comment"
+                  :label="$t('Escreva o seu comentário')" @update:value="Comment = $event" />
+              </div>
+              <div class="col-3 d-flex align-items-center">
+                <p class="btn btn-default bg-gradient-info mb-1 w-100" @click="addComment(transa.id)">{{ $t('Comentar') }}</p>
+              </div>
+            </div>
           </div>
         </div>
         <div v-if="transa && transa.users && transa.users.length > 0" >
@@ -511,6 +534,7 @@
 <script>
 import MaterialButton from "@/components/MaterialButton.vue";
 import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
+import MaterialInput from "@/components/MaterialInput.vue";
 import { ref, computed, onMounted } from 'vue';
 import { fixaStore } from "@/store/fixaStore";
 import { userStore } from "@/store/userStore";
@@ -520,6 +544,7 @@ export default {
   components: {
     MaterialButton,
     MaterialSnackbar,
+    MaterialInput,
   },
   setup() {
     const snackbar = ref(false);
@@ -538,6 +563,8 @@ export default {
     const selectedPendenteId = ref(null);
     const transa = ref(null);
     const dateP = ref(null);
+    const comments = ref(null);
+    const Comment = ref(null);
 
     const loadPendentes = async () => {
       try {
@@ -639,6 +666,8 @@ export default {
         await store.acceptorRejectPendente(selectedPendenteId.value,state);
         popupDetails.value = false;
         loadPendentes();
+        loadPorPagar();
+        loadProximosPagamentos();
       } catch (err) {
         alert("Erro acceptReject-> " + err.message);
       }
@@ -658,12 +687,49 @@ export default {
       }
     };
 
+    const addComment = async (id) => {
+      const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/comment/add";
+      const token = localStorage.getItem('token');
+      
+      const request = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': "Bearer " + token
+        },
+        body: JSON.stringify({
+          idTransacao: id,
+          comentario: Comment.value,
+        }),
+      };
+
+      try {
+        const response = await fetch(url, request);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message);
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        Comment.value = "";
+        
+        openPopup(id,dateP.value);
+
+      } catch (error) {
+        alert('Erro ao adicionar comentario:', error.message);
+      }
+    };  
+
     const openPopup = async (id,data) => {
       dateP.value = data;
       popup.value = true;
       const t = store.proximosPagamentos.find(p => p.id === id);
 
       const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/fixa/"+ t.tipo + "/get/" + t.id;
+      const url_comments = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/comment/list/" + t.id;
       const token = localStorage.getItem('token');
 
       const request = {
@@ -687,6 +753,18 @@ export default {
 
         // Mapear os dados recebidos para o formato de categorias desejado
         transa.value = data;
+
+        const response_comments = await fetch(url_comments, request);
+
+        if (!response_comments.ok) {
+          const errorData = await response_comments.json();
+          throw new Error(errorData.message);
+        }
+
+        const data_comments = await response_comments.json();
+        console.log(data_comments);
+
+        comments.value = data_comments.comentarios;
 
       } catch (error) {
         alert('Erro ao carregar transacao:', error.message);
@@ -722,6 +800,8 @@ export default {
       user,
       dateP,
       transa,
+      comments,
+      Comment,
       deleteTransacao,
       selectedPendenteId,
       openDetailsPopup,
@@ -735,6 +815,7 @@ export default {
       infos,
       participantes,
       leave,
+      addComment,
     };
   },
 };
@@ -746,15 +827,15 @@ export default {
       overflow-y: auto;
     }
   
-    .scroll-container::-webkit-scrollbar, .scroll-container2::-webkit-scrollbar{
+    .scroll-container::-webkit-scrollbar, .scroll-container2::-webkit-scrollbar, .scroll-container3::-webkit-scrollbar{
         width: 8px;
     }
     
-    .scroll-container::-webkit-scrollbar-track, .scroll-container2::-webkit-scrollbar-track{
+    .scroll-container::-webkit-scrollbar-track, .scroll-container2::-webkit-scrollbar-track, .scroll-container3::-webkit-scrollbar-track{
         border-radius: 10px;
     }
     
-    .scroll-container::-webkit-scrollbar-thumb, .scroll-container2::-webkit-scrollbar-thumb{
+    .scroll-container::-webkit-scrollbar-thumb, .scroll-container2::-webkit-scrollbar-thumb, .scroll-container3::-webkit-scrollbar-thumb{
         background: #888;
         border-radius: 10px;
     }
@@ -762,6 +843,37 @@ export default {
     .scroll-container2 {
       height: 32vh;
       overflow-y: auto;
+    }
+    
+    .scroll-container3 {
+      height: 70vh;
+      overflow-y: auto;
+    }
+
+    .form-input {
+        flex: 2;
+    }
+
+    .material-input {
+        width: 100%;
+        position: relative;
+    }
+
+    .material-input input {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1.5rem;
+        color: #495057;
+        background-color: transparent;
+        background-clip: padding-box;
+        border: 1px solid #d2d6da;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 0.375rem;
+        transition: 0.2s ease;
     }
   
     .table-head-fixed {

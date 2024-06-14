@@ -553,11 +553,11 @@ public class Transacao {
     }
 
     @POST
-    @Path("/{transacao}/pay")
+    @Path("/fixa/pay")
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response payTransaction(@PathParam("transacao") String transacao, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response payTransaction( String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -565,36 +565,19 @@ public class Transacao {
         JsonObject jsonObject = reader.readObject();
         reader.close();
         try {
-
             int IdTransacao = jsonObject.getInt("IdTransacao");
-            String dateNow = jsonObject.getString("dateNow");
             String date = jsonObject.getString("date");
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime dateTime = LocalDateTime.parse(dateNow, formatter);
-            Timestamp time_dateNow = Timestamp.valueOf(dateTime);
 
-            dateTime = LocalDateTime.parse(date, formatter);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            Timestamp time_dateNow = new Timestamp(System.currentTimeMillis());
+
+            LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
             Timestamp time_date = Timestamp.valueOf(dateTime);
 
-
-            int cond = -1;
-
-            if (transacao.equals("fixa")) {
-                cond = gerirFixa.payFixa(email, IdTransacao, time_dateNow, time_date);
-            }else {
-                JsonObject jsonResponse = Json.createObjectBuilder()
-                        .add("message", "Tipo de Transacao nao existe!")
-                        .build();
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(jsonResponse.toString())
-                        .type(MediaType.APPLICATION_JSON)
-                        .build();
-            }
+            int cond = gerirFixa.payFixa(email, IdTransacao, time_dateNow, time_date);
 
             if (cond == 0) {
-                JsonObject jsonResponse = null;
-
-                jsonResponse = Json.createObjectBuilder()
+                JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Transacao paga com sucesso!")
                         .build();
 
@@ -810,7 +793,7 @@ public class Transacao {
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-
+            System.out.println("return" + movimentos.toString());
             return Response.ok(movimentos.toString(), MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

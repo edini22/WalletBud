@@ -787,10 +787,11 @@ public class GerirFixa {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
 
-            String condition = "UserId_user = " + user.getId_user();
+            String condition = "UserId_user = " + user.getId_user() + " AND Status = TRUE";
 
             Fixa[] fixas = FixaDAO.listFixaByQuery(condition, null);
 
+            condition = "UserId_user = " + user.getId_user();
             TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
             ArrayList<Fixa> transacoes_id = new ArrayList<>(Arrays.asList(fixas));
 
@@ -798,7 +799,7 @@ public class GerirFixa {
                 try {
                     Fixa f = FixaDAO.getFixaByORMID(transacaoPartilhada.getUsertransacaoId().getId_transacao());
 
-                    if (f != null) {
+                    if (f != null && f.getStatus()) {
                         transacoes_id.add(f);
                     }
                 } catch (Exception e) {
@@ -897,10 +898,11 @@ public class GerirFixa {
         try {
             User user = gerirUtilizador.getUserByEmail(email);
 
-            String condition = "UserId_user = " + user.getId_user();
+            String condition = "UserId_user = " + user.getId_user() + " AND Status = TRUE";
 
             Fixa[] fixas = FixaDAO.listFixaByQuery(condition, null);
 
+            condition = "UserId_user = " + user.getId_user();
             TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
             ArrayList<Fixa> transacoes_id = new ArrayList<>(Arrays.asList(fixas));
 
@@ -908,7 +910,7 @@ public class GerirFixa {
                 try {
                     Fixa f = FixaDAO.getFixaByORMID(transacaoPartilhada.getUsertransacaoId().getId_transacao());
 
-                    if (f != null) {
+                    if (f != null && f.getStatus()) {
                         transacoes_id.add(f);
                     }
                 } catch (Exception e) {
@@ -927,10 +929,8 @@ public class GerirFixa {
                 TransacaoFixa[] tfs = TransacaoFixaDAO.listTransacaoFixaByQuery(condition, orederby);
                 Timestamp time ;
                 if (tfs.length == 0) {
-                    System.out.println(fixa.getDate());
                     time = new Timestamp(fixa.getDate().getTime());
                 } else {
-                    System.out.println(tfs[0].getDataPagamento());
                     time = new Timestamp(tfs[0].getDataPagamento().getTime());
                     LocalDateTime adjustedDateTime = time.toLocalDateTime();
 
@@ -954,18 +954,15 @@ public class GerirFixa {
                     time = Timestamp.valueOf(adjustedDateTime);
                 }
 
-
-                System.out.println();
                 JsonObject lateJson = Json.createObjectBuilder()
                         .add("id",fixa.getId_transacao())
                         .add("name", fixa.getName())
-                        .add("value", fixa.getShareValue())
-                        .add("descricao", fixa.getDescrição())
+                        .add("value", fixa.getValue())
+                        .add("sharevalue", fixa.getShareValue())
                         .add("categoria", fixa.getCategoriaId_categoria().getName())
                         .add("repeticao", fixa.getRepeticao())
                         .add("tipo", fixa.getTipo())
-                        .add("local", fixa.getLocal())
-                        .add("data_pagamento", time.toString())
+                        .add("date", time.toString())
                         .build();
 
                 lateArrayBuilder.add(lateJson);

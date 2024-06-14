@@ -235,7 +235,7 @@ public class GerirTransacaoPartilhada {
                     time = new Timestamp(fixa.getDate().getTime());
                 }
 
-                if(fixa.getRepeticao() == 1 || (fixa.getRepeticao() == 2 && time.before(fixa.getDate())) || fixa.getRepeticao() == 3 || fixa.getRepeticao() == 4){
+                if(fixa.getRepeticao() == 1 || (fixa.getRepeticao() == 2 && time.equals(fixa.getDate())) || fixa.getRepeticao() == 3 || fixa.getRepeticao() == 4){
                     while (time.getMonth() <= fixa.getDate().getMonth()) {
                         if (fixa.getRepeticao() == 3) { //Mensalmente
                             time = new Timestamp(fixa.getDate().getTime());
@@ -359,10 +359,29 @@ public class GerirTransacaoPartilhada {
                     arrayFixas.add(fixasMap);
 
                 } else  {
-                    for (Map<String, Object> pagamento: arrayFixas) {
-                        if (pagamento.get("date").toString().equals(transacao.get("date").toString())) {
-                            pagamento.replace("status", true);
-                            break;
+//                    Fixa f = FixaDAO.getFixaByORMID((int) transacao.get("Id"));
+                    TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID((int) transacao.get("Id"));
+                    Fixa f = tf.getTransacaofixa_ID();
+                    if(f.getOwner_id() == null){
+                        Map<String, Object> fixasMap = new HashMap<>();
+                        fixasMap.put("id", f.getId_transacao());
+                        fixasMap.put("name", f.getName());
+                        fixasMap.put("date", tf.getDataPagamento().toString());
+                        fixasMap.put("value", f.getShareValue());
+                        fixasMap.put("descricao", f.getDescrição());
+                        fixasMap.put("categoria", f.getCategoriaId_categoria().getName());
+                        fixasMap.put("tipo", f.getTipo());
+                        fixasMap.put("local", f.getLocal());
+                        fixasMap.put("repeticao", f.getRepeticao());
+                        fixasMap.put("status", true);
+
+                        arrayFixas.add(fixasMap);
+                    } else{
+                        for (Map<String, Object> pagamento: arrayFixas) {
+                            if (pagamento.get("date").toString().equals(transacao.get("date").toString())) {
+                                pagamento.replace("status", true);
+                                break;
+                            }
                         }
                     }
 
@@ -455,6 +474,7 @@ public class GerirTransacaoPartilhada {
             for(Map<String, Object> transacao : pendentes) {
 
                 if (transacao.get("Discriminator").equals("Unica")) {
+                    System.out.println((int) transacao.get("Id"));
                     Unica unica = UnicaDAO.getUnicaByORMID((int) transacao.get("Id"));
                     String condition = "TransacaoId_transacao = " + unica.getId_transacao();
                     TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
@@ -540,7 +560,6 @@ public class GerirTransacaoPartilhada {
 
                 }
             }
-
             t.commit();
             return Json.createObjectBuilder()
                     .add("pendentes", arrayBuilder)

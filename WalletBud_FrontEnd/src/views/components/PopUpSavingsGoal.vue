@@ -12,9 +12,13 @@
                     <div class="form-group form-row">
                             <label for="value" class="form-label">{{ $t('Objetivo Poupança') }}:
                             </label>
-                            <div v-if="valueError === true" class="form-input mb-3">
+                            <div v-if="valueError === true && valueNegative === null" class="form-input mb-3">
                                 <material-input class="material-input" id="value" type="number" :value="Value"
                                     :label="$t('Indique um valor')" name="value" @update:value="Value = $event" error />
+                            </div>
+                            <div v-if="valueError === true && valueNegative === true" class="form-input mb-3">
+                                <material-input class="material-input" id="value" type="number" :value="Value"
+                                    :label="$t('Indique um valor positivo')" name="value" @update:value="Value = $event" error />
                             </div>
                             <div v-if="valueError === false" class="form-input mb-3">
                                 <material-input class="material-input" id="value" type="number" name="value"
@@ -29,10 +33,10 @@
 
 
                 <div class="modal-footer mt-0">
-                    <p class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Definir') }}</p>
-                    <p id="cancelSavings" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal" @click="cancel">{{
+                    <button class="btn btn-default bg-gradient-info mb-1" :disabled="isLoading" @click="add">{{ $t('Definir') }}</button>
+                    <button id="cancelSavings" class="btn btn-default bg-gradient-primary mb-1" :disabled="isLoading" data-bs-dismiss="modal" @click="cancel">{{
                         $t('Cancelar') }}
-                    </p>
+                    </button>
                 </div>
             </div>
         </div>
@@ -43,7 +47,7 @@
 
 import { useI18n } from 'vue-i18n';
 import MaterialInput from "@/components/MaterialInput.vue";
-import { ref } from 'vue';
+import { ref, nextTick  } from 'vue';
 import { userStore } from "@/store/userStore";
 
 
@@ -56,7 +60,8 @@ export default {
         
         const Value = ref('');
         const valueError = ref(null);
-
+        const valueNegative = ref(null);
+        const isLoading = ref(false);
         const userS = userStore();
 
         const checkInput = function () {
@@ -65,9 +70,13 @@ export default {
                 valueError.value = true;
             else if (Value.value < 0) {
                 valueError.value = true;
+                valueNegative.value = true;
+                Value.value = '';
             }
-            else
+            else{
                 valueError.value = false;
+                valueNegative.value = null;
+            }  
         }
 
         const cancel = function () {
@@ -78,12 +87,25 @@ export default {
         }
 
         const updateObj = async (user) => {
+            isLoading.value = true;
             try {
                 await userS.updateEditedUser(user);
                 await userS.getUser();
 
+                const event = new CustomEvent('show-snackbar', { detail: 'successSavings' });
+                document.dispatchEvent(event);
+
             } catch (err) {
-                valueError.value = true;
+                
+                const event = new CustomEvent('show-snackbar', { detail: 'errorSavings' });
+                document.dispatchEvent(event);
+
+            } finally {
+                isLoading.value = false;
+                await nextTick();
+
+                const cancelButton = document.getElementById('cancelSavings');
+                cancelButton.click();
             }
         };
 
@@ -95,12 +117,7 @@ export default {
                     objetivo: Value.value,
                 };
                 updateObj(user);
-
-                const cancelButton = document.getElementById('cancelSavings');
-                cancelButton.click();
             }
-
-            
         }
 
         return {
@@ -109,29 +126,16 @@ export default {
             cancel,
             checkInput,
             Value,
-            valueError
+            valueError,
+            isLoading,
+            valueNegative
         };
     },
     data() {
         return {
-            showAlert: false,
+            
         };
     },
-    mounted() {
-    },
-    computed: {
-        
-    },
-    watch: {
-    },
-    methods: {
-        hideAlertUsers(){
-            this.showAlertUsers = false;
-        },
-        alert() {
-            this.showAlert = !this.showAlert;
-        },
-    }
 };
 </script>
 
@@ -149,50 +153,6 @@ export default {
     align-items: center;
     position: relative;
     flex: 1;
-}
-
-.arrow-icon {
-    position: absolute;
-    right: 10px;
-    pointer-events: none;
-    color: #344767;
-}
-
-.dropdown-focused-null {
-    border-color: #1a73e8 !important;
-    box-shadow: inset 0 1px #1a73e8,
-        inset 1px 0 #1a73e8,
-        inset -1px 0 #1a73e8,
-        inset 0 -1px #1a73e8 !important;
-}
-
-.dropdown-focused-error {
-    border: 1px solid #f44335 !important;
-    box-shadow: inset 0 1px #f44335,
-        inset 1px 0 #f44335,
-        inset -1px 0 #f44335,
-        inset 0 -1px #f44335 !important;
-    border-radius: 0.375rem;
-}
-
-.dropdown-menu {
-    background-image: linear-gradient(195deg, #49a3f1 0%, #1a73e8 100%);
-    color: white;
-}
-
-.dropdown .dropdown-menu:before {
-    color: #3d96ef;
-}
-
-.dropdown-item {
-    margin-top: 3px;
-    color: #eeeeee;
-    background-color: #ffffff14;
-}
-
-.dropdown-item:hover {
-    background-color: #ffffff;
-    color: #495057
 }
 
 .form-row {
@@ -232,62 +192,5 @@ export default {
     appearance: none;
     border-radius: 0.375rem;
     transition: 0.2s ease;
-}
-
-.form-control-date {
-    width: 100%;
-    padding-right: 2.5rem;
-    /* Espaço para o ícone */
-}
-
-/* Estilo para o ícone de calendário */
-.date-input-wrapper {
-    position: relative;
-}
-
-.date-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    color: #344767;
-    z-index: 2;
-}
-
-.border {
-    border: 1px solid #d2d6da;
-    border-radius: 0.375rem;
-}
-
-.tab {
-    display: none;
-}
-
-.tab.active {
-    display: block;
-}
-
-.nav-pills .nav-link.active,
-.nav-pills .show>.nav-link {
-    color: #344767;
-    background-color: #fff;
-    animation: 0.2s ease;
-}
-
-.nav-link {
-    display: block;
-    padding: 0.5rem 1rem;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
-}
-
-.tab-content {
-    min-height: 400px;
-    /* Define uma altura mínima para as abas */
-}
-
-.ms-auto {
-    margin-left: auto !important;
-    margin-right: 10px;
 }
 </style>

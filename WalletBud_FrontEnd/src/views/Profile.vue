@@ -29,16 +29,12 @@
         </div>
       </div>
       <div class="row">
-        <div class="mt-3 row">  
-          
-          
-          <div class="col-12 col-md-6 col-xl-4 mt-md-0 mt-4 position-relative">
+        <div class="mt-3 row">
             
             <profile-info-card 
               :info="profileInfo" 
               @saveProfile="saveProfile" 
             />
-          </div>
 
         </div>
       </div>

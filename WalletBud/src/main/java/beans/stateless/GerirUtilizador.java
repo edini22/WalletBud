@@ -5,8 +5,7 @@ import jakarta.ejb.Stateless;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
 import org.orm.PersistentException;
-import org.orm.PersistentTransaction;
-import wb.walletbud.AASICPersistentManager;
+import org.orm.PersistentSession;
 import wb.walletbud.User;
 import wb.walletbud.UserDAO;
 
@@ -31,14 +30,12 @@ public class GerirUtilizador {
         return hexString.toString();
     }
 
-    public boolean createUser(String name, String password, String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public boolean createUser(PersistentSession session, String name, String password, String email) throws PersistentException {
         try {
 
-            User u = getUserByEmail(email);
+            User u = getUserByEmail(session, email);
 
             if (u != null) {
-                t.rollback();
                 return false;
             }
 
@@ -56,29 +53,24 @@ public class GerirUtilizador {
             UserDAO.save(user);
 
             if(gerirCategoria.createDefaultCategorias(user) != 0){
-                t.rollback();
                 return false;
             }
 
-            t.commit();
             System.out.println("User inserido!");
             return true;
         } catch (Exception e) {
-            t.rollback();
             System.out.println("User não inserido!");
             return false;
         }
     }
 
-    public boolean editUser(String name, String password, String email, String idioma,String new_email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public boolean editUser(PersistentSession session, String name, String password, String email, String idioma,String new_email, Float objetivo) throws PersistentException {
         try {
 
-            User u = getUserByEmail(email);
+            User u = getUserByEmail(session, email);
 
             if (u == null) {
                 System.out.println("email do token errado!");
-                t.rollback();
                 return false;
             }
             if (name != null) u.setName(name);
@@ -93,33 +85,29 @@ public class GerirUtilizador {
             if (idioma != null) u.setIdioma(idioma);
             if (new_email != null) {
                 //verifica se existe algum ‘user’ com o endereço eletrónico
-                User us = getUserByEmail(new_email);
+                User us = getUserByEmail(session, new_email);
                 if (us != null) {
                     return false;
                 }
                 u.setEmail(new_email);
             }
-
+            if(objetivo!= null) u.setObjetivo(objetivo);
 
             UserDAO.save(u);
 
-            t.commit();
             System.out.println("User editado!");
             return true;
         } catch (Exception e) {
-            t.rollback();
             System.out.println("User não editado!");
             return false;
         }
     }
 
-    public int verifyUser(String email, String password) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int verifyUser(PersistentSession session, String email, String password) throws PersistentException {
         try {
-            User user = getUserByEmail(email);
+            User user = getUserByEmail(session, email);
 
             if (user == null) {
-                t.rollback();
                 return -3;
             }
 
@@ -130,13 +118,11 @@ public class GerirUtilizador {
 
             String condition = "email = '" + email + "' AND password = '" + hashedPassword + "'";
 
-            User[] users = UserDAO.listUserByQuery(condition, null);
+            User[] users = UserDAO.listUserByQuery(session, condition, null);
 
             if (users.length == 0) {
-                t.rollback();
                 return -1;
             } else {
-                t.commit();
                 return 0;
             }
 
@@ -147,10 +133,10 @@ public class GerirUtilizador {
 
     }
 
-    public User getUserByEmail(String email) throws PersistentException {
+    public User getUserByEmail(PersistentSession session,String email) throws PersistentException {
         try {
             String condition = "email = '" + email + "'";
-            User[] users = UserDAO.listUserByQuery(condition, null);
+            User[] users = UserDAO.listUserByQuery(session, condition, null);
 
             if (users.length == 0) {
                 return null;
@@ -162,13 +148,11 @@ public class GerirUtilizador {
         }
     }
 
-    public JsonObject getJsonUserInfo(String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getJsonUserInfo(PersistentSession session, String email) throws PersistentException {
         try {
-            User user = getUserByEmail(email);
+            User user = getUserByEmail(session, email);
 
             if (user == null) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -179,14 +163,13 @@ public class GerirUtilizador {
                     .add("email", user.getEmail())
                     .add("balanco", user.getSaldo())
                     .add("idioma", user.getIdioma())
+                    .add("objetivo",user.getObjetivo())
                     .build();
             System.out.println(userJson.toString());
 
-            t.commit();
             return userJson;
         } catch (Exception e) {
             e.printStackTrace();
-            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }

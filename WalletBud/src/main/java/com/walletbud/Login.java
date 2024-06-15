@@ -12,6 +12,10 @@ import jakarta.ws.rs.core.Response;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.orm.PersistentException;
+import org.orm.PersistentSession;
+import org.orm.PersistentTransaction;
+import wb.walletbud.AASICPersistentManager;
 
 import java.util.Date;
 
@@ -26,7 +30,7 @@ public class Login {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response loginUser(String jsonString) {
+    public Response loginUser(String jsonString) throws PersistentException {
 
         JsonReader reader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonObject = reader.readObject();
@@ -37,8 +41,13 @@ public class Login {
         String email = jsonObject.getString("email");
         String password = jsonObject.getString("password");
 
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
-            int cond = gerirUtilizador.verifyUser(email,password);
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+            int cond = gerirUtilizador.verifyUser(session, email, password);
             if (cond == 0){
                 // Gerar token JWT
                 String token = generateToken(email);
@@ -48,6 +57,7 @@ public class Login {
                         .build();
 
                 System.out.println(jsonResponse.toString());
+                transaction.commit();
                 return Response.status(Response.Status.OK)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -58,6 +68,7 @@ public class Login {
                         .add("message", "password does not match!")
                         .build();
                 System.out.println(jsonResponse.toString());
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -67,6 +78,7 @@ public class Login {
                         .add("message", "Email does not exist!")
                         .build();
                 System.out.println(jsonResponse.toString());
+                transaction.rollback();
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -74,6 +86,12 @@ public class Login {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            if( transaction != null)
+                transaction.rollback();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
 

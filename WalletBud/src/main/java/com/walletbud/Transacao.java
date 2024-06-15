@@ -10,6 +10,10 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.orm.PersistentException;
+import org.orm.PersistentSession;
+import org.orm.PersistentTransaction;
+import wb.walletbud.AASICPersistentManager;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -33,14 +37,22 @@ public class Transacao {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response addTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
         JsonReader reader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonObject = reader.readObject();
         reader.close();
+
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
             String name = jsonObject.getString("name");
             String descricao = jsonObject.getString("descricao");
             String local = jsonObject.getString("local");
@@ -59,13 +71,14 @@ public class Transacao {
             if (transacao.equals("fixa")) {
                 int repeticao = jsonObject.getInt("repeticao");
 
-                cond = gerirFixa.createFixa(name, value, descricao, local, tipo, IdCategoria, timestamp, repeticao, email, usersArray, comentario);
+                cond = gerirFixa.createFixa(session, name, value, descricao, local, tipo, IdCategoria, timestamp, repeticao, email, usersArray, comentario);
             } else if (transacao.equals("unica")) {
-                cond = gerirUnica.createUnica(name, value, descricao, local, tipo, IdCategoria, timestamp, email, usersArray, comentario);
+                cond = gerirUnica.createUnica(session, name, value, descricao, local, tipo, IdCategoria, timestamp, email, usersArray, comentario);
             } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
+                transaction .rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -76,6 +89,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", tipo + " registada com sucesso!")
                         .build();
+                transaction.commit();
                 return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
@@ -83,6 +97,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -91,6 +106,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email nao registado!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -99,6 +115,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Categoria nao encontrada!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -107,11 +124,13 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algum user que inseriu ja pertence ou nao existe!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }  else {
+                transaction.rollback();
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 
@@ -119,13 +138,21 @@ public class Transacao {
             JsonObject jsonResponse = Json.createObjectBuilder()
                     .add("message", "Formato invalido de IdCategoria!")
                     .build();
+            if( transaction != null)
+                transaction.rollback();
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(jsonResponse.toString())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -135,14 +162,22 @@ public class Transacao {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response setTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response setTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
         JsonReader reader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonObject = reader.readObject();
         reader.close();
+
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
             String name, descricao, local, dateStr;
             int IdCategoria;
             Timestamp timestamp;
@@ -201,13 +236,14 @@ public class Transacao {
                     repeticao = -1;
                 }
 
-                cond = gerirFixa.editFixa(IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp, repeticao, email);
+                cond = gerirFixa.editFixa(session, IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp, repeticao, email);
             } else if (transacao.equals("unica")) {
-                cond = gerirUnica.editUnica(IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp, email);
+                cond = gerirUnica.editUnica(session, IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp, email);
             } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -218,6 +254,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", tipo + " editada com sucesso!")
                         .build();
+                transaction.commit();
                 return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
@@ -225,6 +262,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -233,6 +271,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email nao registado!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -241,11 +280,13 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Categoria nao encontrada!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             } else {
+                transaction.rollback();
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 
@@ -253,13 +294,21 @@ public class Transacao {
             JsonObject jsonResponse = Json.createObjectBuilder()
                     .add("message", "Formato invalido de IdCategoria ou do IdTransacao!")
                     .build();
+            if( transaction != null)
+                transaction.rollback();
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(jsonResponse.toString())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -268,20 +317,27 @@ public class Transacao {
     @Path("/{transacao}/{tipo}/list")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listTransactionsUser(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listTransactionsUser(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
             JsonObject unicas;
             if (transacao.equals("fixa")) {
-                unicas = gerirFixa.getFixas(email, tipo);
+                unicas = gerirFixa.getFixas(session, email, tipo);
             } else if (transacao.equals("unica")) {
-                unicas = gerirUnica.getUnicas(email, tipo);
+                unicas = gerirUnica.getUnicas(session, email, tipo);
             } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -292,17 +348,24 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Nenhuma " + tipo + " única encontrada!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-
+            transaction.commit();
             return Response.ok(unicas.toString(), MediaType.APPLICATION_JSON).build();
 
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -311,19 +374,27 @@ public class Transacao {
     @Path("/{transacao}/{tipo}/get/{id}")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, @PathParam("id") int id, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response getTransaction(@PathParam("transacao") String transacao, @PathParam("tipo") String tipo, @PathParam("id") int id, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
+
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
             JsonObject unica;
             if (transacao.equals("fixa")) {
-                unica = gerirFixa.getJsonFixaById(id, email, tipo);
+                unica = gerirFixa.getJsonFixaById(session, id, email, tipo);
             } else if (transacao.equals("unica")) {
-                unica = gerirUnica.getJsonUnicaById(id, email, tipo);
+                unica = gerirUnica.getJsonUnicaById(session, id, email, tipo);
             } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -334,16 +405,23 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", tipo + " única não encontrada!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-
+            transaction.commit();
             return Response.ok(unica.toString(), MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
     }
 
@@ -352,14 +430,20 @@ public class Transacao {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response shareTransaction(@PathParam("transacao") String transacao, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response shareTransaction(@PathParam("transacao") String transacao, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
         JsonReader reader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonObject = reader.readObject();
         reader.close();
+
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
 
             int IdTransacao = jsonObject.getInt("IdTransacao");
             int option = jsonObject.getInt("option");
@@ -369,6 +453,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Nao pode partilhar consigo mesmo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -378,13 +463,14 @@ public class Transacao {
             int cond = -1;
 
             if (transacao.equals("fixa")) {
-                cond = gerirFixa.editUsersFixa(email, IdTransacao, option, email_shared);
+                cond = gerirFixa.editUsersFixa(session, email, IdTransacao, option, email_shared);
             } else if (transacao.equals("unica")) {
-                cond = gerirUnica.editUsersUnica(email, IdTransacao, option, email_shared);
+                cond = gerirUnica.editUsersUnica(session, email, IdTransacao, option, email_shared);
             } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -392,6 +478,7 @@ public class Transacao {
             }
 
             if (cond == 0) {
+                transaction.commit();
                 JsonObject jsonResponse = null;
                 if (option == 1) {
                     jsonResponse = Json.createObjectBuilder()
@@ -409,6 +496,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -417,6 +505,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Nao tem permissoes para fazer tais operações!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -425,6 +514,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email nao registado!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -433,6 +523,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "erro indefinido!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -443,13 +534,21 @@ public class Transacao {
             JsonObject jsonResponse = Json.createObjectBuilder()
                     .add("message", "Formato invalido de IdCategoria ou do IdTransacao!")
                     .build();
+            if( transaction != null)
+                transaction.rollback();
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(jsonResponse.toString())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -459,14 +558,20 @@ public class Transacao {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response confirmSharedTransaction(@PathParam("transacao") String transacao, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response confirmSharedTransaction(@PathParam("transacao") String transacao, String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
         JsonReader reader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonObject = reader.readObject();
         reader.close();
+
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
 
             int IdTransacao = jsonObject.getInt("IdTransacao");
             int option = jsonObject.getInt("option");
@@ -474,13 +579,14 @@ public class Transacao {
             int cond = -1;
 
             if (transacao.equals("fixa")) {
-                cond = gerirFixa.handleFixa(email, IdTransacao, option);
+                cond = gerirFixa.handleFixa(session, email, IdTransacao, option);
             } else if (transacao.equals("unica")) {
-                cond = gerirUnica.handleUnica(email, IdTransacao, option);
+                cond = gerirUnica.handleUnica(session, email, IdTransacao, option);
             } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -489,6 +595,7 @@ public class Transacao {
 
             if (cond == 0) {
                 JsonObject jsonResponse = null;
+                transaction.commit();
                 if (option == 1) {
                     jsonResponse = Json.createObjectBuilder()
                             .add("message", "Transacao partilhada confirmada com sucesso!")
@@ -505,6 +612,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -513,6 +621,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Não pode recusar uma transacao já confirmada!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -521,6 +630,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email nao registado!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -529,11 +639,13 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Não pode remover um utilizador não associado!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             } else {
+                transaction.rollback();
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 
@@ -541,13 +653,21 @@ public class Transacao {
             JsonObject jsonResponse = Json.createObjectBuilder()
                     .add("message", "Formato invalido de IdCategoria ou do IdTransacao!")
                     .build();
+            if( transaction != null)
+                transaction.rollback();
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(jsonResponse.toString())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -557,14 +677,21 @@ public class Transacao {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response payTransaction( String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response payTransaction( String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
         JsonReader reader = Json.createReader(new StringReader(jsonString));
         JsonObject jsonObject = reader.readObject();
         reader.close();
+
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
             int IdTransacao = jsonObject.getInt("IdTransacao");
             String date = jsonObject.getString("date");
 
@@ -574,13 +701,13 @@ public class Transacao {
             LocalDateTime dateTime = LocalDateTime.parse(date, formatter);
             Timestamp time_date = Timestamp.valueOf(dateTime);
 
-            int cond = gerirFixa.payFixa(email, IdTransacao, time_dateNow, time_date);
+            int cond = gerirFixa.payFixa(session, email, IdTransacao, time_dateNow, time_date);
 
             if (cond == 0) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Transacao paga com sucesso!")
                         .build();
-
+                transaction.commit();
                 return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
@@ -588,6 +715,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -596,6 +724,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Não pode pagar uma transacao que nao seja o criador!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -604,6 +733,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email nao registado!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -612,11 +742,13 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Não pode pagar pagar uma transacao nao confirmada!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             } else {
+                transaction.rollback();
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 
@@ -624,13 +756,21 @@ public class Transacao {
             JsonObject jsonResponse = Json.createObjectBuilder()
                     .add("message", "Formato invalido do IdTransacao!")
                     .build();
+            if( transaction != null)
+                transaction.rollback();
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(jsonResponse.toString())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -639,17 +779,25 @@ public class Transacao {
     @Path("/{transacao}/payments")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTransactionPay(@PathParam("transacao") String transacao, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response getTransactionPay(@PathParam("transacao") String transacao, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
+
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
             JsonObject payments;
             if (transacao.equals("fixa")) {
-                payments = gerirFixa.getJsonPaymentFixa(email);
+                payments = gerirFixa.getJsonPaymentFixa(session, email);
             } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -660,36 +808,50 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Transacoes não encontradas!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-
+            transaction.commit();
             return Response.ok(payments.toString(), MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
     }
 
     @DELETE
     @Path("/{transacao}/{idTransacao}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("idTransacao") int idTransacao, @PathParam("transacao") String transacao, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response deleteUser(@PathParam("idTransacao") int idTransacao, @PathParam("transacao") String transacao, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try{
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
             int cond;
             if (transacao.equals("fixa")) {
-                cond = gerirFixa.giveUpTransactionFixa(email,idTransacao);
+                cond = gerirFixa.giveUpTransactionFixa(session, email,idTransacao);
             } else if (transacao.equals("unica")) {
-                cond = gerirUnica.giveUpTransactionUnica(email,idTransacao);
+                cond = gerirUnica.giveUpTransactionUnica(session, email,idTransacao);
             } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -701,6 +863,7 @@ public class Transacao {
                 jsonResponse = Json.createObjectBuilder()
                         .add("message", "Transacao removida com sucesso!")
                         .build();
+                transaction.commit();
 
                 return Response.status(Response.Status.CREATED).entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -709,6 +872,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -717,6 +881,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Nao pode eliminar uma transacao unica sem ser o criador!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -725,6 +890,7 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Email nao registado!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -733,15 +899,23 @@ public class Transacao {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Nao pode desistir de uma transacao ao qual nao pertence!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             } else {
+                transaction.rollback();
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
         } catch (Exception e){
+            if( transaction != null)
+                transaction.rollback();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
     }
 
@@ -749,27 +923,40 @@ public class Transacao {
     @Path("/movimentos") //movimentos todos feitos pelo user
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listMovimentos( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listMovimentos( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
             JsonObject movimentos;
-            movimentos = gerirTransacaoPartilhada.getMovimentos(email);
+            movimentos = gerirTransacaoPartilhada.getMovimentos(session,email);
             if (movimentos.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-
+            transaction.commit();
             return Response.ok(movimentos.toString(), MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -777,27 +964,41 @@ public class Transacao {
     @Path("/pendentes")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listPendentes( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listPendentes( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
             JsonObject movimentos;
-            movimentos = gerirTransacaoPartilhada.getPendentes(email);
+            movimentos = gerirTransacaoPartilhada.getPendentes(session, email);
             if (movimentos.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
+            transaction.commit();
             System.out.println("return" + movimentos.toString());
             return Response.ok(movimentos.toString(), MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -806,27 +1007,40 @@ public class Transacao {
     @Path("/movimentos/{dias}")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listMovimentos(@PathParam("dias") int dias, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listMovimentos(@PathParam("dias") int dias, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
             JsonObject movimentos;
-            movimentos = gerirTransacaoPartilhada.getMovimentosDays(email,dias);
+            movimentos = gerirTransacaoPartilhada.getMovimentosDays(session, email, dias);
             if (movimentos.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "User nao encontrado!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-
+            transaction.commit();
             return Response.ok(movimentos.toString(), MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -835,28 +1049,41 @@ public class Transacao {
     @Path("/fixa/transacoesAtraso") //pagamentos/recibos em atraso das transacoes fixas
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listTransacoesAtraso( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listTransacoesAtraso( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
-            JsonObject leite =  gerirFixa.getLatePayments(email);
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
+            JsonObject leite =  gerirFixa.getLatePayments(session, email);
 
 
             if (leite.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-
+            transaction.commit();
             return Response.ok(leite.toString(), MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -865,28 +1092,41 @@ public class Transacao {
     @Path("/fixa/pagamentos") //pagamentos/recibos em atraso das transacoes fixas
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listPagamentos( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listPagamentos( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
-            JsonObject leite =  gerirFixa.getPayments(email);
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
+            JsonObject leite =  gerirFixa.getPayments(session, email);
 
 
             if (leite.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-
+            transaction.commit();
             return Response.ok(leite.toString(), MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -895,7 +1135,7 @@ public class Transacao {
     @Path("/timeline/{ano}/{mes}") //timeline da do mes em que esta o user das transacoes! | deve ter que levar o mes e ano pela rota
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listTimeline(@PathParam("ano") int ano, @PathParam("mes") int mes, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response listTimeline(@PathParam("ano") int ano, @PathParam("mes") int mes, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -903,26 +1143,38 @@ public class Transacao {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
-            JsonObject timeline = gerirTransacaoPartilhada.getTimeline(email,ano,mes);
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
+            JsonObject timeline = gerirTransacaoPartilhada.getTimeline(session, email,ano,mes);
 
             if (timeline.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-
+            transaction.commit();
             return Response.ok(timeline.toString(), MediaType.APPLICATION_JSON).build();
 
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
-
     }
 
 }

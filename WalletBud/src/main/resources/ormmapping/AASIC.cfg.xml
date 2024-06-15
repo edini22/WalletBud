@@ -16,6 +16,7 @@ License Type: Evaluation
 		<property name="connection.password">password</property>
 		<property name="show_sql">false</property>
 		<property name="query.substitutions">true 1, false 0, yes 'Y', no 'N'</property>
+		<property name="hibernate.connection.release_mode">on_close</property>
 		<!-- mapping files -->
 		<mapping resource="ormmapping/wb/walletbud/Categoria.hbm.xml" />
 		<mapping resource="ormmapping/wb/walletbud/Comentario.hbm.xml" />

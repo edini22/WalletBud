@@ -15,6 +15,7 @@ public class Application extends jakarta.ws.rs.core.Application {
         resources.add(Transacao.class);
         resources.add(Categoria.class);
         resources.add(Register.class);
+        resources.add(ResetPassword.class);
         resources.add(Utilizador.class);
         resources.add(Comentario.class);
         resources.add(AuthenticationFilter.class);

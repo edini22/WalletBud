@@ -37,7 +37,6 @@ public class ResetPassword {
 
 
     @Path("/send")
-    @Secured
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response sendRecoveryEmail(String jsonString) throws PersistentException {
@@ -113,7 +112,6 @@ public class ResetPassword {
     }
 
     @Path("/set")
-    @Secured
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response passwordRecovery(String jsonString) throws PersistentException {

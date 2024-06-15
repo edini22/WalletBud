@@ -246,7 +246,8 @@ public class GerirUtilizador {
                     "Wallet Bud",
                     "[WB] Password recovery",
                     "",
-                    escapeHtml(template)
+                    escapeHtml(template),
+                    token
             );
         } catch (IOException e) {
             return -1;
@@ -296,11 +297,12 @@ public class GerirUtilizador {
         }
     }
 
-    public static void sendEmail(String recipientEmail, String recipientName, String senderEmail, String senderName, String subject, String text, String html) throws IOException, IOException {
+    public static void sendEmail(String recipientEmail, String recipientName, String senderEmail, String senderName, String subject, String text, String html, String token) throws IOException, IOException {
         OkHttpClient client = new OkHttpClient();
 
 
-        String replacedHtml = replacePlaceholder(html, "{$user}", "Paco Nassa");
+        String replacedHtml = replacePlaceholder(html, "{$user}", recipientName);
+        replacedHtml = replacePlaceholder(replacedHtml, "{$token}", token);
 
 
         String json = "{"

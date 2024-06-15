@@ -99,13 +99,12 @@ public class GerirTransacaoPartilhada {
                     Fixa fixa = tf.getTransacaofixa_ID();
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", fixa.getId_transacao())
+                            .add("id_tf",tf.getID())
                             .add("name", fixa.getName())
                             .add("value", tf.getPayvalue())
                             .add("date", tf.getDataAtual().toString())
-                            .add("datePagamento",tf.getDataPagamento().toString())
-                            .add("descricao", fixa.getDescrição())
+                            .add("description", fixa.getDescrição())
                             .add("categoria", fixa.getCategoriaId_categoria().getName())
-                            .add("repeticao", fixa.getRepeticao())
                             .add("tipo", fixa.getTipo())
                             .add("local", fixa.getLocal())
                             .build();
@@ -155,13 +154,12 @@ public class GerirTransacaoPartilhada {
                     Fixa fixa = tf.getTransacaofixa_ID();
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", fixa.getId_transacao())
+                            .add("id_tf",tf.getID())
                             .add("name", fixa.getName())
                             .add("value", tf.getPayvalue())
                             .add("date", tf.getDataAtual().toString())
-                            .add("datePagamento",tf.getDataPagamento().toString())
-                            .add("descricao", fixa.getDescrição())
+                            .add("description", fixa.getDescrição())
                             .add("categoria", fixa.getCategoriaId_categoria().getName())
-                            .add("repeticao", fixa.getRepeticao())
                             .add("tipo", fixa.getTipo())
                             .add("local", fixa.getLocal())
                             .build();

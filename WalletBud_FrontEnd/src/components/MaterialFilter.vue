@@ -2,7 +2,7 @@
     <div>
         <div class="custom-dropdown" :class="{ 'dropdown-focused': showMenu }">
             <button class="custom-dropdown-btn" @click="toggleShow">
-                <i class="material-icons">filter_alt</i> Filtrar
+                <i class="material-icons">filter_alt</i>{{ $t('Filtrar') }} 
             </button>
 
 
@@ -12,7 +12,7 @@
                     <div class="col-md-6 d-flex">
                         <div class="flex-grow-1 me-2">
                             <div class="filter-section">
-                                <p class="title-filter">Categorias</p>
+                                <p class="title-filter">{{ $t('Categorias') }}</p>
                                 <div class="category-checkboxes">
                                     <material-checkbox v-for="(category, index) in categories"
                                         :key="'category_' + index" :id="'category_' + index" :name="'category_' + index"
@@ -25,7 +25,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <div class="filter-section">
-                                <p class="title-filter">Tipos</p>
+                                <p class="title-filter">{{ $t('Tipo') }}</p>
                                 <div class="type-checkboxes">
                                     <material-radio v-for="(type, index) in types" :key="'type_' + index"
                                         :id="'type_' + index" :name="'type_' + index"

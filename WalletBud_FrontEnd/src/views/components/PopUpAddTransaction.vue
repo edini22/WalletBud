@@ -23,7 +23,9 @@
 
                         <!-- Descrição -->
                         <div class="form-group form-row">
-                            <label for="description" class="form-label">{{ $t('Nome') }}</label>
+                            <label for="description" class="form-label">{{ $t('Nome') }}
+                                <p class="required"> *</p>
+                            </label>
                             <div v-if="descriptionError === true" class="form-input mb-3">
                                 <material-input class="material-input" id="description" type="text"
                                     :label="$t('Indique o nome')" name="description"
@@ -42,11 +44,12 @@
 
                         <!-- Montante -->
                         <div class="form-group form-row">
-                            <label for="value" class="form-label">{{ $t('Montante') }}:
+                            <label for="value" class="form-label">{{ $t('Montante') }}
+                                <p class="required"> *</p>
                             </label>
                             <div v-if="valueError === true" class="form-input mb-3">
                                 <material-input class="material-input" id="value" type="number" :value="Value"
-                                    :label=ValueLabel name="value" @update:value="Value = $event" error />
+                                    :label="$t('Indique um montante válido')" name="value" @update:value="Value = $event" error />
                             </div>
                             <div v-if="valueError === false" class="form-input mb-3">
                                 <material-input class="material-input" id="value" type="number" name="value"
@@ -54,14 +57,15 @@
                             </div>
                             <div v-if="valueError === null" class="form-input mb-3">
                                 <material-input class="material-input" id="value" type="number" :value="Value"
-                                    :label=ValueLabel name="value" @update:value="Value = $event" />
+                                    :label="$t('Indique um montante')" name="value" @update:value="Value = $event" />
                             </div>
                         </div>
 
                         <!-- Data -->
                         <div class="form-group form-row">
                             <label for="date" class="form-label">
-                                {{ $t('Data do Movimento') }}:
+                                {{ $t('Data do Movimento') }}
+                                <p class="required"> *</p>
                             </label>
                             <div v-if="DateError === true" class="form-input mb-3 date-input-wrapper"
                                 :class="{ 'dropdown-focused-error': isDateFocused, 'border': SetBorder }"
@@ -73,12 +77,12 @@
                             <div v-if="DateError === false" class="form-input mb-3">
                                 <material-input class="material-input" :class="{ 'is-focused': isFocused }" id="date"
                                     type="date" name="date" :value="DateM" @update:value="DateM = $event" success
-                                    @focus="handleFocus" @blur="handleBlur" label="Indique a data" />
+                                    @focus="handleFocus" @blur="handleBlur" :label="$t('Indique a data')" />
                             </div>
                             <div v-if="DateError === null" class="form-input mb-3  date-input-wrapper">
                                 <material-input class="material-input" :class="{ 'is-focused': isFocused }" id="date"
                                     type="date" name="date" @update:value="DateM = $event" :value="DateM"
-                                    label="Indique a data" @focus="handleFocus" @blur="handleBlur" />
+                                    :label="$t('Indique a data')" @focus="handleFocus" @blur="handleBlur" />
                                 <i class="material-icons date-icon">date_range</i>
                             </div>
                         </div>
@@ -86,7 +90,9 @@
                         <!-- Tipo -->
                         <div class="dropdown" ref="typeDropdown">
                             <div class="form-group form-row">
-                                <label for="Type" class="form-label">{{ $t('Tipo de movimento:') }}</label>
+                                <label for="Type" class="form-label">{{ $t('Tipo de movimento') }}
+                                    <p class="required"> *</p>
+                                </label>
 
                                 <div v-if="TypeError === null || TypeError === false"
                                     class="input-group input-group-outline form-input mb-3"
@@ -142,7 +148,9 @@
                         <!-- Recorrência -->
                         <div class="dropdown" ref="recorrenceDropdown">
                             <div class="form-group form-row">
-                                <label for="recorrence" class="form-label">{{ $t('Recorrência:') }}</label>
+                                <label for="recorrence" class="form-label">{{ $t('Recorrência') }}
+                                    <p class="required"> *</p>
+                                </label>
 
                                 <div v-if="recorrenceError === null || recorrenceError === false"
                                     class="input-group input-group-outline form-input mb-3"
@@ -198,7 +206,9 @@
                         <!-- Repetição -->
                         <div v-if="Recorrence == 'Recorrente (Fixa)'" class="dropdown" ref="repeatDropdown">
                             <div class="form-group form-row">
-                                <label for="Repetition" class="form-label">{{ $t('Repetição') }}</label>
+                                <label for="Repetition" class="form-label">{{ $t('Repetição') }}
+                                    <p class="required"> *</p>
+                                </label>
                                 <div v-if="repetitionError === null || repetitionError === false"
                                     class="input-group input-group-outline form-input mb-3"
                                     style="border-radius: 0.375rem;">
@@ -272,7 +282,9 @@
                         <!-- Categoria -->
                         <div class="dropdown" ref="categoryDropdown">
                             <div class="form-group form-row">
-                                <label for="category" class="form-label">{{ $t('Categoria') }}</label>
+                                <label for="category" class="form-label">{{ $t('Categoria') }}
+                                    <p class="required"> *</p>
+                                </label>
                                 <div v-if="CategoryError === null || CategoryError === false"
                                     class="input-group input-group-outline form-input mb-3"
                                     style="border-radius: 0.375rem;">
@@ -345,6 +357,10 @@
                             </div>
                         </div>
 
+                        <label class="form-label mb-3">
+                            <p class="required" style="font-weight: 400;"> * {{ $t('Campo obrigatório')}}</p>
+                        </label>
+
                         <div class="modal-footer d-block justify-content-center">
                             <div class="align-items-center text-center">
                                 <i class="material-icons align-self-center comment"
@@ -374,7 +390,9 @@
                             <!-- Shared expense -->
                             <div class="form-group">
                                 <label for="sharedExpense" class="form-label mb-3">{{ $t('Partilhar despesa com:')
-                                    }}</label>
+                                    }}
+                                    <p class="required"> *</p>
+                                </label>
                                 <div class="form-input mb-3">
                                     <div v-if="emailError === true && emailErrorStore === null" class="mb-3">
                                         <material-input class="material-input mb-3" id="email" type="email"
@@ -410,7 +428,7 @@
                             <div v-if="sharedUsers.length > 0">
                                 <div class="align-items-center text-center">
                                     <label class="form-label align-self-center mb-3"
-                                        style="font-size: large; font-weight: 600;">{{ Value }}€ a dividir com:</label>
+                                        style="font-size: large; font-weight: 600;">{{ Value + $t('€ a dividir com:')}}</label>
                                 </div>
                                 <div class="form-row" v-for="(user, index) in sharedUsers" :key="index">
                                     <div class="form-row">
@@ -439,14 +457,6 @@
                 </div>
             </div>
         </div>
-        <div class="position-fixed bottom-1 end-1 z-index-2">
-            <material-snackbar v-if="snackbar === 'success'" title="Movimento" date="now"
-                description="Movimento adicionado com sucesso!" :icon="{ component: 'done', color: 'white' }"
-                color="success" :close-handler="closeSnackbar" />
-            <material-snackbar v-if="snackbar === 'error'" title="Movimento" date="now"
-                description="Não foi possível adicionar o movimento! Tente novamente." :icon="{ component: 'campaign', color: 'white' }"
-                color="danger" :close-handler="closeSnackbar" />
-        </div>
     </div>
 </template>
 
@@ -456,7 +466,6 @@ import { useI18n } from 'vue-i18n';
 import MaterialAlert from "@/components/MaterialAlert.vue";
 import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialCheckbox from "@/components/MaterialCheckbox.vue";
-import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 //import NavPill from './NavPill.vue';
 //import { transactionStore } from "@/store/transactionStore.js";
 import { ref, reactive } from 'vue';
@@ -467,8 +476,7 @@ export default {
     components: {
         MaterialAlert,
         MaterialInput,
-        MaterialCheckbox,
-        MaterialSnackbar
+        MaterialCheckbox
     },
     setup() {
         const { t } = useI18n();
@@ -478,7 +486,6 @@ export default {
         const valueError = ref(null);
         const DateM = ref('');
         const DateError = ref(null);
-        const ValueLabel = ref('Indique um montante')
         const Place = ref('');
         const Category = ref('');
         const CategoryError = ref(null);
@@ -500,7 +507,6 @@ export default {
         const showAlertUsers = ref(false);
         let timestamp = ref(null);
         let isValid = true;
-        const snackbar = ref(null);
 
         function validarEmail(email) {
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -575,7 +581,6 @@ export default {
                 valueError.value = true;
             else if (Value.value < 0) {
                 valueError.value = true;
-                ValueLabel.value = 'Indique um montante positivo'
             }
             else
                 valueError.value = false;
@@ -705,16 +710,21 @@ export default {
 
                             // if(post correu bem) {
                             
-                            console.log("post da receita fixa");
+                            console.log("post receita fixa");
 
                             const cancelButton = document.getElementById('cancelButton');
                             cancelButton.click();
 
-                            snackbar.value = 'success';
+                            //sucesso
+                            const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                            document.dispatchEvent(event);
+                            console.log('PopUp emitiu evento');
 
-                            /*else(post correu mal){
-                                snackbar.value = 'error';
-                            }*/
+                            /* else(error)
+                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                                document.dispatchEvent(event);
+                                console.log('PopUp emitiu evento');
+                            */
                         }
                     }else{
                         //post de receita não fixa
@@ -723,17 +733,20 @@ export default {
                         console.log("timestamp: " + timestamp.value);
                         //POST da Receita Não Fixa
 
-                        console.log("post da receita não fixa");
-
-                        alert("Receita adicionada com sucesso!");
+                        console.log("post receita não fixa");
 
                         const cancelButton = document.getElementById('cancelButton');
                         cancelButton.click();
 
-                        snackbar.value = 'success';
+                        //sucesso
+                        const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                        document.dispatchEvent(event);
+                        console.log('PopUp emitiu evento');
 
                         /* else(error)
-                            snackbar.value = 'error';
+                            const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                            document.dispatchEvent(event);
+                            console.log('PopUp emitiu evento');
                          */
                     }                                     
                 }
@@ -758,18 +771,22 @@ export default {
                             console.log("timestamp: " + timestamp.value);
                             console.log(Repetition.value + ": " + SendRepetition.value);
 
-                            console.log("post com partilha de despesa");
+                            console.log("post despesa fixa e partilhada");
 
                             //POST da Despesa
-                            alert("Despesa Fixa Partilhada adicionada com sucesso!")
                             const cancelButton = document.getElementById('cancelButton');
                             cancelButton.click();
 
-                            snackbar.value = 'success';
+                            //sucesso
+                            const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                            document.dispatchEvent(event);
+                            console.log('PopUp emitiu evento');
 
                             /* else(error)
-                            snackbar.value = 'error';
-                         */
+                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                                document.dispatchEvent(event);
+                                console.log('PopUp emitiu evento');
+                            */
                         }
                     }else{
                         
@@ -778,17 +795,21 @@ export default {
                         console.log("data: " + DateM.value);
                         console.log("timestamp: " + timestamp.value);
 
-                        console.log("post com partilha de despesa");
-
                         //POST da Despesa
-                        alert("Despesa Não Fixa Partilhada adicionada com sucesso!")
+                        console.log("post despesa não fixa e partilhada");
+
                         const cancelButton = document.getElementById('cancelButton');
                         cancelButton.click();
 
-                        snackbar.value = 'success';
+                        //sucesso
+                        const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                        document.dispatchEvent(event);
+                        console.log('PopUp emitiu evento');
 
                         /* else(error)
-                            snackbar.value = 'error';
+                            const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                            document.dispatchEvent(event);
+                            console.log('PopUp emitiu evento');
                          */
                     }
 
@@ -807,21 +828,25 @@ export default {
 
                             //POST ---
 
-                            console.log("post sem partilha de despesa");
+                            console.log("post despesa fixa não partilhada");
 
-                            alert("Despesa Fixa Não Partilhada adicionada com sucesso!")
                             //chamar cancel() após POST
                             const cancelButton = document.getElementById('cancelButton');
                             cancelButton.click();
 
-                            snackbar.value = 'success';
+                            //sucesso
+                            const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                            document.dispatchEvent(event);
+                            console.log('PopUp emitiu evento');
 
                             /* else(error)
-                                snackbar.value = 'error';
+                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                                document.dispatchEvent(event);
+                                console.log('PopUp emitiu evento');
                             */
                         }
                     }else{
-                        //DESPESA NÃO PARTILHADA Não FIXA
+                        //DESPESA NÃO PARTILHADA NÃO FIXA
                         
                         //date to timestamp
                         timestamp.value = convertToTimestamp(DateM.value);
@@ -830,17 +855,21 @@ export default {
                         console.log("timestamp: " + timestamp.value);
 
                         //POST da Despesa
-                        console.log("post sem partilha de despesa");
+                        console.log("post despesa não fixa e não partilhada");
 
-                        alert("Despesa Não Fixa e Não Partilhada adicionada com sucesso!");
                         //chamar cancel() após POST
                         const cancelButton = document.getElementById('cancelButton');
                         cancelButton.click();
 
-                        snackbar.value = 'success';
+                        //sucesso
+                        const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                        document.dispatchEvent(event);
+                        console.log('PopUp emitiu evento');
 
                         /* else(error)
-                            snackbar.value = 'error';
+                            const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                            document.dispatchEvent(event);
+                            console.log('PopUp emitiu evento');
                          */
                     }
                 }
@@ -872,7 +901,6 @@ export default {
             recorrenceError,
             Repetition,
             repetitionError,
-            ValueLabel,
             ShareExpense,
             newUserEmail,
             sharedUsers,
@@ -880,8 +908,7 @@ export default {
             emailError,
             emailErrorStore,
             showAlertUsers,
-            resetTab,
-            snackbar
+            resetTab
         };
     },
     data() {
@@ -932,11 +959,6 @@ export default {
             if(this.Tab !== 0)
             this.showTab(0);
             this.resetTab = false;
-        },
-        snackbar(){
-            setTimeout(() => {
-                this.snackbar = null;
-            }, 2000);
         }
     },
     methods: {
@@ -1069,6 +1091,13 @@ export default {
     right: 10px;
     pointer-events: none;
     color: #344767;
+}
+
+.required {
+    display: inline;
+    color: #e91e63;
+    font-weight: 500;
+    font-size: 12px;
 }
 
 .dropdown-focused-null {

@@ -1,11 +1,11 @@
 <template>
 
-  <div class="container">
+<div class="container-fluid">
     <div class="row">
-      <div class="col">
-      </div>
-      <div class="col-6">
-        <div class="timeline-header">
+      <div class="col ">        
+        <!--timeline next days-->
+        <div class = "col pt-0">
+          <div class="timeline-header">
             <h4>Agenda</h4>
           </div>
           <timeline-list class="scroll-container">
@@ -20,8 +20,7 @@
               :description="p.descricao"
             />
           </timeline-list>
-      </div>
-      <div class="col">
+        </div>
       </div>
     </div>
   </div>
@@ -78,12 +77,6 @@
               description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of."
             />
           </timeline-list>
-        </div>
-      </div>
-      <div class="col">
-        <div class="container-fluid py-0">
-          <div class="row">
-          </div>
         </div>
       </div>
     </div>

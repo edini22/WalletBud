@@ -15,7 +15,7 @@
           <div class="input-group input-group-outline" 
               :class="{'is-focused': isFocused}"
               >
-            <label class="form-label">Procurar movimentos</label>
+            <label class="form-label">{{ $t('Procurar movimentos') }}</label>
             <input class="form-control form-control-default" id="search"
               style='width: 170px;' v-model="searchQuery"
               @focus="handleFocus" @blur="handleBlur"/>
@@ -29,12 +29,12 @@
       </div>
       <div class="row mt-3 mb-0">
         <div class="col-md-6">
-          <h6 class="mb-0">Movimentos</h6>
+          <h6 class="mb-0">{{ $t('Movimentos') }}</h6>
         </div>
         <div class="col-md-6 d-flex justify-content-end align-items-center">
           <i class="far fa-calendar-alt me-2" aria-hidden="true"></i>
-          <small>01 - 30 Abril 2024</small>
-          <!-- TODO: ALTERAR AQUI PARA DINAMICO -->
+          <small>{{ date }}</small>
+          <!-- TODO: ALTERAR AQUI PARA DINAMICO -->     
         </div>
       </div>
     </div>
@@ -111,6 +111,7 @@ export default {
       ],
       selectedCategories: [],
       selectedType: '',
+      date: 'fetch date',
     };
   },
   computed: {

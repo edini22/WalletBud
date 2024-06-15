@@ -5,7 +5,7 @@
       background-image: url('https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80');
     "
   >
-    <span class="mask bg-gradient-dark opacity-6"></span>
+    <span class="mask bg-gradient-dark opacity-0"></span>
     <div class="container my-auto">
       <div class="row">
         <div class="col-lg-4 col-md-8 col-12 mx-auto">
@@ -14,15 +14,18 @@
               <div
                 class="bg-gradient-info shadow-success border-radius-lg py-3 pe-1"
               >
-                <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">
+                <h4 v-if="recuperarPassword === false" class="text-white font-weight-bolder text-center mt-2 mb-0">
                   {{$t('Iniciar ')}}{{$t('Sessão')}}
+                </h4>
+                <h4 v-if="recuperarPassword === true" class="text-white font-weight-bolder text-center mt-2 mb-0">
+                  {{$t('Recuperar ')}} Password
                 </h4>
               </div>
             </div>
             <div class="card-body">
 
               <!--Email---->
-              <form  role="form" class="text-start mt-3">
+              <form v-if="recuperarPassword === false " role="form" class="text-start mt-3">
                 <div v-if="emailError === true" class="mb-3">
                   <material-input
                     id="email"
@@ -95,13 +98,26 @@
                     >{{$t('Entrar')}}</material-button
                   >
                 </div>
+                
                 <div class="text-center">
-                  <router-link
-                    :to="{ name: 'Home' }"
+                  <span
                     class="mt-4 text-sm text-info text-gradient"
-                    >{{$t('Esqueceu-se da password')}}?</router-link
-                  >
+                    @click="recuperarPassword = true"
+                    style="cursor: pointer;">
+                    {{$t('Esqueceu-se da password')}}?
+                  </span>
                 </div>
+
+                <div v-if="recuperarPassword === true" class="mb-3">
+                  <material-input
+                    id="email"
+                    type="email"
+                    label="Email"
+                    name="email"
+                    @update:value="email = $event"
+                  />
+                </div>
+
                 <p class="mt-2 text-sm text-center">
                   {{$t('Ainda não tens conta')}}?
                   <router-link
@@ -110,6 +126,48 @@
                     >{{$t('Registar')}}</router-link
                   >
                 </p>
+              </form>
+              <form v-if="recuperarPassword === true" role="form" class="text-start mt-3">
+                <div v-if="emailError === true" class="mb-3">
+                  <material-input
+                    id="email"
+                    type="email"
+                    :label= emailErrorMessages
+                    name="email"
+                    @update:value="email = $event"
+                    error
+                  />
+                </div>
+                <div v-if="emailError === false" class="mb-3">
+                  <material-input
+                    id="email"
+                    type="email"
+                    name="email"
+                    :value="email"
+                    @update:value="email = $event"
+                    success
+                  />
+                </div>
+                <div v-if="emailError === null" class="mb-3">
+                  <material-input
+                    id="email"
+                    type="email"
+                    label="Email de recuperação"
+                    name="email"
+                    @update:value="email = $event"
+                  />
+                </div>
+
+                <div class="text-center">
+                  <material-button
+                    class="my-4 mb-2"
+                    variant="gradient"
+                    color="info"
+                    fullWidth
+                    @click.prevent="recuperar"
+                    >{{$t('Recuperar')}}</material-button
+                  >
+                </div>
               </form>
             </div>
           </div>
@@ -132,6 +190,14 @@
         description="Erro ao efetuar o logIn!"
         :icon="{ component: 'campaign', color: 'white' }"
         color="danger"
+        :close-handler="closeSnackbar"/>
+      <material-snackbar
+        v-if="snackbar === 'success_recuperar'"
+        title="Recuperação de Password"
+        date="now"
+        description="Email de recuperação enviado com sucesso! Verifique a sua caixa de correio!"
+        :icon="{ component: 'done', color: 'white' }"
+        color="success"
         :close-handler="closeSnackbar"/>
     </div>
   </div>
@@ -167,9 +233,15 @@ export default {
     const passwordError = ref(null);
     const passwordErrorMessages = ref(null);
 
+    const recuperarPassword = ref(false);
+
     const snackbar = ref(null);
     
     let state = false;
+
+    const closeSnackbar = () => {
+      snackbar.value = false;
+    };
 
     function validarEmail(email) {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -183,6 +255,27 @@ export default {
         passwordErrorMessages.value = `${t('Password incorreta')}`;
       }
     });
+
+    const recuperar = async () => {
+      if (!validarEmail(email.value)) {
+        recuperarPassword.value = true;
+        emailErrorMessages.value = `${t('Email inválido')}`;
+        emailError.value = true;
+        return;
+      } else {
+        recuperarPassword.value = false;
+        emailError.value = false;
+        snackbar.value = 'success_recuperar';
+        
+        setTimeout(() => {
+          snackbar.value = null;
+          router.push({ name: "SignIn" });
+        }, 2000);
+        
+      }
+      
+    }
+    
 
     const login = async () => {
   
@@ -265,6 +358,9 @@ export default {
       emailErrorMessages,
       state,
       snackbar,
+      recuperarPassword,
+      recuperar,
+      closeSnackbar,
     }
   },
   beforeMount() {

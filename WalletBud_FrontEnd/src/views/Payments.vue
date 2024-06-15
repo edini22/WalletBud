@@ -5,9 +5,7 @@
         <div class="col pt-0">
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-              <div
-                class="bg-gradient-info shadow-info border-radius-lg pt-3 pb-2"
-              >
+              <div class="bg-gradient-info shadow-info border-radius-lg pt-3 pb-2">
                 <h6 class="text-white text-capitalize ps-3">
                   Transações Fixas - Pagamentos
                 </h6>
@@ -15,50 +13,33 @@
             </div>
             <div class="px-0 pb-2">
               <div class="table-responsive p-0 scroll-container">
-                <table
-                  class="table align-items-center justify-content-center mb-0"
-                >
+                <table class="table align-items-center justify-content-center mb-0">
                   <thead class="table-head-fixed">
                     <tr>
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                      >
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         Despesa
                       </th>
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                      >
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                         Periodicidade
                       </th>
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                      >
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                         Próximo Pagamento
                       </th>
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                      >
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                         Valor
                       </th>
-                      <th
-                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                      >
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                         Ação
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <template
-                      v-if="
-                        store &&
-                        store.proximosPagamentos &&
-                        store.proximosPagamentos.length > 0
-                      "
-                    >
-                      <tr
-                        v-for="(p, index) in store.proximosPagamentos"
-                        :key="index"
-                      >
+                    <template v-if="
+                      store &&
+                      store.proximosPagamentos &&
+                      store.proximosPagamentos.length > 0
+                    ">
+                      <tr v-for="(p, index) in store.proximosPagamentos" :key="index">
                         <td>
                           <div class="d-flex px-3">
                             <div class="my-auto">
@@ -77,17 +58,11 @@
                           }}</span>
                         </td>
                         <td>
-                          <span class="text-md font-weight-bold"
-                            >{{ p.shareValue }}€</span
-                          >
+                          <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
                         </td>
                         <td>
-                          <material-button
-                            variant="gradient"
-                            color="secondary"
-                            class="btn btn-sm small-button"
-                            @click="openPopup(p.id, p.date)"
-                          >
+                          <material-button variant="gradient" color="secondary" class="btn btn-sm small-button"
+                            @click="openPopup(p.id, p.date)">
                             {{ $t("Abrir") }}
                           </material-button>
                         </td>
@@ -106,50 +81,34 @@
           <div class="row">
             <div class="col-12">
               <div class="card my-4">
-                <div
-                  class="card-header p-0 position-relative mt-n4 mx-3 z-index-2"
-                >
-                  <div
-                    class="bg-gradient-danger shadow-danger border-radius-lg pt-3 pb-2"
-                  >
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                  <div class="bg-gradient-danger shadow-danger border-radius-lg pt-3 pb-2">
                     <h6 class="text-white text-capitalize ps-3">Por Pagar</h6>
                   </div>
                 </div>
                 <div class="px-0 pb-2">
                   <div class="table-responsive p-0 scroll-container2">
-                    <table
-                      class="table align-items-center justify-content-center mb-0"
-                    >
+                    <table class="table align-items-center justify-content-center mb-0">
                       <thead class="table-head-fixed">
                         <tr>
-                          <th
-                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                          >
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                             Despesa
                           </th>
-                          <th
-                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                          >
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                             Periodicidade
                           </th>
-                          <th
-                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                          >
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                             Data de Pagamento
                           </th>
-                          <th
-                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                          >
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                             Valor
                           </th>
                         </tr>
                       </thead>
                       <tbody>
-                        <template
-                          v-if="
-                            store && store.porPagar && store.porPagar.length > 0
-                          "
-                        >
+                        <template v-if="
+                          store && store.porPagar && store.porPagar.length > 0
+                        ">
                           <tr v-for="(p, index) in store.porPagar" :key="index">
                             <td>
                               <div class="d-flex px-3">
@@ -169,9 +128,7 @@
                               }}</span>
                             </td>
                             <td>
-                              <span class="text-md font-weight-bold"
-                                >{{ p.shareValue }}€</span
-                              >
+                              <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
                             </td>
                           </tr>
                         </template>
@@ -192,12 +149,8 @@
             </div>
             <div class="col-12">
               <div class="card my-4">
-                <div
-                  class="card-header p-0 position-relative mt-n4 mx-3 z-index-2"
-                >
-                  <div
-                    class="bg-gradient-warning shadow-warning border-radius-lg pt-3 pb-2"
-                  >
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                  <div class="bg-gradient-warning shadow-warning border-radius-lg pt-3 pb-2">
                     <h6 class="text-white text-capitalize ps-3">
                       Pedidos Pendentes
                     </h6>
@@ -205,50 +158,33 @@
                 </div>
                 <div class="px-0 pb-2">
                   <div class="table-responsive p-0 scroll-container2">
-                    <table
-                      class="table align-items-center justify-content-center mb-0"
-                    >
+                    <table class="table align-items-center justify-content-center mb-0">
                       <thead class="table-head-fixed">
                         <tr>
-                          <th
-                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
-                          >
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                             Despesa
                           </th>
-                          <th
-                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                          >
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                             Periodicidade
                           </th>
-                          <th
-                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                          >
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                             Próximo Pagamento
                           </th>
-                          <th
-                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                          >
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                             Valor
                           </th>
-                          <th
-                            class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"
-                          >
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                             Detalhes
                           </th>
                         </tr>
                       </thead>
                       <tbody>
-                        <template
-                          v-if="
-                            store &&
-                            store.pendentes &&
-                            store.pendentes.length > 0
-                          "
-                        >
-                          <tr
-                            v-for="(p, index) in store.pendentes"
-                            :key="index"
-                          >
+                        <template v-if="
+                          store &&
+                          store.pendentes &&
+                          store.pendentes.length > 0
+                        ">
+                          <tr v-for="(p, index) in store.pendentes" :key="index">
                             <td>
                               <div class="d-flex px-3">
                                 <div class="my-auto">
@@ -267,17 +203,11 @@
                               }}</span>
                             </td>
                             <td>
-                              <span class="text-md font-weight-bold"
-                                >{{ p.shareValue }}€</span
-                              >
+                              <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
                             </td>
                             <td>
-                              <material-button
-                                variant="gradient"
-                                color="secondary"
-                                class="btn btn-sm small-button"
-                                @click="openDetailsPopup(p.id)"
-                              >
+                              <material-button variant="gradient" color="secondary" class="btn btn-sm small-button"
+                                @click="openDetailsPopup(p.id)">
                                 {{ $t("Detalhes") }}
                               </material-button>
                             </td>
@@ -308,118 +238,158 @@
   <div v-if="popup" class="modal fade show" style="display: block">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div
-          class="modal-header d-flex justify-content-between align-items-center"
-        >
+        <div class="modal-header d-flex justify-content-between align-items-center">
           <h5 class="modal-title">Informações da Transacao</h5>
-          <material-button
-            variant="gradient"
-            color="secondary"
-            class="btn btn-sm small-button"
-            @click="popup = false"
-          >
+          <material-button variant="gradient" color="secondary" class="btn btn-sm small-button" @click="popup = false">
             {{ $t("Voltar") }}
           </material-button>
         </div>
         <div class="modal-body scroll-container3">
+          <div class="nav-wrapper position-relative end-0 mb-4">
+            <ul class="nav nav-pills nav-fill p-1" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link tab-button" :class="{ active: infos }" @click="
+                  infos = true;
+                participantes = false;
+                ">{{ $t("Informação") }}</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link tab-button" :class="{ active: participantes }" @click="
+                  participantes = true;
+                infos = false;
+                ">{{ $t("Participantes") }}</a>
+              </li>
+            </ul>
+          </div>
           <div v-if="transa">
-            <h6>Descrição: {{ transa.descricao }}</h6>
-            <h6>Valor Total: {{ transa.value }}€</h6>
-            <h6 v-if="transa.value != transa.shareValue">
-              Valor Partilhado: {{ transa.shareValue }}€
-            </h6>
-            <h6>Periodicidade: {{ getRepetitionText(transa.repeticao) }}</h6>
-            <h6>Data Criação: {{ transa.date }}</h6>
-            <h6>Data: {{ dateP }}</h6>
-            <h6>Categoria: {{ transa.categoria }}</h6>
-            <h6>Status: {{ transa.status }}</h6>
-            <h6>Tipo: {{ transa.tipo }}</h6>
-            <h6>Local: {{ transa.local }}</h6>
-            <h6>Utilizadores: {{ transa.users }}</h6>
-          </div>
-          <!-- <div v-if="comments && comments.length > 0" class="modal-footer d-block justify-content-center"> -->
-          <div
-            v-if="comments"
-            class="modal-footer d-block justify-content-center"
-          >
-            <div class="align-items-center text-center">
-              <i
-                class="material-icons align-self-center comment"
-                style="max-width: 24px; color: #344767"
-                >insert_comment_outlined</i
-              >
-              <h5>{{ $t("Comentários") }}</h5>
-            </div>
-          </div>
-          <div class="justify-content-left">
-            <div v-for="(c, index) in comments" :key="index" class="mb-3">
-              <h6>
-                {{ c.user_email + " " + c.timestamp + " " + c.descricao }}
+            <div v-if="infos">
+              <h6>Descrição: {{ transa.descricao }}</h6>
+              <h6>Valor Total: {{ transa.value }}€</h6>
+              <h6 v-if="transa.value != transa.shareValue">
+                Valor Partilhado: {{ transa.shareValue }}€
               </h6>
-            </div>
-            <div class="row mb-3">
-              <div class="col-9">
-                <material-input
-                  class="material-input w-100"
-                  id="comment"
-                  type="text"
-                  :value="Comment"
-                  :label="$t('Escreva o seu comentário')"
-                  @update:value="Comment = $event"
-                />
+              <h6>Periodicidade: {{ getRepetitionText(transa.repeticao) }}</h6>
+              <h6>Data Criação: {{ transa.date }}</h6>
+              <h6>Data: {{ dateP }}</h6>
+              <h6>Categoria: {{ transa.categoria }}</h6>
+              <h6>Status: {{ transa.status }}</h6>
+              <h6>Tipo: {{ transa.tipo }}</h6>
+              <h6>Local: {{ transa.local }}</h6>
+
+              <!-- <div v-if="comments && comments.length > 0" class="modal-footer d-block justify-content-center"> -->
+              <div v-if="comments" class="modal-footer d-block justify-content-center">
+                <div class="align-items-center text-center">
+                  <i class="material-icons align-self-center comment"
+                    style="max-width: 24px; color: #344767">insert_comment_outlined</i>
+                  <h5>{{ $t("Comentários") }}</h5>
+                </div>
               </div>
-              <div class="col-3 d-flex align-items-center justify-content-end">
-                <material-button
-                  variant="gradient"
-                  color="info"
-                  class="btn btn-md d-flex justify-content-center align-items-center"
-                  @click="addComment(transa.id)"
-                >
-                  {{ $t("Comentar") }}
-                </material-button>
+              <div class="justify-content-left">
+                <div v-for="(c, index) in comments" :key="index" class="mb-3">
+                  <h6>
+                    {{ c.user_email + " " + c.timestamp + " " + c.descricao }}
+                  </h6>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-9">
+                    <material-input class="material-input w-100" id="comment" type="text" :value="Comment"
+                      :label="$t('Escreva o seu comentário')" @update:value="Comment = $event" />
+                  </div>
+                  <div class="col-3 d-flex align-items-center justify-content-end">
+                    <material-button variant="gradient" color="info"
+                      class="btn btn-md d-flex justify-content-center align-items-center"
+                      @click="addComment(transa.id)">
+                      {{ $t("Comentar") }}
+                    </material-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="participantes">
+              <div v-for="(u, index) in transa.users" :key="index">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
+                    <h6>Utilizador: {{ u.name }}</h6>
+                    <h6>Email: {{ u.email }}</h6>
+                    <h6 v-if="u.confirma === 1">Estado: Aceite</h6>
+                    <h6 v-if="u.confirma === 0">Estado: Em espera</h6>
+                  </div>
+                  <div v-if="transa.users[0].id === user.id">
+                    <div>
+                      <!--remove user-->
+                      <material-button v-if="transa.users[0].id != u.id" variant="gradient" color="danger"
+                        class="btn btn-sm small-button" @click="
+                          popupKickInfo(u);
+                        popupKick = true;
+                        popup = false;
+                        typeKick = 0;
+                        ">
+                        {{ $t("Remover") }}
+                      </material-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Shared expense -->
+              <div v-if="transa.users[0].id === user.id">
+                <hr class="horizontal dark my-sm-4" />
+                <div class="form-group">
+                  <label for="sharedExpense" class="form-label mb-3">{{ $t('Adicionar novos membros:')
+                    }}</label>
+                  <div class="form-input mb-3">
+                    <div v-if="emailError === true && emailErrorStore === null" class="mb-3">
+                      <material-input class="material-input mb-3" id="email" type="email"
+                        :label="$t('Indique o email do utilizador')" name="email" :value="newUserEmail"
+                        @update:value="newUserEmail = $event" error />
+                    </div>
+
+                    <div v-if="emailError === true && emailErrorStore !== null" class="mb-3">
+                      <material-input class="material-input mb-3" id="email" type="email" :label=emailErrorStore
+                        name="email" :value="newUserEmail" @update:value="newUserEmail = $event" error />
+                    </div>
+
+                    <div v-if="emailError === false" class="mb-3">
+                      <material-input class="material-input mb-3" id="email" type="email" name="email"
+                        :value="newUserEmail" @update:value="newUserEmail = $event" success />
+                    </div>
+
+                    <div v-if="emailError === null" class="mb-3">
+                      <material-input class="material-input mb-3" id="email" type="email" name="email"
+                        :value="newUserEmail" @update:value="newUserEmail = $event"
+                        :label="$t('Indique o email do utilizador')" />
+                    </div>
+
+                    <p class="btn btn-default bg-gradient-info mb-1" @click="addUser">{{ $t('Adicionar Utilizador') }}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div v-if="transa && transa.users && transa.users.length > 0">
-          <div
-            v-if="transa.users[0].id == user.id"
-            class="modal-footer d-flex justify-content-between"
-          >
-            <material-button
-              variant="gradient"
-              color="danger"
-              class="btn btn-md"
-              @click="
-                popupReject = true;
-                popup = false;
-              "
-            >
+          <div v-if="transa.users[0].id == user.id" class="modal-footer d-flex justify-content-between">
+            <material-button variant="gradient" color="danger" class="btn btn-md" @click="
+              popupReject = true;
+            popup = false;
+            ">
               {{ $t("Eliminar") }}
             </material-button>
-            <material-button
-              variant="gradient"
-              color="info"
-              class="btn btn-md"
-              @click="
-                popupAccept = true;
-                popup = false;
-              "
-            >
+            <material-button variant="gradient" color="info" class="btn btn-md" @click="
+              popupAccept = true;
+            popup = false;
+            ">
               {{ $t("Pagar") }}
             </material-button>
           </div>
           <div v-else class="modal-footer d-flex justify-content-end">
-            <material-button
-              variant="gradient"
-              color="danger"
-              class="btn btn-md"
-              @click="
-                popupReject = true;
-                popup = false;
-                leave = true;
-              "
-            >
+            <material-button variant="gradient" color="danger" class="btn btn-md" @click="
+              popupReject = true;
+            popup = false;
+            leave = true;
+            ">
               {{ $t("Sair") }}
             </material-button>
           </div>
@@ -432,9 +402,7 @@
   <div v-if="popupReject" class="modal fade show" style="display: block">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div
-          class="modal-header d-flex justify-content-between align-items-center"
-        >
+        <div class="modal-header d-flex justify-content-between align-items-center">
           <div v-if="leave === true">
             <h5 class="modal-title">Tem a certeza que deseja sair do grupo?</h5>
           </div>
@@ -448,29 +416,19 @@
           <p>A sua ação é irreversível!</p>
         </div>
         <div class="modal-footer d-flex justify-content-between">
-          <material-button
-            variant="gradient"
-            color="secondary"
-            class="btn btn-md"
-            @click="
-              popupReject = false;
-              popup = true;
-              leave = false;
-            "
-          >
+          <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
+            popupReject = false;
+          popup = true;
+          leave = false;
+          ">
             {{ $t("Voltar") }}
           </material-button>
-          <material-button
-            variant="gradient"
-            color="info"
-            class="btn btn-md"
-            @click="
-              deleteTransacao();
-              popupReject = false;
-              popup = false;
-              leave = false;
-            "
-          >
+          <material-button variant="gradient" color="info" class="btn btn-md" @click="
+            deleteTransacao();
+          popupReject = false;
+          popup = false;
+          leave = false;
+          ">
             {{ $t("Confirmar") }}
           </material-button>
         </div>
@@ -482,36 +440,24 @@
   <div v-if="popupAccept" class="modal fade show" style="display: block">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div
-          class="modal-header d-flex justify-content-between align-items-center"
-        >
+        <div class="modal-header d-flex justify-content-between align-items-center">
           <h5 class="modal-title">Deseja proceder com o pagamento?</h5>
         </div>
         <div class="modal-body text-center">
           <p>A sua ação é irreversível!</p>
         </div>
         <div class="modal-footer d-flex justify-content-between">
-          <material-button
-            variant="gradient"
-            color="secondary"
-            class="btn btn-md"
-            @click="
-              popupAccept = false;
-              popup = true;
-            "
-          >
+          <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
+            popupAccept = false;
+          popup = true;
+          ">
             {{ $t("Voltar") }}
           </material-button>
-          <material-button
-            variant="gradient"
-            color="info"
-            class="btn btn-md"
-            @click="
-              payTransaction();
-              popupAccept = false;
-              popup = false;
-            "
-          >
+          <material-button variant="gradient" color="info" class="btn btn-md" @click="
+            payTransaction();
+          popupAccept = false;
+          popup = false;
+          ">
             {{ $t("Confirmar") }}
           </material-button>
         </div>
@@ -523,16 +469,10 @@
   <div v-if="popupDetails" class="modal fade show" style="display: block">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div
-          class="modal-header d-flex justify-content-between align-items-center"
-        >
+        <div class="modal-header d-flex justify-content-between align-items-center">
           <h5 class="modal-title">Informações do pedido de adesão</h5>
-          <material-button
-            variant="gradient"
-            color="secondary"
-            class="btn btn-sm small-button"
-            @click="popupDetails = false"
-          >
+          <material-button variant="gradient" color="secondary" class="btn btn-sm small-button"
+            @click="popupDetails = false">
             {{ $t("Voltar") }}
           </material-button>
         </div>
@@ -540,27 +480,17 @@
           <div class="nav-wrapper position-relative end-0 mb-4">
             <ul class="nav nav-pills nav-fill p-1" role="tablist">
               <li class="nav-item">
-                <a
-                  class="nav-link tab-button"
-                  :class="{ active: infos }"
-                  @click="
-                    infos = true;
-                    participantes = false;
-                  "
-                  >{{ $t("Informação") }}</a
-                >
+                <a class="nav-link tab-button" :class="{ active: infos }" @click="
+                  infos = true;
+                participantes = false;
+                ">{{ $t("Informação") }}</a>
               </li>
 
               <li class="nav-item">
-                <a
-                  class="nav-link tab-button"
-                  :class="{ active: participantes }"
-                  @click="
-                    participantes = true;
-                    infos = false;
-                  "
-                  >{{ $t("Participantes") }}</a
-                >
+                <a class="nav-link tab-button" :class="{ active: participantes }" @click="
+                  participantes = true;
+                infos = false;
+                ">{{ $t("Participantes") }}</a>
               </li>
             </ul>
           </div>
@@ -580,97 +510,85 @@
             <h6>Local: {{ selectedPendente.local }}</h6>
           </div>
           <div v-if="participantes">
-            <div v-for="(user, index) in selectedPendente.users" :key="index">
+            <div v-for="(u, index) in selectedPendente.users" :key="index">
               <div class="d-flex align-items-center justify-content-between">
                 <div>
-                  <h6>Utilizador: {{ user.name }}</h6>
-                  <h6>Email: {{ user.email }}</h6>
-                  <h6 v-if="user.confirma === 1">Estado: Aceite</h6>
-                  <h6 v-if="user.confirma === 0">Estado: Em espera</h6>
+                  <h6>Utilizador: {{ u.name }}</h6>
+                  <h6>Email: {{ u.email }}</h6>
+                  <h6 v-if="u.confirma === 1">Estado: Aceite</h6>
+                  <h6 v-if="u.confirma === 0">Estado: Em espera</h6>
                 </div>
-                <div>
-                  <!--remove user-->
-                  <material-button
-                    v-if="selectedPendente.users[0].id != user.id"
-                    variant="gradient"
-                    color="danger"
-                    class="btn btn-sm small-button"
-                  >
-                    {{ $t("Remover") }}
-                  </material-button>
+                <div v-if="selectedPendente.users[0].id === user.id">
+                  <div>
+                    <!--remove user-->
+                    <material-button v-if="selectedPendente.users[0].id != u.id" variant="gradient" color="danger"
+                      class="btn btn-sm small-button" @click="
+                        popupKickInfo(u);
+                      popupKick = true;
+                      popupDetails = false;
+                      typeKick = 1;
+                      ">
+                      {{ $t("Remover") }}
+                    </material-button>
+                  </div>
                 </div>
               </div>
             </div>
             <!-- Shared expense -->
-            <hr class="horizontal dark my-sm-4" />
-                            <div class="form-group">
-                                <label for="sharedExpense" class="form-label mb-3">{{ $t('Adicionar novos membros:')
-                                    }}</label>
-                                <div class="form-input mb-3">
-                                    <div v-if="emailError === true && emailErrorStore === null" class="mb-3">
-                                        <material-input class="material-input mb-3" id="email" type="email" :label="$t('Indique o email do utilizador')" name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" error />
-                                    </div>
+            <div v-if="selectedPendente.users[0].id === user.id">
+              <hr class="horizontal dark my-sm-4" />
+              <div class="form-group">
+                <label for="sharedExpense" class="form-label mb-3">{{ $t('Adicionar novos membros:')
+                  }}</label>
+                <div class="form-input mb-3">
+                  <div v-if="emailError === true && emailErrorStore === null" class="mb-3">
+                    <material-input class="material-input mb-3" id="email" type="email"
+                      :label="$t('Indique o email do utilizador')" name="email" :value="newUserEmail"
+                      @update:value="newUserEmail = $event" error />
+                  </div>
 
-                                    <div v-if="emailError === true && emailErrorStore !== null" class="mb-3">
-                                        <material-input class="material-input mb-3" id="email" type="email" :label= emailErrorStore name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" error />
-                                    </div>
-                                    
-                                    <div v-if="emailError === false" class="mb-3">
-                                        <material-input class="material-input mb-3" id="email" type="email" name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" success />
-                                    </div>
+                  <div v-if="emailError === true && emailErrorStore !== null" class="mb-3">
+                    <material-input class="material-input mb-3" id="email" type="email" :label=emailErrorStore
+                      name="email" :value="newUserEmail" @update:value="newUserEmail = $event" error />
+                  </div>
 
-                                    <div v-if="emailError === null" class="mb-3">
-                                        <material-input class="material-input mb-3" id="email" type="email" name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" :label="$t('Indique o email do utilizador')"/>
-                                    </div>
+                  <div v-if="emailError === false" class="mb-3">
+                    <material-input class="material-input mb-3" id="email" type="email" name="email"
+                      :value="newUserEmail" @update:value="newUserEmail = $event" success />
+                  </div>
 
-                                    <p class="btn btn-default bg-gradient-info mb-1" 
-                                    @click="addUser">{{ $t('Adicionar Utilizador') }}</p>
-                                </div>
-                            </div>
-                        </div>
+                  <div v-if="emailError === null" class="mb-3">
+                    <material-input class="material-input mb-3" id="email" type="email" name="email"
+                      :value="newUserEmail" @update:value="newUserEmail = $event"
+                      :label="$t('Indique o email do utilizador')" />
+                  </div>
 
+                  <p class="btn btn-default bg-gradient-info mb-1" @click="addUser">{{ $t('Adicionar Utilizador') }}</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-                            
+
+        </div>
+        <div>
+
           <div v-if="acceptorRejectPendenteButton() === true">
-            <div
-              v-if="selectedPendente.users[0].id != user.id"
-              class="modal-footer d-flex justify-content-between"
-            >
-              <material-button
-                variant="gradient"
-                color="danger"
-                class="btn btn-md"
-                @click="
-                  popupReject2 = true;
-                  popupDetails = false;
-                "
-              >
+            <div v-if="selectedPendente.users[0].id != user.id" class="modal-footer d-flex justify-content-between">
+              <material-button variant="gradient" color="danger" class="btn btn-md" @click="
+                popupReject2 = true;
+              popupDetails = false;
+              ">
                 {{ $t("Rejeitar") }}
               </material-button>
-              <material-button
-                variant="gradient"
-                color="info"
-                class="btn btn-md"
-                @click="
-                  popupAccept2 = true;
-                  popupDetails = false;
-                "
-              >
+              <material-button variant="gradient" color="info" class="btn btn-md" @click="
+                popupAccept2 = true;
+              popupDetails = false;
+              ">
                 {{ $t("Aceitar") }}
               </material-button>
             </div>
             <div v-else class="modal-footer d-flex justify-content-end">
-              <material-button
-                variant="gradient"
-                color="danger"
-                class="btn btn-md"
-                @click="deletePendente()"
-              >
+              <material-button variant="gradient" color="danger" class="btn btn-md" @click="deletePendente()">
                 {{ $t("Eliminar") }}
               </material-button>
             </div>
@@ -684,9 +602,7 @@
   <div v-if="popupReject2" class="modal fade show" style="display: block">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div
-          class="modal-header d-flex justify-content-between align-items-center"
-        >
+        <div class="modal-header d-flex justify-content-between align-items-center">
           <h5 class="modal-title">
             Tem a certeza que não deseja participar no grupo?
           </h5>
@@ -695,28 +611,18 @@
           <p>A sua ação é irreversível!</p>
         </div>
         <div class="modal-footer d-flex justify-content-between">
-          <material-button
-            variant="gradient"
-            color="secondary"
-            class="btn btn-md"
-            @click="
-              popupReject2 = false;
-              popupDetails = true;
-            "
-          >
+          <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
+            popupReject2 = false;
+          popupDetails = true;
+          ">
             {{ $t("Voltar") }}
           </material-button>
-          <material-button
-            variant="gradient"
-            color="info"
-            class="btn btn-md"
-            @click="
-              acceptorReject(-1);
-              popupReject2 = false;
-              snackbar = 'successReject2';
-              popupDetails = false;
-            "
-          >
+          <material-button variant="gradient" color="info" class="btn btn-md" @click="
+            acceptorReject(-1);
+          popupReject2 = false;
+          snackbar = 'successReject2';
+          popupDetails = false;
+          ">
             {{ $t("Confirmar") }}
           </material-button>
         </div>
@@ -728,37 +634,25 @@
   <div v-if="popupAccept2" class="modal fade show" style="display: block">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div
-          class="modal-header d-flex justify-content-between align-items-center"
-        >
+        <div class="modal-header d-flex justify-content-between align-items-center">
           <h5 class="modal-title">Deseja proceder a entrada no grupo?</h5>
         </div>
         <div class="modal-body text-center">
           <p>A sua ação é irreversível!</p>
         </div>
         <div class="modal-footer d-flex justify-content-between">
-          <material-button
-            variant="gradient"
-            color="secondary"
-            class="btn btn-md"
-            @click="
-              popupAccept2 = false;
-              popupDetails = true;
-            "
-          >
+          <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
+            popupAccept2 = false;
+          popupDetails = true;
+          ">
             {{ $t("Voltar") }}
           </material-button>
-          <material-button
-            variant="gradient"
-            color="info"
-            class="btn btn-md"
-            @click="
-              acceptorReject(1);
-              popupAccept2 = false;
-              snackbar = 'successAccept2';
-              popupDetails = false;
-            "
-          >
+          <material-button variant="gradient" color="info" class="btn btn-md" @click="
+            acceptorReject(1);
+          popupAccept2 = false;
+          snackbar = 'successAccept2';
+          popupDetails = false;
+          ">
             {{ $t("Confirmar") }}
           </material-button>
         </div>
@@ -766,46 +660,57 @@
     </div>
   </div>
 
+  <!--PopUp Detalhes Aceitar-->
+  <div v-if="popupKick" class="modal fade show" style="display: block">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header d-flex justify-content-between align-items-center">
+          <h5 class="modal-title">Deseja proceder a expulsao do elemento {{ userKick.name }}?</h5>
+        </div>
+        <div class="modal-body text-center">
+          <p>A sua ação é irreversível!</p>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <div v-if="typeKick === 1">
+            <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
+              popupKick = false;
+              popupDetails = true;
+            ">
+              {{ $t("Voltar") }}
+            </material-button>
+          </div>
+          <div v-else>
+            <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
+              popupKick = false;
+              popup = true;
+            ">
+              {{ $t("Voltar") }}
+            </material-button>
+          </div>
+          <material-button variant="gradient" color="danger" class="btn btn-sm small-button" @click="kickUser()">
+            {{ $t("Remover") }}
+          </material-button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="position-fixed top-1 end-1 z-index-2">
-    <material-snackbar
-      v-if="snackbar === 'successReject'"
-      title="Pagamento"
-      date="now"
-      description="Grupo de Pagamento removido com sucesso!"
-      :icon="{ component: 'done', color: 'white' }"
-      color="success"
-      :close-handler="closeSnackbar"
-    />
+    <material-snackbar v-if="snackbar === 'successReject'" title="Pagamento" date="now"
+      description="Grupo de Pagamento removido com sucesso!" :icon="{ component: 'done', color: 'white' }"
+      color="success" :close-handler="closeSnackbar" />
 
-    <material-snackbar
-      v-if="snackbar === 'successAccept'"
-      title="Pagamento"
-      date="now"
-      description="Pagamento efetuado com sucesso!"
-      :icon="{ component: 'done', color: 'white' }"
-      color="success"
-      :close-handler="closeSnackbar"
-    />
+    <material-snackbar v-if="snackbar === 'successAccept'" title="Pagamento" date="now"
+      description="Pagamento efetuado com sucesso!" :icon="{ component: 'done', color: 'white' }" color="success"
+      :close-handler="closeSnackbar" />
 
-    <material-snackbar
-      v-if="snackbar === 'successAccept2'"
-      title="Adesão"
-      date="now"
-      description="Adesão a grupo efetuada com sucesso!"
-      :icon="{ component: 'done', color: 'white' }"
-      color="success"
-      :close-handler="closeSnackbar"
-    />
+    <material-snackbar v-if="snackbar === 'successAccept2'" title="Adesão" date="now"
+      description="Adesão a grupo efetuada com sucesso!" :icon="{ component: 'done', color: 'white' }" color="success"
+      :close-handler="closeSnackbar" />
 
-    <material-snackbar
-      v-if="snackbar === 'successReject2'"
-      title="Adesão"
-      date="now"
-      description="Adesão a grupo rejeitada com sucesso!"
-      :icon="{ component: 'done', color: 'white' }"
-      color="success"
-      :close-handler="closeSnackbar"
-    />
+    <material-snackbar v-if="snackbar === 'successReject2'" title="Adesão" date="now"
+      description="Adesão a grupo rejeitada com sucesso!" :icon="{ component: 'done', color: 'white' }" color="success"
+      :close-handler="closeSnackbar" />
   </div>
 </template>
 
@@ -832,9 +737,15 @@ export default {
     const popupDetails = ref(false);
     const popupReject2 = ref(false);
     const popupAccept2 = ref(false);
+
+    const popupKick = ref(false);
+    const userKick = ref(null);
+    const typeKick = ref(null);
+
     const infos = ref(true);
     const participantes = ref(false);
     const leave = ref(false);
+
 
     const store = fixaStore();
     const user = userStore();
@@ -989,6 +900,23 @@ export default {
       }
     };
 
+    const popupKickInfo = (user) => {
+      userKick.value = user;
+      selectedPendenteId.value = transa.value.id;
+    };
+
+    const kickUser = async () => {
+      try {
+        await store.kickUser(userKick.value.email, selectedPendenteId.value);
+        popupDetails.value = false;
+        loadPendentes();
+        loadPorPagar();
+        loadProximosPagamentos();
+      } catch (err) {
+        alert("Erro kickUser-> " + err.message);
+      }
+    };
+
     const addComment = async (id) => {
       const url =
         "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/comment/add";
@@ -1104,10 +1032,12 @@ export default {
       getRepetitionText,
       store,
       user,
+      popupKick,
       dateP,
       transa,
       comments,
       Comment,
+      userKick,
       deleteTransacao,
       selectedPendenteId,
       openDetailsPopup,
@@ -1124,6 +1054,9 @@ export default {
       addComment,
       emailError,
       validarEmail,
+      kickUser,
+      typeKick,
+      popupKickInfo,
     };
   },
 };
@@ -1219,10 +1152,13 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
   transition-duration: 0.2s;
 }
+
 .modal-body {
-    overflow-y: auto; /* Ativa a rolagem vertical */
-    max-height: 70vh; /* Altura máxima do corpo do modal */
-  }
+  overflow-y: auto;
+  /* Ativa a rolagem vertical */
+  max-height: 70vh;
+  /* Altura máxima do corpo do modal */
+}
 
 .tab {
   display: none;
@@ -1233,7 +1169,7 @@ export default {
 }
 
 .nav-pills .nav-link.active,
-.nav-pills .show > .nav-link {
+.nav-pills .show>.nav-link {
   color: #344767;
   background-color: #fff;
   animation: 0.2s ease;
@@ -1247,6 +1183,4 @@ export default {
     background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out;
 }
-
-
 </style>

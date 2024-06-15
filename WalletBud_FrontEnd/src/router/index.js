@@ -8,6 +8,7 @@ import SignIn from "../views/SignIn.vue";
 import SignUp from "../views/SignUp.vue";
 import TermsAndConditions from "../views/TermsAndConditions.vue";
 import Payments from "../views/Payments.vue";
+import Recuperacao from "../views/Recuperacao.vue";
 
 /* Bloqueamento de Acessos
 1) Não retirar os comentários, apenas estão para não obrigar a ter que fazer login sempre
@@ -70,6 +71,11 @@ const routes = [
     path: "/payments",
     name: "Payments",
     component: Payments,
+  },
+  {
+    path: "/recuperacao",
+    name: "Recuperacao",
+    component: Recuperacao,
   },
 ];
 /*

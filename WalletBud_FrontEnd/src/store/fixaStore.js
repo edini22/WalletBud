@@ -286,15 +286,18 @@ export const fixaStore = defineStore('fixa', {
             }
           },  
 
-        async editCategory(editedCategory) {
+        async kickUser(mail,id) {
+          
+          let transaction = this.pendentes.find(transaction => transaction.id === id);
 
           const newt = {
-              name: editedCategory.name,
-              id: editedCategory.id,
+              IdTransacao: id,
+              option: -1,
+              email_shared: mail,
           };
           const newtJSON = JSON.stringify(newt);
 
-          const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/categoria/set";
+          const url = `http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/${transaction.transacao}/share`;
           const token = localStorage.getItem('token');
           const request = {
               method: "POST",
@@ -312,9 +315,6 @@ export const fixaStore = defineStore('fixa', {
             throw new Error(errorData.message);
           }
         },
-        // getCategoriesByID(id) {
-        //     return this.Categories.find(Category => Category.id === id);
-        // }
     }
     
 });

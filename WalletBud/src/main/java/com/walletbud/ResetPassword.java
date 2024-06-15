@@ -17,24 +17,13 @@ import com.auth0.jwt.algorithms.Algorithm;
 import okhttp3.*;
 
 import org.orm.PersistentException;
+import org.orm.PersistentSession;
 import org.orm.PersistentTransaction;
 import wb.walletbud.AASICPersistentManager;
 import wb.walletbud.User;
-import wb.walletbud.UserDAO;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Path("/reset_password")
 public class ResetPassword {
@@ -57,14 +46,19 @@ public class ResetPassword {
         JsonObject jsonObject = reader.readObject();
         reader.close();
 
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
 
             String email = jsonObject.getString("email");
 
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             if (user == null) {
+                transaction.rollback();
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Recuperação de password falhou!")
                         .build();
@@ -75,11 +69,12 @@ public class ResetPassword {
                         .build();
             }
 
-            int cond = sendRecoveryToken(user);
+            int cond = gerirUtilizador.sendRecoveryToken(session, user);
 
-            t.commit();
+
 
             if (cond == 0) {
+                transaction.commit();
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Envio bem sucedido!")
                         .build();
@@ -87,6 +82,7 @@ public class ResetPassword {
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             } else {
+                transaction.rollback();
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Envio falhou!")
                         .build();
@@ -98,8 +94,8 @@ public class ResetPassword {
             }
 
         } catch (Exception e) {
-            t.rollback();
-            e.printStackTrace();
+            assert transaction != null;
+            transaction.rollback();
             JsonObject jsonResponse = Json.createObjectBuilder()
                     .add("message", "Envio falhou!")
                     .build();
@@ -108,6 +104,10 @@ public class ResetPassword {
                     .entity(jsonResponse.toString())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
 
     }
@@ -122,16 +122,21 @@ public class ResetPassword {
         JsonObject jsonObject = reader.readObject();
         reader.close();
 
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
 
             String email = jsonObject.getString("email");
             String token = jsonObject.getString("token");
             String password = jsonObject.getString("password");
 
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             if (user == null) {
+                transaction.rollback();
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Recuperação de password falhou!")
                         .build();
@@ -142,9 +147,10 @@ public class ResetPassword {
                         .build();
             }
 
-            int cond = resetPassword(user, token, password);
+            int cond = gerirUtilizador.resetPassword(session, user, token, password);
 
             if (cond == 0) {
+                transaction.commit();
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Recuperação de password bem sucedida!")
                         .build();
@@ -152,6 +158,7 @@ public class ResetPassword {
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             } else {
+                transaction.rollback();
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Recuperação de password falhou!")
                         .build();
@@ -163,7 +170,8 @@ public class ResetPassword {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            assert transaction != null;
+            transaction.rollback();
             JsonObject jsonResponse = Json.createObjectBuilder()
                     .add("message", "Recuperação de password falhou!")
                     .build();
@@ -172,162 +180,12 @@ public class ResetPassword {
                     .entity(jsonResponse.toString())
                     .type(MediaType.APPLICATION_JSON)
                     .build();
-        }
-
-    }
-
-    private int resetPassword(User user, String token, String password) throws PersistentException {
-
-        Timestamp time = new Timestamp(System.currentTimeMillis());
-        if (!user.getToken().equals(token) || user.getExpToken().before(time)) {
-            return -1;
-        }
-
-        MessageDigest digest = null;
-        try {
-            digest = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            return -1;
-        }
-
-        byte[] encodedhash = digest.digest(
-                password.getBytes(StandardCharsets.UTF_8));
-        String hashedPassword = bytesToHex(encodedhash);
-
-        user.setPassword(hashedPassword);
-        UserDAO.save(user);
-
-        return 0;
-    }
-
-    private int sendRecoveryToken(User user) throws PersistentException {
-
-        byte[] b = new byte[20];
-        new Random().nextBytes(b);
-
-        String token = Arrays.toString(b);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR_OF_DAY, 24);
-        long timeInMillis = calendar.getTimeInMillis();
-
-        Timestamp time = new Timestamp(timeInMillis);
-
-        user.setToken(token);
-        user.setExpToken(time);
-        UserDAO.save(user);
-
-        String template = loadTemplate("email_templates/email_template_en.html");
-
-        try {
-            sendEmail(
-                    "goncalosenra@gmail.com",
-                    user.getName(),
-                    "walletbud@trial-jy7zpl9xp6pl5vx6.mlsender.net",
-                    "Wallet Bud",
-                    "[WB] Password recovery",
-                    "",
-                    escapeHtml(template)
-            );
-        } catch (IOException e) {
-            return -1;
-        }
-
-
-        return 0;
-    }
-
-    private String bytesToHex(byte[] hash) {
-        StringBuilder hexString = new StringBuilder(2 * hash.length);
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
-            if(hex.length() == 1) {
-                hexString.append('0');
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
             }
-            hexString.append(hex);
         }
-        return hexString.toString();
+
     }
 
-    public static String escapeHtml(String html) {
-        if (html == null) {
-            return null;
-        }
-        return html.replace("\\", "\\\\")
-                .replace("\"", "\\\"")
-                .replace("\b", "\\b")
-                .replace("\f", "\\f")
-                .replace("\n", "\\n")
-                .replace("\r", "\\r")
-                .replace("\t", "\\t");
-    }
-
-    public static String replacePlaceholder(String html, String placeholder, String replacement) {
-        // Escape special characters in the placeholder for regex
-        String escapedPlaceholder = Pattern.quote(placeholder);
-
-        // Construct regex pattern to find the placeholder
-        String regex = escapedPlaceholder;
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(html);
-
-        // Replace all occurrences of the placeholder with the replacement string
-        String replacedHtml = matcher.replaceAll(Matcher.quoteReplacement(replacement));
-
-        return replacedHtml;
-    }
-
-    public static String loadTemplate(String templateName) {
-        InputStream inputStream = Teste.class.getClassLoader().getResourceAsStream(templateName);
-        if (inputStream == null) {
-            throw new RuntimeException("Template not found: " + templateName);
-        }
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-            return reader.lines().collect(Collectors.joining(System.lineSeparator()));
-        } catch (Exception e) {
-            throw new RuntimeException("Error reading template", e);
-        }
-    }
-
-    public static void sendEmail(String recipientEmail, String recipientName, String senderEmail, String senderName, String subject, String text, String html) throws IOException, IOException {
-        OkHttpClient client = new OkHttpClient();
-
-
-        String replacedHtml = replacePlaceholder(html, "{$user}", "Paco Nassa");
-
-
-        String json = "{"
-                + "\"from\": {\"email\": \"" + senderEmail + "\", \"name\": \"" + senderName + "\"},"
-                + "\"to\": [{\"email\": \"" + recipientEmail + "\", \"name\": \"" + recipientName + "\"}],"
-                + "\"subject\": \"" + subject + "\","
-                + "\"text\": \"" + text + "\","
-                + "\"html\": \"" + replacedHtml + "\","
-                + "\"personalization\": [{"
-                + "\"email\": \"" + recipientEmail + "\","
-                + "\"data\": {\"user\": \"" + recipientName + "\"}"
-                + "}],"
-                + "\"attachments\": [{"
-                + "\"content\": \"" + BASE64LOGO + "\","
-                + "\"disposition\": \"inline\","
-                + "\"filename\": \"image.png\","
-                + "\"id\": \"image_cid\""
-                + "}]"
-                + "}";
-
-        RequestBody body = RequestBody.create(json, okhttp3.MediaType.parse("application/json"));
-        Request request = new Request.Builder()
-                .url(API_URL)
-                .post(body)
-                .addHeader("Authorization", "Bearer " + API_TOKEN)
-                .addHeader("Content-Type", "application/json")
-                .build();
-
-        try (okhttp3.Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Unexpected code " + response);
-            }
-
-            System.out.println(response.body().string());
-        }
-    }
 }

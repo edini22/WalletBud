@@ -1,6 +1,6 @@
 <template>
     <div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalLabel"
-    aria-hidden="true">
+        aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -202,8 +202,7 @@
                                 <div v-if="repetitionError === null || repetitionError === false"
                                     class="input-group input-group-outline form-input mb-3"
                                     style="border-radius: 0.375rem;">
-                                    <button
-                                        class="cursor-pointer form-control form-control-default material-input"
+                                    <button class="cursor-pointer form-control form-control-default material-input"
                                         :class="{ 'dropdown-focused-null': isRepetitionFocused }" id="dropdownTable"
                                         data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
                                         @focus="handleRepetitionFocus">
@@ -237,14 +236,13 @@
                                 <div v-if="repetitionError === true"
                                     class="input-group input-group-outline form-input mb-3 is-invalid"
                                     style="border-radius: 0.375rem;">
-                                    <button
-                                        class="cursor-pointer form-control form-control-default material-input"
+                                    <button class="cursor-pointer form-control form-control-default material-input"
                                         :class="{ 'dropdown-focused-error': isRepetitionFocused }" id="dropdownTable"
                                         data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
                                         @focus="handleRepetitionFocus">
-                                        {{ Repetition ||  $t('Selecione a repetição') }}
+                                        {{ Repetition || $t('Selecione a repetição') }}
                                     </button>
-                                    
+
                                     <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
                                         <li> <a class="dropdown-item border-radius-md" href="javascript:;"
                                                 @click="selectRepetition('Todos os dias')">
@@ -379,48 +377,51 @@
                                     }}</label>
                                 <div class="form-input mb-3">
                                     <div v-if="emailError === true && emailErrorStore === null" class="mb-3">
-                                        <material-input class="material-input mb-3" id="email" type="email" :label="$t('Indique o email do utilizador')" name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" error />
+                                        <material-input class="material-input mb-3" id="email" type="email"
+                                            :label="$t('Indique o email do utilizador')" name="email"
+                                            :value="newUserEmail" @update:value="newUserEmail = $event" error />
                                     </div>
 
                                     <div v-if="emailError === true && emailErrorStore !== null" class="mb-3">
-                                        <material-input class="material-input mb-3" id="email" type="email" :label= emailErrorStore name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" error />
+                                        <material-input class="material-input mb-3" id="email" type="email"
+                                            :label=emailErrorStore name="email" :value="newUserEmail"
+                                            @update:value="newUserEmail = $event" error />
                                     </div>
-                                    
+
                                     <div v-if="emailError === false" class="mb-3">
                                         <material-input class="material-input mb-3" id="email" type="email" name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" success />
+                                            :value="newUserEmail" @update:value="newUserEmail = $event" success />
                                     </div>
 
                                     <div v-if="emailError === null" class="mb-3">
                                         <material-input class="material-input mb-3" id="email" type="email" name="email"
-                                        :value="newUserEmail" @update:value="newUserEmail = $event" :label="$t('Indique o email do utilizador')"/>
+                                            :value="newUserEmail" @update:value="newUserEmail = $event"
+                                            :label="$t('Indique o email do utilizador')" />
                                     </div>
 
-                                    <p class="btn btn-default bg-gradient-info mb-1" 
-                                    @click="addUser">{{ $t('Adicionar Utilizador') }}</p>
+                                    <p class="btn btn-default bg-gradient-info mb-1" @click="addUser">{{ $t('Adicionar Utilizador') }}</p>
                                 </div>
                             </div>
                             <hr class="horizontal dark my-sm-4" />
-                            <MaterialAlert v-if="showAlertUsers" color="danger" @click="hideAlertUsers" class="font-weight-light" dismissible>
+                            <MaterialAlert v-if="showAlertUsers" color="danger" @click="hideAlertUsers"
+                                class="font-weight-light" dismissible>
                                 <span class="text-sm">{{ $t('Adicione utilizadores para partilhar a despesa') }}</span>
                             </MaterialAlert>
                             <div v-if="sharedUsers.length > 0">
-                            <div class="align-items-center text-center">
-                                <label class="form-label align-self-center mb-3"
-                                    style="font-size: large; font-weight: 600;">{{ Value }}€ a dividir com:</label>
-                            </div>
-                            <div class="form-row" v-for="(user, index) in sharedUsers" :key="index">
-                                <div class="form-row">
-                                <material-checkbox :id="'checkbox_' + index" class="font-weight-light" checked
-                                    @click="removeUser(index)">
-                                </material-checkbox>
-                                <span style="font-size: 16px; padding-left: 10px;">{{ user }} </span>
+                                <div class="align-items-center text-center">
+                                    <label class="form-label align-self-center mb-3"
+                                        style="font-size: large; font-weight: 600;">{{ Value }}€ a dividir com:</label>
                                 </div>
-                                <span style="font-size: 16px; padding-right: 10px;">{{ calculateShare() }}</span>
+                                <div class="form-row" v-for="(user, index) in sharedUsers" :key="index">
+                                    <div class="form-row">
+                                        <material-checkbox :id="'checkbox_' + index" class="font-weight-light" checked
+                                            @click="removeUser(index)">
+                                        </material-checkbox>
+                                        <span style="font-size: 16px; padding-left: 10px;">{{ user }} </span>
+                                    </div>
+                                    <span style="font-size: 16px; padding-right: 10px;">{{ calculateShare() }}</span>
+                                </div>
                             </div>
-                        </div>
                         </div>
 
                     </div>
@@ -431,11 +432,20 @@
                     <p v-if="Type == 'Despesa' && showShareTab == false" class="btn btn-default bg-gradient-info mb-1"
                         @click="showTab(1)">{{ $t('Próximo') }}</p>
                     <p v-else class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Adicionar') }}</p>
-                    <p id="cancelButton" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal" @click="cancel">{{
+                    <p id="cancelButton" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal"
+                        @click="cancel">{{
                         $t('Cancelar') }}
                     </p>
                 </div>
             </div>
+        </div>
+        <div class="position-fixed bottom-1 end-1 z-index-2">
+            <material-snackbar v-if="snackbar === 'success'" title="Movimento" date="now"
+                description="Movimento adicionado com sucesso!" :icon="{ component: 'done', color: 'white' }"
+                color="success" :close-handler="closeSnackbar" />
+            <material-snackbar v-if="snackbar === 'error'" title="Movimento" date="now"
+                description="Não foi possível adicionar o movimento! Tente novamente." :icon="{ component: 'campaign', color: 'white' }"
+                color="danger" :close-handler="closeSnackbar" />
         </div>
     </div>
 </template>
@@ -446,12 +456,20 @@ import { useI18n } from 'vue-i18n';
 import MaterialAlert from "@/components/MaterialAlert.vue";
 import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialCheckbox from "@/components/MaterialCheckbox.vue";
+import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 //import NavPill from './NavPill.vue';
 //import { transactionStore } from "@/store/transactionStore.js";
 import { ref, reactive } from 'vue';
 
 
 export default {
+    name: "add-transactions",
+    components: {
+        MaterialAlert,
+        MaterialInput,
+        MaterialCheckbox,
+        MaterialSnackbar
+    },
     setup() {
         const { t } = useI18n();
         const Description = ref('');
@@ -482,6 +500,7 @@ export default {
         const showAlertUsers = ref(false);
         let timestamp = ref(null);
         let isValid = true;
+        const snackbar = ref(null);
 
         function validarEmail(email) {
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -684,12 +703,18 @@ export default {
                             console.log(Repetition.value + ": " + SendRepetition.value);
                             //POST da Receita Não Fixa
 
+                            // if(post correu bem) {
+                            
                             console.log("post da receita fixa");
-
-                            alert("Receita adicionada com sucesso!");
 
                             const cancelButton = document.getElementById('cancelButton');
                             cancelButton.click();
+
+                            snackbar.value = 'success';
+
+                            /*else(post correu mal){
+                                snackbar.value = 'error';
+                            }*/
                         }
                     }else{
                         //post de receita não fixa
@@ -704,6 +729,12 @@ export default {
 
                         const cancelButton = document.getElementById('cancelButton');
                         cancelButton.click();
+
+                        snackbar.value = 'success';
+
+                        /* else(error)
+                            snackbar.value = 'error';
+                         */
                     }                                     
                 }
 
@@ -733,6 +764,12 @@ export default {
                             alert("Despesa Fixa Partilhada adicionada com sucesso!")
                             const cancelButton = document.getElementById('cancelButton');
                             cancelButton.click();
+
+                            snackbar.value = 'success';
+
+                            /* else(error)
+                            snackbar.value = 'error';
+                         */
                         }
                     }else{
                         
@@ -747,6 +784,12 @@ export default {
                         alert("Despesa Não Fixa Partilhada adicionada com sucesso!")
                         const cancelButton = document.getElementById('cancelButton');
                         cancelButton.click();
+
+                        snackbar.value = 'success';
+
+                        /* else(error)
+                            snackbar.value = 'error';
+                         */
                     }
 
                 }else{
@@ -770,6 +813,12 @@ export default {
                             //chamar cancel() após POST
                             const cancelButton = document.getElementById('cancelButton');
                             cancelButton.click();
+
+                            snackbar.value = 'success';
+
+                            /* else(error)
+                                snackbar.value = 'error';
+                            */
                         }
                     }else{
                         //DESPESA NÃO PARTILHADA Não FIXA
@@ -787,6 +836,12 @@ export default {
                         //chamar cancel() após POST
                         const cancelButton = document.getElementById('cancelButton');
                         cancelButton.click();
+
+                        snackbar.value = 'success';
+
+                        /* else(error)
+                            snackbar.value = 'error';
+                         */
                     }
                 }
 
@@ -825,7 +880,8 @@ export default {
             emailError,
             emailErrorStore,
             showAlertUsers,
-            resetTab
+            resetTab,
+            snackbar
         };
     },
     data() {
@@ -852,11 +908,6 @@ export default {
             Tab: 0,
         };
     },
-    components: {
-        MaterialAlert,
-        MaterialInput,
-        MaterialCheckbox,
-    },
     mounted() {
         document.addEventListener('click', this.handleClickOutsideCategory);
         document.addEventListener('click', this.handleClickOutsideType);
@@ -881,6 +932,11 @@ export default {
             if(this.Tab !== 0)
             this.showTab(0);
             this.resetTab = false;
+        },
+        snackbar(){
+            setTimeout(() => {
+                this.snackbar = null;
+            }, 2000);
         }
     },
     methods: {
@@ -987,68 +1043,6 @@ export default {
             //event.target.type = 'text';
             if (this.DateM == '')
                 this.isFocused = false;
-        },
-        addCategory() {
-            if (this.newCategoryName.trim() === '') {
-                this.showErrorAdd = true;
-                clearTimeout(this.errorTimeout);
-                this.errorTimeout = setTimeout(() => {
-                    this.showErrorAdd = false;
-                }, 2000);
-                return;
-            }
-            if (this.newCategoryType === 'Despesa') {
-                this.expenseCategories.push(this.newCategoryName);
-            } else {
-                this.incomeCategories.push(this.newCategoryName);
-            }
-            this.newCategoryName = '';
-        },
-        deleteCategory(type, index) {
-            if (type === 'Despesa') {
-                this.expenseCategories.splice(index, 1);
-            } else {
-                this.incomeCategories.splice(index, 1);
-            }
-        },
-        changeFilter: function (filter) {
-            this.activeFilter = filter;
-        },
-        toggleEditMode(index) {
-            this.isEditing[index] = !this.isEditing[index];
-            this.editedCategory = this.expenseCategories[index];
-        },
-
-        saveCategory(index) {
-            if (this.editedCategory.trim() === '') {
-                this.showErrorExpense = true;
-                clearTimeout(this.errorTimeout);
-                this.errorTimeout = setTimeout(() => {
-                    this.showErrorExpense = false;
-                }, 2000);
-                return;
-            }
-            this.expenseCategories[index] = this.editedCategory;
-            this.isEditing[index] = false;
-
-        },
-
-        toggleIncomeEditMode(index) {
-            this.isEditingIncome[index] = !this.isEditingIncome[index];
-            this.editedIncomeCategory = this.incomeCategories[index];
-        },
-
-        saveIncomeCategory(index) {
-            if (this.editedIncomeCategory.trim() === '') {
-                this.showErrorIncome = true;
-                clearTimeout(this.errorTimeout);
-                this.errorIncome = setTimeout(() => {
-                    this.showErrorIncome = false;
-                }, 2000);
-                return;
-            }
-            this.incomeCategories[index] = this.editedIncomeCategory;
-            this.isEditingIncome[index] = false;
         },
     }
 };

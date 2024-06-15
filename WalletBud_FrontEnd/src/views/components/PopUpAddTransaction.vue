@@ -716,12 +716,12 @@ export default {
                             cancelButton.click();
 
                             //sucesso
-                            const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                            const event = new CustomEvent('show-snackbar', { detail: 'successAddMove' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
 
                             /* else(error)
-                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                                const event = new CustomEvent('show-snackbar', { detail: 'errorAddMove' });
                                 document.dispatchEvent(event);
                                 console.log('PopUp emitiu evento');
                             */
@@ -739,12 +739,12 @@ export default {
                         cancelButton.click();
 
                         //sucesso
-                        const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                        const event = new CustomEvent('show-snackbar', { detail: 'successAddMove' });
                         document.dispatchEvent(event);
                         console.log('PopUp emitiu evento');
 
                         /* else(error)
-                            const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                            const event = new CustomEvent('show-snackbar', { detail: 'errorAddMove' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                          */
@@ -778,12 +778,12 @@ export default {
                             cancelButton.click();
 
                             //sucesso
-                            const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                            const event = new CustomEvent('show-snackbar', { detail: 'successAddMove' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
 
                             /* else(error)
-                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                                const event = new CustomEvent('show-snackbar', { detail: 'errorAddMove' });
                                 document.dispatchEvent(event);
                                 console.log('PopUp emitiu evento');
                             */
@@ -802,12 +802,12 @@ export default {
                         cancelButton.click();
 
                         //sucesso
-                        const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                        const event = new CustomEvent('show-snackbar', { detail: 'successAddMove' });
                         document.dispatchEvent(event);
                         console.log('PopUp emitiu evento');
 
                         /* else(error)
-                            const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                            const event = new CustomEvent('show-snackbar', { detail: 'errorAddMove' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                          */
@@ -835,12 +835,12 @@ export default {
                             cancelButton.click();
 
                             //sucesso
-                            const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                            const event = new CustomEvent('show-snackbar', { detail: 'successAddMove' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
 
                             /* else(error)
-                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                                const event = new CustomEvent('show-snackbar', { detail: 'errorAddMove' });
                                 document.dispatchEvent(event);
                                 console.log('PopUp emitiu evento');
                             */
@@ -862,12 +862,12 @@ export default {
                         cancelButton.click();
 
                         //sucesso
-                        const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                        const event = new CustomEvent('show-snackbar', { detail: 'successAddMove' });
                         document.dispatchEvent(event);
                         console.log('PopUp emitiu evento');
 
                         /* else(error)
-                            const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                            const event = new CustomEvent('show-snackbar', { detail: 'errorAddMove' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                          */

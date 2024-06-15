@@ -67,10 +67,17 @@
     <PopUpAddTransaction />
     <PopUpSavingsGoal />
     <div class="position-fixed bottom-1 end-1 z-index-991">
-      <material-snackbar v-if="snackbar === 'success'" :title="$t('Movimento')" date="now"
+      <material-snackbar v-if="snackbar === 'successAddMove'" :title="$t('Movimento')" date="now"
         :description="$t('Movimento adicionado com sucesso!')" :icon="{ component: 'done', color: 'white' }"
         color="success" :close-handler="closeSnackbar" />
-      <material-snackbar v-if="snackbar === 'error'" :title="$t('Movimento')" date="now"
+      <material-snackbar v-if="snackbar === 'errorAddMove'" :title="$t('Movimento')" date="now"
+        :description="$t('Não foi possível adicionar o movimento! Tente novamente.')"
+        :icon="{ component: 'campaign', color: 'white' }" color="danger" :close-handler="closeSnackbar" />
+
+      <material-snackbar v-if="snackbar === 'successSavings'" :title="$t('Movimento')" date="now"
+        :description="$t('Movimento adicionado com sucesso!')" :icon="{ component: 'done', color: 'white' }"
+        color="success" :close-handler="closeSnackbar" />
+      <material-snackbar v-if="snackbar === 'errorSavings'" :title="$t('Movimento')" date="now"
         :description="$t('Não foi possível adicionar o movimento! Tente novamente.')"
         :icon="{ component: 'campaign', color: 'white' }" color="danger" :close-handler="closeSnackbar" />
     </div>

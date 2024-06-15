@@ -14,7 +14,7 @@
                             </label>
                             <div v-if="valueError === true" class="form-input mb-3">
                                 <material-input class="material-input" id="value" type="number" :value="Value"
-                                    :label=ValueLabel name="value" @update:value="Value = $event" error />
+                                    :label="$t('Indique um valor')" name="value" @update:value="Value = $event" error />
                             </div>
                             <div v-if="valueError === false" class="form-input mb-3">
                                 <material-input class="material-input" id="value" type="number" name="value"
@@ -22,7 +22,7 @@
                             </div>
                             <div v-if="valueError === null" class="form-input mb-3">
                                 <material-input class="material-input" id="value" type="number" :value="Value"
-                                    :label=ValueLabel name="value" @update:value="Value = $event" />
+                                    :label="$t('Indique um valor')" name="value" @update:value="Value = $event" />
                             </div>
                         </div>
                 </div>
@@ -30,7 +30,7 @@
 
                 <div class="modal-footer mt-0">
                     <p class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Definir') }}</p>
-                    <p id="cancelButton" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal" >{{
+                    <p id="cancelSavings" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal" @click="cancel">{{
                         $t('Cancelar') }}
                     </p>
                 </div>
@@ -54,8 +54,6 @@ export default {
     setup() {
         const { t } = useI18n();
         
-        const ValueLabel = ref('Indique um valor')
-        const showAlertUsers = ref(false);
         const Value = ref('');
         const valueError = ref(null);
 
@@ -67,7 +65,6 @@ export default {
                 valueError.value = true;
             else if (Value.value < 0) {
                 valueError.value = true;
-                ValueLabel.value = 'Indique um valor positivo'
             }
             else
                 valueError.value = false;
@@ -98,7 +95,12 @@ export default {
                     objetivo: Value.value,
                 };
                 updateObj(user);
+
+                const cancelButton = document.getElementById('cancelSavings');
+                cancelButton.click();
             }
+
+            
         }
 
         return {
@@ -107,9 +109,7 @@ export default {
             cancel,
             checkInput,
             Value,
-            valueError,
-            ValueLabel,
-            showAlertUsers
+            valueError
         };
     },
     data() {

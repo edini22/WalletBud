@@ -54,6 +54,7 @@ import MaterialInput from "@/components/MaterialInput.vue";
 //import NavPill from './NavPill.vue';
 //import { transactionStore } from "@/store/transactionStore.js";
 import { ref } from 'vue';
+import { userStore } from "@/store/userStore";
 
 
 export default {
@@ -68,6 +69,8 @@ export default {
         const showAlertUsers = ref(false);
         const Value = ref('');
         const valueError = ref(null);
+
+        const userS = userStore();
 
         const checkInput = function () {
 
@@ -88,9 +91,26 @@ export default {
             
         }
 
+        const updateObj = async (user) => {
+            try {
+                await userS.updateEditedUser(user);
+                await userS.getUser();
+
+            } catch (err) {
+                valueError.value = true;
+            }
+        };
+
         const add = function () {
 
             checkInput();
+
+            if (valueError.value === false) {
+                const user = {
+                    objetivo: Value.value,
+                };
+                updateObj(user);
+            }
         }
 
         return {

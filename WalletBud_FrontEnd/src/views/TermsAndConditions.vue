@@ -8,7 +8,7 @@
                 <material-button
                 class="float-end"
                 variant="gradient"
-                color="info"
+                color="secondary"
                 @click="toSignUp">
                 {{ $t('Voltar')}}
                 </material-button> 

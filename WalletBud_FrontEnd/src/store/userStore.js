@@ -9,6 +9,7 @@ export const userStore = defineStore("user", {
       id: 0,
       saldo : 0,
       idioma: "",
+      objetivo: 0,
     }
   },
   persist: true,
@@ -21,6 +22,7 @@ export const userStore = defineStore("user", {
       this.id = editedUser.id;
       this.saldo = editedUser.saldo;
       this.idioma = editedUser.idioma;
+      this.objetivo = editedUser.objetivo;
     },
 
     setUser(user) {
@@ -30,6 +32,7 @@ export const userStore = defineStore("user", {
       this.id = user.id;
       this.saldo = user.saldo;
       this.idioma = user.idioma;
+      this.objetivo = user.objetivo;
     },
 
     async registUser(newUser) {
@@ -122,7 +125,8 @@ export const userStore = defineStore("user", {
         id: data.id,
         saldo: parseFloat(data.balanco.toFixed(2)),
         idioma: data.idioma,
-        password: this.password
+        password: this.password,
+        objetivo: parseFloat(data.objetivo.toFixed(2)),
       };
 
       this.setUser(user); // Adiciona o novo usuário aos dados do store
@@ -174,6 +178,11 @@ export const userStore = defineStore("user", {
       if(editedUser.username && editedUser.username != this.username){
         this.username = editedUser.username;
       }
+
+      if(editedUser.objetivo && editedUser.objetivo != this.objetivo){
+        this.objetivo = editedUser.objetivo;
+      }
+
     },
 
 

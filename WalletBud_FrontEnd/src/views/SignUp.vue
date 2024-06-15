@@ -118,8 +118,6 @@
                       </div>
 
                       <!--Password-->
-                      
-                      
                       <div v-if= "passwordError===true" class="mb-3">
                         <material-input
                           id="password"
@@ -207,17 +205,19 @@
     <div class="position-fixed top-1 end-1 z-index-2">
       <material-snackbar
         v-if="snackbar === 'success'"
-        title="Registo"
+        :title="$t('Registo de Conta')"	
         date="now"
-        description="Registo efetuado com sucesso!"
+        :description = "$t('Conta registada com sucesso')"
         :icon="{ component: 'done', color: 'white' }"
         color="success"
+        duration= 900
         :close-handler="closeSnackbar"/>
+
       <material-snackbar
         v-if="snackbar === 'error'"
-        title="Registo"
+        :title="$t('Registo de Conta')"	
         date="now"
-        description="Erro ao efetuar o registo!"
+        :description = "$t('Erro ao efetuar o registo da conta')"
         :icon="{ component: 'campaign', color: 'white' }"
         color="danger"
         :close-handler="closeSnackbar"/>
@@ -263,6 +263,10 @@ export default {
     const checkedError = ref(false);
 
     const snackbar = ref(null);
+
+    const closeSnackbar = () => {
+      snackbar.value = false;
+    };
 
     let state = false;
 
@@ -338,7 +342,7 @@ export default {
 
         setTimeout(() => {
           router.push({ name: "SignIn" });
-        }, 2000); 
+        }, 900); 
 
       } catch (error) {
         if (error.message === "Email Já registado!") {
@@ -374,6 +378,7 @@ export default {
       t,
       state,
       snackbar,
+      closeSnackbar,
     };
   },
   beforeMount() {

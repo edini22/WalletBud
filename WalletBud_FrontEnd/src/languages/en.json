@@ -87,6 +87,18 @@
     "Estatísticas": "Statistics",
     "Confirme a sua ação": "Confirm your action",
     "Tem a certeza?": "Are you sure?",
-    "Sair": "Exit"
+    "Sair": "Exit",
+    "Registo de Conta": "Account Registration",
+    "Erro ao efetuar o registo da conta": "Error registering account",
+    "Conta registada com sucesso": "Account successfully registered",
+    "Esqueceu-se da sua password?": "Forgot your password?",
+    "Início de ": " Log",
+    "Início de sessão efetuado com sucesso": "LogIn done successfully",
+    "Erro ao iniciar sessão": "Error logging in",
+    "Recuperação de Password": "Password Recovery",
+    "Email de recuperação enviado com sucesso! Verifique a sua caixa de correio!": "Recovery email sent successfully! Check your mailbox!",
+    "Recuperar": "Recover",
+    "Recuperar Password": "Recover Password",
+    "Email de recuperação": "Recovery email"
 }
 

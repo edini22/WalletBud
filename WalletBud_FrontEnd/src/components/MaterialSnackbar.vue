@@ -54,6 +54,10 @@ export default {
       type: Function,
       default: () => {},
     },
+    duration: {
+      type: Number,
+      default: 2000,
+    },
   },
   data() {
     return {
@@ -65,9 +69,8 @@ export default {
   },
   methods: {
     startProgress() {
-      let duration = 2000;
       let interval = 50;
-      let decrement = 100 / (duration / interval);
+      let decrement = 100 / (this.duration / interval);
 
       let timer = setInterval(() => {
         this.progressWidth -= decrement;

@@ -18,7 +18,7 @@
                   {{$t('Iniciar ')}}{{$t('Sessão')}}
                 </h4>
                 <h4 v-if="recuperarPassword === true" class="text-white font-weight-bolder text-center mt-2 mb-0">
-                  {{$t('Recuperar ')}} Password
+                  {{$t('Recuperar Password')}}
                 </h4>
               </div>
             </div>
@@ -104,7 +104,7 @@
                     class="mt-4 text-sm text-info text-gradient"
                     @click="recuperarPassword = true"
                     style="cursor: pointer;">
-                    {{$t('Esqueceu-se da password')}}?
+                    {{$t('Esqueceu-se da sua password?')}}
                   </span>
                 </div>
 
@@ -152,22 +152,34 @@
                   <material-input
                     id="email"
                     type="email"
-                    label="Email de recuperação"
+                    :label="t('Email de recuperação')"
                     name="email"
                     @update:value="email = $event"
                   />
                 </div>
 
-                <div class="text-center">
+                <div class="text-center d-flex justify-content-between">
                   <material-button
-                    class="my-4 mb-2"
+                    class="btn btn-md "
+                    variant="gradient"
+                    color="secondary"
+                    
+                    @click ="voltar"
+                    >{{$t('Voltar')}}</material-button
+                  >
+
+                  <material-button
+                    class="btn btn-md"
                     variant="gradient"
                     color="info"
-                    fullWidth
+                   
                     @click.prevent="recuperar"
                     >{{$t('Recuperar')}}</material-button
                   >
+
                 </div>
+
+                
               </form>
             </div>
           </div>
@@ -177,27 +189,36 @@
     <div class="position-fixed top-1 end-1 z-index-2">
       <material-snackbar
         v-if="snackbar === 'success'"
-        title="Iniciar Sessão"
+        :title="$t('Início de ') + ' ' + $t('Sessão')"
         date="now"
-        description="LogIn efetuado com sucesso!"
+        :description= "$t('Início de sessão efetuado com sucesso')"
         :icon="{ component: 'done', color: 'white' }"
         color="success"
+        duration= 900
         :close-handler="closeSnackbar"/>
       <material-snackbar
         v-if="snackbar === 'error'"
-        title="Iniciar Sessão"
+        :title="$t('Início de ') + ' ' + $t('Sessão')"
         date="now"
-        description="Erro ao efetuar o logIn!"
+        :description= "$t('Erro ao iniciar sessão')"
         :icon="{ component: 'campaign', color: 'white' }"
         color="danger"
         :close-handler="closeSnackbar"/>
       <material-snackbar
         v-if="snackbar === 'success_recuperar'"
-        title="Recuperação de Password"
+        :title="$t('Recuperação de Password')"
         date="now"
-        description="Email de recuperação enviado com sucesso! Verifique a sua caixa de correio!"
+        :description= "$t('Email de recuperação enviado com sucesso! Verifique a sua caixa de correio!')"
         :icon="{ component: 'done', color: 'white' }"
         color="success"
+        :close-handler="closeSnackbar"/>
+      <material-snackbar
+        v-if="snackbar === 'error2'"
+        :title="$t('Recuperação de Password')"
+        date="now"
+        :description= "$t('Email inválido')"
+        :icon="{ component: 'done', color: 'white' }"
+        color="danger"
         :close-handler="closeSnackbar"/>
     </div>
   </div>
@@ -239,6 +260,10 @@ export default {
     
     let state = false;
 
+    const voltar = () => {
+      router.push({ name: "SignIn" });
+    }
+
     const closeSnackbar = () => {
       snackbar.value = false;
     };
@@ -261,12 +286,50 @@ export default {
         recuperarPassword.value = true;
         emailErrorMessages.value = `${t('Email inválido')}`;
         emailError.value = true;
+
+        snackbar.value = 'error2';
+        setTimeout(() => {
+          snackbar.value = null;
+        }, 2000);
         return;
       } else {
+
+        const url =
+          "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/reset_password/send";
+
+        const request = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email.value,
+          }),
+        };
+
+        try {
+          const response = await fetch(url, request);
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message);
+          }
+
+          
+        } catch (error) {
+          snackbar.value = 'error2';
+          setTimeout(() => {
+            snackbar.value = null;
+          }, 2000);
+          return;
+        }
+
+        userStore.email = email.value;
+        
         recuperarPassword.value = false;
         emailError.value = false;
         snackbar.value = 'success_recuperar';
-        
+
         setTimeout(() => {
           snackbar.value = null;
           router.push({ name: "SignIn" });
@@ -318,7 +381,7 @@ export default {
         
         setTimeout(() => {
           router.push({ name: "Home" });
-        }, 2000);
+        }, 900);
     
       } catch (err) {
         if (err.message === "Email does not exist!"){
@@ -361,6 +424,7 @@ export default {
       recuperarPassword,
       recuperar,
       closeSnackbar,
+      voltar,
     }
   },
   beforeMount() {

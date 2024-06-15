@@ -1010,11 +1010,8 @@ export default {
     };
 
     onMounted(() => {
-      // const modal = document.getElementById('categoryModal');
-      // modal.addEventListener('hidden.bs.modal', forceRerender);
-
       loadPendentes();
-      loadPorPagar(); //TODO: fazer isto tambem quando se pagar algo ao lado!!
+      loadPorPagar(); 
       loadProximosPagamentos();
     });
 

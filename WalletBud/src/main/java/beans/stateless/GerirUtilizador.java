@@ -64,7 +64,7 @@ public class GerirUtilizador {
         }
     }
 
-    public boolean editUser(PersistentSession session, String name, String password, String email, String idioma,String new_email) throws PersistentException {
+    public boolean editUser(PersistentSession session, String name, String password, String email, String idioma,String new_email, Float objetivo) throws PersistentException {
         try {
 
             User u = getUserByEmail(session, email);
@@ -91,7 +91,7 @@ public class GerirUtilizador {
                 }
                 u.setEmail(new_email);
             }
-
+            if(objetivo!= null) u.setObjetivo(objetivo);
 
             UserDAO.save(u);
 
@@ -163,6 +163,7 @@ public class GerirUtilizador {
                     .add("email", user.getEmail())
                     .add("balanco", user.getSaldo())
                     .add("idioma", user.getIdioma())
+                    .add("objetivo",user.getObjetivo())
                     .build();
             System.out.println(userJson.toString());
 

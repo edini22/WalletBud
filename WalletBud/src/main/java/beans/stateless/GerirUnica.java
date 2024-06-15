@@ -461,11 +461,11 @@ public class GerirUnica {
                         tpu.setConfirma(0);
                         TransacaoPartilhadaDAO.save(tpu);
                     }
-                    if (transacoesPart.length == 0) {
-                        confirmUnica(session, unica);
-                    } else {
-                        unica.setStatus(false);
-                    }
+                }
+                if (transacoesPart.length == 0) {
+                    confirmUnica(session, unica);
+                } else {
+                    unica.setStatus(false);
                 }
                 unica.setShareValue(nSValue);
                 UnicaDAO.save(unica);

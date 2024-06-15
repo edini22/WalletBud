@@ -413,8 +413,9 @@ public class GerirFixa {
                         tpu.setConfirma(0);
                         TransacaoPartilhadaDAO.save(tpu);
                     }
-                    fixa.setStatus(transacoesPart.length == 0);
                 }
+
+                fixa.setStatus(transacoesPart.length == 0);
                 fixa.setShareValue(nSValue);
                 FixaDAO.save(fixa);
 

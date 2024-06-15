@@ -9,6 +9,10 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.orm.PersistentException;
+import org.orm.PersistentSession;
+import org.orm.PersistentTransaction;
+import wb.walletbud.AASICPersistentManager;
 
 import java.io.StringReader;
 
@@ -21,17 +25,21 @@ public class Utilizador {
     @GET
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserInfo(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response getUserInfo(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
-
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
         try{
-            JsonObject user = gerirUtilizador.getJsonUserInfo(email);
-
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+            JsonObject user = gerirUtilizador.getJsonUserInfo(session, email);
+            transaction.commit();
             if (user.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Nenhum utilizador encontrado!")
                         .build();
+
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -41,8 +49,14 @@ public class Utilizador {
             return Response.ok(user.toString(), MediaType.APPLICATION_JSON).build();
 
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
     }
 
@@ -50,13 +64,19 @@ public class Utilizador {
     @Path("/get/{email}")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserInfo(@PathParam("email") String email_user, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response getUserInfo(@PathParam("email") String email_user, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
-        try{
-            JsonObject user = gerirUtilizador.getJsonUserInfo(email_user);
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
 
+        try{
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
+            JsonObject user = gerirUtilizador.getJsonUserInfo(session, email_user);
+            transaction.commit();
             if (user.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Nenhum utilizador encontrado!")
@@ -73,8 +93,14 @@ public class Utilizador {
             return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
 
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
     }
 
@@ -83,7 +109,7 @@ public class Utilizador {
     @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editUser(String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response editUser(String jsonString, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email_user = JWTUtil.getEmailFromToken(token);
 
@@ -107,13 +133,19 @@ public class Utilizador {
             }
         }
 
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try {
-            if(gerirUtilizador.editUser(username, password, email_user, idioma,new_email) ){
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
+            if(gerirUtilizador.editUser(session, username, password, email_user, idioma,new_email) ){
 
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "User edited successfully")
                         .build();
-
+                transaction.commit();
                 return Response.status(Response.Status.CREATED)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -122,7 +154,7 @@ public class Utilizador {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Algo de errado nao esta certo!")
                         .build();
-
+                transaction.rollback();
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
@@ -130,8 +162,14 @@ public class Utilizador {
             }
 
         } catch (Exception e) {
+            if( transaction != null)
+                transaction.rollback();
             System.out.println("Error while creating user: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
     }
 

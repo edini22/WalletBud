@@ -5,7 +5,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.json.*;
 import org.orm.PersistentException;
-import org.orm.PersistentTransaction;
+import org.orm.PersistentSession;
 import wb.walletbud.*;
 
 import java.sql.Timestamp;
@@ -30,13 +30,12 @@ public class GerirFixa {
     @EJB
     private GerirComentario gerirComentario;
 
-    public int createFixa(String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, int repeticao, String email, JsonArray usersArray, String comentario) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int createFixa(PersistentSession session, String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, int repeticao, String email, JsonArray usersArray, String comentario) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) return -3;
 
-            Categoria cat = gerirCategoria.getCategoriaById(categoria, email);
+            Categoria cat = gerirCategoria.getCategoriaById(session, categoria, email);
             if (cat == null) return -4;
 
             Fixa fixa = FixaDAO.createFixa();
@@ -54,59 +53,50 @@ public class GerirFixa {
                 fixa.setShareValue(value);
                 fixa.setStatus(true);
             } else {
-                int status = gerirTransacaoPartilhada.shareTransaction("fixa", email, usersArray, null, fixa);
+                int status = gerirTransacaoPartilhada.shareTransaction(session, "fixa", email, usersArray, null, fixa);
                 if (status != 0) {
-                    t.rollback();
                     System.out.println("status: " + status);
                     return status;
                 }
             }
 
             if (!comentario.isEmpty()) {
-                gerirComentario.createComentario(comentario, user, fixa);
+                gerirComentario.createComentario(session, comentario, user, fixa);
             }
 
             FixaDAO.save(fixa);
 
-
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             return -2;
         }
 
         return 0;
     }
 
-    public int editFixa(int id, String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, int repeticao, String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int editFixa(PersistentSession session, int id, String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, int repeticao, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return -3;
             }
             Categoria cat = null;
             if (categoria != -1) {
-                cat = gerirCategoria.getCategoriaById(categoria, email);
+                cat = gerirCategoria.getCategoriaById(session, categoria, email);
                 if (cat == null){
-                    t.rollback();
                     return -4;
                 }
             }
 
             String condition = "Id_transacao = '" + id + "' AND UserId_user = '" + user.getId_user() + "'";
-            Fixa[] fixas = FixaDAO.listFixaByQuery(condition, null);
+            Fixa[] fixas = FixaDAO.listFixaByQuery(session, condition, null);
 
             if (fixas.length == 0) {
-                t.rollback();
                 return -1;
             }
 
             Fixa fixa = fixas[0];
 
             if (!fixa.getTipo().equals(tipo)) {
-                t.rollback();
                 return -1;
             }
 
@@ -117,7 +107,7 @@ public class GerirFixa {
 
                 //iterar pelos ‘users’ todos partilhados a alterar
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao();
-                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
                 for (TransacaoPartilhada transacao : tp) {
                     transacao.setConfirma(0);
@@ -142,35 +132,31 @@ public class GerirFixa {
 
 
             FixaDAO.save(fixa);
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             return -2;
         }
         return 0;
     }
 
-    public JsonObject getFixas(String email, String tipo) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getFixas(PersistentSession session, String email, String tipo) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
 
             String condition = "UserId_user = '" + user.getId_user() + "' AND Tipo = '" + tipo + "'";
 
-            Fixa[] fixas = FixaDAO.listFixaByQuery(condition, null);
+            Fixa[] fixas = FixaDAO.listFixaByQuery(session, condition, null);
 
             condition = "UserId_user = " + user.getId_user();
-            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
             ArrayList<Fixa> transacoes_id = new ArrayList<>(Arrays.asList(fixas));
 
             for (TransacaoPartilhada transacaoPartilhada : transacoes_partilhada) {
                 try {
-                    Fixa f = FixaDAO.getFixaByORMID(transacaoPartilhada.getUsertransacaoId().getId_transacao());
+                    Fixa f = FixaDAO.getFixaByORMID(session, transacaoPartilhada.getUsertransacaoId().getId_transacao());
 
                     if (f != null && f.getTipo().equals(tipo)) {
                         transacoes_id.add(f);
@@ -185,7 +171,7 @@ public class GerirFixa {
 
             for (Fixa fixa : transacoes_id) {
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao();
-                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
                 User Owner = fixa.getOwner_id();
                 JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
@@ -225,35 +211,30 @@ public class GerirFixa {
                         .build();
                 arrayBuilder.add(unicaJson);
             }
-            t.commit();
             return Json.createObjectBuilder()
                     .add(tipo + "s", arrayBuilder.build())
                     .build();
 
         } catch (Exception e) {
-            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
 
     }
 
-    public JsonObject getJsonFixaById(int id, String email, String tipo) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getJsonFixaById(PersistentSession session, int id, String email, String tipo) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
 
             String condition = "Id_transacao = " + id + " AND Tipo = '" + tipo + "'";
-            Fixa[] fixas = FixaDAO.listFixaByQuery(condition, null);
+            Fixa[] fixas = FixaDAO.listFixaByQuery(session, condition, null);
 
 
             if (fixas.length == 0) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -261,7 +242,7 @@ public class GerirFixa {
             Fixa fixa = fixas[0];
 
             condition = "TransacaoId_transacao = " + id;
-            TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
             if (!(fixa.getOwner_id() == user || checkTransationAcess(user, tp))) {
                 return Json.createObjectBuilder()
@@ -289,7 +270,6 @@ public class GerirFixa {
             }
             JsonArray userArray = userArrayBuilder.build();
 
-            t.commit();
             return Json.createObjectBuilder()
                     .add("id", fixa.getId_transacao())
                     .add("name", fixa.getName())
@@ -307,7 +287,6 @@ public class GerirFixa {
                     .build();
 
         } catch (Exception e) {
-            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
@@ -327,10 +306,10 @@ public class GerirFixa {
 
     }
 
-    public int shareFixa(JsonArray usersArray, String email, Fixa fixa) {
+    public int shareFixa(PersistentSession session, JsonArray usersArray, String email, Fixa fixa) {
         try {
 
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
                 return -3;
             }
@@ -344,14 +323,14 @@ public class GerirFixa {
                 JsonObject userObject = userValue.asJsonObject();
                 String userEmail = userObject.getString("email");
 
-                User us = gerirUtilizador.getUserByEmail(userEmail);
+                User us = gerirUtilizador.getUserByEmail(session, userEmail);
                 if (us == null) {
                     return -5;
                 }
 
                 //verificar se o user ja esta naquela transacao
                 String condition = "TransacaoId_transacao = " + fixa.getId_transacao() + " AND UserId_user = " + user.getId_user();
-                TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
                 if(tpcheck.length != 0){
                     return -5;
                 }
@@ -375,31 +354,26 @@ public class GerirFixa {
         return 0;
     }
 
-    public int editUsersFixa(String email, int id_fixa, int option, String email_shared) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int editUsersFixa(PersistentSession session, String email, int id_fixa, int option, String email_shared) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return -3;
             }
 
-            Fixa fixa = FixaDAO.getFixaByORMID(id_fixa);
+            Fixa fixa = FixaDAO.getFixaByORMID(session, id_fixa);
             if (fixa == null) {
-                t.rollback();
                 return -1;
             }
 
             if (fixa.getOwner_id() != user) {
-                t.rollback();
                 return -2;
             }
 
             String condition = "TransacaoId_transacao = " + fixa.getId_transacao();
-            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
             if (tps.length == 0 && option == -1) {
-                t.rollback();
                 return -4;
             }
 
@@ -419,7 +393,7 @@ public class GerirFixa {
 
                 if (option == 1) {
                     //add user
-                    User user_shared = gerirUtilizador.getUserByEmail(email_shared);
+                    User user_shared = gerirUtilizador.getUserByEmail(session, email_shared);
                     TransacaoPartilhada tp = TransacaoPartilhadaDAO.createTransacaoPartilhada();
                     tp.setUserId_user(user_shared);
                     tp.setUsertransacaoId(fixa);
@@ -429,7 +403,7 @@ public class GerirFixa {
                 float aSValue = fixa.getShareValue();
                 float value = fixa.getValue();
 
-                TransacaoPartilhada[] transacoesPart = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] transacoesPart = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
                 int nUsers = transacoesPart.length + 1;
 
                 float nSValue = value / nUsers;
@@ -453,48 +427,39 @@ public class GerirFixa {
             } else {
                 return -4;
             }
-
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             return -1;
         }
 
         return 0;
     }
 
-    public int handleFixa(String email, int id_fixa, int option) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int handleFixa(PersistentSession session, String email, int id_fixa, int option) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return -3;
             }
 
-            Fixa fixa = FixaDAO.getFixaByORMID(id_fixa);
+            Fixa fixa = FixaDAO.getFixaByORMID(session, id_fixa);
             if (fixa == null || fixa.getStatus()) {
-                t.rollback();
                 return -1;
             }
 
             if (fixa.getOwner_id() == user) {
-                t.rollback();
                 return -2;
             }
 
             String condition = "TransacaoId_transacao = " + fixa.getId_transacao();
-            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
             if (tps.length == 0) {
-                t.rollback();
                 return -5;
             }
 
             condition = "TransacaoId_transacao = " + fixa.getId_transacao() + " AND UserId_user = " + user.getId_user();
-            TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
             if(tpcheck.length == 0){
-                t.rollback();
                 return -4;
             }
 
@@ -510,7 +475,6 @@ public class GerirFixa {
                     exist = true;
                     if (option == -1) {
                         if (tp.getConfirma() == 1) {
-                            t.rollback();
                             return -2;
                         }
                         remove = true;
@@ -535,10 +499,8 @@ public class GerirFixa {
             }
             if(exist == false){
                 //user nao pertence a transacao
-                t.rollback();
                 return -1;
             } else if (option == -1 && !remove) {
-                t.rollback();
                 return -4;
             } else if (remove) {
                 //dados novos para a notificacao
@@ -568,42 +530,35 @@ public class GerirFixa {
                 FixaDAO.save(fixa);
             }
 
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             return -1;
         }
 
         return 0;
     }
 
-    public int payFixa(String email, int id_fixa, Timestamp dateNow, Timestamp date) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int payFixa(PersistentSession session, String email, int id_fixa, Timestamp dateNow, Timestamp date) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return -3;
             }
 
-            Fixa fixa = FixaDAO.getFixaByORMID(id_fixa);
+            Fixa fixa = FixaDAO.getFixaByORMID(session, id_fixa);
             if (fixa == null ) {
-                t.rollback();
                 return -1;
             }
 
             if (fixa.getOwner_id() != user) {
-                t.rollback();
                 return -2;
             }
 
             if (!fixa.getStatus()) {
-                t.rollback();
                 return -4;
             }
 
             String condition = "TransacaoId_transacao = " + fixa.getId_transacao();
-            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
             TransacaoFixa tf = TransacaoFixaDAO.createTransacaoFixa();
             tf.setTransacaofixa_ID(fixa);
@@ -637,20 +592,16 @@ public class GerirFixa {
                 // owner 3 dias antes
             }
 
-            t.commit();
         } catch (Exception e){
-            t.rollback();
             return -1;
         }
         return 0;
     }
 
-    public JsonObject getJsonPaymentFixa(String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getJsonPaymentFixa(PersistentSession session, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -678,46 +629,41 @@ public class GerirFixa {
             }
             JsonArray response = userArrayBuilder.build();
 
-            t.commit();
             return Json.createObjectBuilder()
                     .add("transacoes", response)
                     .build();
 
         } catch (Exception e) {
-            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
 
     }
 
-    public int giveUpTransactionFixa(String email,int idTransacao) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int giveUpTransactionFixa(PersistentSession session, String email,int idTransacao) throws PersistentException {
         String condition;
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return -3;
             }
 
-            Fixa fixa = FixaDAO.getFixaByORMID(idTransacao);
+            Fixa fixa = FixaDAO.getFixaByORMID(session, idTransacao);
             if (fixa == null ) {
-                t.rollback();
                 return -1;
             }
 
             if (fixa.getOwner_id() == user) {
                 //vai apagar a transacao principal
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao();
-                Comentario[] comments = ComentarioDAO.listComentarioByQuery(condition, null);
+                Comentario[] comments = ComentarioDAO.listComentarioByQuery(session, condition, null);
 
                 for (Comentario c : comments) {
                     ComentarioDAO.deleteAndDissociate(c);
                 }
 
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao();
-                TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
                 for (TransacaoPartilhada tp : tps) {
 //                    User u = tp.getUserId_user();
@@ -729,7 +675,7 @@ public class GerirFixa {
 
                 //verificar se existem pagamentos associados
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao();
-                TransacaoFixa[] tpfixas = TransacaoFixaDAO.listTransacaoFixaByQuery(condition, null);
+                TransacaoFixa[] tpfixas = TransacaoFixaDAO.listTransacaoFixaByQuery(session, condition, null);
 
                 if(tpfixas.length == 0){
                     FixaDAO.deleteAndDissociate(fixa);
@@ -745,9 +691,8 @@ public class GerirFixa {
             } else{
                 // verifica se está associado a esta transacao
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao() + " AND UserId_user = " + user.getId_user();
-                TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
                 if(tpcheck.length == 0){
-                    t.rollback();
                     return -4;
                 }
                 //remove a subscricao
@@ -756,7 +701,7 @@ public class GerirFixa {
 
                 // mete o estado a false e o confirma a 0 e notificaa todos para aceitar
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao();
-                TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
                 if(tps.length != 0){
                     for (TransacaoPartilhada tp : tps) {
@@ -773,31 +718,27 @@ public class GerirFixa {
                 }
 
             }
-
-            t.commit();
         } catch (Exception e){
-            t.rollback();
             return -1;
         }
         return 0;
     }
 
-    public JsonObject getLatePayments(String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getLatePayments(PersistentSession session, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             String condition = "UserId_user = " + user.getId_user() + " AND Status = TRUE";
 
-            Fixa[] fixas = FixaDAO.listFixaByQuery(condition, null);
+            Fixa[] fixas = FixaDAO.listFixaByQuery(session, condition, null);
 
             condition = "UserId_user = " + user.getId_user();
-            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
             ArrayList<Fixa> transacoes_id = new ArrayList<>(Arrays.asList(fixas));
 
             for (TransacaoPartilhada transacaoPartilhada : transacoes_partilhada) {
                 try {
-                    Fixa f = FixaDAO.getFixaByORMID(transacaoPartilhada.getUsertransacaoId().getId_transacao());
+                    Fixa f = FixaDAO.getFixaByORMID(session, transacaoPartilhada.getUsertransacaoId().getId_transacao());
 
                     if (f != null && f.getStatus()) {
                         transacoes_id.add(f);
@@ -816,7 +757,7 @@ public class GerirFixa {
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao();
                 orederby = "DataPagamento DESC";
 
-                TransacaoFixa[] tfs = TransacaoFixaDAO.listTransacaoFixaByQuery(condition, orederby);
+                TransacaoFixa[] tfs = TransacaoFixaDAO.listTransacaoFixaByQuery(session, condition, orederby);
                 Timestamp time ;
                 if (tfs.length == 0) {
                     time = new Timestamp(fixa.getDate().getTime());
@@ -881,34 +822,31 @@ public class GerirFixa {
                 }
 
             }
-            t.commit();
             return Json.createObjectBuilder()
                     .add("atrasos", lateArrayBuilder)
                     .build();
         } catch (Exception e) {
-            t.rollback();
             e.printStackTrace();
             return Json.createObjectBuilder()
                     .build();
         }
     }
 
-    public JsonObject getPayments(String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getPayments(PersistentSession session, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             String condition = "UserId_user = " + user.getId_user() + " AND Status = TRUE";
 
-            Fixa[] fixas = FixaDAO.listFixaByQuery(condition, null);
+            Fixa[] fixas = FixaDAO.listFixaByQuery(session, condition, null);
 
             condition = "UserId_user = " + user.getId_user();
-            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
             ArrayList<Fixa> transacoes_id = new ArrayList<>(Arrays.asList(fixas));
 
             for (TransacaoPartilhada transacaoPartilhada : transacoes_partilhada) {
                 try {
-                    Fixa f = FixaDAO.getFixaByORMID(transacaoPartilhada.getUsertransacaoId().getId_transacao());
+                    Fixa f = FixaDAO.getFixaByORMID(session, transacaoPartilhada.getUsertransacaoId().getId_transacao());
 
                     if (f != null && f.getStatus()) {
                         transacoes_id.add(f);
@@ -926,7 +864,7 @@ public class GerirFixa {
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao();
                 orederby = "DataPagamento DESC";
 
-                TransacaoFixa[] tfs = TransacaoFixaDAO.listTransacaoFixaByQuery(condition, orederby);
+                TransacaoFixa[] tfs = TransacaoFixaDAO.listTransacaoFixaByQuery(session, condition, orederby);
                 Timestamp time ;
                 if (tfs.length == 0) {
                     time = new Timestamp(fixa.getDate().getTime());
@@ -968,12 +906,10 @@ public class GerirFixa {
                 lateArrayBuilder.add(lateJson);
             }
 
-            t.commit();
             return Json.createObjectBuilder()
                     .add("proximos_pagamentos", lateArrayBuilder)
                     .build();
         } catch (Exception e) {
-            t.rollback();
             e.printStackTrace();
             return Json.createObjectBuilder()
                     .build();

@@ -188,9 +188,8 @@ public class TransacaoDAO {
 		}
 	}
 
-	public static List<Map<String, Object>> queryTransacoesByUserId(int userId) throws PersistentException {
+	public static List<Map<String, Object>> queryTransacoesByUserId(PersistentSession session,int userId) throws PersistentException {
 		try {
-			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			String sqlQuery =
 					"(SELECT t.Id_transacao AS Id, t.Date AS Date, 'Unica' AS Discriminator " +
 							"FROM Transacao t " +
@@ -215,9 +214,8 @@ public class TransacaoDAO {
 		}
 	}
 
-	public static List<Map<String, Object>> queryTransacoesByUserIdandDays(int userId, int days) throws PersistentException {
+	public static List<Map<String, Object>> queryTransacoesByUserIdandDays(PersistentSession session,int userId, int days) throws PersistentException {
 		try {
-			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 			String sqlQuery =
 					"(SELECT t.Id_transacao AS Id, t.Date AS date, 'Unica' AS Discriminator " +
 							"FROM Transacao t " +
@@ -245,9 +243,8 @@ public class TransacaoDAO {
 		}
 	}
 
-	public static List<Map<String, Object>> queryTransacoesByUserIdAndTime(int userId, int year, int month) throws PersistentException {
+	public static List<Map<String, Object>> queryTransacoesByUserIdAndTime(PersistentSession session,int userId, int year, int month) throws PersistentException {
 		try {
-			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
 
 			String sqlQuery =
 					"(SELECT t.Id_transacao AS Id, t.Date AS date, 'Unica' AS Discriminator\n" +
@@ -279,10 +276,8 @@ public class TransacaoDAO {
 		}
 	}
 
-	public static List<Map<String, Object>> queryPendentesByUserId(int userId) throws PersistentException {
+	public static List<Map<String, Object>> queryPendentesByUserId(PersistentSession session,int userId) throws PersistentException {
 		try {
-			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();
-
 			String sqlQuery =
 					"SELECT DISTINCT t.Id_transacao AS Id, t.Date AS date, t.Discriminator AS Discriminator\n" +
 							"FROM Transacao t\n" +

@@ -4,7 +4,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.json.*;
 import org.orm.PersistentException;
-import org.orm.PersistentTransaction;
+import org.orm.PersistentSession;
 import wb.walletbud.*;
 
 import java.sql.Timestamp;
@@ -15,14 +15,14 @@ public class GerirComentario {
     @EJB
     private GerirUtilizador gerirUtilizador;
 
-    public boolean checkUserPermission(User user, Transacao transacao) throws PersistentException {
+    public boolean checkUserPermission(PersistentSession session, User user, Transacao transacao) throws PersistentException {
         boolean check = false;
         if (transacao.getOwner_id() == user) {
             check = true;
         }
 
         String condition = "TransacaoId_transacao = " + transacao.getId_transacao();
-        TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+        TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
         for (TransacaoPartilhada tp : tps) {
             if (tp.getUserId_user() == user) {
@@ -32,9 +32,9 @@ public class GerirComentario {
         return check;
     }
 
-    public int createComentario(String descricao, User owner, Transacao transacao) throws PersistentException {
+    public int createComentario(PersistentSession session, String descricao, User owner, Transacao transacao) throws PersistentException {
 
-        if (!checkUserPermission(owner, transacao)) {
+        if (!checkUserPermission(session, owner, transacao)) {
             return -1;
         }
 
@@ -49,103 +49,87 @@ public class GerirComentario {
         return 0;
     }
 
-    public int editComentario(String descricao, String email, int id_comentario) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int editComentario(PersistentSession session, String descricao, String email, int id_comentario) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             if (user == null) {
-                t.rollback();
                 return -3;
             }
 
             String condition = "Id_comentario = " + id_comentario;
-            Comentario[] comentarios = ComentarioDAO.listComentarioByQuery(condition, null);
+            Comentario[] comentarios = ComentarioDAO.listComentarioByQuery(session, condition, null);
 
             if (comentarios.length == 0) {
-                t.rollback();
                 return -1;
             }
             Comentario comentario = comentarios[0];
 
             if (comentario.getUserId_user() != user) {
-                t.rollback();
                 return -2;
             }
 
             comentario.setData(new Timestamp(System.currentTimeMillis()));
             comentario.setDescrição(descricao);
             ComentarioDAO.save(comentario);
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             return -2;
         }
 
         return 0;
     }
 
-    public int deleteComentario(int id_comentario, String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int deleteComentario(PersistentSession session, int id_comentario, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             if (user == null) {
-                t.rollback();
                 return -3;
             }
 
             String condition = "Id_comentario = " + id_comentario;
-            Comentario[] comentarios = ComentarioDAO.listComentarioByQuery(condition, null);
+            Comentario[] comentarios = ComentarioDAO.listComentarioByQuery(session, condition, null);
 
             if (comentarios.length == 0) {
-                t.rollback();
                 return -1;
             }
 
             Comentario comentario = comentarios[0];
 
             if (comentario.getUserId_user() != user && comentario.getTransacaoId_transacao().getOwner_id() != user) {
-                t.rollback();
                 return -2;
             }
 
             ComentarioDAO.deleteAndDissociate(comentario);
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             return -2;
         }
         return 0;
     }
 
-    public JsonObject getComentariosByTransaction(int id_transacao, String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getComentariosByTransaction(PersistentSession session, int id_transacao, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             if (user == null) {
-                t.commit();
                 return Json.createObjectBuilder()
                         .build();
             }
 
-            Transacao transacao = TransacaoDAO.getTransacaoByORMID(id_transacao);
+            Transacao transacao = TransacaoDAO.getTransacaoByORMID(session, id_transacao);
 
             if (transacao == null) {
-                t.commit();
                 return Json.createObjectBuilder()
                         .build();
             }
 
-            if (!checkUserPermission(user, transacao)) {
-                t.commit();
+            if (!checkUserPermission(session, user, transacao)) {
                 return Json.createObjectBuilder()
                         .build();
             }
 
             String condition = "TransacaoId_transacao = " + transacao.getId_transacao();
-            Comentario[] comentarios = ComentarioDAO.listComentarioByQuery(condition, "Data");
+            Comentario[] comentarios = ComentarioDAO.listComentarioByQuery(session, condition, "Data");
 
 
             JsonArrayBuilder comentaioArrayBuilder = Json.createArrayBuilder();
@@ -159,12 +143,10 @@ public class GerirComentario {
                 comentaioArrayBuilder.add(userJs);
             }
 
-            t.commit();
             return Json.createObjectBuilder()
                     .add("comentarios", comentaioArrayBuilder.build())
                     .build();
         } catch (Exception e) {
-            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }

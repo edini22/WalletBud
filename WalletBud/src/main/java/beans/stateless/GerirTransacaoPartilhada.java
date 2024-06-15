@@ -6,7 +6,7 @@ import jakarta.ejb.Stateless;
 import jakarta.json.*;
 
 import org.orm.PersistentException;
-import org.orm.PersistentTransaction;
+import org.orm.PersistentSession;
 import wb.walletbud.*;
 
 import java.sql.Timestamp;
@@ -41,7 +41,7 @@ public class GerirTransacaoPartilhada {
     @EJB
     private GerirUtilizador gerirUtilizador;
 
-    public int shareTransaction(String transacao, String email, JsonArray usersArray, Unica unica, Fixa fixa) {
+    public int shareTransaction(PersistentSession session, String transacao, String email, JsonArray usersArray, Unica unica, Fixa fixa) {
 
         try {
 
@@ -53,9 +53,9 @@ public class GerirTransacaoPartilhada {
             }
             int cond;
             if (transacao.equals("fixa")) {
-                cond = gerirFixa.shareFixa(usersArray, email, fixa);
+                cond = gerirFixa.shareFixa(session, usersArray, email, fixa);
             } else if (transacao.equals("unica")) {
-                cond = gerirUnica.shareUnica(usersArray, email, unica);
+                cond = gerirUnica.shareUnica(session, usersArray, email, unica);
             } else {
                 return -1;
             }
@@ -68,23 +68,21 @@ public class GerirTransacaoPartilhada {
 
     }
 
-    public JsonObject getMovimentos(String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getMovimentos(PersistentSession session, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             if (user == null) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
 
-            List<Map<String, Object>> transacoes = TransacaoDAO.queryTransacoesByUserId(user.getId_user());
+            List<Map<String, Object>> transacoes = TransacaoDAO.queryTransacoesByUserId(session, user.getId_user());
 
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             for(Map<String, Object> transacao : transacoes) {
                 if(transacao.get("Discriminator").equals("Unica")){
-                    Unica unica = UnicaDAO.getUnicaByORMID((int) transacao.get("Id"));
+                    Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", unica.getId_transacao())
                             .add("name", unica.getName())
@@ -97,7 +95,7 @@ public class GerirTransacaoPartilhada {
                             .build();
                     arrayBuilder.add(unicaJson);
                 } else{
-                    TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID((int) transacao.get("Id"));
+                    TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
                     Fixa fixa = tf.getTransacaofixa_ID();
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", fixa.getId_transacao())
@@ -115,36 +113,32 @@ public class GerirTransacaoPartilhada {
 
                 }
             }
-            t.commit();
             return Json.createObjectBuilder()
                     .add("movimentos", arrayBuilder)
                     .build();
 
         } catch (Exception e) {
-            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
 
     }
 
-    public JsonObject getMovimentosDays(String email, int days) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getMovimentosDays(PersistentSession session, String email, int days) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             if (user == null) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
 
-            List<Map<String, Object>> transacoes = TransacaoDAO.queryTransacoesByUserIdandDays(user.getId_user(), days);
+            List<Map<String, Object>> transacoes = TransacaoDAO.queryTransacoesByUserIdandDays(session, user.getId_user(), days);
 
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             for(Map<String, Object> transacao : transacoes) {
                 if(transacao.get("Discriminator").equals("Unica")){
-                    Unica unica = UnicaDAO.getUnicaByORMID((int) transacao.get("Id"));
+                    Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", unica.getId_transacao())
                             .add("name", unica.getName())
@@ -157,7 +151,7 @@ public class GerirTransacaoPartilhada {
                             .build();
                     arrayBuilder.add(unicaJson);
                 } else{
-                    TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID((int) transacao.get("Id"));
+                    TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
                     Fixa fixa = tf.getTransacaofixa_ID();
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", fixa.getId_transacao())
@@ -175,34 +169,31 @@ public class GerirTransacaoPartilhada {
 
                 }
             }
-            t.commit();
             return Json.createObjectBuilder()
                     .add("movimentos", arrayBuilder)
                     .build();
 
         } catch (Exception e) {
-            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
 
     }
 
-    public JsonObject getTimeline(String email,int ano, int mes) throws PersistentException {//Em processo de construcao
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getTimeline(PersistentSession session, String email,int ano, int mes) throws PersistentException {//Em processo de construcao
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             String condition = "UserId_user = " + user.getId_user();
 
-            Fixa[] fixas = FixaDAO.listFixaByQuery(condition, null);
+            Fixa[] fixas = FixaDAO.listFixaByQuery(session, condition, null);
 
-            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
             ArrayList<Fixa> transacoes_id = new ArrayList<>(Arrays.asList(fixas));
 
             for (TransacaoPartilhada transacaoPartilhada : transacoes_partilhada) {
                 try {
-                    Fixa f = FixaDAO.getFixaByORMID(transacaoPartilhada.getUsertransacaoId().getId_transacao());
+                    Fixa f = FixaDAO.getFixaByORMID(session, transacaoPartilhada.getUsertransacaoId().getId_transacao());
 
                     if (f != null) {
                         transacoes_id.add(f);
@@ -213,7 +204,7 @@ public class GerirTransacaoPartilhada {
             }
 
             //movimentos do mes
-            List<Map<String, Object>> transacoes = TransacaoDAO.queryTransacoesByUserIdAndTime(user.getId_user(), ano, mes);
+            List<Map<String, Object>> transacoes = TransacaoDAO.queryTransacoesByUserIdAndTime(session, user.getId_user(), ano, mes);
             String mes_str;
             if(mes < 10){
                 mes_str = "0" + mes;
@@ -319,7 +310,7 @@ public class GerirTransacaoPartilhada {
 
                     LocalDateTime localDateTime = timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
                     DayOfWeek dayOfWeek = localDateTime.getDayOfWeek();
-                    List<LocalDate> matchingDays = getDaysOfMonthWithSameDayOfWeek(ano, mes, dayOfWeek);
+                    List<LocalDate> matchingDays = getDaysOfMonthWithSameDayOfWeek( ano, mes, dayOfWeek);
 
                     for (LocalDate date : matchingDays) {
                         LocalDateTime dt = date.atTime(localDateTime.toLocalTime());
@@ -344,7 +335,7 @@ public class GerirTransacaoPartilhada {
 
             for(Map<String, Object> transacao : transacoes) {
                 if (transacao.get("Discriminator").equals("Unica")) {
-                    Unica unica = UnicaDAO.getUnicaByORMID((int) transacao.get("Id"));
+                    Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
                     Map<String, Object> fixasMap = new HashMap<>();
                     fixasMap.put("id", unica.getId_transacao());
                     fixasMap.put("name", unica.getName());
@@ -360,7 +351,7 @@ public class GerirTransacaoPartilhada {
 
                 } else  {
 //                    Fixa f = FixaDAO.getFixaByORMID((int) transacao.get("Id"));
-                    TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID((int) transacao.get("Id"));
+                    TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
                     Fixa f = tf.getTransacaofixa_ID();
                     if(f.getOwner_id() == null){
                         Map<String, Object> fixasMap = new HashMap<>();
@@ -427,12 +418,10 @@ public class GerirTransacaoPartilhada {
 
             JsonArray jsonArray = jsonArrayBuilder.build();
 
-            t.commit();
             return Json.createObjectBuilder()
                     .add("timeline", jsonArray)
                     .build();
         } catch (Exception e) {
-            t.rollback();
             e.printStackTrace();
             return Json.createObjectBuilder()
                     .build();
@@ -440,7 +429,7 @@ public class GerirTransacaoPartilhada {
 
     }
 
-    public List<LocalDate> getDaysOfMonthWithSameDayOfWeek(int year, int month, DayOfWeek dayOfWeek) {
+    public List<LocalDate> getDaysOfMonthWithSameDayOfWeek( int year, int month, DayOfWeek dayOfWeek) {
         List<LocalDate> matchingDays = new ArrayList<>();
         YearMonth yearMonth = YearMonth.of(year, month);
 
@@ -456,28 +445,26 @@ public class GerirTransacaoPartilhada {
     }
 
 
-    public JsonObject getPendentes(String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getPendentes(PersistentSession session, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             if (user == null) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
 
 
-            List<Map<String, Object>> pendentes = TransacaoDAO.queryPendentesByUserId(user.getId_user());
+            List<Map<String, Object>> pendentes = TransacaoDAO.queryPendentesByUserId(session, user.getId_user());
 //            System.out.println("pendentes -> " + pendentes.toString());
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             for(Map<String, Object> transacao : pendentes) {
 
                 if (transacao.get("Discriminator").equals("Unica")) {
                     System.out.println((int) transacao.get("Id"));
-                    Unica unica = UnicaDAO.getUnicaByORMID((int) transacao.get("Id"));
+                    Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
                     String condition = "TransacaoId_transacao = " + unica.getId_transacao();
-                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
                     User Owner = unica.getOwner_id();
                     JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
@@ -516,7 +503,7 @@ public class GerirTransacaoPartilhada {
                             .build();
                     arrayBuilder.add(unicaJson);
                 } else {
-                    Fixa fixa = FixaDAO.getFixaByORMID((int) transacao.get("Id"));
+                    Fixa fixa = FixaDAO.getFixaByORMID(session, (int) transacao.get("Id"));
                     User Owner = fixa.getOwner_id();
                     JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
                     JsonObject userJs = Json.createObjectBuilder()
@@ -528,7 +515,7 @@ public class GerirTransacaoPartilhada {
                     userArrayBuilder.add(userJs);
 
                     String condition = "TransacaoId_transacao = " + fixa.getId_transacao();
-                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
                     for (TransacaoPartilhada tpPartilhada : tp) {
                         User u = tpPartilhada.getUserId_user();
@@ -560,14 +547,12 @@ public class GerirTransacaoPartilhada {
 
                 }
             }
-            t.commit();
             return Json.createObjectBuilder()
                     .add("pendentes", arrayBuilder)
                     .build();
 
         } catch (Exception e) {
-//            e.printStackTrace();
-            t.rollback();
+            e.printStackTrace();
             return Json.createObjectBuilder()
                     .build();
         }

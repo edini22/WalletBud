@@ -43,12 +43,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT jwt = verifier.verify(token);
 
-//                String email = jwt.getSubject();
-
-//                System.out.println("Email: " + email);
-
-//                requestContext.setProperty("email", email);
-
             } catch (JWTVerificationException e) {
                 requestContext.abortWith(
                         Response.status(Response.Status.UNAUTHORIZED).entity("Token de autenticação inválido").build());

@@ -8,7 +8,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <!-- Montante -->
+                    <!-- Valor objetivo poupança -->
                     <div class="form-group form-row">
                             <label for="value" class="form-label">{{ $t('Objetivo Poupança') }}:
                             </label>
@@ -25,18 +25,11 @@
                                     :label=ValueLabel name="value" @update:value="Value = $event" />
                             </div>
                         </div>
-
-                        <MaterialAlert v-if="showAlert" color="danger" class="font-weight-light" dismissible
-                            @click="alert">
-                            <span class="text-sm">{{ $t('Escolha o tipo de movimento') }}</span>
-                        </MaterialAlert>
                 </div>
 
 
                 <div class="modal-footer mt-0">
-                    <p v-if="Type == 'Despesa' && showShareTab == false" class="btn btn-default bg-gradient-info mb-1"
-                        >{{ $t('Próximo') }}</p>
-                    <p v-else class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Adicionar') }}</p>
+                    <p class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Definir') }}</p>
                     <p id="cancelButton" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal" >{{
                         $t('Cancelar') }}
                     </p>
@@ -49,17 +42,13 @@
 <script>
 
 import { useI18n } from 'vue-i18n';
-import MaterialAlert from "@/components/MaterialAlert.vue";
 import MaterialInput from "@/components/MaterialInput.vue";
-//import NavPill from './NavPill.vue';
-//import { transactionStore } from "@/store/transactionStore.js";
 import { ref } from 'vue';
 import { userStore } from "@/store/userStore";
 
 
 export default {
     components: {
-        MaterialAlert,
         MaterialInput,
     },
     setup() {
@@ -102,7 +91,6 @@ export default {
         };
 
         const add = function () {
-
             checkInput();
 
             if (valueError.value === false) {

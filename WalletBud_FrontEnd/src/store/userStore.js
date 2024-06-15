@@ -96,8 +96,6 @@ export const userStore = defineStore("user", {
      
     },
 
-    
-
     async getUser() {
       const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/user";
       const token = localStorage.getItem('token');
@@ -130,6 +128,27 @@ export const userStore = defineStore("user", {
       };
 
       this.setUser(user); // Adiciona o novo usuário aos dados do store
+    },
+
+    async getUserByEmail(email) {
+      const url = `http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/user/get/${email}`;
+      const token = localStorage.getItem('token');
+      const request = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+      };
+
+      const response = await fetch(url, request);
+
+      // Verifica se a resposta não é OK
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+
     },
 
     async updateEditedUser(editedUser){

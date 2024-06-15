@@ -324,7 +324,7 @@ export default {
           return;
         }
 
-        userStore.email = email.value;
+        store.email = email.value;
         
         recuperarPassword.value = false;
         emailError.value = false;

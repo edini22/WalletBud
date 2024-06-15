@@ -49,6 +49,8 @@
 import MaterialCheckbox from "@/components/MaterialCheckbox.vue";
 import MaterialRadio from "@/components/MaterialRadio.vue";
 
+import { useTransactionStore } from "@/store/transactionStore.js";
+
 export default {
     name: "FilterDropdown",
     components: {
@@ -56,12 +58,10 @@ export default {
         MaterialRadio,
     },
     data() {
+        // console.log(categoriesStore().categories);
         return {
             showMenu: false,
-            categories: [
-                "Pessoal", "Familiar", "Alimentação", "Casa", "Entretenimento",
-                "Rendas", "Salário"
-            ],
+            categories: [...new Set(useTransactionStore().transactions.map(cat => cat.categoria))],
             types: ["Receita", "Despesa"],
             selectedCategories: [],
             selectedType: '',

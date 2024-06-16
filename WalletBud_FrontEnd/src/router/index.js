@@ -20,37 +20,37 @@ const routes = [
     path: "/",
     name: "/",
     redirect: "/home",
-    //meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: "/home",
     name: "Home",
     component: Home,
-    //meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: "/schedule",
     name: "Schedule",
     component: Schedule,
-    //meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
-    //meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: "/notifications",
     name: "Notifications",
     component: Notifications,
-    //meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: "/profile",
     name: "Profile",
     component: Profile,
-    //meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: "/sign-in",
@@ -71,6 +71,7 @@ const routes = [
     path: "/payments",
     name: "Payments",
     component: Payments,
+    meta: { requiresAuth: true },
   },
   {
     path: "/recuperacao/:token/:email",
@@ -79,10 +80,10 @@ const routes = [
     parameters: true,
   },
 ];
-/*
+
 const isAuthenticated = () => {
   return localStorage.getItem("token") !== null;
-};*/
+};
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
@@ -91,7 +92,7 @@ const router = createRouter({
 });
 
 // Global navigation guard
-/*
+
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // Check if user is authenticated
@@ -107,5 +108,5 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-*/
+
 export default router;

@@ -482,6 +482,7 @@ import { ref, reactive } from 'vue';
 
 import { categoriesStore } from "@/store/categoriesStore";
 import { userStore } from "@/store/userStore";
+import { useRouter } from 'vue-router';
 
 export default {
     name: "add-transactions",
@@ -524,6 +525,7 @@ export default {
         // dinamica
         const categories = categoriesStore();
         const user = userStore();
+        const router = useRouter(); 
 
         function validarEmail(email) {
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -596,7 +598,14 @@ export default {
 
                 } catch (error) {
                     // Tratamento de erro específico para " ... "
-                    if (error.message === " error message ... ") {
+                    if (error.message.includes('token')) {
+                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    router.push('/sign-in');
+                    } else if (error.message === "Nenhum utilizador encontrado!") {
                         emailErrorStore.value = `${t('Email não registado na plataforma.')}`;
                         emailError.value = true;
                         alert("Não é possível partilhar despesas com utilizadores não registados!");
@@ -790,10 +799,19 @@ export default {
                                 user.getUser(); //atualiza o saldo da homepage
 
                             } catch (error) {
-                                alert("Erro ao adicionar Recorrente (Fixa):", error.message);
-                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
-                                document.dispatchEvent(event);
-                                console.log('PopUp emitiu evento');
+                                if (error.message.includes('token')) {
+                                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+                                    localStorage.clear();
+                                    sessionStorage.clear();
+
+                                    router.push('/sign-in');
+                                } else {
+                                    alert("Erro ao adicionar Recorrente (Fixa):", error.message);
+                                    const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                                    document.dispatchEvent(event);
+                                    console.log('PopUp emitiu evento');
+                                }
                             }
 
                         }
@@ -846,11 +864,19 @@ export default {
                             user.getUser(); //atualiza o saldo da homepage
 
                         } catch (error) {
-                            alert("Erro ao adicionar Receita nao fixa:", error.message);
-                            const event = new CustomEvent('show-snackbar', { detail: 'error' });
-                            document.dispatchEvent(event);
-                            console.log('PopUp emitiu evento');
+                            if (error.message.includes('token')) {
+                                alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
 
+                                localStorage.clear();
+                                sessionStorage.clear();
+
+                                router.push('/sign-in');
+                            } else {
+                                alert("Erro ao adicionar Receita nao fixa:", error.message);
+                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                                document.dispatchEvent(event);
+                                console.log('PopUp emitiu evento');
+                            }
                         }
                     }
                 }
@@ -925,9 +951,18 @@ export default {
                                 user.getUser(); //atualiza o saldo da homepage
 
                             } catch (error) {
-                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
-                                document.dispatchEvent(event);
-                                console.log('PopUp emitiu evento');
+                                if (error.message.includes('token')) {
+                                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+                                    localStorage.clear();
+                                    sessionStorage.clear();
+
+                                    router.push('/sign-in');
+                                } else {
+                                    const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                                    document.dispatchEvent(event);
+                                    console.log('PopUp emitiu evento');
+                                }
                             }
                         }
                     } else {
@@ -983,9 +1018,18 @@ export default {
 
 
                         } catch (error) {
-                            const event = new CustomEvent('show-snackbar', { detail: 'error' });
-                            document.dispatchEvent(event);
-                            console.log('PopUp emitiu evento');
+                            if (error.message.includes('token')) {
+                                alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+                                localStorage.clear();
+                                sessionStorage.clear();
+
+                                router.push('/sign-in');
+                            } else {
+                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                                document.dispatchEvent(event);
+                                console.log('PopUp emitiu evento');
+                            }
                         }
                     }
                 }

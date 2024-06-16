@@ -49,6 +49,7 @@ import { useI18n } from 'vue-i18n';
 import MaterialInput from "@/components/MaterialInput.vue";
 import { ref, nextTick  } from 'vue';
 import { userStore } from "@/store/userStore";
+import { useRouter } from 'vue-router';
 
 
 export default {
@@ -63,6 +64,8 @@ export default {
         const valueNegative = ref(null);
         const isLoading = ref(false);
         const userS = userStore();
+
+        const router = useRouter(); 
 
         const checkInput = function () {
 
@@ -96,9 +99,18 @@ export default {
                 document.dispatchEvent(event);
 
             } catch (err) {
+                if (err.message.includes('token')) {
+                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    router.push('/sign-in');
+                } else {
+                    const event = new CustomEvent('show-snackbar', { detail: 'errorSavings' });
+                    document.dispatchEvent(event);
+                }
                 
-                const event = new CustomEvent('show-snackbar', { detail: 'errorSavings' });
-                document.dispatchEvent(event);
 
             } finally {
                 isLoading.value = false;

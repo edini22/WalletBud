@@ -113,6 +113,8 @@ import { ref } from "vue";
 import MaterialButton from "@/components/MaterialButton.vue";
 import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 
+import { useRouter } from 'vue-router';
+
 export default {
   name: "ProfileInfoCard",
   props: {
@@ -146,6 +148,8 @@ export default {
     const showErrorEmail2 = ref(false);
     const editedInfo = ref({ username: '', email: '', password: '' });
     const editPassword = ref(false);
+
+    const router = useRouter(); 
 
     const snackbar = ref(null);
 
@@ -205,7 +209,16 @@ export default {
             email.value = store.$state.email;
           }
         } catch (error) {
+          if (error.message.includes('token')) {
+            alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+            localStorage.clear();
+            sessionStorage.clear();
+
+            router.push('/sign-in');
+        } else {
           alert("Erro: " + error.message);
+        }
         }
 
         editMode.value = false;
@@ -238,7 +251,16 @@ export default {
             email.value = store.$state.email;
           }
         } catch (error) {
+          if (error.message.includes('token')) {
+            alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+            localStorage.clear();
+            sessionStorage.clear();
+
+            router.push('/sign-in');
+        } else {
           alert("Erro: " + error.message);
+        }
         }
 
         editMode.value = false;

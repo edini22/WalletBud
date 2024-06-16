@@ -61,19 +61,15 @@
                           <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
                         </td>
                         <td>
-                          <!-- <material-button variant="gradient" color="secondary" class="btn btn-sm small-button"
-                            @click="openPopup(p.id, p.date)">
-                            {{ $t("Abrir") }}
-                          </material-button> -->
-                          <!-- <material-button variant="gradient" color="secondary" class="btn btn-sm small-button" @click="openModal">
-                            {{ $t("Abrir") }}
-                          </material-button> -->
                           <material-button variant="gradient" color="secondary" class="btn btn-sm small-button"
-                            data-bs-toggle='modal' data-bs-target='#popupteste' @click="transa_id = p.id;">
+                            @click="openPopup(p.id, p.date)">
                             {{ $t("Abrir") }}
                           </material-button>
 
-                          <!-- <PopUpTeste v-if="popup" id="popupteste" @update:show="popup = false" /> -->
+                          <!-- <material-button variant="gradient" color="secondary" class="btn btn-sm small-button"
+                            data-bs-toggle='modal' data-bs-target='#popupteste' @click="transa_id = p.id;">
+                            {{ $t("Abrir") }}
+                          </material-button> -->
 
                         </td>
                       </tr>
@@ -244,8 +240,6 @@
     </div>
   </div>
 
-  <PopUpTeste :id="transa_id" />
-
   <!--PopUp 1-->
   <div v-if="popup" class="modal fade show" style="display: block">
     <div class="modal-dialog modal-dialog-centered">
@@ -299,9 +293,26 @@
               </div>
               <div class="justify-content-left">
                 <div v-for="(c, index) in comments" :key="index" class="mb-3">
-                  <h6>
+                  <h6 v-if="currentEditIndex !== index">
                     {{ c.user_email + " " + c.timestamp + " " + c.descricao }}
                   </h6>
+                  <input v-else class="form-control" v-model="editComment" />
+                  <div class="buttons" v-if="currentEditIndex === index">
+                    <button @click="saveComment(index)" style="background-color: white;">
+                      <i class="material-icons" style="color: #344767; font-size: 18px;">save</i>
+                    </button>
+                    <button @click="cancelEdit()" style="background-color: white;">
+                      <i class="material-icons" style="color: #344767; font-size: 18px;">cancel</i>
+                    </button>
+                  </div>
+                  <div class="buttons" v-else>
+                    <button @click="editCommentMode(index, c.descricao)" style="background-color: white;">
+                      <i class="material-icons" style="color: #344767; font-size: 18px;">edit</i>
+                    </button>
+                    <button @click="deleteComment(index)" style="background-color: white;">
+                      <i class="material-icons" style="color: #344767; font-size: 18px;">delete</i>
+                    </button>
+                  </div>
                 </div>
                 <div class="row mb-3">
                   <div class="col-9">
@@ -730,10 +741,12 @@
 import MaterialButton from "@/components/MaterialButton.vue";
 import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 import MaterialInput from "@/components/MaterialInput.vue";
-import PopUpTeste from "./components/PopUpTeste.vue";
+
 import { ref, computed, onMounted } from "vue";
 import { fixaStore } from "@/store/fixaStore";
 import { userStore } from "@/store/userStore";
+
+import { useRouter } from "vue-router";
 
 export default {
   name: "payments",
@@ -741,7 +754,6 @@ export default {
     MaterialButton,
     MaterialSnackbar,
     MaterialInput,
-    PopUpTeste,
   },
   setup() {
     const snackbar = ref(false);
@@ -773,6 +785,12 @@ export default {
 
     const transa_id = ref(0);
 
+    const router = useRouter();
+
+    const currentEditIndex = ref(null);
+    const editComment = ref(null);
+
+
     function validarEmail(email) {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -800,7 +818,16 @@ export default {
         await store.loadPorPagar();
         console.log("Por pagar carregados:", store.porPagar);
       } catch (err) {
-        alert("Erro loadPorPagar-> " + err.message);
+        if (err.message.includes('token')) {
+          alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+          
+          localStorage.clear();
+          sessionStorage.clear();
+          
+          router.push('/sign-in');
+        } else {
+          alert("Erro loadPorPagar-> " + err.message);
+        }
       }
     };
     const loadProximosPagamentos = async () => {
@@ -808,7 +835,16 @@ export default {
         await store.loadProximosPagamentos();
         console.log("Proximos pagamentos :", store.proximosPagamentos);
       } catch (err) {
-        alert("Erro loadProximosPagamentos-> " + err.message);
+        if (err.message.includes('token')) {
+          alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+          
+          localStorage.clear();
+          sessionStorage.clear();
+          
+          router.push('/sign-in');
+        } else {
+          alert("Erro loadProximosPagamentos-> " + err.message);
+        }
       }
     };
 
@@ -872,7 +908,16 @@ export default {
         popupDetails.value = false;
         loadPendentes();
       } catch (err) {
-        alert("Erro DeletePendente-> " + err.message);
+        if (err.message.includes('token')) {
+          alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+          
+          localStorage.clear();
+          sessionStorage.clear();
+          
+          router.push('/sign-in');
+        } else {
+          alert("Erro DeletePendente-> " + err.message);
+        }
       }
     };
 
@@ -884,8 +929,16 @@ export default {
         loadPorPagar();
         loadProximosPagamentos();
       } catch (err) {
-        alert("Erro DeleteTransacao-> " + err.message);
-        // snackbar.value = 'failureReject'; //TODO: VER ISTO
+        if (err.message.includes('token')) {
+          alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+          
+          localStorage.clear();
+          sessionStorage.clear();
+          
+          router.push('/sign-in');
+        } else {
+          alert("Erro DeleteTransacao-> " + err.message);
+        }
       }
     };
 
@@ -898,7 +951,16 @@ export default {
         loadPorPagar();
         loadProximosPagamentos();
       } catch (err) {
-        alert("Erro acceptReject-> " + err.message);
+        if (err.message.includes('token')) {
+          alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+          
+          localStorage.clear();
+          sessionStorage.clear();
+          
+          router.push('/sign-in');
+        } else {
+          alert("Erro acceptReject-> " + err.message);
+        }
       }
     };
 
@@ -912,7 +974,16 @@ export default {
         loadProximosPagamentos();
         snackbar.value = "successAccept";
       } catch (err) {
-        alert("Erro payTransaction-> " + err.message);
+        if (err.message.includes('token')) {
+            alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+            localStorage.clear();
+            sessionStorage.clear();
+
+            router.push('/sign-in');
+        } else {
+          alert("Erro payTransaction-> " + err.message);
+        }
       }
     };
 
@@ -929,7 +1000,16 @@ export default {
         loadPorPagar();
         loadProximosPagamentos();
       } catch (err) {
-        alert("Erro kickUser-> " + err.message);
+        if (err.message.includes('token')) {
+            alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+            localStorage.clear();
+            sessionStorage.clear();
+
+            router.push('/sign-in');
+        } else {
+          alert("Erro kickUser-> " + err.message);
+        }
       }
     };
 
@@ -965,13 +1045,43 @@ export default {
 
         openPopup(id, dateP.value);
       } catch (error) {
-        alert("Erro ao adicionar comentario:", error.message);
+        if (error.message.includes('token')) {
+          alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+          
+          localStorage.clear();
+          sessionStorage.clear();
+          
+          router.push('/sign-in');
+        } else {
+          alert("Erro ao adicionar comentario:", error.message);
+        }
       }
+    };
+
+    const editCommentMode = (index, descricao) => {
+      currentEditIndex.value = index;
+      editComment.value = descricao;
+    };
+
+    const saveComment = (index) => {
+      if (editComment.value.trim() === '') return;
+
+      comments.value[index].descricao = editComment.value;
+      currentEditIndex.value = null;
+      editComment.value = '';
+    };
+
+    const cancelEdit = () => {
+      currentEditIndex.value = null;
+      editComment.value = '';
+    };
+
+    const deleteComment = (index) => {
+      comments.value.splice(index, 1);
     };
 
     const openPopup = async (id, data) => {
       dateP.value = data;
-      popup.value = true;
       const t = store.proximosPagamentos.find((p) => p.id === id);
 
       const url =
@@ -1017,8 +1127,18 @@ export default {
 
         comments.value = data_comments.comentarios;
       } catch (error) {
-        alert("Erro ao carregar transacao:", error.message);
+        if (error.message.includes('token')) {
+          alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+          
+          localStorage.clear();
+          sessionStorage.clear();
+          
+          router.push('/sign-in');
+        } else {
+          alert("Erro ao carregar transacao:", error.message);
+        }
       }
+      popup.value = true;
     };
 
     const closeSnackbar = () => {
@@ -1071,6 +1191,12 @@ export default {
       kickUser,
       typeKick,
       popupKickInfo,
+      currentEditIndex,
+      editComment,
+      editCommentMode,
+      saveComment,
+      cancelEdit,
+      deleteComment
     };
   },
 };

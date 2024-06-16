@@ -152,6 +152,7 @@ import MaterialAlert from "@/components/MaterialAlert.vue";
 import { categoriesStore } from "@/store/categoriesStore";
 import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 import { ref, onMounted } from 'vue';
+import { useRouter } from "vue-router";
 
 
 export default {
@@ -172,6 +173,7 @@ export default {
         const isFocused = ref(false);
         const TypeError = ref(null);
         const snackbar = ref('');
+        const router = useRouter(); 
 
 
         const addCategory = async () => {
@@ -196,7 +198,13 @@ export default {
                 snackbar.value = '';
 
             } catch (err) {
-                if (err.message == 'Failed to fetch') {
+                if (err.message.includes('token')) {
+                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    router.push('/sign-in');
+                } else if (err.message == 'Failed to fetch') {
                     //não foi possível adicionar a categoria, tente novamente
                     snackbar.value = 'error';
                 } else if (err.message == 'Categoria ja existe com esse nome!') {
@@ -251,7 +259,15 @@ export default {
                 await store.load();
                 alert("Categoria editada com sucesso!");
             } catch (err) {
-                alert(err.message);
+                if (err.message.includes('token')) {
+                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    router.push('/sign-in');
+                } else {
+                    alert(err.message);
+                }
             }
         };
 
@@ -259,7 +275,16 @@ export default {
             try {
                 await store.load();
             } catch (err) {
-                alert("Erro -> " + err.message);
+                if (err.message.includes('token')) {
+                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    router.push('/sign-in');
+                } else {
+                    alert(err.message);
+                }
             }
         };
 
@@ -272,7 +297,15 @@ export default {
                 }
                 await store.load();
             } catch (err) {
-                alert(err.message);
+                if (err.message.includes('token')) {
+                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    router.push('/sign-in');
+                } else {
+                    alert(err.message);
+                }
             }
         };
 

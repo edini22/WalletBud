@@ -89,6 +89,7 @@ import TimelineItem from "@/examples/Cards/TimelineItem.vue";
 import { ref, computed, onMounted } from 'vue';
 import { fixaStore } from "@/store/fixaStore";
 import { userStore } from "@/store/userStore";
+import { useRouter } from 'vue-router';
 
 export default {
   name: "schedule",
@@ -105,13 +106,23 @@ export default {
     const user = userStore();
     const selectedPendenteId = ref(null);
     const transa = ref(null);
+    const router = useRouter(); 
 
     const loadTimeline = async () => {
       try {
         await store.loadTimeline(2024, 6);
         console.log("Timeline carregada:", store.timeline);
       } catch (err) {
-        alert("Erro -> " + err.message);
+        if (err.message.includes('token')) {
+            alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+            localStorage.clear();
+            sessionStorage.clear();
+
+            router.push('/sign-in');
+        } else {
+          alert("Erro -> " + err.message);
+        }
       }
     };
 

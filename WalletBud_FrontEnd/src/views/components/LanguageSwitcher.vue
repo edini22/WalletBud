@@ -11,11 +11,14 @@
 <script>
 import { useI18n } from 'vue-i18n';
 import { userStore } from '@/store/userStore';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
     const { locale, t } = useI18n();
     const store = userStore();
+
+    const router = useRouter(); 
     
     //locale.value === Idioma padrão
     locale.value = store.idioma;
@@ -39,7 +42,16 @@ export default {
           locale.value = store.$state.idioma;
         }
       } catch (err) {
-        alert(err.message);
+        if (err.message.includes('token')) {
+            alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+            localStorage.clear();
+            sessionStorage.clear();
+
+            router.push('/sign-in');
+        } else {
+          alert("Erro -> " + err.message);
+        }
       }
     };
 

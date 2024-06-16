@@ -295,6 +295,42 @@ public class TransacaoDAO {
 			throw new PersistentException(e);
 		}
 	}
+
+	public static List<Map<String, Object>> queryGastosByAnoById(PersistentSession session, int userId, int year) throws PersistentException {
+		try {
+			String sqlQuery = "SELECT MONTH(date) AS Month, SUM(Cost) AS TotalCost\n" +
+					"FROM (\n" +
+					"    SELECT t.Id_transacao AS Id, t.Date AS date, 'Unica' AS Discriminator, t.ShareValue AS Cost\n" +
+					"    FROM Transacao t\n" +
+					"          LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao\n" +
+					"    WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId OR tp.UserId_user IS NULL)\n" +
+					"        AND t.Status = 1\n" +
+					"        AND t.Discriminator = 'Unica'\n" +
+					"        AND YEAR(t.Date) = :year\n" +
+					"\n" +
+					"    UNION ALL\n" +
+					"\n" +
+					"    SELECT tf.ID AS Id, tf.DataAtual AS date, 'Fixa' AS Discriminator, tf.Payvalue AS Cost\n" +
+					"    FROM User_TransacaoFixa utf\n" +
+					"          JOIN TransacaoFixa tf ON utf.TransacaoFixaID = tf.ID\n" +
+					"    WHERE utf.UserId_user = :userId\n" +
+					"        AND YEAR(tf.DataAtual) = :year\n" +
+					") AS combined\n" +
+					"GROUP BY Month\n" +
+					"ORDER BY Month;";
+
+
+
+			Query query = session.createSQLQuery(sqlQuery)
+					.setParameter("userId", userId)
+					.setParameter("year", year)
+					.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new PersistentException(e);
+		}
+	}
 	
 	public static Transacao loadTransacaoByQuery(String condition, String orderBy) throws PersistentException {
 		try {

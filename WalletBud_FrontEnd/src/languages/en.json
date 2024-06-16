@@ -155,6 +155,11 @@
     "Filtrar": "Filter",
     "Tipo": "Type",
     "Campo obrigatório": "Required field",
-    "Definir": "Set"
+    "Definir": "Set",
+    "Indique um valor": "Enter a value",
+    "Definir Objetivo Poupança": "Set Savings Goal",
+    "Objetivo definido com sucesso!": "Goal set successfully!",
+    "Não foi possível definir o objetivo poupança. Tente novamente.": "It was not possible to set the savings goal. Try again.",
+    "Indique um valor positivo": "Enter a positive value"
 }
 

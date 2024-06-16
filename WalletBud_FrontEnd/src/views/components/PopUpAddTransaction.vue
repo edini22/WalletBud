@@ -859,7 +859,7 @@ export default {
                             cancelButton.click();
 
                             //sucesso
-                            const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                            const event = new CustomEvent('show-snackbar', { detail: 'successAddMove' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                             user.getUser(); //atualiza o saldo da homepage
@@ -991,7 +991,7 @@ export default {
                             cancelButton.click();
 
                             //sucesso
-                            const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                            const event = new CustomEvent('show-snackbar', { detail: 'successAddMove' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                             user.getUser(); //atualiza o saldo da homepage

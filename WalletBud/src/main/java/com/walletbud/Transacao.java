@@ -535,6 +535,15 @@ public class Transacao {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
+            } else if (cond == -4) {
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Email ja registado na transacao!")
+                        .build();
+                transaction.rollback();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "erro indefinido!")

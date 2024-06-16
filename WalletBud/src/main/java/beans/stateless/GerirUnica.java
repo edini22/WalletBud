@@ -40,7 +40,9 @@ public class GerirUnica {
             Unica unica = UnicaDAO.createUnica();
             unica.setName(name);
             unica.setValue(value);
-            unica.setDescrição(descricao);
+            if(descricao != null && !descricao.trim().isEmpty()) {
+                unica.setDescrição(descricao);
+            }
             unica.setLocal(local);
             unica.setTipo(tipo);
             unica.setCategoriaId_categoria(cat);
@@ -66,7 +68,7 @@ public class GerirUnica {
                 }
             }
 
-            if (!comentario.isEmpty()) {
+            if (comentario != null && !comentario.trim().isEmpty()) {
                 gerirComentario.createComentario(session, comentario, user, unica);
             }
 
@@ -216,14 +218,17 @@ public class GerirUnica {
                     userArrayBuilder.add(userJson);
                 }
                 JsonArray userArray = userArrayBuilder.build();
-
+                String descricao = unica.getDescrição();
+                if(descricao == null) {
+                    descricao = "";
+                }
                 JsonObject unicaJson = Json.createObjectBuilder()
                         .add("id", unica.getId_transacao())
                         .add("name", unica.getName())
                         .add("value", unica.getValue())
                         .add("shareValue", unica.getShareValue())
                         .add("date", unica.getDate().toString())
-                        .add("descricao", unica.getDescrição())
+                        .add("descricao", descricao)
                         .add("categoria", unica.getCategoriaId_categoria().getName())
                         .add("status", unica.getStatus())
                         .add("tipo", unica.getTipo())
@@ -292,14 +297,17 @@ public class GerirUnica {
                 userArrayBuilder.add(userJson);
             }
             JsonArray userArray = userArrayBuilder.build();
-
+            String descricao = unica.getDescrição();
+            if(descricao == null) {
+                descricao = "";
+            }
             JsonObject unicaJson = Json.createObjectBuilder()
                     .add("id", unica.getId_transacao())
                     .add("name", unica.getName())
                     .add("value", unica.getValue())
                     .add("shareValue", unica.getShareValue())
                     .add("date", unica.getDate().toString())
-                    .add("descricao", unica.getDescrição())
+                    .add("descricao", descricao)
                     .add("categoria", unica.getCategoriaId_categoria().getName())
                     .add("status", unica.getStatus())
                     .add("tipo", unica.getTipo())
@@ -345,7 +353,7 @@ public class GerirUnica {
                 JsonObject userObject = userValue.asJsonObject();
                 String userEmail = userObject.getString("email");
 
-                User us = gerirUtilizador.getUserByEmail(session, email);
+                User us = gerirUtilizador.getUserByEmail(session, userEmail);
                 if (us == null) {
                     return -5;
                 }

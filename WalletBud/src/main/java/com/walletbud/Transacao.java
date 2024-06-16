@@ -54,7 +54,14 @@ public class Transacao {
             transaction = session.beginTransaction();
 
             String name = jsonObject.getString("name");
-            String descricao = jsonObject.getString("descricao");
+            String descricao = null;
+            try {
+                JsonValue comentarioValue = jsonObject.get("descricao");
+                if (comentarioValue instanceof JsonString) {
+                    descricao = ((JsonString) comentarioValue).getString();
+                }
+            } catch (NullPointerException ignored) {
+            }
             String local = jsonObject.getString("local");
             int IdCategoria = jsonObject.getInt("IdCategoria");
             String dateStr = jsonObject.getString("date");
@@ -62,7 +69,15 @@ public class Transacao {
             LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
             Timestamp timestamp = Timestamp.valueOf(dateTime);
             JsonArray usersArray = jsonObject.getJsonArray("users");
-            String comentario = jsonObject.getString("comentario");
+            System.out.println(usersArray.toString());
+            String comentario = null;
+            try {
+                JsonValue comentarioValue = jsonObject.get("comentario");
+                if (comentarioValue instanceof JsonString) {
+                    comentario = ((JsonString) comentarioValue).getString();
+                }
+            } catch (NullPointerException ignored) {
+            }
 
             String value_str = jsonObject.getString("value");
             float value = Float.parseFloat(value_str);
@@ -145,6 +160,7 @@ public class Transacao {
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             if( transaction != null)
                 transaction.rollback();
             System.out.println("Error: " + e.getMessage());

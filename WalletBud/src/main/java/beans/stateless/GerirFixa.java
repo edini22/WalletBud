@@ -41,7 +41,9 @@ public class GerirFixa {
             Fixa fixa = FixaDAO.createFixa();
             fixa.setName(name);
             fixa.setValue(value);
-            fixa.setDescrição(descricao);
+            if(descricao != null && !descricao.trim().isEmpty()) {
+                fixa.setDescrição(descricao);
+            }
             fixa.setLocal(local);
             fixa.setTipo(tipo);
             fixa.setCategoriaId_categoria(cat);
@@ -60,7 +62,7 @@ public class GerirFixa {
                 }
             }
 
-            if (!comentario.isEmpty()) {
+            if (comentario != null && !comentario.trim().isEmpty()) {
                 gerirComentario.createComentario(session, comentario, user, fixa);
             }
 
@@ -193,14 +195,17 @@ public class GerirFixa {
                     userArrayBuilder.add(userJson);
                 }
                 JsonArray userArray = userArrayBuilder.build();
-
+                String descricao = fixa.getDescrição();
+                if(descricao == null) {
+                    descricao = "";
+                }
                 JsonObject unicaJson = Json.createObjectBuilder()
                         .add("id", fixa.getId_transacao())
                         .add("name", fixa.getName())
                         .add("value", fixa.getValue())
                         .add("shareValue", fixa.getShareValue())
                         .add("date", fixa.getDate().toString())
-                        .add("descricao", fixa.getDescrição())
+                        .add("descricao", descricao)
                         .add("categoria", fixa.getCategoriaId_categoria().getName())
                         .add("status", fixa.getStatus())
                         .add("repeticao", fixa.getRepeticao())
@@ -269,14 +274,17 @@ public class GerirFixa {
                 userArrayBuilder.add(userJson);
             }
             JsonArray userArray = userArrayBuilder.build();
-
+            String descricao = fixa.getDescrição();
+            if(descricao == null) {
+                descricao = "";
+            }
             return Json.createObjectBuilder()
                     .add("id", fixa.getId_transacao())
                     .add("name", fixa.getName())
                     .add("value", fixa.getValue())
                     .add("shareValue", fixa.getShareValue())
                     .add("date", fixa.getDate().toString())
-                    .add("descricao", fixa.getDescrição())
+                    .add("descricao", descricao)
                     .add("categoria", fixa.getCategoriaId_categoria().getName())
                     .add("status", fixa.getStatus())
                     .add("repeticao", fixa.getRepeticao())
@@ -611,15 +619,17 @@ public class GerirFixa {
 
             for (Iterator it = user.transacaoFixa.getIterator(); it.hasNext();) {
                 TransacaoFixa tf = (TransacaoFixa) it.next();
-
+                String descricao = tf.getTransacaofixa_ID().getDescrição();
+                if(descricao == null) {
+                    descricao = "";
+                }
                 JsonObject userJson = Json.createObjectBuilder()
                         .add("id", tf.getTransacaofixa_ID().getId_transacao())
                         .add("name", tf.getTransacaofixa_ID().getName())
                         .add("value", tf.getPayvalue())
                         .add("Data",tf.getDataAtual().toString())
                         .add("Data Pagamento",tf.getDataPagamento().toString())
-                        .add("descricao", tf.getTransacaofixa_ID().getDescrição())
-                        .add("descricao", tf.getTransacaofixa_ID().getDescrição())
+                        .add("descricao", descricao)
                         .add("categoria", tf.getTransacaofixa_ID().getCategoriaId_categoria().getName())
                         .add("repeticao", tf.getTransacaofixa_ID().getRepeticao())
                         .add("tipo", tf.getTransacaofixa_ID().getTipo())

@@ -51,6 +51,7 @@ public class ResetPassword {
 
             User user = gerirUtilizador.getUserByEmail(session, email);
 
+
             if (user == null) {
                 transaction.rollback();
                 JsonObject jsonResponse = Json.createObjectBuilder()
@@ -62,6 +63,7 @@ public class ResetPassword {
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
+            System.out.println("User:" + user.getName());
 
             int cond = gerirUtilizador.sendRecoveryToken(session, user);
 

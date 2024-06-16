@@ -44,13 +44,6 @@ public class GerirTransacaoPartilhada {
     public int shareTransaction(PersistentSession session, String transacao, String email, JsonArray usersArray, Unica unica, Fixa fixa) {
 
         try {
-
-            for (JsonValue userValue : usersArray) {
-                JsonObject userObject = userValue.asJsonObject();
-                String userEmail = userObject.getString("email");
-
-                System.out.println("User Email: " + userEmail);
-            }
             int cond;
             if (transacao.equals("fixa")) {
                 cond = gerirFixa.shareFixa(session, usersArray, email, fixa);
@@ -83,12 +76,16 @@ public class GerirTransacaoPartilhada {
             for(Map<String, Object> transacao : transacoes) {
                 if(transacao.get("Discriminator").equals("Unica")){
                     Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
+                    String descricao = unica.getDescrição();
+                    if(descricao == null) {
+                        descricao = "";
+                    }
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", unica.getId_transacao())
                             .add("name", unica.getName())
                             .add("value", unica.getShareValue())
                             .add("date", unica.getDate().toString())
-                            .add("descricao", unica.getDescrição())
+                            .add("descricao", descricao)
                             .add("categoria", unica.getCategoriaId_categoria().getName())
                             .add("tipo", unica.getTipo())
                             .add("local", unica.getLocal())
@@ -97,13 +94,17 @@ public class GerirTransacaoPartilhada {
                 } else{
                     TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
                     Fixa fixa = tf.getTransacaofixa_ID();
+                    String descricao = fixa.getDescrição();
+                    if(descricao == null) {
+                        descricao = "";
+                    }
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", fixa.getId_transacao())
                             .add("id_tf",tf.getID())
                             .add("name", fixa.getName())
                             .add("value", tf.getPayvalue())
                             .add("date", tf.getDataAtual().toString())
-                            .add("description", fixa.getDescrição())
+                            .add("description", descricao)
                             .add("categoria", fixa.getCategoriaId_categoria().getName())
                             .add("tipo", fixa.getTipo())
                             .add("local", fixa.getLocal())
@@ -138,12 +139,16 @@ public class GerirTransacaoPartilhada {
             for(Map<String, Object> transacao : transacoes) {
                 if(transacao.get("Discriminator").equals("Unica")){
                     Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
+                    String descricao = unica.getDescrição();
+                    if(descricao == null) {
+                        descricao = "";
+                    }
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", unica.getId_transacao())
                             .add("name", unica.getName())
                             .add("value", unica.getShareValue())
                             .add("date", unica.getDate().toString())
-                            .add("descricao", unica.getDescrição())
+                            .add("descricao", descricao)
                             .add("categoria", unica.getCategoriaId_categoria().getName())
                             .add("tipo", unica.getTipo())
                             .add("local", unica.getLocal())
@@ -152,13 +157,17 @@ public class GerirTransacaoPartilhada {
                 } else{
                     TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
                     Fixa fixa = tf.getTransacaofixa_ID();
+                    String descricao = fixa.getDescrição();
+                    if(descricao == null) {
+                        descricao = "";
+                    }
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", fixa.getId_transacao())
                             .add("id_tf",tf.getID())
                             .add("name", fixa.getName())
                             .add("value", tf.getPayvalue())
                             .add("date", tf.getDataAtual().toString())
-                            .add("description", fixa.getDescrição())
+                            .add("description", descricao)
                             .add("categoria", fixa.getCategoriaId_categoria().getName())
                             .add("tipo", fixa.getTipo())
                             .add("local", fixa.getLocal())
@@ -266,13 +275,16 @@ public class GerirTransacaoPartilhada {
 
                         // Obter o novo timestamp ajustado
                         time = new Timestamp(calendar.getTimeInMillis());
-
+                        String descricao = fixa.getDescrição();
+                        if(descricao == null) {
+                            descricao = "";
+                        }
                         Map<String, Object> fixasMap = new HashMap<>();
                         fixasMap.put("id", fixa.getId_transacao());
                         fixasMap.put("name", fixa.getName());
                         fixasMap.put("date", time.toString());
                         fixasMap.put("value", fixa.getShareValue());
-                        fixasMap.put("descricao", fixa.getDescrição());
+                        fixasMap.put("descricao", descricao);
                         fixasMap.put("categoria", fixa.getCategoriaId_categoria().getName());
                         fixasMap.put("tipo", fixa.getTipo());
                         fixasMap.put("local", fixa.getLocal());
@@ -313,13 +325,16 @@ public class GerirTransacaoPartilhada {
                     for (LocalDate date : matchingDays) {
                         LocalDateTime dt = date.atTime(localDateTime.toLocalTime());
                         Timestamp sqlTimestamp = Timestamp.valueOf(dt);
-
+                        String descricao = fixa.getDescrição();
+                        if(descricao == null) {
+                            descricao = "";
+                        }
                         Map<String, Object> fixasMap = new HashMap<>();
                         fixasMap.put("id", fixa.getId_transacao());
                         fixasMap.put("name", fixa.getName());
                         fixasMap.put("date", sqlTimestamp.toString());
                         fixasMap.put("value", fixa.getShareValue());
-                        fixasMap.put("descricao", fixa.getDescrição());
+                        fixasMap.put("descricao", descricao);
                         fixasMap.put("categoria", fixa.getCategoriaId_categoria().getName());
                         fixasMap.put("tipo", fixa.getTipo());
                         fixasMap.put("local", fixa.getLocal());
@@ -334,12 +349,16 @@ public class GerirTransacaoPartilhada {
             for(Map<String, Object> transacao : transacoes) {
                 if (transacao.get("Discriminator").equals("Unica")) {
                     Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
+                    String descricao = unica.getDescrição();
+                    if(descricao == null) {
+                        descricao = "";
+                    }
                     Map<String, Object> fixasMap = new HashMap<>();
                     fixasMap.put("id", unica.getId_transacao());
                     fixasMap.put("name", unica.getName());
                     fixasMap.put("date", unica.getDate().toString());
                     fixasMap.put("value", unica.getShareValue());
-                    fixasMap.put("descricao", unica.getDescrição());
+                    fixasMap.put("descricao", descricao);
                     fixasMap.put("categoria", unica.getCategoriaId_categoria().getName());
                     fixasMap.put("tipo", unica.getTipo());
                     fixasMap.put("local", unica.getLocal());
@@ -352,12 +371,16 @@ public class GerirTransacaoPartilhada {
                     TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
                     Fixa f = tf.getTransacaofixa_ID();
                     if(f.getOwner_id() == null){
+                        String descricao = f.getDescrição();
+                        if(descricao == null) {
+                            descricao = "";
+                        }
                         Map<String, Object> fixasMap = new HashMap<>();
                         fixasMap.put("id", f.getId_transacao());
                         fixasMap.put("name", f.getName());
                         fixasMap.put("date", tf.getDataPagamento().toString());
                         fixasMap.put("value", f.getShareValue());
-                        fixasMap.put("descricao", f.getDescrição());
+                        fixasMap.put("descricao", descricao);
                         fixasMap.put("categoria", f.getCategoriaId_categoria().getName());
                         fixasMap.put("tipo", f.getTipo());
                         fixasMap.put("local", f.getLocal());
@@ -485,13 +508,17 @@ public class GerirTransacaoPartilhada {
                         userArrayBuilder.add(userJson);
                     }
                     JsonArray userArray = userArrayBuilder.build();
+                    String descricao = unica.getDescrição();
+                    if(descricao == null) {
+                        descricao = "";
+                    }
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", unica.getId_transacao())
                             .add("name", unica.getName())
                             .add("value", unica.getValue())
                             .add("shareValue", unica.getShareValue())
                             .add("date", unica.getDate().toString())
-                            .add("descricao", unica.getDescrição())
+                            .add("descricao", descricao)
                             .add("categoria", unica.getCategoriaId_categoria().getName())
                             .add("status", unica.getStatus())
                             .add("tipo", unica.getTipo())
@@ -526,13 +553,17 @@ public class GerirTransacaoPartilhada {
                         userArrayBuilder.add(userJson);
                     }
                     JsonArray userArray = userArrayBuilder.build();
+                    String descricao = fixa.getDescrição();
+                    if(descricao == null) {
+                        descricao = "";
+                    }
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", fixa.getId_transacao())
                             .add("name", fixa.getName())
                             .add("value", fixa.getValue())
                             .add("shareValue", fixa.getShareValue())
                             .add("date", fixa.getDate().toString())
-                            .add("descricao", fixa.getDescrição())
+                            .add("descricao", descricao)
                             .add("categoria", fixa.getCategoriaId_categoria().getName())
                             .add("status", fixa.getStatus())
                             .add("repeticao", fixa.getRepeticao())

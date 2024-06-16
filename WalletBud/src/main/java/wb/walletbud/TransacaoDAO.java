@@ -295,7 +295,124 @@ public class TransacaoDAO {
 			throw new PersistentException(e);
 		}
 	}
-	
+
+	public static List<Map<String, Object>> queryGastosByAnoById(PersistentSession session, int userId, int year) throws PersistentException {
+		try {
+			String sqlQuery = "SELECT MONTH(date) AS Month, SUM(Cost) AS TotalCost\n" +
+					"FROM (\n" +
+					"    SELECT t.Id_transacao AS Id, t.Date AS date, 'Unica' AS Discriminator, t.ShareValue AS Cost, t.Tipo as Tipo\n" +
+					"    FROM Transacao t\n" +
+					"          LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao\n" +
+					"    WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId OR tp.UserId_user IS NULL)\n" +
+					"        AND t.Status = 1\n" +
+					"        AND t.Discriminator = 'Unica'\n" +
+					"        AND t.Tipo = 'despesa'\n" +
+					"        AND YEAR(t.Date) = :year\n" +
+					"\n" +
+					"    UNION ALL\n" +
+					"\n" +
+					"    SELECT tf.ID AS Id, tf.DataAtual AS date, 'Fixa' AS Discriminator, tf.Payvalue AS Cost, t.Tipo AS Tipo\n" +
+					"    FROM TransacaoFixa tf\n" +
+					"        JOIN User_TransacaoFixa utf ON tf.ID = utf.TransacaoFixaID\n" +
+					"        JOIN Transacao t ON tf.TransacaoId_transacao = t.Id_transacao\n" +
+					"    WHERE utf.UserId_user = :userId\n" +
+					"        AND YEAR(DataAtual) = :year\n" +
+					"        AND t.Tipo = 'despesa'\n" +
+					") AS combined\n" +
+					"GROUP BY Month\n" +
+					"ORDER BY Month;";
+
+
+
+			Query query = session.createSQLQuery(sqlQuery)
+					.setParameter("userId", userId)
+					.setParameter("year", year)
+					.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+
+	public static List<Map<String, Object>> queryGastosTotalAnoById(PersistentSession session, int userId, int year) throws PersistentException {
+		try {
+			String sqlQuery = "SELECT SUM(Cost) AS TotalCost\n" +
+					"FROM (\n" +
+					"         SELECT t.Id_transacao AS Id, t.Date AS date, 'Unica' AS Discriminator, t.ShareValue AS Cost, t.Tipo as Tipo\n" +
+					"         FROM Transacao t\n" +
+					"                  LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao\n" +
+					"         WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId OR tp.UserId_user IS NULL)\n" +
+					"           AND t.Status = 1\n" +
+					"           AND t.Discriminator = 'Unica'\n" +
+					"           AND t.Tipo = 'despesa'\n" +
+					"           AND YEAR(t.Date) = :year\n" +
+					"\n" +
+					"         UNION ALL\n" +
+					"\n" +
+					"         SELECT tf.ID AS Id, tf.DataAtual AS date, 'Fixa' AS Discriminator, tf.Payvalue AS Cost, t.Tipo AS Tipo\n" +
+					"         FROM TransacaoFixa tf\n" +
+					"                  JOIN User_TransacaoFixa utf ON tf.ID = utf.TransacaoFixaID\n" +
+					"                  JOIN Transacao t ON tf.TransacaoId_transacao = t.Id_transacao\n" +
+					"         WHERE utf.UserId_user = :userId\n" +
+					"           AND YEAR(DataAtual) = :year\n" +
+					"           AND t.Tipo = 'despesa'\n" +
+					"     ) AS combined;";
+
+
+
+			Query query = session.createSQLQuery(sqlQuery)
+					.setParameter("userId", userId)
+					.setParameter("year", year)
+					.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+
+	public static List<Map<String, Object>> queryGastosTotalByCategoriaById(PersistentSession session, int userId, int year, int month) throws PersistentException {
+		try {
+			String sqlQuery = "SELECT combined.Categoria AS Categoria, SUM(Cost) AS TotalCost\n" +
+					"FROM (\n" +
+					"    SELECT t.Id_transacao AS Id, t.Date AS date, 'Unica' AS Discriminator, t.ShareValue AS Cost, t.Tipo as Tipo, c.Name AS Categoria\n" +
+					"    FROM Transacao t\n" +
+					"        LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao\n" +
+					"        JOIN Categoria c ON t.CategoriaId_categoria = c.Id_categoria\n" +
+					"    WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId OR tp.UserId_user IS NULL)\n" +
+					"        AND t.Status = 1\n" +
+					"        AND t.Discriminator = 'Unica'\n" +
+					"        AND t.Tipo = 'despesa'\n" +
+					"        AND YEAR(t.Date) = :year\n" +
+					"        AND MONTH(t.Date) = :month\n" +
+					"\n" +
+					"    UNION ALL\n" +
+					"\n" +
+					"    SELECT tf.ID AS Id, tf.DataAtual AS date, 'Fixa' AS Discriminator, tf.Payvalue AS Cost, t.Tipo AS Tipo, c.Name AS Categoria\n" +
+					"    FROM TransacaoFixa tf\n" +
+					"        JOIN User_TransacaoFixa utf ON tf.ID = utf.TransacaoFixaID\n" +
+					"        JOIN Transacao t ON tf.TransacaoId_transacao = t.Id_transacao\n" +
+					"        JOIN Categoria c ON t.CategoriaId_categoria = c.Id_categoria\n" +
+					"    WHERE utf.UserId_user = :userId\n" +
+					"    AND YEAR(DataAtual) = :year\n" +
+					"    AND MONTH(DataAtual) = :month\n" +
+					"    AND t.Tipo = 'despesa'\n" +
+					") AS combined\n" +
+					"GROUP BY combined.Categoria;";
+
+			Query query = session.createSQLQuery(sqlQuery)
+					.setParameter("userId", userId)
+					.setParameter("year", year)
+					.setParameter("month", month)
+					.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+
 	public static Transacao loadTransacaoByQuery(String condition, String orderBy) throws PersistentException {
 		try {
 			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();

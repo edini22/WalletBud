@@ -2,8 +2,6 @@ package com.walletbud;
 
 //Gasto por cada dia da semana passada - MAYBE
 //
-//Gasto total por ano
-//
 //Gastos por categoria - para cada ano, aceder ao gasto total por categoria por mês.
 
 import jakarta.json.Json;

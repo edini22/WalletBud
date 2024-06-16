@@ -608,6 +608,24 @@ public class GerirTransacaoPartilhada {
         return gastos_mes.build();
     }
 
+    public JsonObject queryGastosTotalByCategoriaById(PersistentSession session, String email, int ano, int mes) throws PersistentException {
+
+        User user = gerirUtilizador.getUserByEmail(session, email);
+
+        List<Map<String, Object>> gastos = TransacaoDAO.queryGastosTotalByCategoriaById(session, user.getId_user(), ano, mes);
+
+        JsonObjectBuilder gastos_mes = Json.createObjectBuilder();
+
+
+        for (Map<String, Object> transacao : gastos) {
+            String categoria = (String) transacao.get("Categoria");
+            Number totalCost = (Number) transacao.get("TotalCost");
+            gastos_mes.add(categoria, totalCost.doubleValue());
+        }
+
+        return gastos_mes.build();
+    }
+
     public JsonObject getGastosPorAno(PersistentSession session, String email, int ano) throws PersistentException {
 
         User user = gerirUtilizador.getUserByEmail(session, email);

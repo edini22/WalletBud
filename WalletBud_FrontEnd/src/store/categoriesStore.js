@@ -102,41 +102,5 @@ export const categoriesStore = defineStore('Category', {
               throw error; 
             }
           },
-        async editCategory(editedCategory,type) {
-          let cate;
-          if(type === 'income'){
-            cate = this.CategoriesIncome.find(Category => Category.id === editedCategory.id);
-          } else {
-            cate = this.CategoriesExpense.find(Category => Category.id === editedCategory.id);
-          }
-
-          if(cate.name === editedCategory.name){
-            return;
-          }
-          alert("passou");
-          const newt = {
-              name: editedCategory.name,
-              id: editedCategory.id,
-          };
-          const newtJSON = JSON.stringify(newt);
-
-          const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/categoria/set";
-          const token = localStorage.getItem('token');
-          const request = {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json",
-                  'Authorization': `Bearer ${token}`
-                },
-              body: newtJSON
-          };
-          const response = await fetch(url, request);
-
-          // Verifica se a resposta não é OK
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message);
-          }
-        },
     }
 });

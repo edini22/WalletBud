@@ -26,16 +26,16 @@
                             <label for="description" class="form-label">{{ $t('Nome') }}
                                 <p class="required"> *</p>
                             </label>
-                            <div v-if="nameError === true" class="form-input mb-3">
+                            <div v-if="nameError === true" class="form-input mb-1">
                                 <material-input class="material-input" id="description" type="text"
                                     :label="$t('Indique o nome')" name="description" @update:value="Name = $event"
                                     :value="Name" error />
                             </div>
-                            <div v-if="nameError === false" class="form-input mb-3">
+                            <div v-if="nameError === false" class="form-input mb-1">
                                 <material-input class="material-input" id="description" type="text" name="description"
                                     :value="Name" @update:value="Name = $event" success />
                             </div>
-                            <div v-if="nameError === null" class="form-input mb-3">
+                            <div v-if="nameError === null" class="form-input mb-1">
                                 <material-input class="material-input" id="description" type="text" :value="Name"
                                     :label="$t('Indique o nome')" name="description" @update:value="Name = $event" />
                             </div>
@@ -44,7 +44,7 @@
                         <!-- Descrição -->
                         <div class="form-group form-row">
                             <label for="place" class="form-label">{{ $t('Descrição') }}</label>
-                            <div class="form-input mb-3">
+                            <div class="form-input mb-1">
                                 <material-input class="material-input" id="place" type="text"
                                     :label="$t('Indique a descrição')" name="place" :value="Description"
                                     @update:value="Description = $event" />
@@ -56,16 +56,16 @@
                             <label for="value" class="form-label">{{ $t('Montante') }}
                                 <p class="required"> *</p>
                             </label>
-                            <div v-if="valueError === true" class="form-input mb-3">
+                            <div v-if="valueError === true" class="form-input mb-1">
                                 <material-input class="material-input" id="value" type="number" :value="Value"
                                     :label="$t('Indique um montante válido')" name="value"
                                     @update:value="Value = $event" error />
                             </div>
-                            <div v-if="valueError === false" class="form-input mb-3">
+                            <div v-if="valueError === false" class="form-input mb-1">
                                 <material-input class="material-input" id="value" type="number" name="value"
                                     :value="Value" @update:value="Value = $event" success />
                             </div>
-                            <div v-if="valueError === null" class="form-input mb-3">
+                            <div v-if="valueError === null" class="form-input mb-1">
                                 <material-input class="material-input" id="value" type="number" :value="Value"
                                     :label="$t('Indique um montante')" name="value" @update:value="Value = $event" />
                             </div>
@@ -77,19 +77,19 @@
                                 {{ $t('Data do Movimento') }}
                                 <p class="required"> *</p>
                             </label>
-                            <div v-if="DateError === true" class="form-input mb-3 date-input-wrapper"
+                            <div v-if="DateError === true" class="form-input mb-1 date-input-wrapper"
                                 :class="{ 'dropdown-focused-error': isDateFocused, 'border': SetBorder }"
                                 style="position: relative;">
                                 <material-input class="material-input" id="date" type="date" name="date" :value="DateM"
                                     @update:value="DateM = $event" error @focus="handleDateFocus"
                                     @blur="handleDateBlur" />
                             </div>
-                            <div v-if="DateError === false" class="form-input mb-3">
+                            <div v-if="DateError === false" class="form-input mb-1">
                                 <material-input class="material-input" :class="{ 'is-focused': isFocused }" id="date"
                                     type="date" name="date" :value="DateM" @update:value="DateM = $event" success
                                     @focus="handleFocus" @blur="handleBlur" :label="$t('Indique a data')" />
                             </div>
-                            <div v-if="DateError === null" class="form-input mb-3  date-input-wrapper">
+                            <div v-if="DateError === null" class="form-input mb-1  date-input-wrapper">
                                 <material-input class="material-input" :class="{ 'is-focused': isFocused }" id="date"
                                     type="date" name="date" @update:value="DateM = $event" :value="DateM"
                                     :label="$t('Indique a data')" @focus="handleFocus" @blur="handleBlur" />
@@ -105,7 +105,7 @@
                                 </label>
 
                                 <div v-if="TypeError === null || TypeError === false"
-                                    class="input-group input-group-outline form-input mb-3"
+                                    class="input-group input-group-outline form-input mb-1"
                                     style="border-radius: 0.375rem;">
                                     <button class="cursor-pointer form-control form-control-default material-input"
                                         :class="{ 'dropdown-focused-null': isTypeFocused }" id="dropdownTable"
@@ -130,7 +130,7 @@
                                 </div>
 
                                 <div v-if="TypeError === true"
-                                    class="input-group input-group-outline form-input mb-3 is-invalid"
+                                    class="input-group input-group-outline form-input mb-1 is-invalid"
                                     style="border-radius: 0.375rem;">
                                     <button class="cursor-pointer form-control form-control-default material-input"
                                         :class="{ 'dropdown-focused-error': isTypeFocused }" id="dropdownTable"
@@ -163,7 +163,7 @@
                                 </label>
 
                                 <div v-if="recorrenceError === null || recorrenceError === false"
-                                    class="input-group input-group-outline form-input mb-3"
+                                    class="input-group input-group-outline form-input mb-1"
                                     style="border-radius: 0.375rem;">
                                     <button class="cursor-pointer form-control form-control-default material-input"
                                         :class="{ 'dropdown-focused-null': isRecorrenceFocused }" id="dropdownTable"
@@ -188,7 +188,7 @@
                                 </div>
 
                                 <div v-if="recorrenceError === true"
-                                    class="input-group input-group-outline form-input mb-3 is-invalid"
+                                    class="input-group input-group-outline form-input mb-1 is-invalid"
                                     style="border-radius: 0.375rem;">
                                     <button class="cursor-pointer form-control form-control-default material-input"
                                         :class="{ 'dropdown-focused-error': isRecorrenceFocused }" id="dropdownTable"
@@ -220,7 +220,7 @@
                                     <p class="required"> *</p>
                                 </label>
                                 <div v-if="repetitionError === null || repetitionError === false"
-                                    class="input-group input-group-outline form-input mb-3"
+                                    class="input-group input-group-outline form-input mb-1"
                                     style="border-radius: 0.375rem;">
                                     <button class="cursor-pointer form-control form-control-default material-input"
                                         :class="{ 'dropdown-focused-null': isRepetitionFocused }" id="dropdownTable"
@@ -254,7 +254,7 @@
                                 </div>
 
                                 <div v-if="repetitionError === true"
-                                    class="input-group input-group-outline form-input mb-3 is-invalid"
+                                    class="input-group input-group-outline form-input mb-1 is-invalid"
                                     style="border-radius: 0.375rem;">
                                     <button class="cursor-pointer form-control form-control-default material-input"
                                         :class="{ 'dropdown-focused-error': isRepetitionFocused }" id="dropdownTable"
@@ -296,7 +296,7 @@
                                     <p class="required"> *</p>
                                 </label>
                                 <div v-if="CategoryError === null || CategoryError === false"
-                                    class="input-group input-group-outline form-input mb-3"
+                                    class="input-group input-group-outline form-input mb-1"
                                     style="border-radius: 0.375rem;">
                                     <button v-if="displayCategories.length > 0"
                                         class="cursor-pointer form-control form-control-default material-input"
@@ -324,7 +324,7 @@
                                 </div>
 
                                 <div v-if="CategoryError === true"
-                                    class="input-group input-group-outline form-input mb-3 is-invalid"
+                                    class="input-group input-group-outline form-input mb-1 is-invalid"
                                     style="border-radius: 0.375rem;">
                                     <button v-if="displayCategories.length > 0"
                                         class="cursor-pointer form-control form-control-default material-input"
@@ -360,14 +360,14 @@
                         <!-- Local -->
                         <div class="form-group form-row">
                             <label for="place" class="form-label">{{ $t('Local') }}</label>
-                            <div class="form-input mb-3">
+                            <div class="form-input mb-1">
                                 <material-input class="material-input" id="place" type="text"
                                     :label="$t('Indique o local')" name="place" :value="Place"
                                     @update:value="Place = $event" />
                             </div>
                         </div>
 
-                        <label class="form-label mb-3">
+                        <label class="form-label mb-1">
                             <p class="required" style="font-weight: 400;"> * {{ $t('Campo obrigatório') }}</p>
                         </label>
 
@@ -377,7 +377,7 @@
                                     style="max-width: 24px; color: #344767">insert_comment_outlined</i>
                                 <h5>{{ $t('Comentário') }}</h5>
 
-                                <div class="form-input mb-3">
+                                <div class="form-input">
                                     <material-input class="material-input" id="comment" type="text" :value="Comment"
                                         :label="$t('Escreva o seu comentário')" @update:value="Comment = $event" />
                                 </div>

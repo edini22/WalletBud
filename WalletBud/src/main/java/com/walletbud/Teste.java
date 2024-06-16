@@ -2,8 +2,6 @@ package com.walletbud;
 
 //Gasto por cada dia da semana passada - MAYBE
 //
-//Gasto por mês num determinado ano - para cada ano mandar o gasto total por mês
-//
 //Gasto total por ano
 //
 //Gastos por categoria - para cada ano, aceder ao gasto total por categoria por mês.

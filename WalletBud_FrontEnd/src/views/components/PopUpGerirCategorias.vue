@@ -36,11 +36,11 @@
 								<!-- @blur="saveIncomeCategory(index)" /> -->
                 <div class="buttons">
                   <button @click="toggleIncomeEditMode(index,category.name)" style="background-color: white;">
-                    <i class="material-icons" style="color: #344767;" v-if="store.CategoriesIncome[index].isedit">save</i>
-                    <i class="material-icons" style="color: #344767;" v-else>edit</i>
+                    <i class="material-icons" style="color: #344767; font-size: 18px;" v-if="store.CategoriesIncome[index].isedit">save</i>
+                    <i class="material-icons" style="color: #344767; font-size: 18px;" v-else>edit</i>
                   </button>
                   <button @click="deleteCategory(index, 'income')" style="background-color: white;">
-                    <i class="material-icons" style="color: #344767; font-size: 20px;">delete</i>
+                    <i class="material-icons" style="color: #344767; font-size: 18px;">delete</i>
                   </button>
                 </div>
                 </li>

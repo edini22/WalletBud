@@ -102,8 +102,18 @@ export const categoriesStore = defineStore('Category', {
               throw error; 
             }
           },
-        async editCategory(editedCategory) {
+        async editCategory(editedCategory,type) {
+          let cate;
+          if(type === 'income'){
+            cate = this.CategoriesIncome.find(Category => Category.id === editedCategory.id);
+          } else {
+            cate = this.CategoriesExpense.find(Category => Category.id === editedCategory.id);
+          }
 
+          if(cate.name === editedCategory.name){
+            return;
+          }
+          alert("passou");
           const newt = {
               name: editedCategory.name,
               id: editedCategory.id,
@@ -128,8 +138,5 @@ export const categoriesStore = defineStore('Category', {
             throw new Error(errorData.message);
           }
         },
-        // getCategoriesByID(id) {
-        //     return this.Categories.find(Category => Category.id === id);
-        // }
     }
 });

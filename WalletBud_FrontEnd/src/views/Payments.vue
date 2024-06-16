@@ -55,7 +55,7 @@
                         <td>
                           <span class="text-xs font-weight-bold">{{
                             p.date
-                          }}</span>
+                            }}</span>
                         </td>
                         <td>
                           <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
@@ -65,6 +65,17 @@
                             @click="openPopup(p.id, p.date)">
                             {{ $t("Abrir") }}
                           </material-button>
+                          <!-- <material-button variant="gradient" color="secondary" class="btn btn-sm small-button" @click="openModal">
+                            {{ $t("Abrir") }}
+                          </material-button> -->
+                          <!-- <material-button variant="gradient" color="secondary"
+                            class="btn btn-sm small-button" data-bs-toggle='modal' data-bs-target='#savingsGoalModal'
+                            @click="openModal">
+                            {{ $t("Abrir") }}
+                          </material-button> -->
+
+                          <!-- <PopUpTeste v-if="popup" id="popupteste" @update:show="popup = false" /> -->
+
                         </td>
                       </tr>
                     </template>
@@ -125,7 +136,7 @@
                             <td>
                               <span class="text-xs font-weight-bold">{{
                                 p.date
-                              }}</span>
+                                }}</span>
                             </td>
                             <td>
                               <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
@@ -200,7 +211,7 @@
                             <td>
                               <span class="text-xs font-weight-bold">{{
                                 p.date
-                              }}</span>
+                                }}</span>
                             </td>
                             <td>
                               <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
@@ -233,6 +244,8 @@
       </div>
     </div>
   </div>
+
+  <!-- <PopUpTeste :id="transa_id"/> -->
 
   <!--PopUp 1-->
   <div v-if="popup" class="modal fade show" style="display: block">
@@ -718,6 +731,7 @@
 import MaterialButton from "@/components/MaterialButton.vue";
 import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 import MaterialInput from "@/components/MaterialInput.vue";
+// import PopUpTeste from "./components/PopUpTeste.vue";
 import { ref, computed, onMounted } from "vue";
 import { fixaStore } from "@/store/fixaStore";
 import { userStore } from "@/store/userStore";
@@ -728,6 +742,7 @@ export default {
     MaterialButton,
     MaterialSnackbar,
     MaterialInput,
+    // PopUpTeste,
   },
   setup() {
     const snackbar = ref(false);

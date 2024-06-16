@@ -169,11 +169,18 @@
                   >
 
                   <material-button
+                    v-if="!isButtonDisabled"
                     class="btn btn-md"
                     variant="gradient"
                     color="info"
-                   
-                    @click.prevent="recuperar"
+                    @click.prevent="isButtonDisabled = true; recuperar();"
+                    >{{$t('Recuperar')}}</material-button
+                  >
+                  <material-button
+                    v-else
+                    class="btn btn-md"
+                    variant="gradient"
+                    color="secondary"
                     >{{$t('Recuperar')}}</material-button
                   >
 
@@ -255,10 +262,13 @@ export default {
     const passwordErrorMessages = ref(null);
 
     const recuperarPassword = ref(false);
+    const isButtonDisabled = ref(false);
 
     const snackbar = ref(null);
     
     let state = false;
+
+
 
     const voltar = () => {
       router.push({ name: "SignIn" });
@@ -282,6 +292,7 @@ export default {
     });
 
     const recuperar = async () => {
+
       if (!validarEmail(email.value)) {
         recuperarPassword.value = true;
         emailErrorMessages.value = `${t('Email inválido')}`;
@@ -414,6 +425,7 @@ export default {
       email,
       password,
       login,
+      isButtonDisabled,
       error,
       emailError,
       passwordError,

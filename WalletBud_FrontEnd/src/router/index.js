@@ -73,7 +73,7 @@ const routes = [
     component: Payments,
   },
   {
-    path: "/recuperacao/:token",
+    path: "/recuperacao/:token/:email",
     name: "Recuperacao",
     component: Recuperacao,
     parameters: true,

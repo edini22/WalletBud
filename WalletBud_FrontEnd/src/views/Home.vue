@@ -20,7 +20,7 @@
               }" />
           </div>
           <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
-            <mini-statistics-card :title="{ text: $t('Movimentos') }"
+            <mini-statistics-card :title="{ text: $t('Categorias') }"
               :detail="`<button class='btn mb-0 btn-sm null null bg-gradient-info' data-bs-toggle='modal' data-bs-target='#categoryModal'>${$t('Gerir Categorias')}</button>`"
               :icon="{
                 name: 'edit_note',

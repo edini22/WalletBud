@@ -190,6 +190,47 @@ export const useTransactionStore = defineStore('transaction', {
               throw error; 
             }
           },
+          async loadAll() {
+            const url = `http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/movimentos`;
+            const token = localStorage.getItem('token');
+          
+            const request = {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${token}`
+              },
+            };
+          
+            try {
+              const response = await fetch(url, request);
+          
+              if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message);
+              }
+          
+              const data = await response.json();
+              console.log(data);
+          
+              // Mapear os dados recebidos para o formato de categorias desejado
+              this.transactions = data.movimentos.map(cat => ({
+                id: cat.id,
+                id_tf: cat.id_tf ? cat.id_tf : -1,
+                name: cat.name,
+                value: parseFloat(cat.value.toFixed(2)),
+                date: cat.date,
+                description: cat.description,
+                categoria: cat.categoria,
+                tipo: cat.tipo,
+                local: cat.local,
+            }));
+          
+            } catch (error) {
+              console.error('Erro ao carregar pendentes:', error.message);
+              throw error; 
+            }
+          },
         getTransactionsByID(id) {
             return this.transactions.find(transaction => transaction.id === id);
         }

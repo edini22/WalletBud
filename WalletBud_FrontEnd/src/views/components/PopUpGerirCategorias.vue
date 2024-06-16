@@ -124,9 +124,9 @@ export default {
       newCategoryName.value = '';
     };
 
-    const editCategory = async (id,name) => {
+    const editCategory = async (id,name,type) => {
       try {
-        await store.editCategory({name: name, id: id});
+        await store.editCategory({name: name, id: id},type);
         await store.load();
       } catch (err) {
         alert(err.message);
@@ -165,7 +165,7 @@ export default {
       }
       if (store.CategoriesExpense && store.CategoriesExpense.length > index) {
         if (store.CategoriesExpense[index].isedit) {
-          editCategory(store.CategoriesExpense[index].id,name);
+          editCategory(store.CategoriesExpense[index].id,name,'expense');
         } else{
             store.CategoriesExpense[index].isedit = !store.CategoriesExpense[index].isedit;	
         }
@@ -183,7 +183,7 @@ export default {
       }
       if (store.CategoriesIncome && store.CategoriesIncome.length > index) {
         if (store.CategoriesIncome[index].isedit) {
-          editCategory(store.CategoriesIncome[index].id,name);
+          editCategory(store.CategoriesIncome[index].id,name,'income');
         } else{
           store.CategoriesIncome[index].isedit = !store.CategoriesIncome[index].isedit;	
         }

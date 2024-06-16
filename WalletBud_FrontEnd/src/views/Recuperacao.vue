@@ -139,7 +139,6 @@
   import { ref } from 'vue';
   import { useRouter, useRoute } from "vue-router";
   import { useI18n } from "vue-i18n";
-  import { userStore } from "@/store/userStore";
 
   
   export default {
@@ -153,28 +152,23 @@
       const passwordError = ref(null);
       const passwordErrorMessages = ref("");
       const snackbar = ref(null);
-      const user = userStore();
 
       const closeSnackbar = () => {
           snackbar.value = false;
       };
 
       const resetPassword = async () => {
-        const email = user.email;
 
         const url =
           "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/reset_password/set";
         
-        alert(email)
-        alert(route.params.token)
-        alert(password.value)
         const request = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: email,
+            email: route.params.email,
             token: route.params.token,
             password: password.value,
           }),

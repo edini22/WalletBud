@@ -21,14 +21,36 @@
 
                     <div class="tab tab-content active" id="tab-0">
 
-                        <!-- Descrição -->
+                        <!-- Name -->
                         <div class="form-group form-row">
                             <label for="description" class="form-label">{{ $t('Nome') }}
                                 <p class="required"> *</p>
                             </label>
-                            <div v-if="descriptionError === true" class="form-input mb-3">
+                            <div v-if="nameError === true" class="form-input mb-3">
                                 <material-input class="material-input" id="description" type="text"
                                     :label="$t('Indique o nome')" name="description"
+                                    @update:value="Name = $event" :value="Name" error />
+                            </div>
+                            <div v-if="nameError === false" class="form-input mb-3">
+                                <material-input class="material-input" id="description" type="text" name="description"
+                                    :value="Name" @update:value="Name = $event" success />
+                            </div>
+                            <div v-if="nameError === null" class="form-input mb-3">
+                                <material-input class="material-input" id="description" type="text" :value="Name"
+                                    :label="$t('Indique o nome')" name="description"
+                                    @update:value="Name = $event" />
+                            </div>
+                        </div>
+
+                        <!-- Adicionamos a Descricao aqui mas nao sei onde fica melhor e se colocavamos este como facultativo noutro sitio -->
+                        <!-- Descrição -->
+                        <div class="form-group form-row">
+                            <label for="description" class="form-label">{{ $t('Descrição') }}
+                                <p class="required"> *</p>
+                            </label>
+                            <div v-if="descriptionError === true" class="form-input mb-3">
+                                <material-input class="material-input" id="description" type="text"
+                                    :label="$t('Indique a descrição')" name="description"
                                     @update:value="Description = $event" :value="Description" error />
                             </div>
                             <div v-if="descriptionError === false" class="form-input mb-3">
@@ -37,7 +59,7 @@
                             </div>
                             <div v-if="descriptionError === null" class="form-input mb-3">
                                 <material-input class="material-input" id="description" type="text" :value="Description"
-                                    :label="$t('Indique o nome')" name="description"
+                                    :label="$t('Indique a descrição')" name="description"
                                     @update:value="Description = $event" />
                             </div>
                         </div>
@@ -293,21 +315,21 @@
                                         :class="{ 'dropdown-focused-null': isCategoryFocused }" id="dropdownTable"
                                         data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
                                         @focus="handleCategoryFocus">
-                                        {{ Category || $t('Selecione a categoria') }}
+                                        {{ Category.name || $t('Selecione a categoria') }}
                                     </button>
                                     <!-- show this button if type has not been chosen -->
                                     <button v-else
                                         class="cursor-pointer form-control form-control-default material-input"
                                         :class="{ 'dropdown-focused-null': isCategoryFocused }" id="dropdownTable"
                                         style="text-align:left; color: #7b809a" @click="alert">
-                                        {{ Category || $t('Selecione a categoria') }}
+                                        {{ Category.name || $t('Selecione a categoria') }}
                                     </button>
                                     <i class="material-icons arrow-icon">keyboard_arrow_down</i>
                                     <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
                                         <li v-for='(category, index) in displayCategories' :key="index">
                                             <a class="dropdown-item border-radius-md" href="javascript:;"
                                                 @click="selectCategory(category)">
-                                                {{ category }}
+                                                {{ category.name }}
                                             </a>
                                         </li>
                                     </ul>
@@ -321,20 +343,20 @@
                                         :class="{ 'dropdown-focused-error': isCategoryFocused }" id="dropdownTable"
                                         data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
                                         @focus="handleCategoryFocus">
-                                        {{ Category || $t('Selecione a categoria') }}
+                                        {{ Category.name || $t('Selecione a categoria') }}
                                     </button>
                                     <!-- show this button if type has not been chosen -->
                                     <button v-else
                                         class="cursor-pointer form-control form-control-default material-input"
                                         :class="{ 'dropdown-focused-error': isCategoryFocused }" id="dropdownTable"
                                         style="text-align:left; color: #7b809a" @click="alert">
-                                        {{ Category || $t('Selecione a categoria') }}
+                                        {{ Category.name || $t('Selecione a categoria') }}
                                     </button>
                                     <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
                                         <li v-for='(category, index) in displayCategories' :key="index">
                                             <a class="dropdown-item border-radius-md" href="javascript:;"
                                                 @click="selectCategory(category)">
-                                                {{ category }}
+                                                {{ category.name }}
                                             </a>
                                         </li>
                                     </ul>
@@ -470,6 +492,8 @@ import MaterialCheckbox from "@/components/MaterialCheckbox.vue";
 //import { transactionStore } from "@/store/transactionStore.js";
 import { ref, reactive } from 'vue';
 
+import { categoriesStore } from "@/store/categoriesStore";
+import { userStore } from "@/store/userStore";
 
 export default {
     name: "add-transactions",
@@ -480,6 +504,8 @@ export default {
     },
     setup() {
         const { t } = useI18n();
+        const Name = ref('');
+        const nameError = ref(null);
         const Description = ref('');
         const descriptionError = ref(null);
         const Value = ref('');
@@ -507,6 +533,10 @@ export default {
         const showAlertUsers = ref(false);
         let timestamp = ref(null);
         let isValid = true;
+        
+        // dinamica
+        const categories = categoriesStore();
+        const user = userStore();
 
         function validarEmail(email) {
             const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -542,36 +572,62 @@ export default {
 
                 
                 //fazer post do email para ver se existe
-                /* try {
+                try {
+                    const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/user/get/" + newUserEmail.value;
+                    const token = localStorage.getItem('token');
+                    const request = {
+                        method: "GET",
+                        headers: {
+                        "Content-Type": "application/json",
+                        'Authorization': "Bearer " + token,
+                        },
+                    };
+
+                    const response = await fetch(url, request);
+
+                    // Verifica se a resposta não é OK
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message);
+                    }
+
+                    if(user.email == newUserEmail.value){
+                        emailErrorStore.value = `${t('Não pode partilhar despesas consigo mesmo!')}`;
+                        emailError.value = true;
+                        newUserEmail.value = '';
+                        return;
+                    } else {
+                        alert(newUserEmail.value);
+                        sharedUsers.push(newUserEmail.value);
+                        alert("Utilizador adicionado com sucesso!");
+                        for (let i = 0; i < sharedUsers.length; i++) {
+                            alert(sharedUsers[i]);
+                        }
+                        newUserEmail.value = '';
+                        emailError.value = null;
+                    }
 
                 } catch (error) {
                     // Tratamento de erro específico para " ... "
                     if (error.message === " error message ... ") {
                         emailErrorStore.value = `${t('Email não registado na plataforma.')}`;
                         emailError.value = true;
-                        state = true;
                         alert("Não é possível partilhar despesas com utilizadores não registados!");
                         return;
                     } else {
                         alert("Erro ao registar: " + error.message);
                     }
                 }
-
-                if(!existe) {
-
-                }else{
-                    sharedUsers.push(newUserEmail);
-                    newUserEmail.value = '';
-                    emailError.value = null;
-                }*/
-
-                sharedUsers.push(newUserEmail.value);
-                newUserEmail.value = '';
-                emailError.value = null;
+            
             }
         }
 
         const checkInputs = function () {
+            if (!Name.value.trim())
+                nameError.value = true;
+            else
+                nameError.value = false;
+
             if (!Description.value.trim())
                 descriptionError.value = true;
             else
@@ -615,7 +671,7 @@ export default {
 
         const goToShare = function () {
             checkInputs();
-            if (TypeError.value == false && descriptionError.value == false && DateError.value == false
+            if (TypeError.value == false && nameError.value == false && descriptionError.value == false && DateError.value == false
                 && valueError.value == false && CategoryError.value == false && recorrenceError.value == false){
                 if(Recorrence.value == 'Recorrente (Fixa)'){
                     if(repetitionError.value == false)
@@ -642,6 +698,9 @@ export default {
 
         const cancel = function () {
             console.log(Description.value);
+
+            nameError.value = null;
+            Name.value = '';
 
             descriptionError.value = null;
             Description.value = '';
@@ -689,12 +748,12 @@ export default {
             }
         }
 
-        const add = function () {
+        const add = async function () {
 
             if(Type.value == 'Receita' || Type.value == ''){
                 checkInputs();
 
-                if (TypeError.value == false && descriptionError.value == false && DateError.value == false
+                if (TypeError.value == false && nameError.value == false && descriptionError.value == false && DateError.value == false
                 && valueError.value == false && CategoryError.value == false && recorrenceError.value == false){
 
                     if(Recorrence.value == 'Recorrente (Fixa)'){
@@ -707,10 +766,94 @@ export default {
                             console.log("timestamp: " + timestamp.value);
                             console.log(Repetition.value + ": " + SendRepetition.value);
                             //POST da Receita Não Fixa
+                            const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/fixa/receita/add";
 
-                            // if(post correu bem) {
-                            
-                            console.log("post receita fixa");
+                            const token = localStorage.getItem("token");
+
+                            const request = {
+                                method: "POST",
+                                headers: {
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + token,
+                                },
+                                body: JSON.stringify({
+                                    name: Name.value,
+                                    value: Value.value,
+                                    descricao: Description.value,
+                                    IdCategoria: Category.value.id,
+                                    local: Place.value,
+                                    date: timestamp.value,
+                                    repeticao: SendRepetition.value,
+                                    users: [],
+                                    comentario: Comment.value
+                                }),
+
+                            };
+
+                            try {
+                                const response = await fetch(url, request);
+
+                                if (!response.ok) {
+                                const errorData = await response.json();
+                                throw new Error(errorData.message);
+                                }
+                                console.log("post receita fixa");
+
+                                const cancelButton = document.getElementById('cancelButton');
+                                cancelButton.click();
+
+                                //sucesso
+                                const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                                document.dispatchEvent(event);
+                                console.log('PopUp emitiu evento');
+                                user.getUser(); //atualiza o saldo da homepage
+
+                            } catch (error) {
+                                alert("Erro ao adicionar Recorrente (Fixa):", error.message);
+                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
+                                document.dispatchEvent(event);
+                                console.log('PopUp emitiu evento');
+                            }
+
+                        }
+                    }else{
+                        //post de receita não fixa
+                        timestamp.value = convertToTimestamp(DateM.value);
+                        console.log("data: " + DateM.value);
+                        console.log("timestamp: " + timestamp.value);
+                        //POST da Receita Não Fixa
+                        const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/unica/receita/add";
+
+                        const token = localStorage.getItem("token");
+
+                        const request = {
+                            method: "POST",
+                            headers: {
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + token,
+                            },
+                            body: JSON.stringify({
+                                name: Name.value,
+                                value: Value.value,
+                                descricao: Description.value,
+                                IdCategoria: Category.value.id,
+                                local: Place.value,
+                                date: timestamp.value,
+                                repeticao: SendRepetition.value,
+                                users: [],
+                                comentario: Comment.value
+                            }),
+
+                        };
+
+                        try {
+                            const response = await fetch(url, request);
+
+                            if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.message);
+                            }
+                            console.log("post receita não fixa");
 
                             const cancelButton = document.getElementById('cancelButton');
                             cancelButton.click();
@@ -719,35 +862,15 @@ export default {
                             const event = new CustomEvent('show-snackbar', { detail: 'success' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
+                            user.getUser(); //atualiza o saldo da homepage
 
-                            /* else(error)
-                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
-                                document.dispatchEvent(event);
-                                console.log('PopUp emitiu evento');
-                            */
-                        }
-                    }else{
-                        //post de receita não fixa
-                        timestamp.value = convertToTimestamp(DateM.value);
-                        console.log("data: " + DateM.value);
-                        console.log("timestamp: " + timestamp.value);
-                        //POST da Receita Não Fixa
-
-                        console.log("post receita não fixa");
-
-                        const cancelButton = document.getElementById('cancelButton');
-                        cancelButton.click();
-
-                        //sucesso
-                        const event = new CustomEvent('show-snackbar', { detail: 'success' });
-                        document.dispatchEvent(event);
-                        console.log('PopUp emitiu evento');
-
-                        /* else(error)
+                        } catch (error) {
+                            alert("Erro ao adicionar Receita nao fixa:", error.message);
                             const event = new CustomEvent('show-snackbar', { detail: 'error' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
-                         */
+
+                        }
                     }                                     
                 }
 
@@ -759,7 +882,7 @@ export default {
                     console.log("sharedExpense:" + ShareExpense.value)
                     console.log("sharedUsers length:" + sharedUsers.length)
                     showAlertUsers.value = true;
-                }else if(ShareExpense.value == true && sharedUsers.length > 0){
+                }else {
 
                     if(Recorrence.value == 'Recorrente (Fixa)'){
                         if(repetitionError.value == false){
@@ -773,20 +896,54 @@ export default {
 
                             console.log("post despesa fixa e partilhada");
 
-                            //POST da Despesa
-                            const cancelButton = document.getElementById('cancelButton');
-                            cancelButton.click();
+                            const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/fixa/despesa/add";
 
-                            //sucesso
-                            const event = new CustomEvent('show-snackbar', { detail: 'success' });
-                            document.dispatchEvent(event);
-                            console.log('PopUp emitiu evento');
+                            const token = localStorage.getItem("token");
 
-                            /* else(error)
+                            const usersArray = sharedUsers.map(email => ({ email }));
+
+                            const request = {
+                                method: "POST",
+                                headers: {
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + token,
+                                },
+                                body: JSON.stringify({
+                                    name: Name.value,
+                                    value: Value.value,
+                                    descricao: Description.value,
+                                    IdCategoria: Category.value.id,
+                                    local: Place.value,
+                                    date: timestamp.value,
+                                    repeticao: SendRepetition.value,
+                                    users: usersArray,
+                                    comentario: Comment.value
+                                }),
+                            };
+
+                            try {
+                                const response = await fetch(url, request);
+
+                                if (!response.ok) {
+                                    const errorData = await response.json();
+                                    throw new Error(errorData.message);
+                                }
+                                
+                                 //POST da Despesa
+                                const cancelButton = document.getElementById('cancelButton');
+                                cancelButton.click();
+
+                                //sucesso
+                                const event = new CustomEvent('show-snackbar', { detail: 'success' });
+                                document.dispatchEvent(event);
+                                console.log('PopUp emitiu evento');
+                                user.getUser(); //atualiza o saldo da homepage
+
+                            } catch (error) {
                                 const event = new CustomEvent('show-snackbar', { detail: 'error' });
                                 document.dispatchEvent(event);
                                 console.log('PopUp emitiu evento');
-                            */
+                            }
                         }
                     }else{
                         
@@ -795,42 +952,41 @@ export default {
                         console.log("data: " + DateM.value);
                         console.log("timestamp: " + timestamp.value);
 
-                        //POST da Despesa
-                        console.log("post despesa não fixa e partilhada");
+                        const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/unica/despesa/add";
 
-                        const cancelButton = document.getElementById('cancelButton');
-                        cancelButton.click();
+                        const token = localStorage.getItem("token");
 
-                        //sucesso
-                        const event = new CustomEvent('show-snackbar', { detail: 'success' });
-                        document.dispatchEvent(event);
-                        console.log('PopUp emitiu evento');
+                        const usersArray = sharedUsers.map(email => ({ email }));
 
-                        /* else(error)
-                            const event = new CustomEvent('show-snackbar', { detail: 'error' });
-                            document.dispatchEvent(event);
-                            console.log('PopUp emitiu evento');
-                         */
-                    }
+                        const request = {
+                            method: "POST",
+                            headers: {
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + token,
+                            },
+                            body: JSON.stringify({
+                                name: Name.value,
+                                value: Value.value,
+                                descricao: Description.value,
+                                IdCategoria: Category.value.id,
+                                local: Place.value,
+                                date: timestamp.value,
+                                repeticao: SendRepetition.value,
+                                users: usersArray,
+                                comentario: Comment.value
+                            }),
+                        };
 
-                }else{
+                        try {
+                            const response = await fetch(url, request);
 
-                    if(Recorrence.value == 'Recorrente (Fixa)'){
-                        if(repetitionError.value == false){
-                            //DESPESA NÃO PARTILHADA FIXA
+                            if (!response.ok) {
+                                const errorData = await response.json();
+                                throw new Error(errorData.message);
+                            }
+                            //POST da Despesa
+                            console.log("post despesa não fixa e partilhada");
 
-                            timestamp.value = convertToTimestamp(DateM.value);
-                            SendRepetition.value = transformRepetition(Repetition.value.trim());
-                        
-                            console.log("data: " + DateM.value);
-                            console.log("timestamp: " + timestamp.value);
-                            console.log(Repetition.value + ": " + SendRepetition.value);
-
-                            //POST ---
-
-                            console.log("post despesa fixa não partilhada");
-
-                            //chamar cancel() após POST
                             const cancelButton = document.getElementById('cancelButton');
                             cancelButton.click();
 
@@ -838,42 +994,16 @@ export default {
                             const event = new CustomEvent('show-snackbar', { detail: 'success' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
+                            user.getUser(); //atualiza o saldo da homepage
+                            
 
-                            /* else(error)
-                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
-                                document.dispatchEvent(event);
-                                console.log('PopUp emitiu evento');
-                            */
-                        }
-                    }else{
-                        //DESPESA NÃO PARTILHADA NÃO FIXA
-                        
-                        //date to timestamp
-                        timestamp.value = convertToTimestamp(DateM.value);
-
-                        console.log("data: " + DateM.value);
-                        console.log("timestamp: " + timestamp.value);
-
-                        //POST da Despesa
-                        console.log("post despesa não fixa e não partilhada");
-
-                        //chamar cancel() após POST
-                        const cancelButton = document.getElementById('cancelButton');
-                        cancelButton.click();
-
-                        //sucesso
-                        const event = new CustomEvent('show-snackbar', { detail: 'success' });
-                        document.dispatchEvent(event);
-                        console.log('PopUp emitiu evento');
-
-                        /* else(error)
+                        } catch (error) {
                             const event = new CustomEvent('show-snackbar', { detail: 'error' });
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
-                         */
+                        }
                     }
                 }
-
             }
         }
 
@@ -885,6 +1015,8 @@ export default {
             goToShare,
             addUser,
             clearSharedUsers,
+            Name,
+            nameError,
             descriptionError,
             Description,
             Comment,
@@ -908,7 +1040,8 @@ export default {
             emailError,
             emailErrorStore,
             showAlertUsers,
-            resetTab
+            resetTab,
+            categories
         };
     },
     data() {
@@ -943,9 +1076,9 @@ export default {
     computed: {
         displayCategories() {
             if (this.Type == 'Despesa')
-                return this.expenseCategories;
+                return this.categories.CategoriesExpense;
             else if (this.Type == 'Receita')
-                return this.incomeCategories;
+                return this.categories.CategoriesIncome;
             else
                 return '';
         },

@@ -3,23 +3,18 @@
     <span class="timeline-step p-3" :class="`bg-${color}`">
       <i class="material-icons opacity-10" :class="icon.class">{{
         icon.component
-      }}</i>
+        }}</i>
     </span>
     <div class="timeline-content">
-      <h6
-        class="mb-0 text-sm font-weight-bold justify-content-between d-flex"
-        :class="$parent.darkMode ? 'text-white' : 'text-dark'"
-      >
-        {{ title }} &nbsp;&nbsp;&nbsp;&nbsp; {{ value }}
+      <h6 class="mb-0 text-s font-weight-bold justify-content-between d-flex"
+        :class="$parent.darkMode ? 'text-white' : 'text-dark'">
+        {{ title }} &nbsp;&nbsp;&nbsp;&nbsp; 
+        <h6 class="mb-0 text-s font-weight-bold">{{dateTime }}</h6>
       </h6>
-      <p class="mt-1 mb-0 text-xs text-secondary font-weight-bold">
-        {{ dateTime }}
+      <p class="mt-1 mb-0 text-sm text-secondary font-weight-bold">
+        {{ value }}
       </p>
-      <p
-        v-if="description"
-        class="mt-2 mb-0 text-sm"
-        :class="$parent.darkMode ? 'text-white' : 'text-dark'"
-      >
+      <p v-if="description" class="mt-2 mb-0 text-sm" :class="$parent.darkMode ? 'text-white' : 'text-dark'">
         {{ description }}
       </p>
     </div>

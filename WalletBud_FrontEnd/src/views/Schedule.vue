@@ -1,24 +1,30 @@
 <template>
 
-<div class="container-fluid">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col ">        
+      <div class="col ">
         <!--timeline next days-->
-        <div class = "col pt-0">
+        <div class="col pt-0">
           <div class="timeline-header">
             <h4>Agenda</h4>
           </div>
           <timeline-list class="scroll-container">
-            <timeline-item
-              v-for="(p, index) in store.timeline"
-              :key="index"
-              color="success"
-              :icon="{ component: 'notifications', class: 'text-white text-sm' }"
-              :title="p.name"
-              :value="p.value + ' €'"
-              :date-time="p.date"
-              :description="p.descricao"
-            />
+            <div v-for="(p, index) in store.timeline" :key="index">
+              <timeline-item v-if="p.tipo === 'receita'"
+                color="success" 
+                :icon="{ component: 'wallet', class: 'text-white text-sm' }"
+                :title="p.name" 
+                :value="p.value + '€'" 
+                :date-time="formattedDate(p.date)" 
+                :description="p.descricao" />
+              <timeline-item v-else
+                color="danger" 
+                :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
+                :title="p.name" 
+                :value="'-' + p.value + ' €'" 
+                :date-time="formattedDate(p.date)" 
+                :description="p.descricao" />
+            </div>
           </timeline-list>
         </div>
       </div>
@@ -29,53 +35,28 @@
 
   <div class="container-fluid">
     <div class="row">
-      <div class="col ">        
+      <div class="col ">
         <!--timeline next days-->
-        <div class = "col pt-0">
+        <div class="col pt-0">
           <div class="timeline-header">
             <h4>Agenda</h4>
           </div>
           <timeline-list class="scroll-container">
-            <timeline-item
-              color="success"
-              :icon="{ component: 'notifications', class: 'text-white text-sm' }"
-              title="Design changes"
-              value="2400€"
-              date-time="22 DEC 7:20 PM"
-              description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of."
-            />
-            <TimelineItem
-              color="danger"
-              :icon="{ component: 'code', class: 'text-white text-sm' }"
-              title="Design changes"
-              value="2400€"
-              date-time="21 DEC 11 PM"
-              description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of."
-            />
-            <TimelineItem
-              color="info"
-              :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
-              title="Design changes"
-              value="2400€"
-              date-time="21 DEC 9:34 PM"
-              description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of."
-            />
-            <TimelineItem
-              color="info"
-              :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
-              title="Design changes"
-              value="2400€"
-              date-time="21 DEC 9:34 PM"
-              description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of."
-            />
-            <TimelineItem
-              color="info"
-              :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
-              title="Design changes"
-              value="2400€"
-              date-time="21 DEC 9:34 PM"
-              description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of."
-            />
+            <timeline-item color="success" :icon="{ component: 'notifications', class: 'text-white text-sm' }"
+              title="Design changes" value="2400€" date-time="22 DEC 7:20 PM"
+              description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
+            <TimelineItem color="danger" :icon="{ component: 'code', class: 'text-white text-sm' }"
+              title="Design changes" value="2400€" date-time="21 DEC 11 PM"
+              description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
+            <TimelineItem color="info" :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
+              title="Design changes" value="2400€" date-time="21 DEC 9:34 PM"
+              description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
+            <TimelineItem color="info" :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
+              title="Design changes" value="2400€" date-time="21 DEC 9:34 PM"
+              description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
+            <TimelineItem color="info" :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
+              title="Design changes" value="2400€" date-time="21 DEC 9:34 PM"
+              description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
           </timeline-list>
         </div>
       </div>
@@ -144,6 +125,17 @@ export default {
       }
     };
 
+    const formattedDate = (timestamp) => {
+      const date = new Date(timestamp.replace(' ', 'T'));
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+
+      return `${day}-${month}-${year} ${hours}:${minutes}`;
+    }
+
     const openDetailsPopup = (id) => {
       selectedPendenteId.value = id;
       popupDetails.value = true;
@@ -200,6 +192,7 @@ export default {
     });
 
     return {
+      formattedDate,
       loadTimeline,
       snackbar,
       closeSnackbar,

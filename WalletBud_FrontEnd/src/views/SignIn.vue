@@ -292,7 +292,7 @@ export default {
     });
 
     const recuperar = async () => {
-
+      
       if (!validarEmail(email.value)) {
         recuperarPassword.value = true;
         emailErrorMessages.value = `${t('Email inválido')}`;
@@ -304,7 +304,7 @@ export default {
         }, 2000);
         return;
       } else {
-
+        
         const url =
           "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/reset_password/send";
 
@@ -328,6 +328,7 @@ export default {
 
           
         } catch (error) {
+          alert(error.message);
           snackbar.value = 'error2';
           setTimeout(() => {
             snackbar.value = null;

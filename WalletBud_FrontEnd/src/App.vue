@@ -63,7 +63,6 @@ export default {
   },
   computed: {
     ...mapState([
-      "isRTL",
       "color",
       "isAbsolute",
       "isNavFixed",

@@ -61,18 +61,17 @@
                           <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
                         </td>
                         <td>
-                          <material-button variant="gradient" color="secondary" class="btn btn-sm small-button"
+                          <!-- <material-button variant="gradient" color="secondary" class="btn btn-sm small-button"
                             @click="openPopup(p.id, p.date)">
                             {{ $t("Abrir") }}
-                          </material-button>
+                          </material-button> -->
                           <!-- <material-button variant="gradient" color="secondary" class="btn btn-sm small-button" @click="openModal">
                             {{ $t("Abrir") }}
                           </material-button> -->
-                          <!-- <material-button variant="gradient" color="secondary"
-                            class="btn btn-sm small-button" data-bs-toggle='modal' data-bs-target='#savingsGoalModal'
-                            @click="openModal">
+                          <material-button variant="gradient" color="secondary" class="btn btn-sm small-button"
+                            data-bs-toggle='modal' data-bs-target='#popupteste' @click="transa_id = p.id;">
                             {{ $t("Abrir") }}
-                          </material-button> -->
+                          </material-button>
 
                           <!-- <PopUpTeste v-if="popup" id="popupteste" @update:show="popup = false" /> -->
 
@@ -245,7 +244,7 @@
     </div>
   </div>
 
-  <!-- <PopUpTeste :id="transa_id"/> -->
+  <PopUpTeste :id="transa_id" />
 
   <!--PopUp 1-->
   <div v-if="popup" class="modal fade show" style="display: block">
@@ -731,7 +730,7 @@
 import MaterialButton from "@/components/MaterialButton.vue";
 import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 import MaterialInput from "@/components/MaterialInput.vue";
-// import PopUpTeste from "./components/PopUpTeste.vue";
+import PopUpTeste from "./components/PopUpTeste.vue";
 import { ref, computed, onMounted } from "vue";
 import { fixaStore } from "@/store/fixaStore";
 import { userStore } from "@/store/userStore";
@@ -742,7 +741,7 @@ export default {
     MaterialButton,
     MaterialSnackbar,
     MaterialInput,
-    // PopUpTeste,
+    PopUpTeste,
   },
   setup() {
     const snackbar = ref(false);
@@ -771,6 +770,8 @@ export default {
     const Comment = ref(null);
 
     const emailError = ref(null);
+
+    const transa_id = ref(0);
 
     function validarEmail(email) {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -1034,6 +1035,7 @@ export default {
       snackbar,
       closeSnackbar,
       popup,
+      transa_id,
       popupReject,
       popupAccept,
       popupDetails,

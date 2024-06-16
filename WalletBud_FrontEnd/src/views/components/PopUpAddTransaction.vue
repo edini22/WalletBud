@@ -28,8 +28,8 @@
                             </label>
                             <div v-if="nameError === true" class="form-input mb-3">
                                 <material-input class="material-input" id="description" type="text"
-                                    :label="$t('Indique o nome')" name="description"
-                                    @update:value="Name = $event" :value="Name" error />
+                                    :label="$t('Indique o nome')" name="description" @update:value="Name = $event"
+                                    :value="Name" error />
                             </div>
                             <div v-if="nameError === false" class="form-input mb-3">
                                 <material-input class="material-input" id="description" type="text" name="description"
@@ -37,29 +37,16 @@
                             </div>
                             <div v-if="nameError === null" class="form-input mb-3">
                                 <material-input class="material-input" id="description" type="text" :value="Name"
-                                    :label="$t('Indique o nome')" name="description"
-                                    @update:value="Name = $event" />
+                                    :label="$t('Indique o nome')" name="description" @update:value="Name = $event" />
                             </div>
                         </div>
 
-                        <!-- Adicionamos a Descricao aqui mas nao sei onde fica melhor e se colocavamos este como facultativo noutro sitio -->
                         <!-- Descrição -->
                         <div class="form-group form-row">
-                            <label for="description" class="form-label">{{ $t('Descrição') }}
-                                <p class="required"> *</p>
-                            </label>
-                            <div v-if="descriptionError === true" class="form-input mb-3">
-                                <material-input class="material-input" id="description" type="text"
-                                    :label="$t('Indique a descrição')" name="description"
-                                    @update:value="Description = $event" :value="Description" error />
-                            </div>
-                            <div v-if="descriptionError === false" class="form-input mb-3">
-                                <material-input class="material-input" id="description" type="text" name="description"
-                                    :value="Description" @update:value="Description = $event" success />
-                            </div>
-                            <div v-if="descriptionError === null" class="form-input mb-3">
-                                <material-input class="material-input" id="description" type="text" :value="Description"
-                                    :label="$t('Indique a descrição')" name="description"
+                            <label for="place" class="form-label">{{ $t('Descrição') }}</label>
+                            <div class="form-input mb-3">
+                                <material-input class="material-input" id="place" type="text"
+                                    :label="$t('Indique a descrição')" name="place" :value="Description"
                                     @update:value="Description = $event" />
                             </div>
                         </div>
@@ -71,7 +58,8 @@
                             </label>
                             <div v-if="valueError === true" class="form-input mb-3">
                                 <material-input class="material-input" id="value" type="number" :value="Value"
-                                    :label="$t('Indique um montante válido')" name="value" @update:value="Value = $event" error />
+                                    :label="$t('Indique um montante válido')" name="value"
+                                    @update:value="Value = $event" error />
                             </div>
                             <div v-if="valueError === false" class="form-input mb-3">
                                 <material-input class="material-input" id="value" type="number" name="value"
@@ -380,7 +368,7 @@
                         </div>
 
                         <label class="form-label mb-3">
-                            <p class="required" style="font-weight: 400;"> * {{ $t('Campo obrigatório')}}</p>
+                            <p class="required" style="font-weight: 400;"> * {{ $t('Campo obrigatório') }}</p>
                         </label>
 
                         <div class="modal-footer d-block justify-content-center">
@@ -474,7 +462,7 @@
                     <p v-else class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Adicionar') }}</p>
                     <p id="cancelButton" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal"
                         @click="cancel">{{
-                        $t('Cancelar') }}
+                            $t('Cancelar') }}
                     </p>
                 </div>
             </div>
@@ -507,7 +495,6 @@ export default {
         const Name = ref('');
         const nameError = ref(null);
         const Description = ref('');
-        const descriptionError = ref(null);
         const Value = ref('');
         const valueError = ref(null);
         const DateM = ref('');
@@ -533,7 +520,7 @@ export default {
         const showAlertUsers = ref(false);
         let timestamp = ref(null);
         let isValid = true;
-        
+
         // dinamica
         const categories = categoriesStore();
         const user = userStore();
@@ -554,7 +541,7 @@ export default {
 
         function padNumber(num) {
             return num.toString().padStart(2, '0');
-        }   
+        }
 
         function convertToTimestamp(dateString) {
             const date = new Date(dateString);
@@ -568,9 +555,9 @@ export default {
 
             validarEmail(newUserEmail);
 
-            if(isValid == true){
+            if (isValid == true) {
 
-                
+
                 //fazer post do email para ver se existe
                 try {
                     const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/user/get/" + newUserEmail.value;
@@ -578,8 +565,8 @@ export default {
                     const request = {
                         method: "GET",
                         headers: {
-                        "Content-Type": "application/json",
-                        'Authorization': "Bearer " + token,
+                            "Content-Type": "application/json",
+                            'Authorization': "Bearer " + token,
                         },
                     };
 
@@ -591,7 +578,7 @@ export default {
                         throw new Error(errorData.message);
                     }
 
-                    if(user.email == newUserEmail.value){
+                    if (user.email == newUserEmail.value) {
                         emailErrorStore.value = `${t('Não pode partilhar despesas consigo mesmo!')}`;
                         emailError.value = true;
                         newUserEmail.value = '';
@@ -618,7 +605,7 @@ export default {
                         alert("Erro ao registar: " + error.message);
                     }
                 }
-            
+
             }
         }
 
@@ -627,11 +614,6 @@ export default {
                 nameError.value = true;
             else
                 nameError.value = false;
-
-            if (!Description.value.trim())
-                descriptionError.value = true;
-            else
-                descriptionError.value = false;
 
             if (!Value.value)
                 valueError.value = true;
@@ -660,8 +642,8 @@ export default {
                 recorrenceError.value = true;
             else
                 recorrenceError.value = false;
-            
-            if(Recorrence.value == 'Recorrente (Fixa)'){
+
+            if (Recorrence.value == 'Recorrente (Fixa)') {
                 if (!Repetition.value)
                     repetitionError.value = true;
                 else
@@ -671,22 +653,22 @@ export default {
 
         const goToShare = function () {
             checkInputs();
-            if (TypeError.value == false && nameError.value == false && descriptionError.value == false && DateError.value == false
-                && valueError.value == false && CategoryError.value == false && recorrenceError.value == false){
-                if(Recorrence.value == 'Recorrente (Fixa)'){
-                    if(repetitionError.value == false)
+            if (TypeError.value == false && nameError.value == false && DateError.value == false
+                && valueError.value == false && CategoryError.value == false && recorrenceError.value == false) {
+                if (Recorrence.value == 'Recorrente (Fixa)') {
+                    if (repetitionError.value == false)
                         return true;
                     else
                         return false
-                }else{
+                } else {
                     return true;
-                }        
-            }else
+                }
+            } else
                 return false;
         }
 
-        
-        const clearSharedUsers = function() {
+
+        const clearSharedUsers = function () {
             if (sharedUsers.length > 0) {
                 console.log('Before clearing:', sharedUsers.value);
                 sharedUsers.splice(0, sharedUsers.length); // Esvaziando o array reativamente
@@ -702,7 +684,6 @@ export default {
             nameError.value = null;
             Name.value = '';
 
-            descriptionError.value = null;
             Description.value = '';
 
             valueError.value = null;
@@ -727,7 +708,7 @@ export default {
 
             resetTab.value = true;
 
-            if(ShareExpense.value == true){
+            if (ShareExpense.value == true) {
                 ShareExpense.value = false;
                 console.log(sharedUsers.value);
                 clearSharedUsers();
@@ -737,27 +718,27 @@ export default {
         }
 
         function transformRepetition(repetition) {
-            if(repetition == 'Todos os dias'){
+            if (repetition == 'Todos os dias') {
                 return 1;
-            }else if(repetition == 'Todas as semanas'){
+            } else if (repetition == 'Todas as semanas') {
                 return 2;
-            }else if(repetition == 'Todos os meses'){
+            } else if (repetition == 'Todos os meses') {
                 return 3;
-            }else if(repetition == 'Todos os anos'){
+            } else if (repetition == 'Todos os anos') {
                 return 4;
             }
         }
 
         const add = async function () {
 
-            if(Type.value == 'Receita' || Type.value == ''){
+            if (Type.value == 'Receita' || Type.value == '') {
                 checkInputs();
 
-                if (TypeError.value == false && nameError.value == false && descriptionError.value == false && DateError.value == false
-                && valueError.value == false && CategoryError.value == false && recorrenceError.value == false){
+                if (TypeError.value == false && nameError.value == false && DateError.value == false
+                    && valueError.value == false && CategoryError.value == false && recorrenceError.value == false) {
 
-                    if(Recorrence.value == 'Recorrente (Fixa)'){
-                        if(repetitionError.value == false){
+                    if (Recorrence.value == 'Recorrente (Fixa)') {
+                        if (repetitionError.value == false) {
                             //faz post de receita fixa
                             timestamp.value = convertToTimestamp(DateM.value);
                             SendRepetition.value = transformRepetition(Repetition.value.trim());
@@ -773,8 +754,8 @@ export default {
                             const request = {
                                 method: "POST",
                                 headers: {
-                                "Content-Type": "application/json",
-                                Authorization: "Bearer " + token,
+                                    "Content-Type": "application/json",
+                                    Authorization: "Bearer " + token,
                                 },
                                 body: JSON.stringify({
                                     name: Name.value,
@@ -794,8 +775,8 @@ export default {
                                 const response = await fetch(url, request);
 
                                 if (!response.ok) {
-                                const errorData = await response.json();
-                                throw new Error(errorData.message);
+                                    const errorData = await response.json();
+                                    throw new Error(errorData.message);
                                 }
                                 console.log("post receita fixa");
 
@@ -816,7 +797,7 @@ export default {
                             }
 
                         }
-                    }else{
+                    } else {
                         //post de receita não fixa
                         timestamp.value = convertToTimestamp(DateM.value);
                         console.log("data: " + DateM.value);
@@ -829,8 +810,8 @@ export default {
                         const request = {
                             method: "POST",
                             headers: {
-                            "Content-Type": "application/json",
-                            Authorization: "Bearer " + token,
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + token,
                             },
                             body: JSON.stringify({
                                 name: Name.value,
@@ -850,8 +831,8 @@ export default {
                             const response = await fetch(url, request);
 
                             if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.message);
+                                const errorData = await response.json();
+                                throw new Error(errorData.message);
                             }
                             console.log("post receita não fixa");
 
@@ -871,25 +852,25 @@ export default {
                             console.log('PopUp emitiu evento');
 
                         }
-                    }                                     
+                    }
                 }
 
-            }else{
-                if(showAlertUsers.value == true)
+            } else {
+                if (showAlertUsers.value == true)
                     showAlertUsers.value = false;
 
                 if (ShareExpense.value == true && sharedUsers.length === 0) {
                     console.log("sharedExpense:" + ShareExpense.value)
                     console.log("sharedUsers length:" + sharedUsers.length)
                     showAlertUsers.value = true;
-                }else {
+                } else {
 
-                    if(Recorrence.value == 'Recorrente (Fixa)'){
-                        if(repetitionError.value == false){
+                    if (Recorrence.value == 'Recorrente (Fixa)') {
+                        if (repetitionError.value == false) {
 
                             timestamp.value = convertToTimestamp(DateM.value);
                             SendRepetition.value = transformRepetition(Repetition.value.trim());
-                        
+
                             console.log("data: " + DateM.value);
                             console.log("timestamp: " + timestamp.value);
                             console.log(Repetition.value + ": " + SendRepetition.value);
@@ -902,11 +883,15 @@ export default {
 
                             const usersArray = sharedUsers.map(email => ({ email }));
 
+                            for (let i = 0; i < usersArray.length; i++) {
+                                alert(usersArray[i]);
+                            }
+
                             const request = {
                                 method: "POST",
                                 headers: {
-                                "Content-Type": "application/json",
-                                Authorization: "Bearer " + token,
+                                    "Content-Type": "application/json",
+                                    Authorization: "Bearer " + token,
                                 },
                                 body: JSON.stringify({
                                     name: Name.value,
@@ -928,8 +913,8 @@ export default {
                                     const errorData = await response.json();
                                     throw new Error(errorData.message);
                                 }
-                                
-                                 //POST da Despesa
+
+                                //POST da Despesa
                                 const cancelButton = document.getElementById('cancelButton');
                                 cancelButton.click();
 
@@ -945,10 +930,10 @@ export default {
                                 console.log('PopUp emitiu evento');
                             }
                         }
-                    }else{
-                        
+                    } else {
+
                         timestamp.value = convertToTimestamp(DateM.value);
-                    
+
                         console.log("data: " + DateM.value);
                         console.log("timestamp: " + timestamp.value);
 
@@ -961,8 +946,8 @@ export default {
                         const request = {
                             method: "POST",
                             headers: {
-                            "Content-Type": "application/json",
-                            Authorization: "Bearer " + token,
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + token,
                             },
                             body: JSON.stringify({
                                 name: Name.value,
@@ -995,7 +980,7 @@ export default {
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                             user.getUser(); //atualiza o saldo da homepage
-                            
+
 
                         } catch (error) {
                             const event = new CustomEvent('show-snackbar', { detail: 'error' });
@@ -1017,7 +1002,6 @@ export default {
             clearSharedUsers,
             Name,
             nameError,
-            descriptionError,
             Description,
             Comment,
             Value,
@@ -1089,13 +1073,13 @@ export default {
             this.isCategoryFocused = false;
         },
         resetTab() {
-            if(this.Tab !== 0)
-            this.showTab(0);
+            if (this.Tab !== 0)
+                this.showTab(0);
             this.resetTab = false;
         }
     },
     methods: {
-        hideAlertUsers(){
+        hideAlertUsers() {
             this.showAlertUsers = false;
         },
         calculateShare() {

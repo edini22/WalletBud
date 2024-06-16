@@ -61,7 +61,10 @@ export default {
         MaterialInput,
     },
     props: {
-        id: String,
+        id: {
+            type: Number,
+            default: 0
+        }
     },
     setup() {
         const { t } = useI18n();

@@ -48,7 +48,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["isRTL", "sidebarType", "isDarkMode"]),
+    ...mapState(["sidebarType", "isDarkMode"]),
   },
 };
 </script>

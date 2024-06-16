@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+  <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -12,21 +12,18 @@
               <li v-for="(category, index) in store.CategoriesExpense" :key="index">
                 <span class="category" v-if="!store.CategoriesExpense[index].isedit">{{ category.name }}</span>
                 <input class="input-group input-group-outline custom" v-else v-model="category.name" />
-                <!-- @blur="saveCategory(index)" /> -->
+                  <!-- @blur="saveCategory(index)" /> -->
                 <div class="buttons">
                   <button @click="toggleExpenseEditMode(index, category.name)" style="background-color: white;">
-                    <i class="material-icons" style="color: #344767;"
-                      v-if="store.CategoriesExpense[index].isedit">save</i>
+                    <i class="material-icons" style="color: #344767;" v-if="store.CategoriesExpense[index].isedit">save</i>
                     <i class="material-icons" style="color: #344767;" v-else>edit</i>
                   </button>
                   <button @click="deleteCategory(index,'expense')" style="background-color: white;">
                     <i class="material-icons" style="color: #344767;">delete</i>
                   </button>
                 </div>
-              </li>
-              <MaterialAlert v-if="showErrorExpense" color="danger" class="font-weight-light">
-                <span class="text-sm">{{ $t('Nomes de Categorias não podem ser nulos') }}</span>
-              </MaterialAlert>
+                </li>
+              <p v-if="showErrorExpense" class="error-category">{{ $t('Nomes de Categorias não podem ser nulos') }}</p>
             </ul>
             <p class="message" v-else>{{ $t('Adicione Categorias!') }}</p>
           </div>
@@ -36,21 +33,18 @@
               <li v-for="(category, index) in store.CategoriesIncome" :key="index">
                 <span class="category" v-if="!store.CategoriesIncome[index].isedit">{{ category.name }}</span>
                 <input class="input-group input-group-outline custom" v-else v-model="category.name" />
-                <!-- @blur="saveIncomeCategory(index)" /> -->
+								<!-- @blur="saveIncomeCategory(index)" /> -->
                 <div class="buttons">
-                  <button @click="toggleIncomeEditMode(index, category.name)" style="background-color: white;">
-                    <i class="material-icons" style="color: #344767; font-size: 20px;"
-                      v-if="store.CategoriesIncome[index].isedit">save</i>
-                    <i class="material-icons" style="color: #344767; font-size: 20px;" v-else>edit</i>
+                  <button @click="toggleIncomeEditMode(index,category.name)" style="background-color: white;">
+                    <i class="material-icons" style="color: #344767;" v-if="store.CategoriesIncome[index].isedit">save</i>
+                    <i class="material-icons" style="color: #344767;" v-else>edit</i>
                   </button>
                   <button @click="deleteCategory(index,'income')" style="background-color: white;">
-                    <i class="material-icons" style="color: #344767; font-size: 20px;">delete</i>
+                    <i class="material-icons" style="color: #344767;">delete</i>
                   </button>
                 </div>
-              </li>
-              <MaterialAlert v-if="showErrorIncome" color="danger" class="font-weight-light">
-                <span class="text-sm">{{ $t('Nomes de Categorias não podem ser nulos') }}</span>
-              </MaterialAlert>
+                </li>
+              <p v-if="showErrorIncome" class="error-category">{{ $t('Nomes de Categorias não podem ser nulos') }}</p>
             </ul>
             <p class="message" v-else>{{ $t('Adicione Categorias!') }}</p>
           </div>
@@ -59,54 +53,13 @@
           <div class="modal-body">
             <h5>{{ $t('Adicionar Categoria') }}</h5>
             <label for="categoryType" style="color: black;">{{ $t('Selecionar o tipo de movimento') }}:</label>
-
-            <!-- Tipo -->
-            <div class="dropdown" ref="typeDropdown">
-              <div class="form-group form-row">
-                <div v-if="TypeError === null || TypeError === false"
-                  class="input-group input-group-outline form-input mb-3" style="border-radius: 0.375rem;">
-                  <button class="cursor-pointer form-control form-control-default material-input"
-                    :class="{ 'dropdown-focused-null': isTypeFocused }" id="dropdownTable" data-bs-toggle="dropdown"
-                    style="text-align:left; color: #7b809a" @focus="handleTypeFocus">
-                    {{ newCategoryType || $t('Selecione o tipo') }}
-                  </button>
-                  <i class="material-icons arrow-icon">keyboard_arrow_down</i>
-                  <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
-                    <li>
-                      <a class="dropdown-item border-radius-md" href="javascript:;" @click="selectType('Despesa')">
-                        {{ $t('Despesa') }}
-                      </a>
-                    </li>
-                    <li> <a class="dropdown-item border-radius-md" href="javascript:;" @click="selectType('Receita')">
-                        {{ $t('Receita') }}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-                <div v-if="TypeError === true" class="input-group input-group-outline form-input mb-3 is-invalid"
-                  style="border-radius: 0.375rem;">
-                  <button class="cursor-pointer form-control form-control-default material-input"
-                    :class="{ 'dropdown-focused-error': isTypeFocused }" id="dropdownTable" data-bs-toggle="dropdown"
-                    style="text-align:left; color: #7b809a" @focus="handleTypeFocus">
-                    {{ newCategoryType || $t('Selecione o tipo') }}
-                  </button>
-                  <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
-                    <li>
-                      <a class="dropdown-item border-radius-md" href="javascript:;" @click="selectType('Despesa')">
-                        {{ $t('Despesa') }}
-                      </a>
-                    </li>
-                    <li> <a class="dropdown-item border-radius-md" href="javascript:;" @click="selectType('Receita')">
-                        {{ $t('Receita') }}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+            <div class="input-group input-group-outline mb-2" style="position: relative;  border-radius: 0.375rem;">
+              <select v-model="newCategoryType" class="form-control form-control-default" id="categoryType">
+                <option value="Despesa">{{ $t('Despesa') }}</option>
+                <option value="Receita">{{ $t('Receita') }}</option>
+              </select>
+              <i class="material-icons arrow-icon">keyboard_arrow_down</i>
             </div>
-
-
             <div class="input-group input-group-outline mb-3" :class="{ 'is-focused': isFocused }">
               <label class="form-label">{{ $t('Escreva uma categoria') }}</label>
               <input class="form-control form-control-default" type="text" v-model="newCategoryName"
@@ -124,26 +77,15 @@
       </div>
     </div>
   </div>
-  <div class="position-fixed top-1 end-1 z-index-1051">
-      <!-- error snackbar -->
-      <material-snackbar v-if="snackbar === 'error'" :title="$t('Adicionar Categoria')" date="now"
-        :description="$t('Não foi possível adicionar a categoria. Tente novamente.')"
-        :icon="{ component: 'campaign', color: 'white' }" color="danger" :close-handler="closeSnackbar" />
-        <material-snackbar v-if="snackbar === 'exists'" :title="$t('Adicionar Categoria')" date="now"
-        :description="$t('Já existe um categoria com esse nome!')"
-        :icon="{ component: 'campaign', color: 'white' }" color="danger" :close-handler="closeSnackbar" />
-        <material-snackbar v-if="snackbar === 'unknown'" :title="$t('Adicionar Categoria')" date="now"
-        :description="$t('Erro ao adicionar a categoria. Tente novamente.')"
-        :icon="{ component: 'campaign', color: 'white' }" color="danger" :close-handler="closeSnackbar" />
-    </div>
 </template>
 
 <script>
 import { useI18n } from 'vue-i18n';
 import MaterialAlert from "@/components/MaterialAlert.vue";
 import { categoriesStore } from "@/store/categoriesStore";
-import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
+
 import { ref, onMounted} from 'vue';
+
 
 
 export default {
@@ -152,7 +94,7 @@ export default {
   // setup() {
     const { t } = useI18n();
     const store = categoriesStore();
-    const newCategoryType = ref('');
+    const newCategoryType = ref('Despesa');
     const newCategoryName = ref('');
     const isEditing = ref([]);
     const isEditingIncome = ref([]);
@@ -163,12 +105,10 @@ export default {
     const showErrorAdd = ref(false);
     const errorTimeout = ref(0);
     const isFocused = ref(false);
-    const TypeError = ref(null);
-    const snackbar = ref('');
+
+    
 
     const addCategory = async () => {
-      if(!newCategoryType.value)
-        TypeError.value = true;
       if (newCategoryName.value.trim() === '') {
         showErrorAdd.value = true;
         clearTimeout(errorTimeout.value);
@@ -181,31 +121,15 @@ export default {
         await store.addCategory({ name: newCategoryName.value, tipo: newCategoryType.value.toLowerCase() });
         alert("Categoria adicionada com sucesso!");
         await store.load();
-        
-        newCategoryName.value = '';
-        newCategoryType.value = '';
-        TypeError.value = null;
-        snackbar.value = '';
-
       } catch (err) {
-        if(err.message == 'Failed to fetch'){
-          //não foi possível adicionar a categoria, tente novamente
-          snackbar.value = 'error';
-        }else if(err.message == 'Categoria ja existe com esse nome!'){
-          newCategoryName.value = '';
-          console.log("repetida")
-          snackbar.value = 'exists';
-          console.log(snackbar)
-        }else{
-          snackbar.value = 'unknown';
-        }
+        alert(err.message);
       }
-      
+      newCategoryName.value = '';
     };
 
-    const editCategory = async (id,name,type) => {
+    const editCategory = async (id,name) => {
       try {
-        await store.editCategory({name: name, id: id},type);
+        await store.editCategory({name: name, id: id});
         await store.load();
       } catch (err) {
         alert(err.message);
@@ -244,7 +168,7 @@ export default {
       }
       if (store.CategoriesExpense && store.CategoriesExpense.length > index) {
         if (store.CategoriesExpense[index].isedit) {
-          editCategory(store.CategoriesExpense[index].id,name,'expense');
+          editCategory(store.CategoriesExpense[index].id,name);
         } else{
             store.CategoriesExpense[index].isedit = !store.CategoriesExpense[index].isedit;	
         }
@@ -262,7 +186,7 @@ export default {
       }
       if (store.CategoriesIncome && store.CategoriesIncome.length > index) {
         if (store.CategoriesIncome[index].isedit) {
-          editCategory(store.CategoriesIncome[index].id,name,'income');
+          editCategory(store.CategoriesIncome[index].id,name);
         } else{
           store.CategoriesIncome[index].isedit = !store.CategoriesIncome[index].isedit;	
         }
@@ -300,14 +224,12 @@ export default {
       editCategory,
       toggleExpenseEditMode,
       toggleIncomeEditMode,
-      TypeError,
-      snackbar
+      
     };
   },
 
   components: {
     MaterialAlert,
-    MaterialSnackbar
   },
 
   methods: {
@@ -316,12 +238,6 @@ export default {
     },
     handleBlur() {
       this.isFocused = false;
-    },
-    selectType(type) {
-      this.newCategoryType = type;
-    },
-    closeSnackbar() {
-      this.snackbar = null;
     },
   }
 };
@@ -338,7 +254,6 @@ export default {
 .category {
     color: #15181a;
     font-weight: 400;
-    font-size: 14px;
 }
 
 .error-category {
@@ -400,6 +315,7 @@ ul li {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 5px 0;
 }
 
 ul li .buttons {
@@ -432,9 +348,6 @@ button.btn-close {
     background-color: rgb(223, 76, 76);
 }
 
-.z-index-1051 {
-  z-index: 1051;
-}
 
 .custom {
     background: none;
@@ -471,48 +384,6 @@ button.btn-close {
     color: #000; /* Ajuste a cor conforme necessário */
 }
 
-.dropdown-focused-null {
-    border-color: #1a73e8 !important;
-    box-shadow: inset 0 1px #1a73e8,
-        inset 1px 0 #1a73e8,
-        inset -1px 0 #1a73e8,
-        inset 0 -1px #1a73e8 !important;
-}
 
-.dropdown-focused-error {
-    border: 1px solid #f44335 !important;
-    box-shadow: inset 0 1px #f44335,
-        inset 1px 0 #f44335,
-        inset -1px 0 #f44335,
-        inset 0 -1px #f44335 !important;
-    border-radius: 0.375rem;
-}
-
-.dropdown-menu {
-    background-image: linear-gradient(195deg, #49a3f1 0%, #1a73e8 100%);
-    color: white;
-}
-
-.dropdown .dropdown-menu:before {
-    color: #3d96ef;
-}
-
-.dropdown-item {
-    margin-top: 3px;
-    color: #eeeeee;
-    background-color: #ffffff14;
-}
-
-.dropdown-item:hover {
-    background-color: #ffffff;
-    color: #495057
-}
-
-.arrow-icon {
-    position: absolute;
-    right: 10px;
-    pointer-events: none;
-    color: #344767;
-}
     
 </style>

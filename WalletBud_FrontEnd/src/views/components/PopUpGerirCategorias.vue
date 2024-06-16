@@ -18,7 +18,7 @@
                     <i class="material-icons" style="color: #344767;" v-if="store.CategoriesExpense[index].isedit">save</i>
                     <i class="material-icons" style="color: #344767;" v-else>edit</i>
                   </button>
-                  <button @click="deleteCategory(index,'expense')" style="background-color: white;">
+                  <button @click="deleteCategory(index, 'expense')" style="background-color: white;">
                     <i class="material-icons" style="color: #344767;">delete</i>
                   </button>
                 </div>
@@ -39,8 +39,8 @@
                     <i class="material-icons" style="color: #344767;" v-if="store.CategoriesIncome[index].isedit">save</i>
                     <i class="material-icons" style="color: #344767;" v-else>edit</i>
                   </button>
-                  <button @click="deleteCategory(index,'income')" style="background-color: white;">
-                    <i class="material-icons" style="color: #344767;">delete</i>
+                  <button @click="deleteCategory(index, 'income')" style="background-color: white;">
+                    <i class="material-icons" style="color: #344767; font-size: 20px;">delete</i>
                   </button>
                 </div>
                 </li>
@@ -53,12 +53,51 @@
           <div class="modal-body">
             <h5>{{ $t('Adicionar Categoria') }}</h5>
             <label for="categoryType" style="color: black;">{{ $t('Selecionar o tipo de movimento') }}:</label>
-            <div class="input-group input-group-outline mb-2" style="position: relative;  border-radius: 0.375rem;">
-              <select v-model="newCategoryType" class="form-control form-control-default" id="categoryType">
-                <option value="Despesa">{{ $t('Despesa') }}</option>
-                <option value="Receita">{{ $t('Receita') }}</option>
-              </select>
-              <i class="material-icons arrow-icon">keyboard_arrow_down</i>
+
+            <!-- Tipo -->
+            <div class="dropdown" ref="typeDropdown">
+              <div class="form-group form-row">
+                <div v-if="TypeError === null || TypeError === false"
+                  class="input-group input-group-outline form-input mb-1" style="border-radius: 0.375rem;">
+                  <button class="cursor-pointer form-control form-control-default material-input"
+                    :class="{ 'dropdown-focused-null': isTypeFocused }" id="dropdownTable" data-bs-toggle="dropdown"
+                    style="text-align:left; color: #7b809a" @focus="handleTypeFocus">
+                    {{ newCategoryType || $t('Selecione o tipo') }}
+                  </button>
+                  <i class="material-icons arrow-icon">keyboard_arrow_down</i>
+                  <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                    <li>
+                      <a class="dropdown-item border-radius-md" href="javascript:;" @click="selectType('Despesa')">
+                        {{ $t('Despesa') }}
+                      </a>
+                    </li>
+                    <li> <a class="dropdown-item border-radius-md" href="javascript:;" @click="selectType('Receita')">
+                        {{ $t('Receita') }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div v-if="TypeError === true" class="input-group input-group-outline form-input mb-3 is-invalid"
+                  style="border-radius: 0.375rem;">
+                  <button class="cursor-pointer form-control form-control-default material-input"
+                    :class="{ 'dropdown-focused-error': isTypeFocused }" id="dropdownTable" data-bs-toggle="dropdown"
+                    style="text-align:left; color: #7b809a" @focus="handleTypeFocus">
+                    {{ newCategoryType || $t('Selecione o tipo') }}
+                  </button>
+                  <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                    <li>
+                      <a class="dropdown-item border-radius-md" href="javascript:;" @click="selectType('Despesa')">
+                        {{ $t('Despesa') }}
+                      </a>
+                    </li>
+                    <li> <a class="dropdown-item border-radius-md" href="javascript:;" @click="selectType('Receita')">
+                        {{ $t('Receita') }}
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
             <div class="input-group input-group-outline mb-3" :class="{ 'is-focused': isFocused }">
               <label class="form-label">{{ $t('Escreva uma categoria') }}</label>
@@ -77,24 +116,35 @@
       </div>
     </div>
   </div>
+  <div class="position-fixed top-1 end-1 z-index-1051">
+    <!-- error snackbar -->
+    <material-snackbar v-if="snackbar === 'error'" :title="$t('Adicionar Categoria')" date="now"
+      :description="$t('Não foi possível adicionar a categoria. Tente novamente.')"
+      :icon="{ component: 'campaign', color: 'white' }" color="danger" :close-handler="closeSnackbar" />
+    <material-snackbar v-if="snackbar === 'exists'" :title="$t('Adicionar Categoria')" date="now"
+      :description="$t('Já existe um categoria com esse nome!')" :icon="{ component: 'campaign', color: 'white' }"
+      color="danger" :close-handler="closeSnackbar" />
+    <material-snackbar v-if="snackbar === 'unknown'" :title="$t('Adicionar Categoria')" date="now"
+      :description="$t('Erro ao adicionar a categoria. Tente novamente.')"
+      :icon="{ component: 'campaign', color: 'white' }" color="danger" :close-handler="closeSnackbar" />
+  </div>
 </template>
 
 <script>
 import { useI18n } from 'vue-i18n';
 import MaterialAlert from "@/components/MaterialAlert.vue";
 import { categoriesStore } from "@/store/categoriesStore";
-
-import { ref, onMounted} from 'vue';
-
+import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
+import { ref, onMounted } from 'vue';
 
 
 export default {
 
   setup(props, { emit }) {
-  // setup() {
+    // setup() {
     const { t } = useI18n();
     const store = categoriesStore();
-    const newCategoryType = ref('Despesa');
+    const newCategoryType = ref('');
     const newCategoryName = ref('');
     const isEditing = ref([]);
     const isEditingIncome = ref([]);
@@ -105,10 +155,13 @@ export default {
     const showErrorAdd = ref(false);
     const errorTimeout = ref(0);
     const isFocused = ref(false);
-
+    const TypeError = ref(null);
+    const snackbar = ref('');
     
 
     const addCategory = async () => {
+      if (!newCategoryType.value)
+        TypeError.value = true;
       if (newCategoryName.value.trim() === '') {
         showErrorAdd.value = true;
         clearTimeout(errorTimeout.value);
@@ -121,10 +174,26 @@ export default {
         await store.addCategory({ name: newCategoryName.value, tipo: newCategoryType.value.toLowerCase() });
         alert("Categoria adicionada com sucesso!");
         await store.load();
+
+        newCategoryName.value = '';
+        newCategoryType.value = '';
+        TypeError.value = null;
+        snackbar.value = '';
+
       } catch (err) {
-        alert(err.message);
+        if(err.message == 'Failed to fetch'){
+          //não foi possível adicionar a categoria, tente novamente
+          snackbar.value = 'error';
+        }else if(err.message == 'Categoria ja existe com esse nome!'){
+          newCategoryName.value = '';
+          console.log("repetida")
+          snackbar.value = 'exists';
+          console.log(snackbar)
+        }else{
+          snackbar.value = 'unknown';
+        }
       }
-      newCategoryName.value = '';
+      
     };
 
     const editCategory = async (id,name) => {
@@ -146,18 +215,18 @@ export default {
 
     const deleteCategory = async (index, flag) => {
       try {
-				if (flag === 'income') {
-					await store.removeCategory(store.CategoriesIncome[index].id);
-				} else if (flag === 'expense') {
-					await store.removeCategory(store.CategoriesExpense[index].id);
-				}
-				await store.load();
+        if (flag === 'income') {
+          await store.removeCategory(store.CategoriesIncome[index].id);
+        } else if (flag === 'expense') {
+          await store.removeCategory(store.CategoriesExpense[index].id);
+        }
+        await store.load();
       } catch (err) {
         alert(err.message);
       }
     };
 
-    const toggleExpenseEditMode = (index,name) => {
+    const toggleExpenseEditMode = (index, name) => {
       if (name.trim() === '') {
         showErrorExpense.value = true;
         clearTimeout(errorTimeout.value);
@@ -175,7 +244,7 @@ export default {
       }
     };
 
-    const toggleIncomeEditMode = (index,name) => {
+    const toggleIncomeEditMode = (index, name) => {
       if (name.trim() === '') {
         showErrorIncome.value = true;
         clearTimeout(errorTimeout.value);
@@ -193,15 +262,15 @@ export default {
       }
     };
 
-		const forceRerender = () => {
+    const forceRerender = () => {
       emit('forceRerender');
     };
 
-		onMounted(() => {
+    onMounted(() => {
       const modal = document.getElementById('categoryModal');
       modal.addEventListener('hidden.bs.modal', forceRerender);
-			
-			loadCategories();
+
+      loadCategories();
     });
 
     return {
@@ -224,12 +293,15 @@ export default {
       editCategory,
       toggleExpenseEditMode,
       toggleIncomeEditMode,
+      TypeError,
+      snackbar
       
     };
   },
 
   components: {
     MaterialAlert,
+    MaterialSnackbar
   },
 
   methods: {
@@ -239,151 +311,206 @@ export default {
     handleBlur() {
       this.isFocused = false;
     },
+    selectType(type) {
+      this.newCategoryType = type;
+    },
+    closeSnackbar() {
+      this.snackbar = null;
+    },
   }
 };
 </script>
 
 <style scoped>
+.z-index-1051 {
+  z-index: 1051;
+}
 
 .message {
-    text-align: center;
-    color: #495057;
-    font-weight: 400;
+  text-align: center;
+  color: #495057;
+  font-weight: 400;
 }
 
 .category {
-    color: #15181a;
-    font-weight: 400;
+  color: #15181a;
+  font-weight: 400;
+  font-size: 14px;
 }
 
 .error-category {
-    text-align: center;
-    font-weight: bold;
-    background-color: red;
-    color: white;
-    padding: 5px;
-    border-radius: 8px;
-    font-size: 17px;
+  text-align: center;
+  font-weight: bold;
+  background-color: red;
+  color: white;
+  padding: 5px;
+  border-radius: 8px;
+  font-size: 17px;
 }
 
 .category-input {
-    width: 100%; 
-    padding: 5px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid ;
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid;
 }
 
 .form-group {
-    margin-bottom: 10px;
-    text-align: left;
-    width: 100%; 
-    padding: 0; 
+  margin-bottom: 10px;
+  text-align: left;
+  width: 100%;
+  padding: 0;
 }
 
 .small-select {
-    width: 100%; 
-    padding: 5px;
-    border-radius: 5px;
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .modal-content {
-    width: 100%;
+  width: 100%;
 }
 
 .modal {
-  z-index: 1050; /* padrão do Bootstrap para modais */
+  z-index: 1050;
+  /* padrão do Bootstrap para modais */
 }
 
-h2, h4 {
-    text-align: left;
+h2,
+h4 {
+  text-align: left;
 }
 
 .category-section {
-    margin-bottom: 20px;
-    font-weight: bold;
-    color: black;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: black;
 }
 
 .category-list {
-    list-style: none;
-    padding-left: 0; 
-    margin-left: 0;
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
 }
 
 ul li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 ul li .buttons {
-    margin-left: auto;
+  margin-left: auto;
 }
 
 ul li button {
-    border: none;
-    background: none;
-    margin-left: 5px;
+  border: none;
+  background: none;
+  margin-left: 5px;
 }
 
 button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
 }
 
 button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 button.btn-secondary {
-    background-color: red;
+  background-color: red;
 }
 
 button.btn-close {
-    background-color: rgb(223, 76, 76);
+  background-color: rgb(223, 76, 76);
 }
 
 
 .custom {
-    background: none;
-    border: 1px solid #1a73e8;
-    border-radius: 0.375rem;
-    border-top-left-radius: 0.375rem !important;
-    border-bottom-left-radius: 0.375rem !important;
-    padding: 0.625rem 0.75rem !important;
-    line-height: 1.3 !important;
-    font-size: 0.875rem;
-    font-weight: 400;
-    width: 50%;
+  background: none;
+  border: 1px solid #1a73e8;
+  border-radius: 0.375rem;
+  border-top-left-radius: 0.375rem !important;
+  border-bottom-left-radius: 0.375rem !important;
+  padding: 0.625rem 0.75rem !important;
+  line-height: 1.3 !important;
+  font-size: 0.875rem;
+  font-weight: 400;
+  width: 50%;
 }
 
 .input-group-outline.custom:focus {
-    border-color: #1a73e8 !important;
-    box-shadow:  inset 0 1px #1a73e8, 
-        inset 1px 0 #1a73e8, 
-        inset -1px 0 #1a73e8,
-        inset 0 -1px #1a73e8;
-    outline: none; /* Remove o outline padrão */
+  border-color: #1a73e8 !important;
+  box-shadow: inset 0 1px #1a73e8,
+    inset 1px 0 #1a73e8,
+    inset -1px 0 #1a73e8,
+    inset 0 -1px #1a73e8;
+  outline: none;
+  /* Remove o outline padrão */
 }
 
 .input-group {
-    display: flex;
-    align-items: center;
-    position: relative;
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 .arrow-icon {
-    position: absolute;
-    right: 10px;  /* Ajuste conforme necessário */
-    pointer-events: none;
-    color: #000; /* Ajuste a cor conforme necessário */
+  position: absolute;
+  right: 10px;
+  /* Ajuste conforme necessário */
+  pointer-events: none;
+  color: #000;
+  /* Ajuste a cor conforme necessário */
 }
 
+.dropdown-focused-null {
+  border-color: #1a73e8 !important;
+  box-shadow: inset 0 1px #1a73e8,
+    inset 1px 0 #1a73e8,
+    inset -1px 0 #1a73e8,
+    inset 0 -1px #1a73e8 !important;
+}
 
-    
+.dropdown-focused-error {
+  border: 1px solid #f44335 !important;
+  box-shadow: inset 0 1px #f44335,
+    inset 1px 0 #f44335,
+    inset -1px 0 #f44335,
+    inset 0 -1px #f44335 !important;
+  border-radius: 0.375rem;
+}
+
+.dropdown-menu {
+  background-image: linear-gradient(195deg, #49a3f1 0%, #1a73e8 100%);
+  color: white;
+}
+
+.dropdown .dropdown-menu:before {
+  color: #3d96ef;
+}
+
+.dropdown-item {
+  margin-top: 3px;
+  color: #eeeeee;
+  background-color: #ffffff14;
+}
+
+.dropdown-item:hover {
+  background-color: #ffffff;
+  color: #495057
+}
+
+.arrow-icon {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  color: #344767;
+}
 </style>

@@ -45,14 +45,14 @@
             
             <h4>4. {{ $t ('Modificações nos Termos') }}</h4>
             <p><span class="font-weight-bold text-dark">4.1</span>
-                {{ $t ('Reservamo-nos o direito, a nosso critério exclusivo, de modificar ou substituir estes Termos a qualquer momento. Se uma revisão fôr significativa, tentaremos fornecer um aviso com pelo menos cinco dias de antecedência antes que os novos termos entrem em vigor') }}.
+                {{ $t ('Reservamo-nos o direito, a nosso critério exclusivo, de modificar ou substituir estes Termos a qualquer momento. Se uma revisão for significativa, tentaremos fornecer um aviso com pelo menos cinco dias de antecedência antes que os novos termos entrem em vigor') }}.
             </p>
 
             <h4>5. {{ $t ('Contacto') }}</h4>
             <p>
-                {{ $t ('Se tiver alguma dúvida sobre estes Termos, pode entrar em contato conosco através do e-mail') }}: <span class="font-weight-bold text-dark">walletbud@gmail.com</span>.
+                {{ $t ('Se tiver alguma dúvida sobre estes Termos, pode entrar em contacto connosco através do e-mail') }}: <span class="font-weight-bold text-dark">walletbud@gmail.com</span>.
             <br>
-                {{ $t ('Estes Termos e Condições de Uso foram atualizados pela última vez a') }} <span class="font-weight-bold text-dark">{{ $t('17 de junho de 2024') }}</span>.
+                {{ $t ('Estes Termos e Condições de Uso foram atualizados pela última vez a') }} <span class="font-weight-bold text-dark">{{ $t('20 de junho de 2024') }}</span>.
             </p>
           </div>
         </div>

@@ -48,7 +48,7 @@
           url="#"
           :aria-controls="''"
           v-bind:collapse="false"
-          collapseRef="billing"
+          collapseRef="Dashboard"
           :navText="$t('Estatísticas')"
         >
           <template v-slot:icon>

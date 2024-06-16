@@ -12,7 +12,10 @@
     </div>
     <div>
       <div class="card-footer p-3 size">
-        <p v-html="detail"></p>
+        <div v-if="$slots.detail">
+          <slot name="detail"></slot>
+        </div>
+        <p v-else v-html="detail"></p>
       </div>
     </div>
   </div>

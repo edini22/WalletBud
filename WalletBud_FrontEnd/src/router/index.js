@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Schedule from "../views/Schedule.vue";
-import Billing from "../views/Billing.vue";
+import Dashboard from "../views/Dashboard.vue";
 import Notifications from "../views/Notifications.vue";
 import Profile from "../views/Profile.vue";
 import SignIn from "../views/SignIn.vue";
@@ -35,9 +35,9 @@ const routes = [
     //meta: { requiresAuth: true },
   },
   {
-    path: "/billing",
-    name: "Billing",
-    component: Billing,
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
     //meta: { requiresAuth: true },
   },
   {

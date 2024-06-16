@@ -149,7 +149,9 @@
     "Sex": "Fri",
     "Sáb": "Sat",
     "Dom": "Sun",
-    "Gasto Semanal": "Weekly Spend",
+    "Gasto da Semana Anterior": "Last Week's Spend",
+    "Gasto total por dia na semana passada": "Total spend per day last week",
+    "Gasto diário": "Daily spending",
     "Procurar movimentos": "Search for movements",
     "Categorias": "Categories",
     "Filtrar": "Filter",
@@ -160,6 +162,9 @@
     "Definir Objetivo Poupança": "Set Savings Goal",
     "Objetivo definido com sucesso!": "Goal set successfully!",
     "Não foi possível definir o objetivo poupança. Tente novamente.": "It was not possible to set the savings goal. Try again.",
-    "Indique um valor positivo": "Enter a positive value"
+    "Indique um valor positivo": "Enter a positive value",
+    "Orçamento Disponível": "Available Budget",
+    "Balanço Mensal": "Monthly Balance",
+    "Objetivo poupança descontado": "Discounted savings goal"
 }
 

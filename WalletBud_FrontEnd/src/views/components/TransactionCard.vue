@@ -4,7 +4,10 @@
       <div class="d-flex flex-wrap align-items-center">
         <div class="me-2 mb-2">
           <!-- time period-->
-          <MaterialDropdown :on-click='changeFilter' :items='time_periods' v-model:selected="activeFilter" />
+          <MaterialDropdown 
+            :on-click='changeFilter' 
+            :options='time_periods' 
+            v-model:selected="activeFilter" />
         </div>
         <div class="me-2 mb-2">
           <!-- filter by category or/and type -->

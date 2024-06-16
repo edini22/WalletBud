@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-lg-3 col-md-6 col-sm-6">
             <mini-statistics-card :title="{ text: $t('Saldo Atual'), value: user.saldo + ' €' }" :icon="{
-                name: 'account_balance_wallet',
+                name: 'account_balance',
                 color: 'text-white',
                 background: 'success',
               }" />
@@ -39,27 +39,7 @@
           </div>
         </div>
         <div class="table-responsive p-0 mt-4">
-          <!--<div class="col-lg-4 col-md-6 mt-4">
-            <chart-holder-card
-              :title="$t('Gasto Semanal')"
-              :subtitle="$t('Gasto por dia na semana passada')"
-              week="14 a 21 abril"
-            >
-              <reports-bar-chart
-                :chart="{
-                  labels: [$t('Seg'), $t('Ter'), $t('Qua'), $t('Qui'), $t('Sex'), $t('Sáb'), $t('Dom')],
-                  datasets: {
-                    label: $t('Gasto Semanal'),
-                    data: [100, 20, 10, 40, 50, 10, 40],
-                  },
-                }"
-              />
-            </chart-holder-card>
-          </div>-->
-
-          <!--<div class="col-lg-8 col-md-6 mb-md-0 mb-4 mt-4">-->
           <transaction-card />
-          <!--</div>-->
         </div>
       </div>
     </div>

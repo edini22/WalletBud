@@ -1,11 +1,26 @@
 <template>
-    <div>
-        <button @click='toggleShow' class='dropdown-c' :class="{ 'dropdown-focused': showMenu }">
-            {{ selected }}
-            <i class="material-icons arrow-icon">keyboard_arrow_down</i>
-        </button>
-        <div v-if='showMenu' class='menu'>
-            <div class='menu-item' v-for='(item, index) in items' :key='index' @click='itemClicked(item)'>{{ item }}
+    <!-- Tipo -->
+    <div class="dropdown" ref="Dropdown">
+        <div class="form-group form-row">
+            <div class="input-group input-group-outline form-input mb-3" style="border-radius: 0.375rem;">
+                <button 
+                    class="cursor-pointer form-control form-control-default material-input"
+                    :class="{ 'dropdown-focused-null': isFocused }" 
+                    id="dropdownTab" 
+                    data-bs-toggle="dropdown"
+                    style="text-align:left; color: #7b809a" 
+                    @focus="handleFocus"
+                    >
+                    {{ selected || inputText }}
+                </button>
+                <i class="material-icons arrow-icon">keyboard_arrow_down</i>
+                <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTab">
+                    <li v-for="(option, index) in options" :key="index">
+                        <a class="dropdown-item border-radius-md" href="javascript:;" @click="selectOption(option)">
+                            {{ option }}
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -14,89 +29,133 @@
 <script>
 export default {
     name: "MaterialDropdown",
-    data() {
-        return {
-            showMenu: false
-        }
-    },
     props: {
-        onClick: Function,
-        items: {
-            type: Object,
-            default: () => ({})
+        options: {
+            type: Array,
+            required: true
+        },
+        inputText: {
+            type: String,
+            default: ''
         },
         selected: {
             type: String,
             default: ''
         }
     },
+    data() {
+        return {
+            isFocused: false
+        };
+    },
     methods: {
-        toggleShow() {
-            this.showMenu = !this.showMenu;
+        handleFocus() {
+            this.isFocused = true;
         },
-        itemClicked(item) {
-            this.$emit('update:selected', item);
-            this.toggleShow();
-            this.onClick(item);
-        },
+        selectOption(option) {
+            this.$emit('update:selected', option);
+            this.isFocused = false;
+            document.getElementById('dropdownTab').click();
+        }
     },
 };
 </script>
 
 <style>
-.menu {
-    position: absolute;
-    background-color: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-radius: 0.25rem;
-    z-index: 999;
-    margin-top: 5px;
+.form-group {
+  margin-bottom: 10px;
+  text-align: left;
+  width: 100%;
+  padding: 0;
 }
 
-.menu-item {
-    color: #212529;
-    padding: 0.45rem 1.5rem;
-    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: #495057;
-    position: relative;
-    color: #7b809a;
+.custom {
+  background: none;
+  border: 1px solid #1a73e8;
+  border-radius: 0.375rem;
+  border-top-left-radius: 0.375rem !important;
+  border-bottom-left-radius: 0.375rem !important;
+  padding: 0.625rem 0.75rem !important;
+  line-height: 1.3 !important;
+  font-size: 0.875rem;
+  font-weight: 400;
+  width: 50%;
 }
 
-.menu-item:hover {
-    background-color: #1a73e816;
-    cursor: pointer;
+.input-group-outline.custom:focus {
+  border-color: #1a73e8 !important;
+  box-shadow: inset 0 1px #1a73e8,
+    inset 1px 0 #1a73e8,
+    inset -1px 0 #1a73e8,
+    inset 0 -1px #1a73e8;
+  outline: none;
+  /* Remove o outline padrão */
 }
 
-.card {
-    position: relative;
-    /* Ensure relative positioning for the dropdown */
+.input-group {
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
-.dropdown-c {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: none;
-    border: 1px solid #1a73e8;
-    border-radius: 0.375rem;
-    border-top-left-radius: 0.375rem !important;
-    border-bottom-left-radius: 0.375rem !important;
-    padding: 0.625rem 0.75rem !important;
-    line-height: 1.3 !important;
-    color: #1a73e8;
-    font-size: 0.875rem;
-    font-weight: 400;
-    height: 40px;
-    width: 100% !important;
+button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
 }
 
-.dropdown-focused {
-    border-color: #1a73e8 !important;
-    box-shadow:  inset 0 1px #1a73e8, 
-        inset 1px 0 #1a73e8, 
-        inset -1px 0 #1a73e8,
-        inset 0 -1px #1a73e8;
+.arrow-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #344767;
+}
+
+.dropdown-focused-null {
+  border-color: #1a73e8 !important;
+  box-shadow: inset 0 1px #1a73e8,
+    inset 1px 0 #1a73e8,
+    inset -1px 0 #1a73e8,
+    inset 0 -1px #1a73e8 !important;
+}
+
+.dropdown-focused-error {
+  border: 1px solid #f44335 !important;
+  box-shadow: inset 0 1px #f44335,
+    inset 1px 0 #f44335,
+    inset -1px 0 #f44335,
+    inset 0 -1px #f44335 !important;
+  border-radius: 0.375rem;
+}
+
+.dropdown-menu {
+  background-image: linear-gradient(195deg, #49a3f1 0%, #1a73e8 100%);
+  color: white;
+}
+
+.dropdown .dropdown-menu:before {
+  color: #3d96ef !important;
+}
+
+.dropdown-item {
+  margin-top: 3px;
+  color: #eeeeee !important;
+  background-color: #ffffff14;
+}
+
+.dropdown-item:hover {
+  background-color: #ffffff;
+  color: #495057 !important;
+}
+
+.arrow-icon {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  color: #344767;
 }
 </style>

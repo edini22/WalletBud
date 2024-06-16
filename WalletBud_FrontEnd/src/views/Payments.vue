@@ -60,7 +60,7 @@
                                                 <td>
                                                     <span class="text-xs font-weight-bold">{{
                                                         p.date
-                                                        }}</span>
+                                                    }}</span>
                                                 </td>
                                                 <td>
                                                     <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
@@ -141,7 +141,7 @@
                                                         <td>
                                                             <span class="text-xs font-weight-bold">{{
                                                                 p.date
-                                                                }}</span>
+                                                            }}</span>
                                                         </td>
                                                         <td>
                                                             <span class="text-md font-weight-bold">{{ p.shareValue
@@ -222,7 +222,7 @@
                                                         <td>
                                                             <span class="text-xs font-weight-bold">{{
                                                                 p.date
-                                                                }}</span>
+                                                            }}</span>
                                                         </td>
                                                         <td>
                                                             <span class="text-md font-weight-bold">{{ p.shareValue
@@ -265,7 +265,7 @@
                 <div class="modal-header d-flex justify-content-between align-items-center">
                     <h5 class="modal-title">Informações da Transacao</h5>
                     <material-button variant="gradient" color="secondary" class="btn btn-sm small-button"
-                        @click="popup = false;currentEditIndex = null;infos = true; participantes = false;">
+                        @click="popup = false; currentEditIndex = null; infos = true; participantes = false;emailError = null;newUserEmail = '',emailErrorStore = null;">
                         {{ $t("Voltar") }}
                     </material-button>
                 </div>
@@ -381,7 +381,7 @@
                                 </div>
                             </div>
                             <!-- Shared expense -->
-                            <div v-if="transa.users[0].id === user.id">
+                            <div v-if="transa.users[0].id === user.id && transa.tipo == 'despesa' ">
                                 <hr class="horizontal dark my-sm-4" />
                                 <div class="form-group">
                                     <label for="sharedExpense" class="form-label mb-3">{{ $t('Adicionar novos membros:')
@@ -411,7 +411,7 @@
                                                 :label="$t('Indique o email do utilizador')" />
                                         </div>
 
-                                        <p class="btn btn-default bg-gradient-info mb-1" @click="addUser">{{
+                                        <p class="btn btn-default bg-gradient-info mb-1" @click="addUser(1)">{{
                                             $t('Adicionar Utilizador') }}
                                         </p>
                                     </div>
@@ -424,16 +424,17 @@
                     <div v-if="transa.users[0].id == user.id" class="modal-footer d-flex justify-content-between">
                         <material-button variant="gradient" color="danger" class="btn btn-md" @click="
                             popupReject = true;
-                            popup = false;
+                        popup = false;
                         ">
                             {{ $t("Eliminar") }}
                         </material-button>
                         <material-button variant="gradient" color="info" class="btn btn-md" @click="
                             popupAccept = true;
-                            popup = false;
-                            currentEditIndex = null;
-                            infos = true;
-                            participantes = false;
+                        popup = false;
+                        currentEditIndex = null;
+                        infos = true;
+                        participantes = false;
+                        emailError = null;newUserEmail = '',emailErrorStore = null;
                         ">
                             {{ $t("Pagar") }}
                         </material-button>
@@ -441,11 +442,12 @@
                     <div v-else class="modal-footer d-flex justify-content-end">
                         <material-button variant="gradient" color="danger" class="btn btn-md" @click="
                             popupReject = true;
-                            popup = false;
-                            leave = true;
-                            currentEditIndex = null;
-                            infos = true;
-                            participantes = false;
+                        popup = false;
+                        leave = true;
+                        currentEditIndex = null;
+                        infos = true;
+                        participantes = false;
+                        emailError = null;newUserEmail = '',emailErrorStore = null;
                         ">
                             {{ $t("Sair") }}
                         </material-button>
@@ -595,8 +597,10 @@
                         <div v-if="selectedPendente.users[0].id === user.id">
                             <hr class="horizontal dark my-sm-4" />
                             <div class="form-group">
-                                <label for="sharedExpense" class="form-label mb-3">{{ $t('Adicionar novos membros:')
-                                    }}</label>
+                                <label for="sharedExpense" class="form-label mb-3">{{ $t('Partilhar despesa com:')
+                                    }}
+                                    <p class="required"> *</p>
+                                </label>
                                 <div class="form-input mb-3">
                                     <div v-if="emailError === true && emailErrorStore === null" class="mb-3">
                                         <material-input class="material-input mb-3" id="email" type="email"
@@ -786,6 +790,8 @@ import { userStore } from "@/store/userStore";
 
 import { useRouter } from "vue-router";
 
+import { useI18n } from 'vue-i18n';
+
 export default {
     name: "payments",
     components: {
@@ -794,6 +800,7 @@ export default {
         MaterialInput,
     },
     setup() {
+        const { t } = useI18n();
         const snackbar = ref(false);
         const popup = ref(false);
         const popupReject = ref(false);
@@ -817,7 +824,7 @@ export default {
         const transa = ref(null);
         const dateP = ref(null);
         const comments = ref(null);
-        const Comment = ref(null);
+        const Comment = ref('');
 
         const emailError = ref(null);
 
@@ -828,18 +835,9 @@ export default {
         const currentEditIndex = ref(null);
         const editComment = ref(null);
 
-
-        function validarEmail(email) {
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-            if (!emailRegex.test(email.value)) {
-                emailError.value = true;
-            } else {
-                emailError.value = false;
-            }
-        }
-
-        //validar e adicionar utilizador
+        let isValid = true;
+        const newUserEmail = ref('');
+        const emailErrorStore = ref(null);
 
 
         const loadPendentes = async () => {
@@ -1032,11 +1030,14 @@ export default {
 
         const kickUser = async () => {
             try {
-                await store.kickUser(userKick.value.email, selectedPendenteId.value);
-                popupDetails.value = false;
+                await store.kickUser(userKick.value.email, selectedPendenteId.value,"fixa");//TODO: MUDAR AQUI FIXA PARA O QUE FOR!!
+                // popupDetails.value = false;
                 loadPendentes();
                 loadPorPagar();
                 loadProximosPagamentos();
+                popup.value = false;
+                popupDetails.value = false;
+                popupKick.value = false;
             } catch (err) {
                 if (err.message.includes('token')) {
                     alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
@@ -1052,6 +1053,11 @@ export default {
         };
 
         const addComment = async (id) => {
+            if (Comment.value.trim() === '') {
+                alert('O comentário não pode estar vazio.');
+                Comment.value = '';
+                return;
+            }
             const url =
                 "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/comment/add";
             const token = localStorage.getItem("token");
@@ -1261,6 +1267,87 @@ export default {
             popup.value = true;
         };
 
+        function validarEmail(email) {
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailRegex.test(email.value)) {
+                emailError.value = true;
+                newUserEmail.value = '';
+                emailErrorStore.value = `${t('Email inválido')}`;
+                isValid = false;
+            } else {
+                emailError.value = false;
+                isValid = true;
+            }
+        }
+
+        function validarEmailTransacao(email) {
+            for (let i = 0; i < transa.value.users.length; i++) {
+                if (transa.value.users[i].email === email) {
+                    emailError.value = true;
+                    emailErrorStore.value = `${t('Email já registado na transação!')}`;
+                    isValid = false;
+                    return;
+                }
+            }
+        }
+
+        const addUser = async (flag) => {
+
+            validarEmail(newUserEmail);
+
+            if (isValid == true) {
+                validarEmailTransacao(newUserEmail.value);
+                if (isValid == true) {
+                    try {
+                        if (user.email == newUserEmail.value) {
+                            emailErrorStore.value = `${t('Não pode partilhar despesas consigo mesmo!')}`;
+                            emailError.value = true;
+                            newUserEmail.value = '';
+                            return;
+                        }
+                        await store.ShareTransactionWithUser(newUserEmail.value, transa.value.id,"fixa");
+                        loadPendentes();
+                        loadPorPagar();
+                        loadProximosPagamentos();
+                        console.log(flag);
+                        // if(flag === 1){//TODO: VER ISTO MELHOR
+                        //     selectedPendenteId.value = transa.value.id;
+                        //     popup.value = false;
+                        //     popupDetails.value = true;
+                        // }
+                        popup.value = false;
+                        popupDetails.value = false;
+
+                        alert("Utilizador adicionado com sucesso!");
+                        newUserEmail.value = '';
+                        emailError.value = null;
+                    } catch (err) {
+                        if (err.message.includes('token')) {
+                            alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+                            localStorage.clear();
+                            sessionStorage.clear();
+
+                            router.push('/sign-in');
+                        } else if (err.message === "Email nao registado!") {
+                            emailErrorStore.value = `${t('Email não registado na plataforma.')}`;
+                            emailError.value = true;
+                            alert("Não é possível partilhar despesas com utilizadores não registados!");
+                            return;
+                        } else if (err.message === "Email ja registado na transacao!") {
+                            emailErrorStore.value = `${t('Email não registado na plataforma.')}`;
+                            emailError.value = true;
+                            alert("Não é possível partilhar despesas com utilizadores não registados!");
+                            return;
+                        } else {
+                            alert("Erro ao adicionar User: " + err.message);
+                        }
+                    }
+                }
+            }
+        }
+
         const closeSnackbar = () => {
             snackbar.value = false;
         };
@@ -1307,7 +1394,6 @@ export default {
             leave,
             addComment,
             emailError,
-            validarEmail,
             kickUser,
             typeKick,
             popupKickInfo,
@@ -1316,7 +1402,11 @@ export default {
             editCommentMode,
             saveComment,
             cancelEdit,
-            deleteComment
+            deleteComment,
+            addUser,
+            validarEmailTransacao,
+            newUserEmail,
+            emailErrorStore,
         };
     },
 };

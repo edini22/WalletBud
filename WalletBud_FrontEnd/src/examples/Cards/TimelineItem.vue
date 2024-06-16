@@ -1,16 +1,16 @@
 <template>
   <div class="mb-3 timeline-block">
-    <span class="timeline-step p-3" :class="`bg-${color}`">
+    <span class="timeline-step p-3 " :class="`bg-${color}`">
       <i class="material-icons opacity-10" :class="icon.class">{{
         icon.component
         }}</i>
     </span>
     <div class="timeline-content">
-      <h6 class="mb-0 text-s font-weight-bold justify-content-between d-flex"
+      <h5 class="mb-0 text-s font-weight-bold justify-content-between d-flex"
         :class="$parent.darkMode ? 'text-white' : 'text-dark'">
-        {{ title }} &nbsp;&nbsp;&nbsp;&nbsp; 
-        <h6 class="mb-0 text-s font-weight-bold">{{dateTime }}</h6>
-      </h6>
+        {{ title }} &nbsp;&nbsp;&nbsp;&nbsp;
+        <h6 class="mb-0 text-s font-weight-bold">{{dateTime}}</h6>
+      </h5>
       <p class="mt-1 mb-0 text-sm text-secondary font-weight-bold">
         {{ value }}
       </p>

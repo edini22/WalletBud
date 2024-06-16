@@ -286,9 +286,7 @@ export const fixaStore = defineStore('fixa', {
             }
           },  
 
-        async kickUser(mail,id) {
-          
-          let transaction = this.pendentes.find(transaction => transaction.id === id);
+        async kickUser(mail,id,flag) {
 
           const newt = {
               IdTransacao: id,
@@ -297,7 +295,34 @@ export const fixaStore = defineStore('fixa', {
           };
           const newtJSON = JSON.stringify(newt);
 
-          const url = `http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/${transaction.transacao}/share`;
+          const url = `http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/${flag}/share`;
+          const token = localStorage.getItem('token');
+          const request = {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  'Authorization': `Bearer ${token}`
+                },
+              body: newtJSON
+          };
+          const response = await fetch(url, request);
+
+          // Verifica se a resposta não é OK
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message);
+          }
+        },
+        async ShareTransactionWithUser(mail,id,tipo) {
+
+          const newt = {
+              IdTransacao: id,
+              option: 1,
+              email_shared: mail,
+          };
+          const newtJSON = JSON.stringify(newt);
+
+          const url = `http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/${tipo}/share`;
           const token = localStorage.getItem('token');
           const request = {
               method: "POST",

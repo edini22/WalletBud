@@ -1,5 +1,5 @@
 <template>
-  <div class="card" :class="darkMode ? 'bg-gradient-dark' : ''">
+  <div class="card px-8" :class="darkMode ? 'bg-gradient-dark' : ''">
     <div class="pb-0 card-header" :class="darkMode ? 'bg-transparent' : ''">
       <h6 :class="darkMode ? 'text-white' : ''">{{ title }}</h6>
       <!--  eslint-disable-next-line vue/no-v-html -->
@@ -35,3 +35,5 @@ export default {
   },
 };
 </script>
+
+

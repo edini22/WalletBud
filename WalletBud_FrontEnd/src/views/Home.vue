@@ -1,0 +1,132 @@
+<template>
+  <div class="py-4 container-fluid">
+    <div class="row mb-4">
+      <div class="col-lg-12 position-relative z-index-2">
+        <div class="row">
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <mini-statistics-card :title="{ text: $t('Saldo Atual'), value: user.saldo + ' ' + store.moeda }" :icon="{
+                name: 'account_balance',
+                color: 'text-white',
+                background: 'success',
+              }" />
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0">
+            <mini-statistics-card :title="{ text: $t('Objetivo Poupança'), value: user.objetivo + ' ' + store.moeda }"
+              :detail="`<button class='btn mb-0 btn-sm null null btn-outline-primary' data-bs-toggle='modal' data-bs-target='#savingsGoalModal'>${$t('Definir Objetivo')}</button>`"
+              :icon="{
+                name: 'savings',
+                color: 'text-white',
+                background: 'primary',
+              }" />
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
+            <mini-statistics-card :title="{ text: $t('Categorias') }"
+              :detail="`<button class='btn mb-0 btn-sm null null bg-gradient-info' data-bs-toggle='modal' data-bs-target='#categoryModal'>${$t('Gerir Categorias')}</button>`"
+              :icon="{
+                name: 'edit_note',
+                color: 'text-white',
+                background: 'info',
+              }" />
+          </div>
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-4">
+            <mini-statistics-card :title="{ text: $t('Movimentos') }"
+              :detail="`<button class='btn mb-0 btn-sm null null bg-gradient-dark' data-bs-toggle='modal' data-bs-target='#transactionModal'>${$t('Adicionar Movimento')}</button>`"
+              :icon="{
+                name: 'post_add',
+                color: 'text-white',
+                background: 'dark',
+              }" />
+          </div>
+        </div>
+        <div class="table-responsive p-0 mt-4">
+          <transaction-card />
+        </div>
+      </div>
+    </div>
+    <PopUpGerirCategorias :key="componentKey" @forceRerender="forceRerender" />
+    <PopUpAddTransaction />
+    <PopUpSavingsGoal />
+    <div class="position-fixed bottom-1 end-1 z-index-991">
+      <!-- add movement snackbar -->
+      <material-snackbar v-if="snackbar === 'successAddMove'" :title="$t('Movimento')" date="now"
+        :description="$t('Movimento adicionado com sucesso!')" :icon="{ component: 'done', color: 'white' }"
+        color="success" :close-handler="closeSnackbar" />
+      <material-snackbar v-if="snackbar === 'errorAddMove'" :title="$t('Movimento')" date="now"
+        :description="$t('Não foi possível adicionar o movimento! Tente novamente.')"
+        :icon="{ component: 'campaign', color: 'white' }" color="danger" :close-handler="closeSnackbar" />
+
+      <!-- savings snackbar -->
+      <material-snackbar v-if="snackbar === 'successSavings'" :title="$t('Objetivo Poupança')" date="now"
+        :description="$t('Objetivo definido com sucesso!')" :icon="{ component: 'done', color: 'white' }"
+        color="success" :close-handler="closeSnackbar" />
+      <material-snackbar v-if="snackbar === 'errorSavings'" :title="$t('Objetivo Poupança')" date="now"
+        :description="$t('Não foi possível definir o objetivo poupança. Tente novamente.')"
+        :icon="{ component: 'campaign', color: 'white' }" color="danger" :close-handler="closeSnackbar" />
+    </div>
+  </div>
+</template>
+
+<script>
+import MiniStatisticsCard from "./components/MiniStatisticsCard.vue";
+import TransactionCard from "./components/TransactionCard.vue";
+import { userStore } from '@/store/userStore.js';
+import PopUpGerirCategorias from "./components/PopUpGerirCategorias.vue";
+import PopUpAddTransaction from "./components/PopUpAddTransaction.vue";
+import PopUpSavingsGoal from "./components/PopUpSavingsGoal.vue";
+import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
+
+
+export default {
+  name: "home",
+  setup() {
+    const store = userStore();
+    return { store };
+  },
+  data() {
+    return {
+      componentKey: 0,
+      snackbar: null,
+    };
+  },
+  mounted() {
+    // Adiciona um listener para o evento customizado 'my-document-event'
+    document.addEventListener('show-snackbar', this.showSnackbar);
+    this.fetchUserData();
+  },
+  methods: {
+    forceRerender() {
+      this.componentKey += 1;
+    },
+    fetchUserData() {
+      // Chamada para a action getUser da store
+      this.user.getUser(); // Supondo que a action na store seja user.getUser
+    },
+    showSnackbar(event) {
+      this.snackbar = event.detail;
+    },
+    closeSnackbar() {
+      this.snackbar = null;
+    },
+  },
+  components: {
+    MiniStatisticsCard,
+    TransactionCard,
+    PopUpGerirCategorias,
+    PopUpAddTransaction,
+    PopUpSavingsGoal,
+    MaterialSnackbar
+  },
+  computed: {
+    user() {
+      const uStore = userStore();
+      return uStore;
+    }
+  },
+};
+</script>
+
+<style>
+.z-index-991{
+  z-index: 991;
+}
+</style>

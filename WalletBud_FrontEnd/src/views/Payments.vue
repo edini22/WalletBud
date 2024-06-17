@@ -1109,9 +1109,30 @@ export default {
             }
         }
 
+        function dataTransform(){
+            if(Recorrence.value == 'Unica'){
+                if(transa.value.name != Name.value || transa.value.descricao != Description.value || transa.value.value != Value.value || transa.value.local != Place.value || transa.value.categoria != Category.value.name ){
+                    alert('Existem campos alterados');
+                    return false;
+                }
+            }else{
+                alert('Repetida');
+                if(transa.value.name != Name.value || transa.value.descricao != Description.value || transa.value.value != Value.value || transa.value.local != Place.value || transa.value.repeticao != SendRepetition.value || transa.value.categoria != Category.value.name ){
+                    alert('Existem campos alterados');
+                    return false;
+                }
+            }   
+            return true;
+        }
+
         const editTransaction = async function () {
             if (Type.value == 'receita' || Type.value == '') {
                 checkInputs();
+                //verifica se os campos estao alterados
+                if(dataTransform()){
+                    isEditing.value = false;
+                }
+
 
                 if (nameError.value == false && valueError.value == false && CategoryError.value == false && recorrenceError.value == false) {
                     if (Recorrence.value != 'Unica') {
@@ -1201,7 +1222,6 @@ export default {
                                 descricao: Description.value,
                                 IdCategoria: Category.value.id,
                                 local: Place.value,
-                                repeticao: SendRepetition.value
                             }),
 
                         };
@@ -1248,7 +1268,10 @@ export default {
 
             } else {
                 checkInputs();
-                alert("editTransaction despesa");
+
+                if(dataTransform()){
+                    isEditing.value = false;
+                }
 
                 if (Recorrence.value != 'Unica') {
                     if (repetitionError.value == false) {
@@ -1335,7 +1358,6 @@ export default {
                             descricao: Description.value,
                             IdCategoria: Category.value.id,
                             local: Place.value,
-                            repeticao: SendRepetition.value
                         }),
                     };
 
@@ -1603,7 +1625,11 @@ export default {
 
         const kickUser = async () => {
             try {
-                await store.kickUser(userKick.value.email, transa.value.id, "fixa");//TODO: MUDAR AQUI FIXA PARA O QUE FOR!!
+                if(transa.value.repeticao){
+                    await store.kickUser(userKick.value.email, transa.value.id, "fixa");
+                } else {
+                    await store.kickUser(userKick.value.email, transa.value.id, "unica");
+                }
                 // popupDetails.value = false;
                 loadPendentes();
                 loadPorPagar();
@@ -2011,15 +2037,12 @@ export default {
     computed: {
         displayCategories() {
             if (this.Type == 'despesa') {
-                alert("despesa");
                 return this.categories.CategoriesExpense;
             }
             else if (this.Type == 'receita') {
-                alert("receita");
                 return this.categories.CategoriesIncome;
             }
             else {
-                alert("else");
                 return '';
             }
         },

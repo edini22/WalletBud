@@ -110,6 +110,15 @@
           <LanguageSwitcher />
         </div>
         <hr class="horizontal dark my-sm-4" />
+
+        <!-- Change idiom -->
+        <div class="d-flex" style="align-items: center; justify-content: space-between;">
+          <h6 class="mb-0" >{{$t ('Unidade Monetária')}}</h6>
+          <!-- dropdown menu -->
+          <CurrencySwitcher/>
+        </div>
+        <hr class="horizontal dark my-sm-4" />
+
       </div>
     </div>
   </div>
@@ -119,6 +128,7 @@
 import { mapMutations, mapState, mapActions } from "vuex";
 import { activateDarkMode, deactivateDarkMode } from "@/assets/js/dark-mode";
 import LanguageSwitcher from "../views/components/LanguageSwitcher.vue";
+import CurrencySwitcher from "../views/components/CurrencySwitcher.vue";
 
 
 export default {
@@ -180,6 +190,7 @@ export default {
   },
   components: {
     LanguageSwitcher,
+    CurrencySwitcher,
   },
 };
 </script>

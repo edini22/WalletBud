@@ -21,4 +21,5 @@ appInstance.use(router);
 appInstance.use(MaterialDashboard);
 appInstance.use(i18n);
 
+
 appInstance.mount("#app");

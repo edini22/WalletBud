@@ -63,7 +63,7 @@
                                                     }}</span>
                                                 </td>
                                                 <td>
-                                                    <span class="text-md font-weight-bold">{{ p.shareValue }}€</span>
+                                                    <span class="text-md font-weight-bold">{{ p.shareValue }} {{user.moeda}}</span>
                                                 </td>
                                                 <td>
                                                     <material-button variant="gradient" color="secondary"
@@ -80,6 +80,13 @@
                                                 </td>
                                             </tr>
                                         </template>
+                                        <template v-else>
+                                                    <tr>
+                                                        <td colspan="5" class="text-center">
+                                                            <h6 class=" message text-secondary">{{ $t("Sem pagamentos em atraso!") }}</h6>
+                                                        </td>
+                                                    </tr>
+                                                </template>
                                     </tbody>
                                 </table>
                             </div>
@@ -145,16 +152,14 @@
                                                         </td>
                                                         <td>
                                                             <span class="text-md font-weight-bold">{{ p.shareValue
-                                                                }}€</span>
+                                                                }} {{user.moeda}}</span>
                                                         </td>
                                                     </tr>
                                                 </template>
                                                 <template v-else>
                                                     <tr>
                                                         <td colspan="5" class="text-center">
-                                                            <p class="message">
-                                                                {{ $t("Sem pagamentos em atraso!") }}
-                                                            </p>
+                                                            <h6 class=" message text-secondary">{{ $t("Sem pagamentos em atraso!") }}</h6>
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -226,7 +231,7 @@
                                                         </td>
                                                         <td>
                                                             <span class="text-md font-weight-bold">{{ p.shareValue
-                                                                }}€</span>
+                                                                }} {{user.moeda}}</span>
                                                         </td>
                                                         <td>
                                                             <material-button variant="gradient" color="secondary"
@@ -240,9 +245,7 @@
                                                 <template v-else>
                                                     <tr>
                                                         <td colspan="5" class="text-center">
-                                                            <p class="message">
-                                                                {{ $t("Sem pedidos pendentes!") }}
-                                                            </p>
+                                                            <h6 class=" message text-secondary">{{ $t("Sem pedidos pendentes!") }}</h6>
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -290,9 +293,9 @@
                     <div v-if="transa">
                         <div v-if="infos">
                             <h6>Descrição: {{ transa.descricao }}</h6>
-                            <h6>Valor Total: {{ transa.value }}€</h6>
+                            <h6>Valor Total: {{ transa.value }} {{user.moeda}}</h6>
                             <h6 v-if="transa.value != transa.shareValue">
-                                Valor Partilhado: {{ transa.shareValue }}€
+                                Valor Partilhado: {{ transa.shareValue }} {{user.moeda}}
                             </h6>
                             <h6>Periodicidade: {{ getRepetitionText(transa.repeticao) }}</h6>
                             <h6>Data Criação: {{ transa.date }}</h6>
@@ -555,9 +558,9 @@
                     </div>
                     <div v-if="infos">
                         <h6>Descrição: {{ selectedPendente.name }}</h6>
-                        <h6>Valor Total: {{ selectedPendente.value }}€</h6>
+                        <h6>Valor Total: {{ selectedPendente.value }} {{user.moeda}}</h6>
                         <h6 v-if="selectedPendente.value != selectedPendente.shareValue">
-                            Valor Partilhado: {{ selectedPendente.shareValue }}€
+                            Valor Partilhado: {{ selectedPendente.shareValue }} {{user.moeda}}
                         </h6>
                         <h6>
                             Periodicidade: {{ getRepetitionText(selectedPendente.repeticao) }}

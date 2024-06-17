@@ -10,6 +10,7 @@ export const userStore = defineStore("user", {
       saldo : 0,
       idioma: "",
       objetivo: 0,
+      moeda: "EUR",
     }
   },
   persist: true,
@@ -23,6 +24,7 @@ export const userStore = defineStore("user", {
       this.saldo = editedUser.saldo;
       this.idioma = editedUser.idioma;
       this.objetivo = editedUser.objetivo;
+      this.moeda = editedUser.moeda;
     },
 
     setUser(user) {
@@ -33,6 +35,7 @@ export const userStore = defineStore("user", {
       this.saldo = user.saldo;
       this.idioma = user.idioma;
       this.objetivo = user.objetivo;
+      this.moeda = user.moeda;
     },
 
     async registUser(newUser) {
@@ -125,6 +128,7 @@ export const userStore = defineStore("user", {
         idioma: data.idioma,
         password: this.password,
         objetivo: parseFloat(data.objetivo.toFixed(2)),
+        //moeda: data.moeda,
       };
 
       this.setUser(user); // Adiciona o novo usuário aos dados do store
@@ -175,6 +179,11 @@ export const userStore = defineStore("user", {
         throw new Error(errorData.message);
       }
 
+      //moeda
+      //if(editedUser.moeda != this.moeda){
+      //  this.moeda = editedUser.moeda;
+      //}
+
       //idioma
       if(editedUser.idioma != this.idioma){
         this.idioma = editedUser.idioma;
@@ -213,7 +222,7 @@ export const userStore = defineStore("user", {
       this.id = 0;
       this.saldo = 0;
       this.idioma = "";
-
+      this.moeda = "€";
     },
     
   },

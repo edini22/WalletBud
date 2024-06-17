@@ -48,11 +48,9 @@
           </div>
 
           <!-- Month spend chart on chosen year -->
-          <div class="col-lg-4 col-md-6 mt-5 mt-md-4">
+          <div class="col-lg-8 col-md-6 mt-5 mt-md-4">
             <chart-holder-card title="Daily Sales"
-              subtitle="(<span class='font-weight-bolder'>+15%</span>) increase in today sales."
-              color="success"
-              >
+              subtitle="(<span class='font-weight-bolder'>+15%</span>) increase in today sales." color="success">
               <reports-line-chart :chart="{
                 labels: [
                   $t('Jan'),
@@ -74,11 +72,29 @@
                 },
               }" />
               <template #detail>
-                <year-picker ></year-picker>
+                <year-picker></year-picker>
               </template>
             </chart-holder-card>
           </div>
-          <div class="col-lg-4 mt-5 mt-md-6 mt-lg-4">
+        </div>
+
+        <div class="row mt-4">
+
+          <!-- Weekly spend chart -->
+          <div class="col-lg-4 col-md-6 mt-4">
+            <chart-holder-card :title="$t('Gasto Semanal')" :subtitle="$t('Gasto total por dia numa semana')"
+              :week="pastWeekDate">
+
+              <reports-bar-chart :chart="{
+                labels: [$t('Seg'), $t('Ter'), $t('Qua'), $t('Qui'), $t('Sex'), $t('Sáb'), $t('Dom')],
+                datasets: {
+                  label: $t('Gasto diário'),
+                  data: weekDailySpend,
+                },
+              }" />
+            </chart-holder-card>
+          </div>
+          <div class="col-lg-8 mt-5 mt-md-6 mt-lg-4">
             <chart-holder-card title="Completed Tasks" subtitle="Last Campaign Performance" update="just updated"
               color="dark">
               <reports-line-chart id="tasks-chart" :chart="{

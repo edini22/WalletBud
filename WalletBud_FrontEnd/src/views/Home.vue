@@ -10,7 +10,7 @@
                 background: 'success',
               }" />
           </div>
-          <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0">
+          <div class="col-lg-3 col-md-6 col-sm-6 mt-lg-0 mt-md-0 mt-sm-0 mt-4">
             <mini-statistics-card :title="{ text: $t('Objetivo Poupança'), value: user.objetivo + ' ' + store.moeda }"
               :detail="`<button class='btn mb-0 btn-sm null null btn-outline-primary' data-bs-toggle='modal' data-bs-target='#savingsGoalModal'>${$t('Definir Objetivo')}</button>`"
               :icon="{

@@ -1,19 +1,19 @@
 <template>
   <div class="card h-100">
     <div class="card-header pb-0 px-3">
-      <div class="d-flex flex-wrap align-items-center">
-        <div class="me-2 mb-2">
+      <div class="d-flex flex-wrap">
+        <div class="me-2" style="width: 150px;">
           <!-- time period-->
           <MaterialDropdown 
             :on-click='changeFilter' 
             :options='time_periods' 
             v-model:selected="activeFilter" />
         </div>
-        <div class="me-2 mb-2">
+        <div class="me-2">
           <!-- filter by category or/and type -->
           <MaterialFilter @change="handleFilterChange" />
         </div>
-        <div class="me-2 mb-2">
+        <div class="me-2">
           <!-- search movements -->
           <div class="input-group input-group-outline" 
               :class="{'is-focused': isFocused}"
@@ -23,9 +23,8 @@
               style='width: 170px;' v-model="searchQuery"
               @focus="handleFocus" @blur="handleBlur"/>
           </div>
-
         </div>
-        <div class="me-2 mt-2" v-tooltip="'Exportar'">
+        <div class="me-2" v-tooltip="'Exportar'">
           <!-- download transactions file -->
           <ExportData />
         </div>

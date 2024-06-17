@@ -1,23 +1,34 @@
 <template>
   <div class="year-picker">
-    <!-- Botão para o ano anterior -->
-    <button class="nav-button" @click="goToPreviousYear" :disabled="currentYear === minYear">
-      &lt; <!-- Seta para esquerda -->
-    </button>
+    <div class="current-year bg-gradient-info shadow-info" @click="showYearGrid">
+      {{ currentYear }}
+      <i class="material-icons sm">date_range</i>
+    </div>
+    <div v-if="showGrid" class="card year-grid-dropdown">
 
-    <!-- Botão para o ano atual -->
-    <button class="current-year" @click="showYearGrid">{{ currentYear }}</button>
-
-    <!-- Botão para o próximo ano -->
-    <button class="nav-button info" @click="goToNextYear" :disabled="currentYear === maxYear">
-      &gt; <!-- Seta para direita -->
-    </button>
-
-    <!-- Grid para escolher o ano como dropdown -->
-    <div v-if="showGrid" class="year-grid-dropdown">
-      <button v-for="year in yearArray" :key="year" @click="selectYear(year)">
+      <div class="dropdown-header">
+        <a class="nav-button" @click="goToPreviousYear" :disabled="currentYear === minYear">
+          
+          <i class="material-icons">chevron_left</i>
+        </a>
+        <span class="text">{{ currentYear }}</span>
+        <a class="nav-button" @click="goToNextYear" :disabled="currentYear === maxYear">
+          
+          <i class="material-icons">chevron_right</i>
+        </a>
+      </div>
+      <hr class="horizontal dark my-sm-4" style="margin: 0 !important;"/>
+      <div class="dropdown-body mt-1">
+      <button 
+        class="year-grid-dropdown-button"
+        v-for="year in yearArray" 
+        :key="year" 
+        @click="selectYear(year)"
+        :class="{ 'selected-year': year == currentYear }"
+      >
         {{ year }}
       </button>
+    </div>
     </div>
   </div>
 </template>
@@ -68,66 +79,80 @@ export default {
 <style scoped>
 .year-picker {
   display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative; /* Necessário para o posicionamento absoluto do dropdown */
+  width: 50%;
 }
 
 .current-year {
-  background: none;
   border: none;
   cursor: pointer;
-  background: none;
   border-radius: 0.375rem;
-  border-top-left-radius: 0.375rem !important;
-  border-bottom-left-radius: 0.375rem !important;
-  padding: 0.625rem 0.75rem !important;
-  line-height: 1.3 !important;
-  background-color: #1a73e8;
-  color: white;
-  font-size: 0.875rem;
+  color: rgb(255, 255, 255);
   font-weight: 400;
-  height: 40px;
-  width: 110px;
-  background-image: linear-gradient(195deg, #49a3f1 0%, #1a73e8 100%);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.sm{
+  font-size: 18px;
+  margin-top: 4px;
+  pointer-events: none;
 }
 .nav-button {
-  font-size: 16px;
-  padding: 8px;
-  margin: 0 5px;
+  font-size: 18px;
   cursor: pointer;
-  border-radius: 0.375rem;
-  border-top-left-radius: 0.375rem !important;
-  border-bottom-left-radius: 0.375rem !important;
-  padding: 0.625rem 0.75rem !important;
-  line-height: 1.3 !important;
-  background-color: #1a73e8;
-  background-image: linear-gradient(195deg, #49a3f1 0%, #1a73e8 100%);
+  margin-top: 3px;
+}
+
+.selected-year{
+  background-color: #f7f7f7 !important;
+  color: #1a73e8 !important;
 }
 
 .year-grid-dropdown {
   display: flex;
   flex-wrap: wrap;
   margin-top: 5px;
-  justify-content: center;
+  justify-content: space-around;
   position: absolute;
   top: 100%; /* Posiciona logo abaixo do botão */
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
   background-color: white;
-  border: 1px solid #ccc;
-  padding: 10px;
+  border: 1px solid #ebebeb;
+  padding: 3px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 6000; /* Garante que o dropdown fique acima de outros elementos */
-  width: 250px; /* Largura do dropdown */
+  width: 100%; /* Largura do dropdown */
   border-radius: 0.375rem;
 }
 
-.year-grid-dropdown button {
-  font-size: 14px;
-  padding: 5px 10px;
+.year-grid-dropdown-button {
+  font-size: 16px;
+  padding: 5px 5px;
   margin: 5px;
   cursor: pointer;
-  width: 70px; /* Largura dos botões */
+  width: 70px;
+  background-color: transparent;
+  color: #868686;
+  font-weight: 300;
+  line-height: 1.5;
 }
+
+.dropdown-header {
+  justify-content: space-around;
+  text-align: center;
+  display: flex;
+}
+.text {
+  line-height: 1.5;
+  font-size: 18px;
+  text-align: center;
+  font-weight: 200;
+}
+
 </style>

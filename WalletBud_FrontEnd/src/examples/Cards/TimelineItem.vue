@@ -5,7 +5,7 @@
         icon.component
         }}</i>
     </span>
-    <div class="timeline-content">
+    <div class="timeline-content" style="max-width: 100%;">
       <h5 class="mb-0 text-s font-weight-bold justify-content-between d-flex"
         :class="$parent.darkMode ? 'text-white' : 'text-dark'">
         {{ title }} &nbsp;&nbsp;&nbsp;&nbsp;

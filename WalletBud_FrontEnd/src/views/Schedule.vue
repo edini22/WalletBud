@@ -1,89 +1,31 @@
 <template>
 
-  <!-- <timeline-list title="Timeline">
-    <timeline-item color="success" :icon="{ component: 'notifications', class: 'text-white text-sm' }"
-      title="$2400 Design changes" date-time="22 DEC 7:20 PM"
-      description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
-    <TimelineItem color="danger" :icon="{ component: 'code', class: 'text-white text-sm' }" title="New order #1832412"
-      date-time="21 DEC 11 PM"
-      description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
-    <TimelineItem color="info" :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
-      title="Server payments for April" date-time="21 DEC 9:34 PM"
-      description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
-  </timeline-list> -->
-
-  <div class="container">
-    <div class="row justify-content-center"> <!-- Centraliza a linha horizontalmente -->
-      <div class="col-8">
-        <div class="timeline-header text-center mb-4"> <!-- Centraliza o cabeçalho da timeline -->
-          <h4>Agenda</h4>
-        </div>
-        <div class="scroll-container"> <!-- Remove a classe 'col' desnecessária aqui -->
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-8">
+      <div class="timeline-header mb-4">
+        <h4>Agenda</h4>
+      </div>
+      <div class="scroll-container">
+        <div v-if="store.timeline.length > 0">
+          
           <timeline-list>
             <timeline-item v-for="(p, index) in store.timeline" :key="index" :color="p.tipo === 'receita' ? 'success' : 'danger'"
               :icon="{ component: p.tipo === 'receita' ? 'notifications' : 'shopping_cart', class: 'text-white text-sm' }"
-              :title="p.name" :value="p.tipo === 'receita' ? (p.value + ' €') : ('-' + p.value + ' €')"
+              :title="p.name" :value="p.tipo === 'receita' ? (p.value + ' ' + user.moeda) : ('-' + p.value + ' ' + user.moeda)"
               :date-time="p.date" :description="p.descricao" />
-          </timeline-list>
-        </div>
+            </timeline-list>
+          
+          </div>
+          <div v-else class="d-flex justify-content-center align-items-center" style="height: 70vh;">
+            <h5 class="text-secondary">Sem eventos futuros!</h5>
+          </div>
       </div>
     </div>
   </div>
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col ">
-          <!--timeline next days-->
-          <div class="col pt-0">
-            <div class="timeline-header">
-              <h4>Agenda</h4>
-            </div>
-            <timeline-list class="scroll-container">
-              <div v-for="(p, index) in store.timeline" :key="index">
-                <timeline-item v-if="p.tipo === 'receita'" color="success"
-                  :icon="{ component: 'wallet', class: 'text-white text-sm' }" :title="p.name" :value="p.value + ' €'"
-                  :date-time="formattedDate(p.date)" :description="p.descricao" />
-                <timeline-item v-else color="danger" :icon="{ component: 'notifications', class: 'text-white text-sm' }"
-                  :title="p.name" :value="'-' + p.value + ' €'" :date-time="formattedDate(p.date)"
-                  :description="p.descricao" />
-              </div>
-            </timeline-list>
-          </div>
-        </div>
-      </div>
-    </div>
+</div>
 
 
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col ">
-          <!--timeline next days-->
-          <div class="col pt-0">
-            <div class="timeline-header">
-              <h4>Agenda</h4>
-            </div>
-            <timeline-list class="scroll-container">
-              <timeline-item color="success" :icon="{ component: 'notifications', class: 'text-white text-sm' }"
-                title="Design changes" value="2400€" date-time="22 DEC 7:20 PM"
-                description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
-              <TimelineItem color="danger" :icon="{ component: 'code', class: 'text-white text-sm' }"
-                title="Design changes" value="2400€" date-time="21 DEC 11 PM"
-                description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
-              <TimelineItem color="info" :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
-                title="Design changes" value="2400€" date-time="21 DEC 9:34 PM"
-                description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
-              <TimelineItem color="info" :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
-                title="Design changes" value="2400€" date-time="21 DEC 9:34 PM"
-                description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
-              <TimelineItem color="info" :icon="{ component: 'shopping_cart', class: 'text-white text-sm' }"
-                title="Design changes" value="2400€" date-time="21 DEC 9:34 PM"
-                description="People care about how you see the world, how you think, what motivates you, what you’re struggling with or afraid of." />
-            </timeline-list>
-          </div>
-        </div>
-      </div>
-    </div>
 </template>
 
 <script>
@@ -272,8 +214,6 @@ export default {
     background-color: white;
   }
 
-  .timeline-one-side .timeline-content {
-  width: 200%;
-}
+  
 
 </style>

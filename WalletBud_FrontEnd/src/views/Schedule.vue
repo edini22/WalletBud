@@ -211,7 +211,6 @@ export default {
   .table-head-fixed {
     position: sticky;
     top: 0;
-    background-color: white;
   }
 
   

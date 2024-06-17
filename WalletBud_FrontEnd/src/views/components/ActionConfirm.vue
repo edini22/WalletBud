@@ -4,7 +4,7 @@
             <div class="card modal-content ">
                 <div class="card-header card-header-primary text-center">
                     <h5 class="card-title">{{ message }}</h5>
-                    <p class="card-category ">{{ $t('Confirme a sua ação') }}.</p>
+                    <p class="card-category">{{ $t('Confirme a sua ação') }}.</p>
                 </div>
                 <div class="card-footer d-flex justify-content-between ">
                     <MaterialButton
@@ -60,6 +60,7 @@ export default {
     width: 85%;
     margin:5px auto;
     margin-bottom: 7%;
+    border-color: white;
   }
   
   .card-footer{

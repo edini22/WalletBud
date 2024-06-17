@@ -8,15 +8,21 @@
     >
       <span class="mask bg-gradient-info opacity-0"></span>
     </div>
+
+
     <div class="card card-body mx-3 mx-md-4 mt-n6">
-      <div class="row gx-4">
+      <div class="row gx-3">
         <div class="col-auto">
           <div class="avatar avatar-xl position-relative">
             <img
-              src="@/assets/img/icons/user.png"
+              :src="
+                isDarkMode
+                  ? require('@/assets/img/icons/user_2.png')
+                  : require('@/assets/img/icons/user_1.png')"
               alt="profile_image"
-              class="shadow-sm w-100 border-radius-lg"
+              class="border-radius-lg"
             />
+            
           </div>
         </div>
         <div class="col-auto my-auto">
@@ -50,7 +56,10 @@ import setTooltip from "@/assets/js/tooltip.js";
 
 import { useI18n } from 'vue-i18n';
 import { userStore } from "@/store/userStore";
+import { mapState } from "vuex";
 
+import userDark from "@/assets/img/icons/user_2.png";
+import user from "@/assets/img/icons/user_1.png";
 
 export default {
   name: "profile-overview",
@@ -68,6 +77,8 @@ export default {
       showMenu: false,
       showPopup: false,
       showMessage: false,
+      userDark,
+      user,
     };
   },
   mounted() {
@@ -88,6 +99,9 @@ export default {
     handleEditProfile() {
       this.showMessage = true;
     },
+  },
+  computed: {
+    ...mapState(["sidebarType", "isDarkMode"]),
   },
 };
 </script>

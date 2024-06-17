@@ -3,39 +3,28 @@
     <div class="p-3 pb-0 card-header">
       <div class="row align-items-center">
 
-        <div class="mb-2">
-          <material-button v-if="!editMode" class="mb-2" variant="gradient" color="info" size="sm" @click="editProfile">
-            {{ $t('Editar Perfil') }}
-            <i data-bs-toggle="tooltip" data-bs-placement="top" :title="action.tooltip"></i>
-          </material-button>
-          &nbsp;
-          <material-button v-if="!editMode" class="mb-2" variant="gradient" color="info" size="sm"
-            @click="editPasswordFunc">
-            {{ $t('Alterar Password') }}
-            <i data-bs-toggle="tooltip" data-bs-placement="top" :title="action.tooltip"></i>
-          </material-button>
-        </div>
+        
 
         <div class="col-md-8 d-flex align-items-center ">
-          <h5 class="mb-0">{{ $t('Informação do Perfil') }}</h5>
+          <h4 class="mb-0">{{ $t('Informação do Perfil') }}</h4>
         </div>
       </div>
     </div>
     <div class="p-3 card-body">
       <ul class="list-group">
         <div v-if="!editPassword">
-          <li class="pt-0 text-sm border-0 list-group-item ps-0">
+          <li class="pt-0 text-md border-0 list-group-item ps-0">
             <div v-if="showErrorNome">
               <p class="error-pass">{{ $t('Nome não pode ser nulo') }}</p>
             </div>
 
-            <strong v-if="!editMode || !editPassword" class="text-dark">{{ $t('Nome') }}:</strong>
+            <strong v-if="!editMode || !editPassword" class="text-secondary">{{ $t('Nome') }}:  </strong>
             <span v-if="!editMode">{{ username }} </span>
             <input v-else-if="showErrorNome" class="input-error" v-model="editedInfo.username" />
             <input v-else-if="editMode && !editPassword" v-model="editedInfo.username" class="full_width1" />
           </li>
 
-          <li class="text-sm border-0 list-group-item ps-0">
+          <li class="text-md border-0 list-group-item ps-0">
             <div v-if="showErrorEmail">
               <p class="error-pass">{{ $t('Email não pode ser nulo') }}</p>
             </div>
@@ -43,7 +32,7 @@
               <p class="error-pass">{{ $t('Email inválido') }}</p>
             </div>
 
-            <strong v-if="!editMode || !editPassword" class="text-dark">{{ $t('Email') }}:</strong>
+            <strong v-if="!editMode || !editPassword" class="text-secondary">{{ $t('Email') }}:  </strong>
             <span v-if="!editMode">{{ email }}</span>
             <input v-else-if="showErrorEmail" class="input-error" v-model="editedInfo.email" />
             <input v-else-if="editMode && !editPassword" v-model="editedInfo.email" class="full_width2" />
@@ -51,23 +40,23 @@
         </div>
 
 
-        <li class="text-sm border-0 list-group-item ps-0">
+        <li class="text-md border-0 list-group-item ps-0">
           <div v-if="showError">
             <p class="error-pass">{{ $t('Passwords não coincidem') }}</p>
           </div>
           <div v-if="showError2">
             <p class="error-pass">{{ $t('Passwords devem ter no mínimo') }} 6 {{ $t('caracteres') }}</p>
           </div>
-          <strong v-if="!editMode" class="text-dark">Password:</strong>
-          <strong v-if="editMode && editPassword" class="text-dark">{{ $t('Nova') }} Password:</strong>
+          <strong v-if="!editMode" class="text-secondary">Password:  </strong>
+          <strong v-if="editMode && editPassword" class="text-secondary">{{ $t('Nova') }} Password:  </strong>
           <span v-if="!editMode">*********</span>
           <input v-else-if="showError" class="input-error" v-model="editedInfo.senha1" type="password" />
           <input v-else-if="showError2" class="input-error" v-model="editedInfo.senha1" type="password" />
           <input v-else-if="editMode && editPassword" v-model="editedInfo.senha1" type="password" class="full_width3" />
         </li>
 
-        <li class="text-sm border-0 list-group-item ps-0" v-if="editMode && editPassword">
-          <strong class="text-dark">{{ $t('Confirmar Password') }}:</strong>
+        <li class="text-md border-0 list-group-item ps-0" v-if="editMode && editPassword">
+          <strong class="text-secondary">{{ $t('Confirmar Password') }}:  </strong>
           <input v-if="showError" class="input-error" v-model="editedInfo.senha2" type="password" />
           <input v-else-if="showError2" class="input-error" v-model="editedInfo.senha2" type="password" />
           <input v-else-if="editMode && editPassword" v-model="editedInfo.senha2" type="password" class="full_width4" />
@@ -95,6 +84,18 @@
         </material-button>
       </div>
     </div>
+    <div class="mb-4">
+          <material-button v-if="!editMode" class="mb-2" variant="gradient" color="info" size="sm" @click="editProfile">
+            {{ $t('Editar Perfil') }}
+            <i data-bs-toggle="tooltip" data-bs-placement="top" :title="action.tooltip"></i>
+          </material-button>
+          &nbsp;
+          <material-button v-if="!editMode" class="mb-2" variant="gradient" color="info" size="sm"
+            @click="editPasswordFunc">
+            {{ $t('Alterar Password') }}
+            <i data-bs-toggle="tooltip" data-bs-placement="top" :title="action.tooltip"></i>
+          </material-button>
+        </div>
 
     <div class="position-fixed top-1 end-1 z-index-2">
       <material-snackbar v-if="snackbar === 'success'" title="Editar Perfil" date="now"
@@ -356,26 +357,12 @@ export default {
   width: 9.3rem;
 }
 
-.btn-edit {
-  background-color: lightblue;
-  color: white;
-  border: none;
-  border-radius: 4px;
-}
-
-.btn-edit:hover {
-  background-color: #0056b3;
-}
 
 input {
   margin-left: auto;
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-.text-dark {
-  margin-right: 10px;
 }
 
 .error-pass {

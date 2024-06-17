@@ -1,6 +1,6 @@
 <template>
     <div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalLabel"
-        aria-hidden="true">
+        aria-hidden="true" data-bs-backdrop='static'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -56,10 +56,14 @@
                             <label for="value" class="form-label">{{ $t('Montante') }}
                                 <p class="required"> *</p>
                             </label>
-                            <div v-if="valueError === true" class="form-input mb-1">
+                            <div v-if="valueError === true && valueNegative === null" class="form-input mb-1">
                                 <material-input class="material-input" id="value" type="number" :value="Value"
                                     :label="$t('Indique um montante válido')" name="value"
                                     @update:value="Value = $event" error />
+                            </div>
+                            <div v-if="valueError === true && valueNegative === true" class="form-input mb-1">
+                                <material-input class="material-input" id="value" type="number" :value="Value"
+                                    :label="$t('Indique um valor maior que zero')" name="value" @update:value="Value = $event" error />
                             </div>
                             <div v-if="valueError === false" class="form-input mb-1">
                                 <material-input class="material-input" id="value" type="number" name="value"
@@ -498,6 +502,7 @@ export default {
         const Description = ref('');
         const Value = ref('');
         const valueError = ref(null);
+        const valueNegative = ref(null);
         const DateM = ref('');
         const DateError = ref(null);
         const Place = ref('');
@@ -626,11 +631,16 @@ export default {
 
             if (!Value.value)
                 valueError.value = true;
-            else if (Value.value < 0) {
+            else if (Value.value <= 0) {
                 valueError.value = true;
+                valueNegative.value = true;
+                Value.value = '';
             }
-            else
+            else{
                 valueError.value = false;
+                valueNegative.value = null;
+            }
+                
 
             if (!DateM.value)
                 DateError.value = true;
@@ -1069,7 +1079,8 @@ export default {
             emailErrorStore,
             showAlertUsers,
             resetTab,
-            categories
+            categories,
+            valueNegative
         };
     },
     data() {

@@ -1,6 +1,6 @@
 <template>
     <div class="modal fade" id="savingsGoalModal" tabindex="-1" aria-labelledby="transactionModalLabel"
-    aria-hidden="true">
+    aria-hidden="true" data-bs-backdrop='static'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">

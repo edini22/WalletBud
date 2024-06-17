@@ -193,7 +193,4 @@ export default {
   }
 }
 
-.input-group.input-group-outline .form-control {
-  border: 1px solid #1a73e8 !important;
-}
 </style>

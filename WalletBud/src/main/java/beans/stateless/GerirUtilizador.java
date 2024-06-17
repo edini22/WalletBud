@@ -4,11 +4,18 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.json.Json;
 import jakarta.json.JsonObject;
+import java.time.LocalDate;
+
+import jakarta.json.JsonObjectBuilder;
+import org.orm.PersistentException;
+import org.orm.PersistentTransaction;
+
+import wb.walletbud.*;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import org.orm.PersistentException;
-import org.orm.PersistentSession;
+
 import wb.walletbud.User;
 import wb.walletbud.UserDAO;
 
@@ -18,6 +25,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -184,6 +195,72 @@ public class GerirUtilizador {
                     .build();
         }
     }
+
+    public static Map<User, List<Transacao>> getAllTransacoesFromUsers(){
+        Map<User, List<Transacao>> transacoes = new HashMap<>();
+
+        try {
+            User[] users = UserDAO.listUserByQuery(null, null);
+            LocalDate now = LocalDate.now();
+
+            for (User u : users) {
+                List<Transacao> userTransacoes = new ArrayList<>();
+
+                for (Transacao t : u.transacaos.toArray()) {
+                    Timestamp transactionTimestamp = t.getDate();
+
+                    // Convert Timestamp to LocalDate
+                    LocalDate transactionDate = transactionTimestamp.toLocalDateTime().toLocalDate();
+
+                    // Check if now is exactly three days before transaction date
+                    if (now.plusDays(3).equals(transactionDate)) {
+                        userTransacoes.add(t);
+                    }
+                }
+
+                transacoes.put(u, userTransacoes);
+            }
+
+            return transacoes;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JsonObject getJsonUserNotifs(String email) throws PersistentException {
+        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+        try {
+            User user = getUserByEmail(email);
+
+            if (user == null) {
+                t.rollback();
+                return Json.createObjectBuilder()
+                        .build();
+            }
+
+            JsonObjectBuilder notifJsonObjectBuilder = Json.createObjectBuilder();
+
+            List<Notificacao> notifs = user.getNotifications();
+
+            for (Notificacao n : notifs) {
+                notifJsonObjectBuilder.add("notificacoes", Json.createObjectBuilder()
+                        .add("id", n.getId_notificacao())
+                        .add("date", n.getDate().toString())
+                        .add("descricao", n.getDescrição())
+                        .build());
+            }
+            t.commit();
+            return notifJsonObjectBuilder.build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            t.rollback();
+
+            return Json.createObjectBuilder()
+                    .build();
+        }
+    }
+
 
     public int resetPassword(PersistentSession session, User user, String token, String password) throws PersistentException {
 

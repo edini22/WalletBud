@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @Stateless
-public class GerirUnica {
+public class GerirUnica{
 
     @EJB
     private GerirUtilizador gerirUtilizador;
@@ -120,7 +120,6 @@ public class GerirUnica {
                         user.setSaldo(user.getSaldo() + aSvalue);
                     }
                     UserDAO.save(user);
-                    //TODO: eliminar todas as notificacoes referentes a esta transacao
                 }
 
                 //iterar pelos ‘users’ todos partilhados a alterar
@@ -137,12 +136,17 @@ public class GerirUnica {
                     UserDAO.save(u);
                     transacao.setConfirma(0);
                     TransacaoPartilhadaDAO.save(transacao);
+
+                    // Notify shared users about the change
+                    Notificacao notification = new Notificacao();
+                    notification.setDescrição("The transaction " + unica.getName() + " has been updated. Old share value: " + aSvalue + ", new share value: " + nSvalue);
+                    u.notify(notification);
                 }
 
-                //TODO: gerar novas notificacoes com as novas informacoes
-                // destinatarios : useres que estao na lista tps(este para aceitarem ou nao) e o unica.owner(informa que foi alterado com sucesso)
-                // antigo valor que lhe ficava (aSValue)
-                // novo valor por quanto vai ficar (nSValue)
+                // Notify the owner about the successful update
+                Notificacao ownerNotification = new Notificacao();
+                ownerNotification.setDescrição("Your transaction " + unica.getName() + " has been successfully updated.");
+                user.notify(ownerNotification);
 
                 unica.setStatus(false);
                 unica.setShareValue(nSvalue);
@@ -426,7 +430,10 @@ public class GerirUnica {
                             UserDAO.save(us);
                         }
                         TransacaoPartilhadaDAO.deleteAndDissociate(tp);
-                        //TODO: apagar a notificacao relacionada com este user e esta transacao ou dar update para que este rejeitou a transacao
+                        // Notificar o utilizador removido
+                        Notificacao notification = new Notificacao();
+                        notification.setDescrição("You have been removed from the transaction " + unica.getName() + ".");
+                        tp.getUserId_user().notify(notification);
                     }
                 }
             }
@@ -439,6 +446,10 @@ public class GerirUnica {
                     tp.setUserId_user(user_shared);
                     tp.setUsertransacaoId(unica);
                     TransacaoPartilhadaDAO.save(tp);
+                    // Notificar o utilizador adicionado
+                    Notificacao notification = new Notificacao();
+                    notification.setDescrição("You have been added to the transaction " + unica.getName() + ". Please confirm your participation.");
+                    user_shared.notify(notification);
                 }
 
                 float aSValue = unica.getShareValue();
@@ -478,11 +489,17 @@ public class GerirUnica {
                 unica.setShareValue(nSValue);
                 UnicaDAO.save(unica);
 
-                //TODO: gerar novas notificacoes com as novas informacoes e apaga as notificacoes antigas referidas a esta transacao
-                // destinatarios : users que estao na lista tps(este para aceitarem ou nao) e o unica.owner(neste so avisa que um user rejeitou)
-                // quantos users vai ter agora
-                // antigo valor que lhe ficava (aSValue)
-                // novo valor por quanto vai ficar (nSValue)
+                // Gerar novas notificações
+                for (TransacaoPartilhada tpu : transacoesPart) {
+                    User u = tpu.getUserId_user();
+                    Notificacao notification = new Notificacao();
+                    notification.setDescrição("The transaction " + unica.getName() + " has been updated. Old share value: " + aSValue + ", New share value: " + nSValue + ".");
+                    u.notify(notification);
+                }
+
+                Notificacao ownerNotification = new Notificacao();
+                ownerNotification.setDescrição("The transaction " + unica.getName() + " has been successfully updated. Old share value: " + aSValue + ", New share value: " + nSValue + ".");
+                user.notify(ownerNotification);
 
             } else {
                 return -4;
@@ -555,10 +572,20 @@ public class GerirUnica {
                         unica.setStatus(false);
                         UnicaDAO.save(unica);
                         TransacaoPartilhadaDAO.deleteAndDissociate(tp);
+                        // Notify owner that a user has rejected the transaction
+                        Notificacao notification = new Notificacao();
+                        notification.setDescrição("User " + email + " has rejected the transaction " + unica.getName());
+                        unica.getOwner_id().notify(notification);
+
                     } else if (option == 1) {
                         users +=1;
                         tp.setConfirma(1);
                         TransacaoPartilhadaDAO.save(tp);
+
+                        // Notify owner that a user has confirmed the transaction
+                        Notificacao notification = new Notificacao();
+                        notification.setDescrição("User " + email + " has confirmed the transaction " + unica.getName());
+                        unica.getOwner_id().notify(notification);
                     }
                 } else if (tp.getConfirma() == 0) {
                     users +=1;
@@ -601,18 +628,34 @@ public class GerirUnica {
                     }
                     UserDAO.save(user);
                 }
-                //TODO: gerar novas notificacoes com as novas informacoes e apaga as notificacoes antigas referidas a esta transacao
-                // destinatarios : useres que estao na lista tps(este para aceitarem ou nao) e o unica.owner(neste so avisa que um user rejeitou)
-                // quantos users desistiram
-                // antigo valor que lhe ficava (aSValue)
-                // novo valor por quanto vai ficar (nSValue)
+
+                // Notify remaining users and owner
+                Notificacao notification = new Notificacao();
+                notification.setDescrição("Transaction " + unica.getName() + " has been updated. Previous share value: " + aSValue + ", new share value: " + nSValue + ", users remaining: " + nUsers);
+                for (TransacaoPartilhada tp : transacoesPart) {
+                    User sharedUser = gerirUtilizador.getUserByEmail(tp.getUserId_user().getEmail());
+                    if (sharedUser != null) {
+                        sharedUser.notify(notification);
+                    }
+                }
+                unica.getOwner_id().notify(notification);
 
 
             }
             if (ready_to_confirm && (!remove || users == 1)) {
                 System.out.println("confirmaUnica");
                 // chamar função para confirmar e atualizar saldos
-                confirmUnica(session, unica);
+
+                confirmUnica(unica);
+
+                // Notify all users that the transaction is confirmed
+                Notificacao notification = new Notificacao();
+                notification.setDescrição("Transaction " + unica.getName() + " is now confirmed.");
+                for (User u : users) {
+                    u.notify(notification);
+                }
+                unica.getOwner_id().notify(notification);
+
             }
 
         } catch (Exception e) {
@@ -698,15 +741,22 @@ public class GerirUnica {
                     UserDAO.save(u);
                     TransacaoPartilhadaDAO.deleteAndDissociate(tp);
 
-                    //TODO: notificar todos os utilizadores (u) que um o owner eliminou esta  transacao
-                    // NOTA: não esquecer de enviar notificação para toda os utilizadores(pedir para se querem continuar mas agora vao pagar/receber (nSValue)) e o proprio a dizer que disistiu
+                    // Notificar todos os utilizadores (u) que o owner eliminou esta transacao
+                    Notificacao notification = new Notificacao();
+                    notification.setDescrição("The owner has deleted the transaction " + unica.getName() + ". Please confirm if you want to continue with the new share value.");
+                    u.notify(notification);
                 }
 
                 //mudar o owner para null para assim "eliminar" a transacao
                 unica.setOwner_id(null);
                 unica.setStatus(false);
                 UnicaDAO.save(unica);
-                //TODO: notificar o owner (user) eliminou esta  transacao
+
+                // Notificar o owner que eliminou esta transacao
+                Notificacao ownerNotification = new Notificacao();
+                ownerNotification.setDescrição("You have successfully deleted the transaction " + unica.getName() + ".");
+                user.notify(ownerNotification);
+
 
             } else{
                 return -2;

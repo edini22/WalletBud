@@ -14,9 +14,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import java.util.Iterator;
+import java.util.List;
 
 @Stateless
-public class GerirFixa {
+public class GerirFixa{
 
     @EJB
     private GerirUtilizador gerirUtilizador;
@@ -112,12 +113,16 @@ public class GerirFixa {
                 TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
                 for (TransacaoPartilhada transacao : tp) {
+                    User sharedUser = gerirUtilizador.getUserByEmail(transacao.getUserId_user().getEmail());
                     transacao.setConfirma(0);
                     TransacaoPartilhadaDAO.save(transacao);
+                    if (sharedUser != null) {
+                        Notificacao notification = new Notificacao();
+                        notification.setDescrição("Transaction " + fixa.getName() + " has been edited. Old share value: " + aSvalue + ", new share value: " + nSvalue);
+                        sharedUser.notify(notification);
+                    }
                 }
 
-                //TODO: gerar novas notificacoes com as novas informacoes
-                // destinatarios : useres que estao na lista tps(este para aceitarem ou nao) e o unica.owner(informa que foi alterado com sucesso)
                 // antigo valor que lhe ficava (aSValue)
                 // novo valor por quanto vai ficar (nSValue)
 
@@ -134,6 +139,13 @@ public class GerirFixa {
 
 
             FixaDAO.save(fixa);
+
+            Notificacao ownerNotification = new Notificacao();
+            ownerNotification.setDescrição("Your transaction " + fixa.getName() + " has been successfully edited.");
+            user.notify(ownerNotification);
+
+            t.commit();
+
         } catch (Exception e) {
             return -2;
         }
@@ -393,7 +405,10 @@ public class GerirFixa {
                     cond = true;
                     if (option == -1) {
                         TransacaoPartilhadaDAO.deleteAndDissociate(tp);
-                        //TODO: apagar a notificacao relacionada com este user e esta transacao ou dar update para que este rejeitou a transacao
+                        //notificar que user rejeitou a transacao
+                        Notificacao notification = new Notificacao();
+                        notification.setDescrição("User " + email_shared + " has been removed from the transaction " + fixa.getName());
+                        user.notify(notification);
                     }
                 }
             }
@@ -406,6 +421,11 @@ public class GerirFixa {
                     tp.setUserId_user(user_shared);
                     tp.setUsertransacaoId(fixa);
                     TransacaoPartilhadaDAO.save(tp);
+
+                    // Notify that a user was added to the transaction
+                    Notificacao notification = new Notificacao();
+                    notification.setDescrição("User " + email_shared + " has been added to the transaction " + fixa.getName());
+                    user.notify(notification);
                 }
 
                 float aSValue = fixa.getShareValue();
@@ -427,11 +447,21 @@ public class GerirFixa {
                 fixa.setShareValue(nSValue);
                 FixaDAO.save(fixa);
 
-                //TODO: gerar novas notificacoes com as novas informacoes e apaga as notificacoes antigas referidas a esta transacao
-                // destinatarios : users que estao na lista tps(este para aceitarem ou nao) e o unica.owner(neste so avisa que um user rejeitou)
-                // quantos users vai ter agora
                 // antigo valor que lhe ficava (aSValue)
                 // novo valor por quanto vai ficar (nSValue)
+                Notificacao notification = new Notificacao();
+                notification.setDescrição("Transaction " + fixa.getName() + " has been updated. Previous share value: " + aSValue + ", new share value: " + nSValue + ", total users: " + nUsers);
+
+                // Notify all users involved in the transaction
+                for (TransacaoPartilhada tp : transacoesPart) {
+                    User sharedUser = gerirUtilizador.getUserByEmail(tp.getUserId_user().getEmail());
+                    if (sharedUser != null) {
+                        sharedUser.notify(notification);
+                    }
+                }
+
+                // Notify the owner
+                user.notify(notification);
 
             } else {
                 return -4;
@@ -488,12 +518,24 @@ public class GerirFixa {
                         }
                         remove = true;
                         TransacaoPartilhadaDAO.deleteAndDissociate(tp);
+
+                        // Notify owner that a user has rejected the transaction
+                        Notificacao notification = new Notificacao();
+                        notification.setDescrição("User " + email + " has rejected the transaction " + fixa.getName());
+                        fixa.getOwner_id().notify(notification);
+
                         fixa.setStatus(false);
                         FixaDAO.save(fixa);
+
                     } else if (option == 1) {
                         users +=1;
                         tp.setConfirma(1);
                         TransacaoPartilhadaDAO.save(tp);
+
+                        // Notify owner that a user has confirmed the transaction
+                        Notificacao notification = new Notificacao();
+                        notification.setDescrição("User " + email + " has confirmed the transaction " + fixa.getName());
+                        fixa.getOwner_id().notify(notification);
                     }
                 } else if (tp.getConfirma() == 0) {
                     users +=1;
@@ -521,14 +563,25 @@ public class GerirFixa {
                 fixa.setStatus(false);
                 FixaDAO.save(fixa);
 
+                System.out.println("nUsers = " + nUsers);
+                System.out.println("transacoesPart = " + transacoesPart.length);
+                for (TransacaoPartilhada tpu : transacoesPart) {
+                    tpu.setConfirma(0);
+                    TransacaoPartilhadaDAO.save(tpu);
+                }
+
                 System.out.println("nUsers = " + users);
 
-                //TODO: gerar novas notificacoes com as novas informacoes e apaga as notificacoes antigas referidas a esta transacao
-                // destinatarios : useres que estao na lista tps(este para aceitarem ou nao) e o unica.owner(neste so avisa que um user rejeitou)
-                // quantos users desistiram
-                // antigo valor que lhe ficava (aSValue)
-                // novo valor por quanto vai ficar (nSValue)
-
+                // Notify remaining users and owner
+                Notificacao notification = new Notificacao();
+                notification.setDescrição("Transaction " + fixa.getName() + " has been updated. Previous share value: " + aSValue + ", new share value: " + nSValue + ", users remaining: " + nUsers);
+                for (TransacaoPartilhada tp : transacoesPart) {
+                    User sharedUser = gerirUtilizador.getUserByEmail(tp.getUserId_user().getEmail());
+                    if (sharedUser != null) {
+                        sharedUser.notify(notification);
+                    }
+                }
+                fixa.getOwner_id().notify(notification);
 
             }
             if (ready_to_confirm && (!remove || users == 1)) {
@@ -537,6 +590,14 @@ public class GerirFixa {
                 float nSValue = fixa.getValue() / users;
                 fixa.setShareValue(nSValue);
                 FixaDAO.save(fixa);
+
+                // Notify all users that the transaction is confirmed
+                Notificacao notification = new Notificacao();
+                notification.setDescrição("Transaction " + fixa.getName() + " is now confirmed. Share value: " + nSValue + ", total users: " + nUsers);
+                for (User u : users) {
+                    u.notify(notification);
+                }
+                fixa.getOwner_id().notify(notification);
             }
 
         } catch (Exception e) {
@@ -586,6 +647,12 @@ public class GerirFixa {
                 user.setSaldo(user.getSaldo() - fixa.getShareValue());
             }
             UserDAO.save(user);
+
+            // Notify the owner
+            Notificacao ownerNotification = new Notificacao();
+            ownerNotification.setDescrição("Your fixed transaction " + fixa.getName() + " has been paid.");
+            user.notify(ownerNotification);
+
             for (TransacaoPartilhada tp : tps) {
                 User u = tp.getUserId_user();
                 u.transacaoFixa.add(tf);
@@ -596,9 +663,10 @@ public class GerirFixa {
                 }
                 UserDAO.save(u);
 
-                //TODO: notificar todos os utilizadores (u) que uma despes/receita fixa foi paga
-                // NOTA: não esquecer de enviar notificação para toda os utilizadores e o proprio
-                // owner 3 dias antes
+                //notificar todos os utilizadores (u) que uma despes/receita fixa foi paga
+                Notificacao userNotification = new Notificacao();
+                userNotification.setDescrição("The fixed transaction " + fixa.getName() + " has been paid.");
+                u.notify(userNotification);
             }
 
         } catch (Exception e){
@@ -677,11 +745,20 @@ public class GerirFixa {
                 TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
                 for (TransacaoPartilhada tp : tps) {
-//                    User u = tp.getUserId_user();
+                    User u = tp.getUserId_user();
                     TransacaoPartilhadaDAO.deleteAndDissociate(tp);
 
-                    //TODO: notificar todos os utilizadores (u) que um o owner eliminou esta  transacao
-                    // NOTA: não esquecer de enviar notificação para toda os utilizadores(pedir para se querem continuar mas agora vao pagar/receber (nSValue)) e o proprio a dizer que disistiu
+                    //notificar todos os utilizadores (u) que o owner eliminou esta  transacao
+                    Notificacao notification = new Notificacao();
+                    notification.setDescrição("The owner has deleted the fixed transaction " + fixa.getName() + ".");
+                    u.notify(notification);
+
+                    // enviar notificação para toda os utilizadores(pedir para se querem continuar mas agora vao pagar/receber (nSValue))
+                    float nSValue = fixa.getValue() / (tps.length - 1);
+                    Notificacao newShareNotification = new Notificacao();
+                    newShareNotification.setDescrição("Do you want to continue with the new share value of " + nSValue + "?");
+                    u.notify(newShareNotification);
+
                 }
 
                 //verificar se existem pagamentos associados
@@ -697,7 +774,10 @@ public class GerirFixa {
                 }
 
 
-                //TODO: notificar o owner (user) eliminou esta  transacao
+                //notificar o owner (user) eliminou esta  transacao
+                Notificacao ownerNotification = new Notificacao();
+                ownerNotification.setDescrição("You have deleted the fixed transaction " + fixa.getName() + ".");
+                user.notify(ownerNotification);
 
             } else{
                 // verifica se está associado a esta transacao
@@ -719,10 +799,18 @@ public class GerirFixa {
                         tp.setConfirma(0);
                         TransacaoPartilhadaDAO.save(tp);
 
-    //                    User u = tp.getUserId_user();
-    //                    float nSValue = fixa.getValue()/tps.length;
-                        //TODO: notificar todos os utilizadores (u) que um user desistiu da despesa/receita fixa
-                        // NOTA: não esquecer de enviar notificação para toda os utilizadores(pedir para se querem continuar mas agora vao pagar/receber (nSValue)) e o proprio a dizer que disistiu
+                        User u = tp.getUserId_user();
+                        float nSValue = fixa.getValue()/tps.length;
+
+                        // Notify all users that a user has given up
+                        Notificacao notification = new Notificacao();
+                        notification.setDescrição("A user has given up the fixed transaction " + fixa.getName() + ".");
+                        u.notify(notification);
+
+                        // Inform users to decide on continuing with the new share value
+                        Notificacao newShareNotification = new Notificacao();
+                        newShareNotification.setDescrição("Do you want to continue with the new share value of " + nSValue + "?");
+                        u.notify(newShareNotification);
                     }
                     fixa.setStatus(false);
                     FixaDAO.save(fixa);

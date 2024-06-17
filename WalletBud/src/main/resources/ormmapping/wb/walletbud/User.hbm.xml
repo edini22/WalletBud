@@ -18,6 +18,7 @@ License Type: Evaluation
 		<property name="objetivo" column="Objetivo" type="float" not-null="true" lazy="false"/>
 		<property name="token" column="Token" type="string" length="255" not-null="false" lazy="false"/>
 		<property name="expToken" column="ExpToken" type="timestamp" not-null="false" lazy="false"/>
+		<property name="moeda" column="Moeda" type="string" length="255" not-null="false" lazy="false"/>
 		<set name="ORM_Transacaos" lazy="true" cascade="save-update,lock" inverse="true">
 			<key column="UserId_user" not-null="false"/>
 			<one-to-many class="wb.walletbud.Transacao"/>

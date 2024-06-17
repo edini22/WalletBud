@@ -75,13 +75,15 @@ public class User implements Observer{
 	
 	private float saldo = 0.0f;
 	
-	private String idioma = "portugues";
+	private String idioma = "pt";
 	
 	private float objetivo;
 	
 	private String token;
 	
 	private java.sql.Timestamp expToken;
+
+	private String moeda = "EUR";
 	
 	private java.util.Set ORM_transacaos = new java.util.HashSet();
 	
@@ -170,7 +172,15 @@ public class User implements Observer{
 	public java.sql.Timestamp getExpToken() {
 		return expToken;
 	}
-	
+
+	public void setMoeda(String value) {
+		this.moeda = value;
+	}
+
+	public String getMoeda() {
+		return moeda;
+	}
+
 	private void setORM_Transacaos(java.util.Set value) {
 		this.ORM_transacaos = value;
 	}

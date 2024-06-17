@@ -7,9 +7,7 @@ import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import org.orm.PersistentException;
 import org.orm.PersistentSession;
-import wb.walletbud.Categoria;
-import wb.walletbud.CategoriaDAO;
-import wb.walletbud.User;
+import wb.walletbud.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -226,6 +224,14 @@ public class GerirCategoria {
             }
 
             Categoria categoria = categorias[0];
+
+            //verificar antes de eliminar se esta conectada a algum lado!
+            condition = "CategoriaId_categoria = " + id;
+            Transacao[] t = TransacaoDAO.listTransacaoByQuery(session,condition,null);
+
+            if(t.length != 0){
+                return -4;
+            }
 
             CategoriaDAO.deleteAndDissociate(categoria);
         } catch (Exception e) {

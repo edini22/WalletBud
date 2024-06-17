@@ -110,44 +110,62 @@ public class GerirUnica {
 
             if (name != null) unica.setName(name);
             if (value != -1) {
-                float aSvalue = unica.getShareValue();
-                float nSvalue = (value * aSvalue) / unica.getValue();
-
-                if (unica.getStatus()) {
-                    if (unica.getTipo().equals("receita")) {
-                        user.setSaldo(user.getSaldo() - aSvalue);
-                    } else {
-                        user.setSaldo(user.getSaldo() + aSvalue);
-                    }
-                    UserDAO.save(user);
-                    //TODO: eliminar todas as notificacoes referentes a esta transacao
-                }
-
                 //iterar pelos ‘users’ todos partilhados a alterar
                 condition = "TransacaoId_transacao = " + unica.getId_transacao();
                 TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
+                if(unica.getValue() != value){
+                    float aSvalue = unica.getShareValue();
+                    float nSvalue = (value * aSvalue) / unica.getValue();
+                    if(tp.length > 0){
 
-                for (TransacaoPartilhada transacao : tp) {
-                    User u = transacao.getUserId_user();
-                    if (unica.getTipo().equals("receita")) {
-                        u.setSaldo(u.getSaldo() - aSvalue);
-                    } else {
-                        u.setSaldo(u.getSaldo() + aSvalue);
+                        if (unica.getStatus()) {
+                            if (unica.getTipo().equals("receita")) {
+                                user.setSaldo(user.getSaldo() - aSvalue);
+                            } else {
+                                user.setSaldo(user.getSaldo() + aSvalue);
+                            }
+                            UserDAO.save(user);
+                            //TODO: eliminar todas as notificacoes referentes a esta transacao
+                        }
+
+
+                        for (TransacaoPartilhada transacao : tp) {
+                            User u = transacao.getUserId_user();
+                            if (unica.getTipo().equals("receita")) {
+                                u.setSaldo(u.getSaldo() - aSvalue);
+                            } else {
+                                u.setSaldo(u.getSaldo() + aSvalue);
+                            }
+                            UserDAO.save(u);
+                            transacao.setConfirma(0);
+                            TransacaoPartilhadaDAO.save(transacao);
+                        }
+
+                        //TODO: gerar novas notificacoes com as novas informacoes
+                        // destinatarios : useres que estao na lista tps(este para aceitarem ou nao) e o unica.owner(informa que foi alterado com sucesso)
+                        // antigo valor que lhe ficava (aSValue)
+                        // novo valor por quanto vai ficar (nSValue)
+
+                        unica.setStatus(false);
+                        unica.setShareValue(nSvalue);
+
+                        unica.setValue(value);
+                    } else{
+                        if (unica.getStatus()) {
+                            if (unica.getTipo().equals("receita")) {
+                                user.setSaldo(user.getSaldo() - aSvalue);
+                                user.setSaldo(user.getSaldo() + value);
+                            } else {
+                                user.setSaldo(user.getSaldo() + aSvalue);
+                                user.setSaldo(user.getSaldo() - value);
+                            }
+                            UserDAO.save(user);
+                            //TODO: eliminar todas as notificacoes referentes a esta transacao
+                        }
                     }
-                    UserDAO.save(u);
-                    transacao.setConfirma(0);
-                    TransacaoPartilhadaDAO.save(transacao);
+
+
                 }
-
-                //TODO: gerar novas notificacoes com as novas informacoes
-                // destinatarios : useres que estao na lista tps(este para aceitarem ou nao) e o unica.owner(informa que foi alterado com sucesso)
-                // antigo valor que lhe ficava (aSValue)
-                // novo valor por quanto vai ficar (nSValue)
-
-                unica.setStatus(false);
-                unica.setShareValue(nSvalue);
-
-                unica.setValue(value);
             }
             if (descricao != null) unica.setDescrição(descricao);
             if (local != null) unica.setLocal(local);
@@ -592,7 +610,6 @@ public class GerirUnica {
                 unica.setStatus(false);
                 UnicaDAO.save(unica);
 
-                System.out.println("nUsers = " + users);
                 if (unica.getStatus()) {
                     if (unica.getTipo().equals("receita")) {
                         user.setSaldo(user.getSaldo() - unica.getShareValue());
@@ -610,13 +627,11 @@ public class GerirUnica {
 
             }
             if (ready_to_confirm && (!remove || users == 1)) {
-                System.out.println("confirmaUnica");
                 // chamar função para confirmar e atualizar saldos
                 confirmUnica(session, unica);
             }
 
         } catch (Exception e) {
-            System.out.println("ardeu ->" + e);
             return -1;
         }
 

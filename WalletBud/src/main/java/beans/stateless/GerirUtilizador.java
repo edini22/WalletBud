@@ -74,14 +74,8 @@ public class GerirUtilizador {
 
             UserDAO.save(user);
 
-            if(gerirCategoria.createDefaultCategorias(user) != 0){
-                return false;
-            }
-
-            System.out.println("User inserido!");
-            return true;
+            return gerirCategoria.createDefaultCategorias(user) == 0;
         } catch (Exception e) {
-            System.out.println("User não inserido!");
             return false;
         }
     }
@@ -92,7 +86,6 @@ public class GerirUtilizador {
             User u = getUserByEmail(session, email);
 
             if (u == null) {
-                System.out.println("email do token errado!");
                 return false;
             }
             if (name != null) u.setName(name);
@@ -117,10 +110,8 @@ public class GerirUtilizador {
 
             UserDAO.save(u);
 
-            System.out.println("User editado!");
             return true;
         } catch (Exception e) {
-            System.out.println("User não editado!");
             return false;
         }
     }
@@ -179,7 +170,7 @@ public class GerirUtilizador {
                         .build();
             }
 
-            JsonObject userJson = Json.createObjectBuilder()
+            return Json.createObjectBuilder()
                     .add("id", user.getId_user())
                     .add("name", user.getName())
                     .add("email", user.getEmail())
@@ -187,9 +178,6 @@ public class GerirUtilizador {
                     .add("idioma", user.getIdioma())
                     .add("objetivo",user.getObjetivo())
                     .build();
-            System.out.println(userJson.toString());
-
-            return userJson;
         } catch (Exception e) {
             e.printStackTrace();
             return Json.createObjectBuilder()
@@ -198,11 +186,9 @@ public class GerirUtilizador {
     }
 
     public int resetPassword(PersistentSession session, User user, String token, String password) throws PersistentException {
-        System.out.println("Recebi o token: " + token);
 
         Timestamp time = new Timestamp(System.currentTimeMillis());
         if (!user.getToken().equals(token) || user.getExpToken().before(time)) {
-            System.out.println("fodeu " + !user.getToken().equals(token) + " " + user.getExpToken().before(time));
             return -1;
         }
 
@@ -238,8 +224,6 @@ public class GerirUtilizador {
         long timeInMillis = calendar.getTimeInMillis();
 
         Timestamp time = new Timestamp(timeInMillis);
-
-        System.out.println("Guardei o token: " + token);
 
         user.setToken(token);
         user.setExpToken(time);

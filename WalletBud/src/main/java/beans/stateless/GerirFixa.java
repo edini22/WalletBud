@@ -104,27 +104,30 @@ public class GerirFixa {
 
             if (name != null) fixa.setName(name);
             if (value != -1) {
-                float aSvalue = fixa.getShareValue();
-                float nSvalue = (value * aSvalue) / fixa.getValue();
-
-                //iterar pelos ‘users’ todos partilhados a alterar
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao();
                 TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
+                if(fixa.getValue() != value ) {
+                    float aSvalue = fixa.getShareValue();
+                    float nSvalue = (value * aSvalue) / fixa.getValue();
 
-                for (TransacaoPartilhada transacao : tp) {
-                    transacao.setConfirma(0);
-                    TransacaoPartilhadaDAO.save(transacao);
+                    //iterar pelos ‘users’ todos partilhados a alterar
+
+                    for (TransacaoPartilhada transacao : tp) {
+                        transacao.setConfirma(0);
+                        TransacaoPartilhadaDAO.save(transacao);
+                    }
+
+                    //TODO: gerar novas notificacoes com as novas informacoes
+                    // destinatarios : useres que estao na lista tps(este para aceitarem ou nao) e o unica.owner(informa que foi alterado com sucesso)
+                    // antigo valor que lhe ficava (aSValue)
+                    // novo valor por quanto vai ficar (nSValue)
+                    if(tp.length > 0){
+                        fixa.setStatus(false);
+                    }
+                    fixa.setShareValue(nSvalue);
+
+                    fixa.setValue(value);
                 }
-
-                //TODO: gerar novas notificacoes com as novas informacoes
-                // destinatarios : useres que estao na lista tps(este para aceitarem ou nao) e o unica.owner(informa que foi alterado com sucesso)
-                // antigo valor que lhe ficava (aSValue)
-                // novo valor por quanto vai ficar (nSValue)
-
-                fixa.setStatus(false);
-                fixa.setShareValue(nSvalue);
-
-                fixa.setValue(value);
             }
             if (descricao != null) fixa.setDescrição(descricao);
             if (local != null) fixa.setLocal(local);
@@ -521,8 +524,6 @@ public class GerirFixa {
                 fixa.setStatus(false);
                 FixaDAO.save(fixa);
 
-                System.out.println("nUsers = " + users);
-
                 //TODO: gerar novas notificacoes com as novas informacoes e apaga as notificacoes antigas referidas a esta transacao
                 // destinatarios : useres que estao na lista tps(este para aceitarem ou nao) e o unica.owner(neste so avisa que um user rejeitou)
                 // quantos users desistiram
@@ -532,7 +533,6 @@ public class GerirFixa {
 
             }
             if (ready_to_confirm && (!remove || users == 1)) {
-                System.out.println("confirmaUnica");
                 fixa.setStatus(true);
                 float nSValue = fixa.getValue() / users;
                 fixa.setShareValue(nSValue);

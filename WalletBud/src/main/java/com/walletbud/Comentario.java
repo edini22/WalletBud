@@ -118,7 +118,6 @@ public class Comentario {
     public Response listComments(@PathParam("id") int IdTransacao, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
-        System.out.println("Email: " + email);
         PersistentSession session = null;
         PersistentTransaction transaction = null;
 

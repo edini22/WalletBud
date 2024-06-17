@@ -306,6 +306,15 @@ public class Categoria {
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
+            } else if(cond == -4){
+                JsonObject jsonResponse = Json.createObjectBuilder()
+                        .add("message", "Nao pode eliminar categorias que já estejam associadas a Transações!")
+                        .build();
+                transaction.rollback();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(jsonResponse.toString())
+                        .type(MediaType.APPLICATION_JSON)
+                        .build();
             } else{
                 transaction.rollback();
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

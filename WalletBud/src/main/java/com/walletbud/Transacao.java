@@ -69,7 +69,6 @@ public class Transacao {
             LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
             Timestamp timestamp = Timestamp.valueOf(dateTime);
             JsonArray usersArray = jsonObject.getJsonArray("users");
-            System.out.println(usersArray.toString());
             String comentario = null;
             try {
                 JsonValue comentarioValue = jsonObject.get("comentario");
@@ -194,25 +193,32 @@ public class Transacao {
             session = AASICPersistentManager.instance().getSession();
             transaction = session.beginTransaction();
 
-            String name, descricao, local, dateStr;
+            String name, dateStr;
             int IdCategoria;
             Timestamp timestamp;
 
             int IdTransacao = jsonObject.getInt("IdTransacao");
+
             try {
                 name = jsonObject.getString("name");
             } catch (java.lang.NullPointerException en) {
                 name = null;
             }
+            String descricao = null;
             try {
-                descricao = jsonObject.getString("descricao");
-            } catch (java.lang.NullPointerException en) {
-                descricao = null;
+                JsonValue descricaoValue = jsonObject.get("descricao");
+                if (descricaoValue instanceof JsonString) {
+                    descricao = ((JsonString) descricaoValue).getString();
+                }
+            } catch (NullPointerException ignored) {
             }
+            String local = null;
             try {
-                local = jsonObject.getString("local");
-            } catch (java.lang.NullPointerException en) {
-                local = null;
+                JsonValue localValue = jsonObject.get("local");
+                if (localValue instanceof JsonString) {
+                    local = ((JsonString) localValue).getString();
+                }
+            } catch (NullPointerException ignored) {
             }
             try {
                 IdCategoria = jsonObject.getInt("IdCategoria");
@@ -232,15 +238,22 @@ public class Transacao {
                 timestamp = null;
             }
 
-            String value_str;
-            float value;
+            String valueStr = null;
+            float value = 0.0f;
+
             try {
-                value_str = jsonObject.getString("value");
-            } catch (java.lang.NullPointerException en) {
-                value_str = null;
+                JsonValue jsonValue = jsonObject.get("value");
+
+                if (jsonValue instanceof JsonNumber) {
+                    JsonNumber jsonNumber = (JsonNumber) jsonValue;
+                    value = jsonNumber.bigDecimalValue().floatValue();
+                } else if (jsonValue instanceof jakarta.json.JsonString) {
+                    valueStr = jsonObject.getString("value");
+                    value = Float.parseFloat(valueStr);
+                }
+            } catch (java.lang.NullPointerException | ClassCastException | NumberFormatException e) {
+                value = -1;
             }
-            if (value_str != null) value = Float.parseFloat(value_str);
-            else value = -1;
 
             int cond = -1;
 
@@ -1013,7 +1026,6 @@ public class Transacao {
                         .build();
             }
             transaction.commit();
-            System.out.println("return" + movimentos.toString());
             return Response.ok(movimentos.toString(), MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             if( transaction != null)

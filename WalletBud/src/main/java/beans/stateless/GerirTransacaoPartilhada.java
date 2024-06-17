@@ -477,12 +477,10 @@ public class GerirTransacaoPartilhada {
 
 
             List<Map<String, Object>> pendentes = TransacaoDAO.queryPendentesByUserId(session, user.getId_user());
-//            System.out.println("pendentes -> " + pendentes.toString());
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             for(Map<String, Object> transacao : pendentes) {
 
                 if (transacao.get("Discriminator").equals("Unica")) {
-                    System.out.println((int) transacao.get("Id"));
                     Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
                     String condition = "TransacaoId_transacao = " + unica.getId_transacao();
                     TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);

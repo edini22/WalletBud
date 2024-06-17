@@ -25,8 +25,14 @@ export function activateDarkMode() {
     ".main-content .container-fluid .card",
   );
   const svg = document.querySelectorAll("g");
+  const theads = document.querySelectorAll("thead.table-head-fixed");
+
 
   body.classList.add("dark-version");
+  
+  theads.forEach(thead => {
+    thead.style.backgroundColor = "#202940"; // Remove o fundo branco do <thead> ao ativar o modo escuro
+  });
   
   modals.forEach(modal => {
     const modalContent = modal.querySelector(".modal-content");
@@ -155,8 +161,14 @@ export function deactivateDarkMode() {
     ".main-content .container-fluid .card",
   );
   const svg = document.querySelectorAll("g");
+  const theads = document.querySelectorAll("thead.table-head-fixed");
+
 
   body.classList.remove("dark-version");
+  
+  theads.forEach(thead => {
+    thead.style.backgroundColor = "white"; // Restaura o fundo branco do <thead> ao desativar o modo escuro
+  });
 
   modals.forEach(modal => {
     const modalContent = modal.querySelector(".modal-content");

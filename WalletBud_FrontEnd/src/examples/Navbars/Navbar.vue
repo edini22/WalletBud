@@ -28,7 +28,7 @@
               </i>
             </router-link>
           </li>
-          <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+          <li class="nav-item d-xl-none ps-3 px-2 d-flex align-items-center">
             <a
               href="#"
               @click="toggleSidebar"

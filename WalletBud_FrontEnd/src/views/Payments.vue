@@ -17,23 +17,23 @@
                                     <thead class="table-head-fixed">
                                         <tr>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                class="text-uppercase text-xxs font-weight-bolder opacity-7">
                                                 Despesa
                                             </th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Periodicidade
                                             </th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Próximo Pagamento
                                             </th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Valor
                                             </th>
                                             <th
-                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                 Ação
                                             </th>
                                         </tr>
@@ -83,7 +83,7 @@
                                         <template v-else>
                                                     <tr>
                                                         <td colspan="5" class="text-center">
-                                                            <h6 class=" message text-secondary">{{ $t("Sem pagamentos em atraso!") }}</h6>
+                                                            <h6 class=" message">{{ $t("Sem pagamentos em atraso!") }}</h6>
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -111,19 +111,19 @@
                                             <thead class="table-head-fixed">
                                                 <tr>
                                                     <th
-                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        class="text-uppercase text-xxs font-weight-bolder opacity-7">
                                                         Despesa
                                                     </th>
                                                     <th
-                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                         Periodicidade
                                                     </th>
                                                     <th
-                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                         Data de Pagamento
                                                     </th>
                                                     <th
-                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                         Valor
                                                     </th>
                                                 </tr>
@@ -159,7 +159,7 @@
                                                 <template v-else>
                                                     <tr>
                                                         <td colspan="5" class="text-center">
-                                                            <h6 class=" message text-secondary">{{ $t("Sem pagamentos em atraso!") }}</h6>
+                                                            <h6 class="message">{{ $t("Sem pagamentos em atraso!") }}</h6>
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -184,23 +184,23 @@
                                             <thead class="table-head-fixed">
                                                 <tr>
                                                     <th
-                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                        class="text-uppercase text-xxs font-weight-bolder opacity-7">
                                                         Despesa
                                                     </th>
                                                     <th
-                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                         Periodicidade
                                                     </th>
                                                     <th
-                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                         Próximo Pagamento
                                                     </th>
                                                     <th
-                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                         Valor
                                                     </th>
                                                     <th
-                                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                        class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                         Detalhes
                                                     </th>
                                                 </tr>
@@ -245,7 +245,7 @@
                                                 <template v-else>
                                                     <tr>
                                                         <td colspan="5" class="text-center">
-                                                            <h6 class=" message text-secondary">{{ $t("Sem pedidos pendentes!") }}</h6>
+                                                            <h6 class=" message ">{{ $t("Sem pedidos pendentes!") }}</h6>
                                                         </td>
                                                     </tr>
                                                 </template>

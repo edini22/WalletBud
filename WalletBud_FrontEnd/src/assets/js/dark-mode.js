@@ -167,7 +167,7 @@ export function deactivateDarkMode() {
   body.classList.remove("dark-version");
   
   theads.forEach(thead => {
-    thead.style.backgroundColor = "white"; // Restaura o fundo branco do <thead> ao desativar o modo escuro
+    thead.style.backgroundColor = "#fff";
   });
 
   modals.forEach(modal => {

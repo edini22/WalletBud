@@ -413,6 +413,67 @@ public class TransacaoDAO {
 		}
 	}
 
+	public static List<Map<String, Object>> queryGastosTotalByDiaSemana(PersistentSession session, int userId, String startDate) throws PersistentException {
+		try {
+			String sqlQuery = "WITH RECURSIVE dates AS (\n" +
+					"    SELECT DATE(:startDate) AS date\n" +
+					"    UNION ALL\n" +
+					"    SELECT date + INTERVAL 1 DAY\n" +
+					"    FROM dates\n" +
+					"    WHERE date < :startDate + INTERVAL 34 DAY\n" +
+					")\n" +
+					"SELECT\n" +
+					"    dates.date AS Date,\n" +
+					"    DATE_FORMAT(dates.date, '%W') AS DayOfWeek,\n" +
+					"    IFNULL(SUM(combined.Cost), 0) AS TotalCost\n" +
+					"FROM dates\n" +
+					"    LEFT JOIN (\n" +
+					"    SELECT\n" +
+					"        t.Id_transacao AS Id,\n" +
+					"        t.Date AS date,\n" +
+					"        'Unica' AS Discriminator,\n" +
+					"        t.ShareValue AS Cost,\n" +
+					"        t.Tipo AS Tipo,\n" +
+					"        c.Name AS Categoria\n" +
+					"    FROM Transacao t\n" +
+					"             LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao\n" +
+					"             JOIN Categoria c ON t.CategoriaId_categoria = c.Id_categoria\n" +
+					"    WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId OR tp.UserId_user IS NULL)\n" +
+					"      AND t.Status = 1\n" +
+					"      AND t.Discriminator = 'Unica'\n" +
+					"      AND t.Tipo = 'despesa'\n" +
+					"      AND t.Date BETWEEN :startDate AND :startDate + INTERVAL 34 DAY\n" +
+					"    UNION ALL\n" +
+					"    SELECT\n" +
+					"        tf.ID AS Id,\n" +
+					"        tf.DataAtual AS date,\n" +
+					"        'Fixa' AS Discriminator,\n" +
+					"        tf.Payvalue AS Cost,\n" +
+					"        t.Tipo AS Tipo,\n" +
+					"        c.Name AS Categoria\n" +
+					"    FROM TransacaoFixa tf\n" +
+					"             JOIN User_TransacaoFixa utf ON tf.ID = utf.TransacaoFixaID\n" +
+					"             JOIN Transacao t ON tf.TransacaoId_transacao = t.Id_transacao\n" +
+					"             JOIN Categoria c ON t.CategoriaId_categoria = c.Id_categoria\n" +
+					"    WHERE utf.UserId_user = :userId\n" +
+					"      AND tf.DataAtual BETWEEN :startDate AND :startDate + INTERVAL 34 DAY\n" +
+					"      AND t.Tipo = 'despesa'\n" +
+					") AS combined ON dates.date = DATE(combined.date)\n" +
+					"\n" +
+					"GROUP BY dates.date\n" +
+					"ORDER BY dates.date;";
+
+			Query query = session.createSQLQuery(sqlQuery)
+					.setParameter("userId", userId)
+					.setParameter("startDate", startDate)
+					.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+			return query.list();
+		} catch (Exception e) {
+			throw new PersistentException(e);
+		}
+	}
+
 	public static Transacao loadTransacaoByQuery(String condition, String orderBy) throws PersistentException {
 		try {
 			PersistentSession session = wb.walletbud.AASICPersistentManager.instance().getSession();

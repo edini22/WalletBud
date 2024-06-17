@@ -1,11 +1,9 @@
 package com.walletbud;
 
 //Gasto por cada dia da semana passada - MAYBE
-//
-//Gastos por categoria - para cada ano, aceder ao gasto total por categoria por mês.
+
 
 import jakarta.json.Json;
-import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import org.orm.PersistentException;

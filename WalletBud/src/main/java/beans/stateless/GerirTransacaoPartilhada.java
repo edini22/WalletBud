@@ -641,4 +641,48 @@ public class GerirTransacaoPartilhada {
 
         return gastos_mes.build();
     }
+
+    public JsonObject getGastosPorDiaDaSemana(PersistentSession session, String email, String startDay) throws PersistentException {
+        User user = gerirUtilizador.getUserByEmail(session, email);
+        List<Map<String, Object>> gastos = TransacaoDAO.queryGastosTotalByDiaSemana(session, user.getId_user(), startDay);
+
+        System.out.println("GASTOS: " + gastos.toString());
+        JsonObjectBuilder gastosSemana = Json.createObjectBuilder();
+
+        int semanaCount = 1;
+        int count = 0;
+
+        JsonArrayBuilder semanaArray = Json.createArrayBuilder();
+        for (Map<String, Object> transacao : gastos) {
+            count++;
+
+            String dia = transacao.get("Date").toString();
+            String diaDaSemana = (String) transacao.get("DayOfWeek");
+            double totalCost = ((Number) transacao.get("TotalCost")).doubleValue();
+
+            if (count == 8) {
+                gastosSemana.add("Semana " + semanaCount, semanaArray.build());
+
+                semanaArray = Json.createArrayBuilder();
+
+                semanaArray.add(Json.createObjectBuilder()
+                        .add("Dia", dia)
+                        .add("DiaDaSemana", diaDaSemana)
+                        .add("TotalCost", totalCost));
+
+                count = 1;
+                semanaCount++;
+            } else {
+                semanaArray.add(Json.createObjectBuilder()
+                        .add("Dia", dia)
+                        .add("DiaDaSemana", diaDaSemana)
+                        .add("TotalCost", totalCost));
+            }
+        }
+
+        gastosSemana.add("Semana " + semanaCount, semanaArray.build());
+
+
+        return gastosSemana.build();
+    }
 }

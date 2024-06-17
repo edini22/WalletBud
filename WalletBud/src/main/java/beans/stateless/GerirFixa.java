@@ -450,7 +450,7 @@ public class GerirFixa {
 
                 // Notify all users involved in the transaction
                 for (TransacaoPartilhada tp : transacoesPart) {
-                    User sharedUser = gerirUtilizador.getUserByEmail(tp.getUserId_user().getEmail());
+                    User sharedUser = tp.getUserId_user();
                     if (sharedUser != null) {
                         sharedUser.notify(notification);
                     }
@@ -565,7 +565,7 @@ public class GerirFixa {
 
                 // Notify remaining users and owner
                 Notificacao notification = new Notificacao();
-                notification.setDescrição("Transaction " + fixa.getName() + " has been updated. Previous share value: " + aSValue + ", new share value: " + nSValue + ", users remaining: " + nUsers);
+                notification.setDescrição("Transaction " + fixa.getName() + " has been updated. Previous share value: " + aSValue + ", new share value: " + nSValue + ", users remaining: " + users);
                 for (TransacaoPartilhada tp : transacoesPart) {
                     User sharedUser = gerirUtilizador.getUserByEmail(session,tp.getUserId_user().getEmail());
                     if (sharedUser != null) {
@@ -585,7 +585,7 @@ public class GerirFixa {
 
                 // Notify all users that the transaction is confirmed
                 Notificacao notification = new Notificacao();
-                notification.setDescrição("Transaction " + fixa.getName() + " is now confirmed. Share value: " + nSValue + ", total users: " + nUsers);
+                notification.setDescrição("Transaction " + fixa.getName() + " is now confirmed. Share value: " + nSValue + ", total users: " + users);
 
                 for(TransacaoPartilhada tp : transacoesPart){
                     User u = tp.getUserId_user();

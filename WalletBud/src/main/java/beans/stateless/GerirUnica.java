@@ -649,9 +649,9 @@ public class GerirUnica {
                 TransacaoPartilhada[] transacoesPart = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
                 // Notify remaining users and owner
                 Notificacao notification = new Notificacao();
-                notification.setDescrição("Transaction " + unica.getName() + " has been updated. Previous share value: " + aSValue + ", new share value: " + nSValue + ", users remaining: " + nUsers);
+                notification.setDescrição("Transaction " + unica.getName() + " has been updated. Previous share value: " + aSValue + ", new share value: " + nSValue + ", users remaining: " + users);
                 for (TransacaoPartilhada tp : transacoesPart) {
-                    User sharedUser = gerirUtilizador.getUserByEmail(tp.getUserId_user().getEmail());
+                    User sharedUser = gerirUtilizador.getUserByEmail(session,tp.getUserId_user().getEmail());
                     if (sharedUser != null) {
                         sharedUser.notify(notification);
                     }

@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 import jakarta.json.JsonObjectBuilder;
 import org.orm.PersistentException;
+import org.orm.PersistentSession;
 import org.orm.PersistentTransaction;
 
 import wb.walletbud.*;
@@ -91,7 +92,7 @@ public class GerirUtilizador {
         }
     }
 
-    public boolean editUser(PersistentSession session, String name, String password, String email, String idioma,String new_email, Float objetivo) throws PersistentException {
+    public boolean editUser(PersistentSession session, String name, String password, String email, String idioma, String new_email, Float objetivo) throws PersistentException {
         try {
 
             User u = getUserByEmail(session, email);
@@ -196,11 +197,11 @@ public class GerirUtilizador {
         }
     }
 
-    public static Map<User, List<Transacao>> getAllTransacoesFromUsers(){
+    public static Map<User, List<Transacao>> getAllTransacoesFromUsers(PersistentSession session){
         Map<User, List<Transacao>> transacoes = new HashMap<>();
 
         try {
-            User[] users = UserDAO.listUserByQuery(null, null);
+            User[] users = UserDAO.listUserByQuery(session,null, null);
             LocalDate now = LocalDate.now();
 
             for (User u : users) {
@@ -228,13 +229,11 @@ public class GerirUtilizador {
         }
     }
 
-    public JsonObject getJsonUserNotifs(String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getJsonUserNotifs(PersistentSession session,String email) throws PersistentException {
         try {
-            User user = getUserByEmail(email);
+            User user = getUserByEmail(session, email);
 
             if (user == null) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -250,12 +249,9 @@ public class GerirUtilizador {
                         .add("descricao", n.getDescrição())
                         .build());
             }
-            t.commit();
             return notifJsonObjectBuilder.build();
         } catch (Exception e) {
             e.printStackTrace();
-            t.rollback();
-
             return Json.createObjectBuilder()
                     .build();
         }

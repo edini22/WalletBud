@@ -179,23 +179,30 @@ public class Utilizador {
     @Path("/getNotif/{email}")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserNotifs(@PathParam("email") String email_user, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Response getUserNotifs(@PathParam("email") String email_user, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
+        PersistentSession session = null;
+        PersistentTransaction transaction = null;
+
         try{
-            JsonObject notifsUser = gerirUtilizador.getJsonUserNotifs(email_user);
+            session = AASICPersistentManager.instance().getSession();
+            transaction = session.beginTransaction();
+
+            JsonObject notifsUser = gerirUtilizador.getJsonUserNotifs(session,email_user);
 
             if (notifsUser.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Nenhum utilizador encontrado!")
                         .build();
+                transaction.rollback();
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity(jsonResponse.toString())
                         .type(MediaType.APPLICATION_JSON)
                         .build();
             }
-
+            transaction.commit();
             JsonObject jsonResponse = Json.createObjectBuilder()
                     .add("message", "Utilizador encontrado!")
                     .add("notificacoes", notifsUser)
@@ -203,8 +210,14 @@ public class Utilizador {
             return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
 
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            if( transaction != null)
+                transaction.rollback();
+            System.out.println("Error while creating user: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
         }
     }
 

@@ -15,9 +15,10 @@
       <!--  eslint-disable-next-line vue/no-v-html -->
       <p class="text-sm" v-html="subtitle"></p>
       <hr class="dark horizontal" />
-      <div class="d-flex">
-        <i class="material-icons text-sm my-auto me-1">date_range</i>
-        <p class="mb-0 text-sm">{{ week }}</p>
+      <div style="z-index: 4 !important;">
+        <div v-if="$slots.detail">
+          <slot name="detail"></slot>
+        </div>
       </div>
     </div>
   </div>

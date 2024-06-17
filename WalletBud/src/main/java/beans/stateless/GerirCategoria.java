@@ -6,8 +6,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import org.orm.PersistentException;
-import org.orm.PersistentTransaction;
-import wb.walletbud.AASICPersistentManager;
+import org.orm.PersistentSession;
 import wb.walletbud.Categoria;
 import wb.walletbud.CategoriaDAO;
 import wb.walletbud.User;
@@ -56,22 +55,18 @@ public class GerirCategoria {
         return 0;
     }
 
-    public int createCategoria(String nome, String tipo, String email) throws PersistentException {
-
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int createCategoria(PersistentSession session, String nome, String tipo, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             if(user == null){
-                t.rollback();
                 return -3;
             }
 
             String condition = "tipo = '" + tipo + "' AND name = '" + nome + "' AND Userid_user = '" + user.getId_user() + "'";
-            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(condition, null);
+            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(session, condition, null);
 
             if (categorias.length != 0) {
-                t.rollback();
                 return -1;
             }
 
@@ -81,9 +76,7 @@ public class GerirCategoria {
             categoria.setUserId_user(user);
 
             CategoriaDAO.save(categoria);
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             e.printStackTrace();
             return -2;
         }
@@ -91,21 +84,18 @@ public class GerirCategoria {
         return 0;
     }
 
-    public JsonObject getJsonCategoriaById(int id, String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getJsonCategoriaById(PersistentSession session, int id, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
 
             String condition = "id_categoria = " + id + " AND Userid_user = " + user.getId_user();
-            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(condition, null);
+            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(session, condition, null);
 
             if (categorias.length == 0) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -117,12 +107,9 @@ public class GerirCategoria {
                     .add("tipo", categoria.getTipo())
                     .build();
 
-            t.commit();
-
             return categoriaJson;
 
         } catch (Exception e) {
-            t.rollback();
             e.printStackTrace();
             return Json.createObjectBuilder()
                     .build();
@@ -130,15 +117,15 @@ public class GerirCategoria {
 
     }
 
-    public Categoria getCategoriaById(int id, String email) throws PersistentException {
+    public Categoria getCategoriaById(PersistentSession session, int id, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
                 return null;
             }
 
             String condition = "id_categoria = " + id + " AND Userid_user = " + user.getId_user();
-            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(condition, null);
+            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(session, condition, null);
 
             if (categorias.length == 0) {
                 return null;
@@ -153,20 +140,18 @@ public class GerirCategoria {
 
     }
 
-    public JsonObject getCategorias(String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getCategorias(PersistentSession session, String email) throws PersistentException {
 
         try{
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if(user == null){
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
 
             String condition = "UserId_user = '" + user.getId_user() + "'";
 
-            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(condition,null);
+            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(session, condition,null);
 
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
 
@@ -178,56 +163,45 @@ public class GerirCategoria {
                         .build();
                 arrayBuilder.add(categoriaJson);
             }
-
-            t.commit();
-
             return Json.createObjectBuilder()
                     .add("categorias", arrayBuilder.build())
                     .build();
 
         } catch (Exception e) {
-            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
 
     }
 
-    public int editCategoria(int id, String nome, String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int editCategoria(PersistentSession session, int id, String nome, String email) throws PersistentException {
 
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             if(user == null){
-                t.rollback();
                 return -3;
             }
 
             String condition = "id_categoria = '" + id + "' AND Userid_user = '" + user.getId_user() + "'";
-            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(condition, null);
+            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(session, condition, null);
 
             if (categorias.length == 0) {
-                t.rollback();
                 return -3;
             }
 
             Categoria categoria = categorias[0];
 
             condition = "tipo = '" + categoria.getTipo() + "' AND name = '" + nome + "' AND Userid_user = '" + user.getId_user() + "'";
-            Categoria[] cat = CategoriaDAO.listCategoriaByQuery(condition, null);
+            Categoria[] cat = CategoriaDAO.listCategoriaByQuery(session, condition, null);
 
             if (cat.length != 0) {
-                t.rollback();
                 return -1;
             }
 
             categoria.setName(nome);
             CategoriaDAO.save(categoria);
-
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             e.printStackTrace();
             return -2;
         }
@@ -235,32 +209,26 @@ public class GerirCategoria {
         return 0;
     }
 
-    public int deleteCategoria(int id, String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int deleteCategoria(PersistentSession session, int id, String email) throws PersistentException {
 
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
 
             if(user == null){
-                t.rollback();
                 return -3;
             }
 
             String condition = "id_categoria = '" + id + "' AND Userid_user = '" + user.getId_user() + "'";
-            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(condition, null);
+            Categoria[] categorias = CategoriaDAO.listCategoriaByQuery(session, condition, null);
 
             if (categorias.length == 0) {
-                t.rollback();
                 return -3;
             }
 
             Categoria categoria = categorias[0];
 
             CategoriaDAO.deleteAndDissociate(categoria);
-
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             e.printStackTrace();
             return -2;
         }

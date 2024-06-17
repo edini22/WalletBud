@@ -6,7 +6,8 @@ import jakarta.ejb.Stateless;
 import jakarta.json.*;
 
 import org.orm.PersistentException;
-import org.orm.PersistentTransaction;
+import org.orm.PersistentSession;
+
 import wb.walletbud.*;
 
 import java.sql.Timestamp;
@@ -28,20 +29,20 @@ public class GerirUnica{
     @EJB
     private GerirComentario gerirComentario;
 
-
-    public int createUnica(String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, String email, JsonArray usersArray, String comentario) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int createUnica(PersistentSession session, String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, String email, JsonArray usersArray, String comentario) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) return -3;
 
-            Categoria cat = gerirCategoria.getCategoriaById(categoria, email);
+            Categoria cat = gerirCategoria.getCategoriaById(session,categoria, email);
             if (cat == null) return -4;
 
             Unica unica = UnicaDAO.createUnica();
             unica.setName(name);
             unica.setValue(value);
-            unica.setDescrição(descricao);
+            if(descricao != null && !descricao.trim().isEmpty()) {
+                unica.setDescrição(descricao);
+            }
             unica.setLocal(local);
             unica.setTipo(tipo);
             unica.setCategoriaId_categoria(cat);
@@ -61,22 +62,18 @@ public class GerirUnica{
                 UserDAO.save(user);
 
             } else {
-                int status = gerirTransacaoPartilhada.shareTransaction("unica", email, usersArray, unica, null);
+                int status = gerirTransacaoPartilhada.shareTransaction(session, "unica", email, usersArray, unica, null);
                 if (status != 0) {
-                    t.rollback();
                     return status;
                 }
             }
 
-            if (!comentario.isEmpty()) {
-                gerirComentario.createComentario(comentario, user, unica);
+            if (comentario != null && !comentario.trim().isEmpty()) {
+                gerirComentario.createComentario(session, comentario, user, unica);
             }
 
             UnicaDAO.save(unica);
-
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             e.printStackTrace();
             return -2;
         }
@@ -84,35 +81,30 @@ public class GerirUnica{
         return 0;
     }
 
-    public int editUnica(int id, String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, String email) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int editUnica(PersistentSession session, int id, String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, String email) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return -3;
             }
             Categoria cat = null;
             if (categoria != -1) {
-                cat = gerirCategoria.getCategoriaById(categoria, email);
+                cat = gerirCategoria.getCategoriaById(session, categoria, email);
                 if (cat == null) {
-                    t.rollback();
                     return -4;
                 }
             }
 
             String condition = "Id_transacao = '" + id + "' AND UserId_user = '" + user.getId_user() + "'";
-            Unica[] unicas = UnicaDAO.listUnicaByQuery(condition, null);
+            Unica[] unicas = UnicaDAO.listUnicaByQuery(session, condition, null);
 
             if (unicas.length == 0) {
-                t.rollback();
                 return -1;
             }
 
             Unica unica = unicas[0];
 
             if (!unica.getTipo().equals(tipo)) {
-                t.rollback();
                 return -1;
             }
 
@@ -132,7 +124,7 @@ public class GerirUnica{
 
                 //iterar pelos ‘users’ todos partilhados a alterar
                 condition = "TransacaoId_transacao = " + unica.getId_transacao();
-                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
                 for (TransacaoPartilhada transacao : tp) {
                     User u = transacao.getUserId_user();
@@ -167,9 +159,7 @@ public class GerirUnica{
             if (time != null) unica.setDate(time);
 
             UnicaDAO.save(unica);
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             e.printStackTrace();
             return -2;
         }
@@ -177,27 +167,25 @@ public class GerirUnica{
     }
 
 
-    public JsonObject getUnicas(String email, String tipo) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getUnicas(PersistentSession session, String email, String tipo) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
 
             String condition = "UserId_user = '" + user.getId_user() + "' AND Tipo = '" + tipo + "'";
 
-            Unica[] unicas = UnicaDAO.listUnicaByQuery(condition, null);
+            Unica[] unicas = UnicaDAO.listUnicaByQuery(session, condition, null);
 
             condition = "UserId_user = " + user.getId_user();
-            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] transacoes_partilhada = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
             ArrayList<Unica> transacoes_id = new ArrayList<>(Arrays.asList(unicas));
 
             for (TransacaoPartilhada transacaoPartilhada : transacoes_partilhada) {
                 try {
-                    Unica u = UnicaDAO.getUnicaByORMID(transacaoPartilhada.getUsertransacaoId().getId_transacao());
+                    Unica u = UnicaDAO.getUnicaByORMID(session, transacaoPartilhada.getUsertransacaoId().getId_transacao());
 
                     if (u != null && u.getTipo().equals(tipo)) {
                         transacoes_id.add(u);
@@ -212,7 +200,7 @@ public class GerirUnica{
 
             for (Unica unica : transacoes_id) {
                 condition = "TransacaoId_transacao = " + unica.getId_transacao();
-                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
                 User Owner = unica.getOwner_id();
                 JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
@@ -229,19 +217,22 @@ public class GerirUnica{
                             .add("id", u.getId_user())
                             .add("name", u.getName())
                             .add("email", u.getEmail())
-                            .add("cofirma", tpPartilhada.getConfirma())
+                            .add("confirma", tpPartilhada.getConfirma())
                             .build();
                     userArrayBuilder.add(userJson);
                 }
                 JsonArray userArray = userArrayBuilder.build();
-
+                String descricao = unica.getDescrição();
+                if(descricao == null) {
+                    descricao = "";
+                }
                 JsonObject unicaJson = Json.createObjectBuilder()
                         .add("id", unica.getId_transacao())
                         .add("name", unica.getName())
                         .add("value", unica.getValue())
                         .add("shareValue", unica.getShareValue())
                         .add("date", unica.getDate().toString())
-                        .add("descricao", unica.getDescrição())
+                        .add("descricao", descricao)
                         .add("categoria", unica.getCategoriaId_categoria().getName())
                         .add("status", unica.getStatus())
                         .add("tipo", unica.getTipo())
@@ -251,35 +242,30 @@ public class GerirUnica{
                         .build();
                 arrayBuilder.add(unicaJson);
             }
-            t.commit();
             return Json.createObjectBuilder()
                     .add(tipo + "s", arrayBuilder.build())
                     .build();
 
         } catch (Exception e) {
             e.printStackTrace();
-            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
     }
 
-    public JsonObject getJsonUnicaById(int id, String email, String tipo) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public JsonObject getJsonUnicaById(PersistentSession session, int id, String email, String tipo) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
 
             String condition = "Id_transacao = " + id + " AND Tipo = '" + tipo + "'";
-            Unica[] unicas = UnicaDAO.listUnicaByQuery(condition, null); // ate aqui qualuer um pode requisitar esta transacao
+            Unica[] unicas = UnicaDAO.listUnicaByQuery(session, condition, null); // ate aqui qualuer um pode requisitar esta transacao
 
 
             if (unicas.length == 0) {
-                t.rollback();
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -287,10 +273,9 @@ public class GerirUnica{
             Unica unica = unicas[0];
 
             condition = "TransacaoId_transacao = " + id;
-            TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
             //verificar se o owner o se com quem está transacao esta partilhada corresponde ao ‘user’ que pede, senao se verificar return vazio
-            if (!(unica.getOwner_id() == user || checkTransationAcess(user, tp))) {
-                t.rollback();
+            if (!(unica.getOwner_id() == user || checkTransationAcess( user, tp))) {
                 return Json.createObjectBuilder()
                         .build();
             }
@@ -316,14 +301,17 @@ public class GerirUnica{
                 userArrayBuilder.add(userJson);
             }
             JsonArray userArray = userArrayBuilder.build();
-
+            String descricao = unica.getDescrição();
+            if(descricao == null) {
+                descricao = "";
+            }
             JsonObject unicaJson = Json.createObjectBuilder()
                     .add("id", unica.getId_transacao())
                     .add("name", unica.getName())
                     .add("value", unica.getValue())
                     .add("shareValue", unica.getShareValue())
                     .add("date", unica.getDate().toString())
-                    .add("descricao", unica.getDescrição())
+                    .add("descricao", descricao)
                     .add("categoria", unica.getCategoriaId_categoria().getName())
                     .add("status", unica.getStatus())
                     .add("tipo", unica.getTipo())
@@ -331,18 +319,16 @@ public class GerirUnica{
                     .add("status", unica.getStatus())
                     .add("users", userArray)
                     .build();
-            t.commit();
             return unicaJson;
 
         } catch (Exception e) {
             e.printStackTrace();
-            t.rollback();
             return Json.createObjectBuilder()
                     .build();
         }
     }
 
-    private boolean checkTransationAcess(User user, TransacaoPartilhada[] tp) {
+    private boolean checkTransationAcess( User user, TransacaoPartilhada[] tp) {
         //return se corresponder a algum deles
         boolean check = false;
         for (TransacaoPartilhada tpPartilhada : tp) {
@@ -355,10 +341,10 @@ public class GerirUnica{
     }
 
 
-    public int shareUnica(JsonArray usersArray, String email, Unica unica) {
+    public int shareUnica(PersistentSession session, JsonArray usersArray, String email, Unica unica) {
         try {
 
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
                 return -3;
             }
@@ -371,13 +357,13 @@ public class GerirUnica{
                 JsonObject userObject = userValue.asJsonObject();
                 String userEmail = userObject.getString("email");
 
-                User us = gerirUtilizador.getUserByEmail(userEmail);
+                User us = gerirUtilizador.getUserByEmail(session, userEmail);
                 if (us == null) {
                     return -5;
                 }
                 //verificar se o user ja esta naquela transacao
                 String condition = "TransacaoId_transacao = " + unica.getId_transacao() + " AND UserId_user = " + user.getId_user();
-                TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
                 if(tpcheck.length != 0){
                     return -5;
                 }
@@ -401,33 +387,28 @@ public class GerirUnica{
         return 0;
     }
 
-    public int editUsersUnica(String email, int id_unica, int option, String email_shared) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int editUsersUnica(PersistentSession session, String email, int id_unica, int option, String email_shared) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return -3;
             }
 
-            Unica unica = UnicaDAO.getUnicaByORMID(id_unica);
+            Unica unica = UnicaDAO.getUnicaByORMID(session, id_unica);
             if (unica == null) {
-                t.rollback();
                 return -1;
             }
 
             if (unica.getOwner_id() != user) {
-                t.rollback();
                 return -2;
             }
 
             String condition = "TransacaoId_transacao = " + unica.getId_transacao();
-            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
             int oldUsers = tps.length + 1;
 
             if (tps.length == 0 && option == -1) {
-                t.rollback();
                 return -4;
             }
 
@@ -460,7 +441,7 @@ public class GerirUnica{
 
                 if (option == 1) {
                     //add user
-                    User user_shared = gerirUtilizador.getUserByEmail(email_shared);
+                    User user_shared = gerirUtilizador.getUserByEmail(session, email);
                     TransacaoPartilhada tp = TransacaoPartilhadaDAO.createTransacaoPartilhada();
                     tp.setUserId_user(user_shared);
                     tp.setUsertransacaoId(unica);
@@ -474,7 +455,7 @@ public class GerirUnica{
                 float aSValue = unica.getShareValue();
                 float value = unica.getValue();
 
-                TransacaoPartilhada[] transacoesPart = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] transacoesPart = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
                 int nUsers = transacoesPart.length + 1;
 
                 float nSValue = value / nUsers;
@@ -499,11 +480,11 @@ public class GerirUnica{
                         tpu.setConfirma(0);
                         TransacaoPartilhadaDAO.save(tpu);
                     }
-                    if (transacoesPart.length == 0) {
-                        confirmUnica(unica);
-                    } else {
-                        unica.setStatus(false);
-                    }
+                }
+                if (transacoesPart.length == 0) {
+                    confirmUnica(session, unica);
+                } else {
+                    unica.setStatus(false);
                 }
                 unica.setShareValue(nSValue);
                 UnicaDAO.save(unica);
@@ -521,67 +502,60 @@ public class GerirUnica{
                 user.notify(ownerNotification);
 
             } else {
-                t.rollback();
                 return -4;
             }
 
-            t.commit();
         } catch (Exception e) {
-            t.rollback();
             return -1;
         }
 
         return 0;
     }
 
-    public int handleUnica(String email, int id_unica, int option) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int handleUnica(PersistentSession session, String email, int id_unica, int option) throws PersistentException {
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return -3;
             }
 
-            Unica unica = UnicaDAO.getUnicaByORMID(id_unica);
+            Unica unica = UnicaDAO.getUnicaByORMID(session, id_unica);
             if (unica == null || unica.getStatus()) {
-                t.rollback();
                 return -1;
             }
 
             if (unica.getOwner_id() == user) {
-                t.rollback();
                 return -2;
             }
 
             String condition = "TransacaoId_transacao = " + unica.getId_transacao();
-            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
             int oldUsers = tps.length + 1;
 
             if (tps.length == 0) {
-                t.rollback();
                 return -5;
             }
 
             condition = "TransacaoId_transacao = " + unica.getId_transacao() + " AND UserId_user = " + user.getId_user();
-            TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+            TransacaoPartilhada[] tpcheck = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
             if(tpcheck.length == 0){
-                t.rollback();
                 return -4;
             }
 
             boolean ready_to_confirm = true;
             boolean remove = false;
-            ArrayList<User> users = new ArrayList<>();
+//            ArrayList<User> users = new ArrayList<>();
+            int users = 1;
+            boolean exist = false;
 
             for (TransacaoPartilhada tp : tps) {
 
                 if (tp.getUserId_user() == user) {
+                    exist = true;
 
                     if (option == -1) {
                         if (tp.getConfirma() == 1) {
-                            t.rollback();
                             return -2;
                         }
                         remove = true;
@@ -595,6 +569,8 @@ public class GerirUnica{
                             }
                             UserDAO.save(us);
                         }
+                        unica.setStatus(false);
+                        UnicaDAO.save(unica);
                         TransacaoPartilhadaDAO.deleteAndDissociate(tp);
                         // Notify owner that a user has rejected the transaction
                         Notificacao notification = new Notificacao();
@@ -602,7 +578,7 @@ public class GerirUnica{
                         unica.getOwner_id().notify(notification);
 
                     } else if (option == 1) {
-                        users.add(tp.getUserId_user());
+                        users +=1;
                         tp.setConfirma(1);
                         TransacaoPartilhadaDAO.save(tp);
 
@@ -612,29 +588,38 @@ public class GerirUnica{
                         unica.getOwner_id().notify(notification);
                     }
                 } else if (tp.getConfirma() == 0) {
+                    users +=1;
                     ready_to_confirm = false;
                 } else {
-                    users.add(tp.getUserId_user());
+                    if(option == -1){
+                        User us = tp.getUserId_user();
+                        if (unica.getStatus()) {
+                            if (unica.getTipo().equals("receita")) {
+                                us.setSaldo(us.getSaldo() - unica.getShareValue());
+                            } else {
+                                us.setSaldo(us.getSaldo() + unica.getShareValue());
+                            }
+                        }
+                        tp.setConfirma(0);
+                        TransacaoPartilhadaDAO.save(tp);
+                    }
+                    users +=1;
                 }
             }
             if (option == -1 && !remove) {
-                t.rollback();
                 return -4;
             } else if (remove) {
                 //dados novos para a notificacao
                 float aSValue = unica.getShareValue();
                 float value = unica.getValue();
 
-                TransacaoPartilhada[] transacoesPart = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
-                int nUsers = transacoesPart.length + 1;
 
-                float nSValue = value / nUsers;
+                float nSValue = value / users;
                 unica.setShareValue(nSValue);
                 unica.setStatus(false);
                 UnicaDAO.save(unica);
 
-                System.out.println("nUsers = " + nUsers);
-                System.out.println("transacoesPart = " + transacoesPart.length);
+                System.out.println("nUsers = " + users);
                 if (unica.getStatus()) {
                     if (unica.getTipo().equals("receita")) {
                         user.setSaldo(user.getSaldo() - unica.getShareValue());
@@ -642,18 +627,6 @@ public class GerirUnica{
                         user.setSaldo(user.getSaldo() + unica.getShareValue());
                     }
                     UserDAO.save(user);
-                }
-                for (TransacaoPartilhada tpu : transacoesPart) {
-                    User us = tpu.getUserId_user();
-                    if (unica.getStatus()) {
-                        if (unica.getTipo().equals("receita")) {
-                            us.setSaldo(us.getSaldo() - aSValue);
-                        } else {
-                            us.setSaldo(us.getSaldo() + aSValue);
-                        }
-                    }
-                    tpu.setConfirma(0);
-                    TransacaoPartilhadaDAO.save(tpu);
                 }
 
                 // Notify remaining users and owner
@@ -669,9 +642,10 @@ public class GerirUnica{
 
 
             }
-            if (ready_to_confirm && (!remove || users.isEmpty())) {
+            if (ready_to_confirm && (!remove || users == 1)) {
                 System.out.println("confirmaUnica");
                 // chamar função para confirmar e atualizar saldos
+
                 confirmUnica(unica);
 
                 // Notify all users that the transaction is confirmed
@@ -681,24 +655,23 @@ public class GerirUnica{
                     u.notify(notification);
                 }
                 unica.getOwner_id().notify(notification);
+
             }
 
-            t.commit();
         } catch (Exception e) {
             System.out.println("ardeu ->" + e);
-            t.rollback();
             return -1;
         }
 
         return 0;
     }
 
-    public int confirmUnica(Unica unica) throws PersistentException {
+    public int confirmUnica(PersistentSession session, Unica unica) throws PersistentException {
 
         User user = unica.getOwner_id();
 
         String condition = "TransacaoId_transacao = " + unica.getId_transacao();
-        TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+        TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
         float nSvalue = unica.getValue() / (tp.length + 1); // + owner
 
@@ -726,32 +699,29 @@ public class GerirUnica{
         return 0;
     }
 
-    public int giveUpTransactionUnica(String email,int idTransacao) throws PersistentException {
-        PersistentTransaction t = AASICPersistentManager.instance().getSession().beginTransaction();
+    public int giveUpTransactionUnica(PersistentSession session, String email,int idTransacao) throws PersistentException {
         String condition;
         try {
-            User user = gerirUtilizador.getUserByEmail(email);
+            User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
-                t.rollback();
                 return -3;
             }
 
-            Unica unica = UnicaDAO.getUnicaByORMID(idTransacao);
+            Unica unica = UnicaDAO.getUnicaByORMID(session, idTransacao);
             if (unica == null ) {
-                t.rollback();
                 return -1;
             }
 
             if (unica.getOwner_id() == user) {
                 //vai apagar a transacao principal
                 condition = "TransacaoId_transacao = " + unica.getId_transacao();
-                Comentario[] comments = ComentarioDAO.listComentarioByQuery(condition, null);
+                Comentario[] comments = ComentarioDAO.listComentarioByQuery(session, condition, null);
 
                 for (Comentario c : comments) {
                     ComentarioDAO.deleteAndDissociate(c);
                 }
                 condition = "TransacaoId_transacao = " + unica.getId_transacao();
-                TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(condition, null);
+                TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
 
                 //devolver/retirar dinheiro da carteira de todos
                 if (unica.getTipo().equals("receita")) {
@@ -788,15 +758,11 @@ public class GerirUnica{
                 user.notify(ownerNotification);
 
 
-
             } else{
-                t.rollback();
                 return -2;
             }
 
-            t.commit();
         } catch (Exception e){
-            t.rollback();
             return -1;
         }
         return 0;

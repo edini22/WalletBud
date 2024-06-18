@@ -39,13 +39,14 @@
           </div>
         </div>
         <div class="table-responsive p-0 mt-4">
-          <transaction-card />
+          <transaction-card @open-details-modal="openDetailsModal"/>
         </div>
       </div>
     </div>
-    <PopUpGerirCategorias :key="componentKey" @forceRerender="forceRerender" />
+    <PopUpGerirCategorias />
     <PopUpAddTransaction />
     <PopUpSavingsGoal />
+    <PopUpMovementDetails :transaction="selectedTransaction"/>
     <div class="position-fixed bottom-1 end-1 z-index-991">
       <!-- add movement snackbar -->
       <material-snackbar v-if="snackbar === 'successAddMove'" :title="$t('Movimento')" date="now"
@@ -74,6 +75,7 @@ import PopUpGerirCategorias from "./components/PopUpGerirCategorias.vue";
 import PopUpAddTransaction from "./components/PopUpAddTransaction.vue";
 import PopUpSavingsGoal from "./components/PopUpSavingsGoal.vue";
 import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
+import PopUpMovementDetails from "./components/PopUpMovementDetails.vue";
 
 
 export default {
@@ -86,6 +88,7 @@ export default {
     return {
       componentKey: 0,
       snackbar: null,
+      selectedTransaction: null,
     };
   },
   mounted() {
@@ -94,6 +97,10 @@ export default {
     this.fetchUserData();
   },
   methods: {
+    openDetailsModal(transaction) {
+      this.selectedTransaction = transaction;
+      console.log(transaction);
+    },
     forceRerender() {
       this.componentKey += 1;
     },
@@ -114,7 +121,8 @@ export default {
     PopUpGerirCategorias,
     PopUpAddTransaction,
     PopUpSavingsGoal,
-    MaterialSnackbar
+    MaterialSnackbar,
+    PopUpMovementDetails
   },
   computed: {
     user() {

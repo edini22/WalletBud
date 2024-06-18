@@ -41,14 +41,15 @@
     </div>
     <div class="card-body pt-2 p-3 pb-1">
       <ul class="list-group">
-        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg"
-          v-for="t in paginatedTransactions" :key="t.id" :tID="t.id">
+        <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg" data-bs-toggle='modal' data-bs-target='#detailsModal'
+          v-for="t in paginatedTransactions" :key="t.id" :tID="t.id"
+          @click="openTransactionDetails(t)">
           <div class="d-flex align-items-center">
-            <material-button v-if="t.tipo == 'Despesa'" color="danger" variant="outline" size="sm"
+            <material-button style="cursor:auto;" v-if="t.tipo == 'Despesa'" color="danger" variant="outline" size="sm"
               class="btn-icon-only btn-rounded mb-0 me-3 d-flex align-items-center justify-content-center">
               <i class="fas fa-arrow-down" aria-hidden="true"></i>
             </material-button>
-            <material-button v-if="t.tipo == 'Receita'" color="success" variant="outline" size="sm"
+            <material-button style="cursor:auto;" v-if="t.tipo == 'Receita'" color="success" variant="outline" size="sm"
               class="btn-icon-only btn-rounded mb-0 me-3 d-flex align-items-center justify-content-center">
               <i class="fas fa-arrow-up" aria-hidden="true"></i>
             </material-button>
@@ -88,6 +89,7 @@ import MaterialDropdown from "@/components/MaterialDropdown.vue";
 import MaterialFilter from "@/components/MaterialFilter.vue";
 import ExportData from '@/components/ExportData.vue';
 
+
 export default {
   name: "transaction-card",
   components: {
@@ -96,7 +98,7 @@ export default {
     MaterialPaginationItem,
     MaterialDropdown,
     MaterialFilter,
-    ExportData,
+    ExportData
   },
   data() {
     return {
@@ -146,6 +148,10 @@ export default {
     }
   },
   methods: {
+    openTransactionDetails(transaction) {
+      // Emita um evento globalmente ou passe diretamente para o componente pai
+      this.$emit('open-details-modal', transaction);
+    },
     handleFocus() {
       this.isFocused = true;
     },

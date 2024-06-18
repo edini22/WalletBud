@@ -1,10 +1,10 @@
 <template>
     <div class="modal fade" id="savingsGoalModal" tabindex="-1" aria-labelledby="transactionModalLabel"
-    aria-hidden="true" data-bs-backdrop='static'>
+    aria-hidden="true" data-bs-backdrop='static' data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="categoryModalLabel">{{ $t('Definir Objetivo Poupança') }}</h5>
+                    <h5 class="modal-title">{{ $t('Definir Objetivo Poupança') }}</h5>
                 </div>
 
                 <div class="modal-body">

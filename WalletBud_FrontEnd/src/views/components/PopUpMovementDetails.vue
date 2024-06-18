@@ -81,7 +81,7 @@
                                 <p v-if="edit" class="required"> *</p>
                             </label>
                             <p class="detail form-label" v-if="transaction !== null && edit == false">{{
-                                transaction.valor}}</p>
+                                transaction.value}}</p>
 
                             <div v-if="valueError === true && valueNegative === null && edit === true"
                                 class="form-input mb-1">
@@ -101,8 +101,8 @@
                             </div>
                             <div v-if="valueError === null && edit === true" class="form-input mb-1">
                                 <material-input class="material-input" id="value" type="number"
-                                    :value="transaction.valor" :label="$t('Indique um montante')" name="value"
-                                    :class="{'is-focused': transaction.valor !== null && edit == true}"
+                                    :value="transaction.value" :label="$t('Indique um montante')" name="value"
+                                    :class="{'is-focused': transaction.value !== null && edit == true}"
                                     @update:value="Value = $event" />
                             </div>
                         </div>
@@ -471,7 +471,7 @@
                                 <div class="align-items-center text-center">
                                     <label v-if="transaction != null" class="form-label align-self-center mb-3"
                                         style="font-size: large; font-weight: 600;"
-                                        >{{ transaction.valor + $t('€ a dividir com:')}}</label>
+                                        >{{ transaction.value + $t('€ a dividir com:')}}</label>
                                 </div>
                                 <div class="form-row" v-for="(user, index) in transaction.users" :key="index">
                                     <div class="form-row">
@@ -907,7 +907,7 @@ export default {
         
         function editTransaction(){
             Name.value = transaction.value.name;
-            Value.value = transaction.value.valor;
+            Value.value = transaction.value.value;
             DateM.value = transaction.value.date;
             Description.value = transaction.value.description;
             Place.value = transaction.value.local;
@@ -921,7 +921,7 @@ export default {
             
             transaction.value.name = Name.value;
             transaction.value.description = Description.value;
-            transaction.value.valor = Value.value;
+            transaction.value.value = Value.value;
             timestamp.value = convertToTimestamp(DateM.value);
             transaction.value.date = timestamp.value;
             transaction.value.local = Place.value;
@@ -1028,7 +1028,7 @@ export default {
         },
         calculateShare() {
             if (this.transaction.users === 0) return ''; // Evita divisão por zero
-            this.shareValue = this.transaction.valor / (this.transaction.users.length + 1);
+            this.shareValue = this.transaction.value / (this.transaction.users.length + 1);
             return `${this.shareValue.toFixed(2)} €`; // Formata o valor com duas casas decimais
         },
         removeUser(index) {

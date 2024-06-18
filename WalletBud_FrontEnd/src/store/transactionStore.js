@@ -6,7 +6,7 @@ export const useTransactionStore = defineStore('transaction', {
             {
                 id: 1,
                 name: 'Compra de Livro',
-                valor: 20.50,
+                value: 20.50,
                 date: '2022-05-23',
                 description: 'Livro sobre JavaScript',
                 local: 'LivroStore',
@@ -24,7 +24,7 @@ export const useTransactionStore = defineStore('transaction', {
             {
                 id: 2,
                 name: 'Pagamento de Conta',
-                valor: 50,
+                value: 50,
                 date: '23 Abril 2024',
                 description: null,
                 local: 'Empresa de Energia',
@@ -42,7 +42,7 @@ export const useTransactionStore = defineStore('transaction', {
             {
                 id: 3,
                 name: 'Depósito Bancário',
-                valor: 1000,
+                value: 1000,
                 date: '20 Abril 2024',
                 description: 'Depósito salário',
                 local: 'Banco XPTO',

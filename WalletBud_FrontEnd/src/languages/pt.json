@@ -97,6 +97,9 @@
     "Recovery email sent successfully! Check your mailbox!" : "Email de recuperação enviado com sucesso! Verifique a sua caixa de correio!",
     "Recover" : "Recuperar",
     "Recover Password" : "Recuperar Password",
-    "Recovery email" : "Email de recuperação"
+    "Recovery email" : "Email de recuperação",
+    "profile" : "perfil",
+    "Payments" : "Pagamentos",
+    "Dashboard" : "Painel de Controlo"
 
 }

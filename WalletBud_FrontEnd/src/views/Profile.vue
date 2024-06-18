@@ -61,7 +61,7 @@ import userDark from "@/assets/img/icons/user_2.png";
 import user from "@/assets/img/icons/user_1.png";
 
 export default {
-  name: "profile-overview",
+  name: "profile",
   components: {
     ProfileInfoCard,
   },

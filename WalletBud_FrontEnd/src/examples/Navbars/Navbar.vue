@@ -19,7 +19,7 @@
         <ul class="navbar-nav justify-content-end">
           <li class="nav-item d-flex align-items-center">
             <router-link
-            :to="{ name: 'Profile' }"
+            :to="{ name: 'Perfil' }"
             class="px-0 nav-link font-weight-bold lh-1 d-flex align-items-center"
             :class="color ? color : 'text-body'"
             >
@@ -203,12 +203,13 @@ import { useI18n } from "vue-i18n";
 import { categoriesStore } from "@/store/categoriesStore";
 import { fixaStore } from "@/store/fixaStore";
 
+
 export default {
   name: "navbar",
   setup(){
     const store = userStore();
     const router = useRouter();
-    const { t } = useI18n();
+    const {  t} = useI18n();
 
     const logOut = async () => {
       await store.logOut();
@@ -216,10 +217,13 @@ export default {
       await fixaStore().resetFixas();
       router.push({ name: "SignIn" });
     };
+    
+
     return {
       logOut,
       t,
       store,
+     
     };
 
   },
@@ -255,7 +259,16 @@ export default {
     ...mapState(["isAbsolute"]),
 
     currentRouteName() {
-      return this.$route.name;
+      const currentPage = this.$route.name;
+      if (this.store.idioma === "pt") {
+        return currentPage;
+      } else if (this.store.idioma === "en") {
+        if (currentPage !== undefined) {
+          alert(currentPage);
+          return this.t(currentPage);
+        }
+      }
+      return currentPage;
     },
   },
 };

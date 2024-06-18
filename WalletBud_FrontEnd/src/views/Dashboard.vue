@@ -47,8 +47,58 @@
             </chart-holder-card>
           </div>
 
-          <!-- Month spend chart on chosen year -->
-          <div class="col-lg-8 col-md-6 mt-5 mt-md-4">
+          <!-- category spend chart -->
+          <div class="col-lg-4 col-md-6 mt-4">
+            <chart-holder-card :title="$t('Gastos Por Categoria')" :subtitle="$t('Gasto total por dia numa semana')"
+              :week="pastWeekDate">
+
+              <reports-bar-chart :chart="{
+                labels: [$t('Seg'), $t('Ter'), $t('Qua'), $t('Qui'), $t('Sex'), $t('Sáb'), $t('Dom')],
+                datasets: {
+                  label: $t('Gasto diário'),
+                  data: weekDailySpend,
+                },
+              }" />
+              <template #detail>
+                <div class="d-flex">
+                <year-picker></year-picker>
+                <month-picker></month-picker>
+              </div>
+              </template>
+            </chart-holder-card>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+
+          
+          <div class="col-lg-8 mt-5 mt-md-6 mt-lg-4">
+            <chart-holder-card title="Completed Tasks" subtitle="Last Campaign Performance" update="just updated"
+              color="dark">
+              <reports-line-chart id="tasks-chart" :chart="{
+                labels: [
+                  'Apr',
+                  'May',
+                  'Jun',
+                  'Jul',
+                  'Aug',
+                  'Sep',
+                  'Oct',
+                  'Nov',
+                  'Dec',
+                ],
+                datasets: {
+                  label: 'Mobile apps',
+                  data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+                },
+              }" />
+            </chart-holder-card>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+<!-- Month spend chart on chosen year -->
+<div class="col-lg-8 col-md-6 mt-5 mt-md-4">
             <chart-holder-card title="Daily Sales"
               subtitle="(<span class='font-weight-bolder'>+15%</span>) increase in today sales." color="success">
               <reports-line-chart :chart="{
@@ -77,46 +127,6 @@
             </chart-holder-card>
           </div>
         </div>
-
-        <div class="row mt-4">
-
-          <!-- Weekly spend chart -->
-          <div class="col-lg-4 col-md-6 mt-4">
-            <chart-holder-card :title="$t('Gasto Semanal')" :subtitle="$t('Gasto total por dia numa semana')"
-              :week="pastWeekDate">
-
-              <reports-bar-chart :chart="{
-                labels: [$t('Seg'), $t('Ter'), $t('Qua'), $t('Qui'), $t('Sex'), $t('Sáb'), $t('Dom')],
-                datasets: {
-                  label: $t('Gasto diário'),
-                  data: weekDailySpend,
-                },
-              }" />
-            </chart-holder-card>
-          </div>
-          <div class="col-lg-8 mt-5 mt-md-6 mt-lg-4">
-            <chart-holder-card title="Completed Tasks" subtitle="Last Campaign Performance" update="just updated"
-              color="dark">
-              <reports-line-chart id="tasks-chart" :chart="{
-                labels: [
-                  'Apr',
-                  'May',
-                  'Jun',
-                  'Jul',
-                  'Aug',
-                  'Sep',
-                  'Oct',
-                  'Nov',
-                  'Dec',
-                ],
-                datasets: {
-                  label: 'Mobile apps',
-                  data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-                },
-              }" />
-            </chart-holder-card>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -129,6 +139,7 @@ import ReportsLineChart from "@/examples/Charts/ReportsLineChart.vue";
 import MiniStatisticsCard from "./components/MiniStatisticsCard.vue";
 import MaterialDropdown from "@/components/MaterialDropdown.vue"
 import YearPicker from "@/components/YearPicker.vue"
+import MonthPicker from "../components/MonthPicker.vue";
 import { userStore } from "@/store/userStore";
 
 export default {
@@ -150,7 +161,8 @@ export default {
     ReportsLineChart,
     MiniStatisticsCard,
     MaterialDropdown,
-    YearPicker
+    YearPicker,
+    MonthPicker
   },
   methods: {
     getBudget() {

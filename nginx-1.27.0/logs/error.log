@@ -1,0 +1,25 @@
+2024/06/17 03:31:25 [emerg] 29856#30124: invalid host in upstream "http://localhost:3000/" in C:\Users\dario\Downloads\nginx-1.27.0\nginx-1.27.0/conf/nginx.conf:3
+2024/06/17 03:32:14 [emerg] 28004#30396: invalid host in upstream "http://localhost:3000/" in C:\Users\dario\Downloads\nginx-1.27.0\nginx-1.27.0/conf/nginx.conf:3
+2024/06/17 03:35:26 [emerg] 26380#23248: no "events" section in configuration
+2024/06/17 03:36:02 [emerg] 30008#17984: no "events" section in configuration
+2024/06/17 03:36:06 [emerg] 31308#23176: no "events" section in configuration
+2024/06/17 03:46:07 [emerg] 28320#16784: no "events" section in configuration
+2024/06/18 00:06:35 [notice] 28168#32036: signal process started
+2024/06/18 00:06:35 [emerg] 30100#30536: bind() to 0.0.0.0:8080 failed (10013: An attempt was made to access a socket in a way forbidden by its access permissions)
+2024/06/18 00:13:49 [notice] 3332#8568: signal process started
+2024/06/18 00:13:49 [error] 26732#21264: *10 CreateFile() "C:\Users\dario\Downloads\nginx-1.27.0\nginx-1.27.0/html/favicon.ico" failed (2: The system cannot find the file specified), client: 192.168.1.72, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "192.168.1.72:8080", referrer: "http://192.168.1.72:8080/"
+2024/06/18 00:14:11 [notice] 33264#35224: signal process started
+2024/06/18 00:25:08 [notice] 18836#30564: signal process started
+2024/06/18 00:36:41 [notice] 29892#19100: signal process started
+2024/06/18 00:36:41 [emerg] 13748#28500: CreateFile() "C:/var/log/nginx/access.log" failed (3: The system cannot find the path specified)
+2024/06/18 00:36:46 [notice] 18780#31708: signal process started
+2024/06/18 00:36:46 [emerg] 13748#28500: CreateFile() "C:/var/log/nginx/access.log" failed (3: The system cannot find the path specified)
+2024/06/18 00:36:48 [notice] 31776#20972: signal process started
+2024/06/18 00:36:48 [emerg] 13748#28500: CreateFile() "C:/var/log/nginx/access.log" failed (3: The system cannot find the path specified)
+2024/06/18 01:41:18 [notice] 25168#25532: signal process started
+2024/06/18 01:41:18 [emerg] 13748#28500: CreateFile() "C:/var/log/nginx/access.log" failed (3: The system cannot find the path specified)
+2024/06/18 01:41:33 [notice] 31084#27504: signal process started
+2024/06/18 01:41:33 [emerg] 13748#28500: CreateFile() "C:/var/log/nginx/access.log" failed (3: The system cannot find the path specified)
+2024/06/18 01:41:37 [emerg] 33048#16052: CreateFile() "C:/var/log/nginx/access.log" failed (3: The system cannot find the path specified)
+2024/06/18 01:41:58 [notice] 19352#31540: signal process started
+2024/06/18 01:48:58 [notice] 33788#11992: signal process started

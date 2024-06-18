@@ -28,6 +28,7 @@ public class UserDetachedCriteria extends AbstractORMDetachedCriteria {
 	public final FloatExpression objetivo;
 	public final StringExpression token;
 	public final TimestampExpression expToken;
+	public final StringExpression moeda;
 	public final CollectionExpression transacaos;
 	public final CollectionExpression notificacao;
 	public final CollectionExpression comentario;
@@ -46,6 +47,7 @@ public class UserDetachedCriteria extends AbstractORMDetachedCriteria {
 		objetivo = new FloatExpression("objetivo", this.getDetachedCriteria());
 		token = new StringExpression("token", this.getDetachedCriteria());
 		expToken = new TimestampExpression("expToken", this.getDetachedCriteria());
+		moeda = new StringExpression("moeda", this.getDetachedCriteria());
 		transacaos = new CollectionExpression("ORM_Transacaos", this.getDetachedCriteria());
 		notificacao = new CollectionExpression("ORM_Notificacao", this.getDetachedCriteria());
 		comentario = new CollectionExpression("ORM_Comentario", this.getDetachedCriteria());
@@ -65,6 +67,7 @@ public class UserDetachedCriteria extends AbstractORMDetachedCriteria {
 		objetivo = new FloatExpression("objetivo", this.getDetachedCriteria());
 		token = new StringExpression("token", this.getDetachedCriteria());
 		expToken = new TimestampExpression("expToken", this.getDetachedCriteria());
+		moeda = new StringExpression("moeda", this.getDetachedCriteria());
 		transacaos = new CollectionExpression("ORM_Transacaos", this.getDetachedCriteria());
 		notificacao = new CollectionExpression("ORM_Notificacao", this.getDetachedCriteria());
 		comentario = new CollectionExpression("ORM_Comentario", this.getDetachedCriteria());

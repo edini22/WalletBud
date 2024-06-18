@@ -28,6 +28,7 @@ public class UserCriteria extends AbstractORMCriteria {
 	public final FloatExpression objetivo;
 	public final StringExpression token;
 	public final TimestampExpression expToken;
+	public final StringExpression moeda;
 	public final CollectionExpression transacaos;
 	public final CollectionExpression notificacao;
 	public final CollectionExpression comentario;
@@ -46,6 +47,7 @@ public class UserCriteria extends AbstractORMCriteria {
 		objetivo = new FloatExpression("objetivo", this);
 		token = new StringExpression("token", this);
 		expToken = new TimestampExpression("expToken", this);
+		moeda = new StringExpression("moeda", this);
 		transacaos = new CollectionExpression("ORM_Transacaos", this);
 		notificacao = new CollectionExpression("ORM_Notificacao", this);
 		comentario = new CollectionExpression("ORM_Comentario", this);

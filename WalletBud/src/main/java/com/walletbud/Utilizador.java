@@ -120,12 +120,13 @@ public class Utilizador {
 
         System.out.println("Received JSON: " + jsonObject.toString());
 
-        String username, password, idioma,new_email;
+        String username, password, idioma,new_email, moeda;
         Float objetivo;
 
         try{username = jsonObject.getString("username");}catch(java.lang.NullPointerException en) {username=null;}
         try{password = jsonObject.getString("password");}catch(java.lang.NullPointerException en) {password=null;}
         try{idioma = jsonObject.getString("idioma");}catch(java.lang.NullPointerException en) {idioma=null;}
+        try{moeda = jsonObject.getString("moeda");}catch(java.lang.NullPointerException en) {moeda=null;}
         try{new_email = jsonObject.getString("email");}catch(java.lang.NullPointerException en) {new_email=null;}
         try{objetivo = Float.parseFloat(jsonObject.getString("objetivo"));}catch(java.lang.NullPointerException en) {objetivo=null;}
 
@@ -142,7 +143,7 @@ public class Utilizador {
             session = AASICPersistentManager.instance().getSession();
             transaction = session.beginTransaction();
 
-            if(gerirUtilizador.editUser(session, username, password, email_user, idioma, new_email, objetivo) ){
+            if(gerirUtilizador.editUser(session, username, password, email_user, idioma, new_email, objetivo, moeda) ){
 
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "User edited successfully")

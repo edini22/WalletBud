@@ -92,7 +92,7 @@ public class GerirUtilizador {
         }
     }
 
-    public boolean editUser(PersistentSession session, String name, String password, String email, String idioma, String new_email, Float objetivo) throws PersistentException {
+    public boolean editUser(PersistentSession session, String name, String password, String email, String idioma, String new_email, Float objetivo, String moeda) throws PersistentException {
         try {
 
             User u = getUserByEmail(session, email);
@@ -110,6 +110,7 @@ public class GerirUtilizador {
                 u.setPassword(hashedPassword);
             }
             if (idioma != null) u.setIdioma(idioma);
+            if (moeda != null) u.setMoeda(moeda);
             if (new_email != null) {
                 //verifica se existe algum ‘user’ com o endereço eletrónico
                 User us = getUserByEmail(session, new_email);
@@ -188,6 +189,7 @@ public class GerirUtilizador {
                     .add("email", user.getEmail())
                     .add("balanco", user.getSaldo())
                     .add("idioma", user.getIdioma())
+                    .add("moeda", user.getMoeda())
                     .add("objetivo",user.getObjetivo())
                     .build();
         } catch (Exception e) {

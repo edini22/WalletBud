@@ -37,6 +37,24 @@ services:
       database:
         condition: service_healthy
 
+    # wildfly2:
+    # build: .
+    # container_name: walletbud-web
+    # environment:
+    #   DB_HOST: database
+    #   DB_PORT: 3306
+    #   DB_NAME: WalletBudDB
+    #   DB_USER: user
+    # networks:
+    #   - wb-network
+    # ports:
+    #   - "8001:8080"
+    # # depends_on:
+    # #   - database
+    # depends_on:
+    #   database:
+    #     condition: service_healthy
+
 networks:
   wb-network:
     driver: bridge

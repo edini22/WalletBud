@@ -732,11 +732,7 @@ public class GerirFixa {
                     TransacaoPartilhadaDAO.deleteAndDissociate(tp);
 
                     //notificar todos os utilizadores (u) que o owner eliminou esta  transacao
-                    notify("The owner has deleted the fixed transaction " + fixa.getName() + ".",u,fixa);
-
-                    // enviar notificação para toda os utilizadores(pedir para se querem continuar mas agora vao pagar/receber (nSValue))
-                    float nSValue = fixa.getValue() / (tps.length - 1);
-                    notify("Do you want to continue with the new share value of " + nSValue + "?",u,fixa);
+                    notify("The owner has deleted the fixed transaction " + fixa.getName() + ".",u,null);
                 }
 
                 //verificar se existem pagamentos associados
@@ -751,9 +747,8 @@ public class GerirFixa {
                     FixaDAO.save(fixa);
                 }
 
-
                 //notificar o owner (user) eliminou esta  transacao
-                notify("You have deleted the fixed transaction " + fixa.getName() + ".", user,fixa);
+                notify("You have deleted the fixed transaction " + fixa.getName() + ".", user,null);
 
             } else{
                 // verifica se está associado a esta transacao

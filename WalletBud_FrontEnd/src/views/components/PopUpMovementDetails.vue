@@ -8,18 +8,21 @@
                 </div>
 
                 <div class="modal-body">
-                    <div v-if="shared == 'sim'" class="nav-wrapper position-relative end-0 mb-4">
+                    <div v-if="transaction !== null && transaction.tipo == 'Despesa'"
+                        class="nav-wrapper position-relative end-0 mb-4">
                         <ul class="nav nav-pills nav-fill p-1" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active tab-button" @click="showTab(0)">{{ $t('Informação') }}</a>
+                                <a class="nav-link active tab-button-details" @click="showTab(0)">{{ $t('Informação')
+                                    }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link tab-button" @click="showTab(1)">{{ $t('Dividir Despesa') }}</a>
+                                <a class="nav-link tab-button-details" @click="showTab(1)">{{ $t('Dividir Despesa')
+                                    }}</a>
                             </li>
                         </ul>
                     </div>
 
-                    <div class="tab tab-content active" id="tab-0">
+                    <div class="tab-details tab-content active" id="tab-0">
 
                         <!-- Name -->
                         <div class="form-group form-row">
@@ -28,313 +31,306 @@
                             </label>
                             <p class="detail form-label" v-if="transaction !== null && edit == false">{{
                                 transaction.name }}</p>
-                                <div v-if="nameError === true && edit == true" class="form-input mb-1">
-                                    <material-input class="material-input" id="description" type="text"
-                                        :label="$t('Indique o nome')" name="description"
-                                         :value="transaction.name" error />
-                                </div>
-                                <div v-if="nameError === false && edit == true" class="form-input mb-1">
-                                    <material-input class="material-input" id="description" type="text"
-                                        name="description" :value="transaction.name"
-                                         success />
-                                </div>
-                                <div v-if="nameError === null && edit == true" class="form-input mb-1">
-                                    <material-input class="material-input" id="description" type="text"
-                                        :value="transaction.name" :label="$t('Indique o nome')" name="description"
-                                         />
-                                </div>
+                            <div v-if="nameError === true && edit == true" class="form-input mb-1">
+                                <material-input class="material-input" id="description" type="text"
+                                    :label="$t('Indique o nome')" name="description" :value="Name"
+                                    @update:value="Name = $event" error />
+                            </div>
+                            <div v-if="nameError === false && edit == true" class="form-input mb-1">
+                                <material-input class="material-input" id="description" type="text" name="description"
+                                    :value="Name" @update:value="Name = $event" success />
+                            </div>
+
+                            <div v-if="nameError === null && edit == true" class="form-input mb-1">
+                                <material-input class="material-input" id="description" type="text"
+                                    :value="transaction.name" :label="$t('Indique o nome')" name="description"
+                                    :class="{'is-focused': transaction.name !== null && edit == true}"
+                                    @update:value="Name = $event" />
+                            </div>
                         </div>
 
                         <!-- Descrição -->
-                        <div v-if="transaction !== null && transaction.description !== null" class="form-group form-row">
+                        <div v-if="transaction !== null && transaction.description !== null"
+                            class="form-group form-row">
                             <label for="place" class="form-label">{{ $t('Descrição') }}</label>
                             <p class="detail form-label" v-if="transaction !== null && edit == false">{{
                                 transaction.description }}</p>
-
-                                <div v-if="transaction !== null && transaction.description !== null && edit == true" class="form-input mb-1">
-                                    <material-input class="material-input" id="description" type="text" :class="{'is-focused': transaction.description !== null && edit == true}"
-                                        name="description" :value="transaction.description" :label="$t('Indique a descrição')"/>
-                                </div>
+                            <div v-if="edit == true" class="form-input mb-1">
+                                <material-input class="material-input" id="description" type="text"
+                                    :class="{'is-focused': transaction.description !== null && edit == true}"
+                                    name="description" :value="transaction.description" @update:value="Description = $event"
+                                    :label="$t('Indique a descrição')" />
+                            </div>
                         </div>
-                        <div v-if="transaction !== null && transaction.description === null && edit" class="form-group form-row">
+                        <div v-if="transaction !== null && transaction.description === null && edit"
+                            class="form-group form-row">
                             <label v-if="edit" for="place" class="form-label">{{ $t('Descrição') }}</label>
                             <p class="detail form-label" v-if="transaction !== null && edit == false">{{
                                 transaction.description }}</p>
 
-                                <div v-if="edit && transaction !== null && transaction.description === null" class="form-input mb-1">
-                                    <material-input class="material-input" id="place" type="text"
-                                        :label="$t('Indique a descrição')" name="place" :value="transaction.description"
-                                         />
-                                </div>
+                            <div class="form-input mb-1">
+                                <material-input class="material-input" id="place" type="text"
+                                    :label="$t('Indique a descrição')" name="place" :value="transaction.description" 
+                                    @update:value="Description = $event"/>
+                            </div>
                         </div>
 
                         <!-- Montante -->
-                        <div class="form-group form-row">
+                        <div v-if="transaction !== null" class="form-group form-row">
                             <label for="value" class="form-label">{{ $t('Montante') }}
                                 <p v-if="edit" class="required"> *</p>
                             </label>
                             <p class="detail form-label" v-if="transaction !== null && edit == false">{{
                                 transaction.valor}}</p>
-                            
-                                <div v-if="transaction !== null && valueError === true && valueNegative === null && edit === true" class="form-input mb-1">
-                                    <material-input class="material-input" id="value" type="number"
-                                        :value="transaction.valor" :label="$t('Indique um montante válido')"
-                                        name="value"  error />
-                                </div>
-                                <div v-if="transaction !== null && valueError === true && valueNegative === true && edit === true" class="form-input mb-1">
-                                    <material-input class="material-input" id="value" type="number"
-                                        :value="transaction.valor" :label="$t('Indique um valor maior que zero')"
-                                        name="value"  error />
-                                </div>
-                                <div v-if="transaction !== null && valueError === false && edit === true" class="form-input mb-1">
-                                    <material-input class="material-input" id="value" type="number" name="value"
-                                        :value="transaction.valor"  success />
-                                </div>
-                                <div v-if="transaction !== null && valueError === null && edit === true" class="form-input mb-1">
-                                    <material-input class="material-input" id="value" type="number"
-                                        :value="transaction.valor" :label="$t('Indique um montante')" name="value"
-                                         />
-                                </div>
+
+                            <div v-if="valueError === true && valueNegative === null && edit === true"
+                                class="form-input mb-1">
+                                <material-input class="material-input" id="value" type="number" :value="Value"
+                                    :label="$t('Indique um montante válido')" name="value" error
+                                    @update:value="Value = $event" />
+                            </div>
+                            <div v-if="valueError === true && valueNegative === true && edit === true"
+                                class="form-input mb-1">
+                                <material-input class="material-input" id="value" type="number" :value="Value"
+                                    :label="$t('Indique um valor maior que zero')" name="value" error
+                                    @update:value="Value = $event" />
+                            </div>
+                            <div v-if="valueError === false && edit === true" class="form-input mb-1">
+                                <material-input class="material-input" id="value" type="number" name="value"
+                                    :value="Value" success @update:value="Value = $event" />
+                            </div>
+                            <div v-if="valueError === null && edit === true" class="form-input mb-1">
+                                <material-input class="material-input" id="value" type="number"
+                                    :value="transaction.valor" :label="$t('Indique um montante')" name="value"
+                                    :class="{'is-focused': transaction.valor !== null && edit == true}"
+                                    @update:value="Value = $event" />
+                            </div>
                         </div>
 
                         <!-- Data -->
-                        <div class="form-group form-row">
+                        <div v-if="transaction !== null" class="form-group form-row">
                             <label for="date" class="form-label">
                                 {{ $t('Data do Movimento') }}
                                 <p v-if="edit" class="required"> *</p>
                             </label>
-                            <p class="detail form-label" v-if="transaction !== null && edit == false">{{
+                            <p class="detail form-label" v-if="edit == false">{{
                                 transaction.date }}</p>
-                            
-                                <div v-if="DateError === true && edit == true" class="form-input mb-1 date-input-wrapper"
-                                    :class="{ 'dropdown-focused-error': isDateFocused, 'border': SetBorder }"
-                                    style="position: relative;">
-                                    <material-input class="material-input" id="date" type="date" name="date"
-                                        :value="transaction.date"  error
-                                        @focus="handleDateFocus" @blur="handleDateBlur" />
-                                </div>
-                                <div v-if="DateError === false && edit == true" class="form-input mb-1">
-                                    <material-input class="material-input" :class="{ 'is-focused': isFocused }"
-                                        id="date" type="text" name="date" :value="transaction.date"
-                                         success @focus="handleFocus"
-                                        @blur="handleBlur" />
-                                </div>
-                                <div v-if="DateError === null && edit == true" class="form-input mb-1  date-input-wrapper">
-                                    <material-input class="material-input" :class="{ 'is-focused': isFocused }"
-                                        id="date" type="date" name="date" 
-                                        :value="transaction.date" :label="$t('Indique a data')" @focus="handleFocus"
-                                        @blur="handleBlur" />
-                                    <i class="material-icons date-icon">date_range</i>
-                                </div>
+
+                            <div v-if="DateError === true && edit == true" class="form-input mb-1 date-input-wrapper"
+                                :class="{ 'dropdown-focused-error': isDateFocused, 'border': SetBorder }"
+                                style="position: relative;">
+                                <material-input class="material-input" id="date" type="date" name="date" :value="DateM"
+                                    error @update:value="DateM = $event" @focus="handleDateFocus"
+                                    @blur="handleDateBlur" />
+                            </div>
+                            <div v-if="DateError === false && edit == true" class="form-input mb-1">
+                                <material-input class="material-input" :class="{ 'is-focused': isFocused }" id="date"
+                                    type="text" name="date" :value="DateM" success @focus="handleFocus"
+                                    @update:value="DateM = $event" @blur="handleBlur" />
+                            </div>
+                            <div v-if="DateError === null && edit == true" class="form-input mb-1  date-input-wrapper">
+                                <material-input class="material-input"
+                                    :class="{'is-focused': transaction.date !== null && edit == true}" id="date"
+                                    type="date" name="date" :value="transaction.date" :label="$t('Indique a data')"
+                                    @focus="handleFocus" @blur="handleBlur" @update:value="DateM = $event" />
+                                <i class="material-icons date-icon">date_range</i>
+                            </div>
                         </div>
 
                         <!-- Tipo -->
-                        <div class="dropdown" ref="typeDropdown">
+                        <div v-if="transaction !== null" class="dropdown" ref="typeDropdown">
                             <div class="form-group form-row">
                                 <label for="Type" class="form-label">{{ $t('Tipo de movimento') }}
                                     <p v-if="edit" class="required"> *</p>
                                 </label>
-                                <p class="detail form-label" v-if="transaction !== null && edit == false">{{
+                                <p class="detail form-label" v-if="edit == false">{{
                                     transaction.tipo }}</p>
-                                    <div v-if="TypeError === null && edit == true || TypeError === false && edit == true"
-                                        class="input-group input-group-outline form-input mb-1"
-                                        style="border-radius: 0.375rem;">
-                                        <button class="cursor-pointer form-control form-control-default material-input"
-                                            :class="{ 'dropdown-focused-null': isTypeFocused }" id="dropdownTable"
-                                            data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
-                                            @focus="handleTypeFocus">
-                                            {{ transaction.tipo || $t('Selecione o tipo') }}
-                                        </button>
-                                        <i class="material-icons arrow-icon">keyboard_arrow_down</i>
-                                        <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5"
-                                            aria-labelledby="dropdownTable">
-                                            <li>
-                                                <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectType('Despesa')">
-                                                    {{ $t('Despesa') }}
-                                                </a>
-                                            </li>
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectType('Receita')">
-                                                    {{ $t('Receita') }}
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div v-if="TypeError === null && edit == true || TypeError === false && edit == true"
+                                    class="input-group input-group-outline form-input mb-1"
+                                    style="border-radius: 0.375rem;">
+                                    <button class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-null': transaction.tipo !== null && edit == true }"
+                                        id="dropdownTable" data-bs-toggle="dropdown"
+                                        style="text-align:left; color: #7b809a">
+                                        {{ transaction.tipo || $t('Selecione o tipo') }}
+                                    </button>
+                                    <i class="material-icons arrow-icon">keyboard_arrow_down</i>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                        <li>
+                                            <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectType('Despesa')">
+                                                {{ $t('Despesa') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectType('Receita')">
+                                                {{ $t('Receita') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
 
-                                    <div v-if="TypeError === true && edit == true"
-                                        class="input-group input-group-outline form-input mb-1 is-invalid"
-                                        style="border-radius: 0.375rem;">
-                                        <button class="cursor-pointer form-control form-control-default material-input"
-                                            :class="{ 'dropdown-focused-error': isTypeFocused }" id="dropdownTable"
-                                            data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
-                                            @focus="handleTypeFocus">
-                                            {{ transaction.tipo || $t('Selecione o tipo') }}
-                                        </button>
-                                        <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5"
-                                            aria-labelledby="dropdownTable">
-                                            <li>
-                                                <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectType('Despesa')">
-                                                    {{ $t('Despesa') }}
-                                                </a>
-                                            </li>
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectType('Receita')">
-                                                    {{ $t('Receita') }}
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div v-if="TypeError === true && edit == true"
+                                    class="input-group input-group-outline form-input mb-1 is-invalid"
+                                    style="border-radius: 0.375rem;">
+                                    <button class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-error': transaction.tipo !== null && edit == true }"
+                                        id="dropdownTable" data-bs-toggle="dropdown"
+                                        style="text-align:left; color: #7b809a" @focus="handleTypeFocus">
+                                        {{ transaction.tipo || $t('Selecione o tipo') }}
+                                    </button>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                        <li>
+                                            <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectType('Despesa')">
+                                                {{ $t('Despesa') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectType('Receita')">
+                                                {{ $t('Receita') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Recorrência -->
-                        <div class="dropdown" ref="recorrenceDropdown">
+                        <div v-if="transaction !== null && transaction.repeticao !== null" class="dropdown"
+                            ref="recorrenceDropdown">
                             <div class="form-group form-row">
                                 <label for="recorrence" class="form-label">{{ $t('Recorrência') }}
                                     <p v-if="edit" class="required"> *</p>
                                 </label>
-                                <p class="detail form-label" v-if="transaction !== null && edit == false && transaction.recorrencia === 'fixa'">{{
-                                   $t('Recorrente (Fixa)') }}</p>
-                                   <p class="detail form-label" v-if="transaction !== null && edit == false && transaction.recorrencia === 'nãofixa'">{{
-                                   $t('Única (Não Fixa)') }}</p>
-                                    <div v-if="recorrenceError === null && edit == true || recorrenceError === false && edit == true"
-                                        class="input-group input-group-outline form-input mb-1"
-                                        style="border-radius: 0.375rem;">
-                                        <button v-if="transaction !== null && transaction.recorrencia === 'nãofixa'" class="cursor-pointer form-control form-control-default material-input"
-                                            :class="{ 'dropdown-focused-null': isRecorrenceFocused }" id="dropdownTable"
-                                            data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
-                                            @focus="handleRecorrenceFocus">
-                                            {{ $t('Única (Não Fixa)') || $t('Selecione a recorrência do movimento') }}
-                                        </button>
-                                        <button v-if="transaction !== null && transaction.recorrencia === 'fixa'" class="cursor-pointer form-control form-control-default material-input"
-                                            :class="{ 'dropdown-focused-null': isRecorrenceFocused }" id="dropdownTable"
-                                            data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
-                                            @focus="handleRecorrenceFocus">
-                                            {{ Recorrence || $t('Selecione a recorrência do movimento') }}
-                                        </button>
-                                        <i class="material-icons arrow-icon">keyboard_arrow_down</i>
-                                        <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5"
-                                            aria-labelledby="dropdownTable">
-                                            <li>
-                                                <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRecorrence('Única (Não Fixa)')">
-                                                    {{ $t('Única (Não Fixa)') }}
-                                                </a>
-                                            </li>
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRecorrence('Recorrente (Fixa)')">
-                                                    {{ $t('Recorrente (Fixa)') }}
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <p class="detail form-label"
+                                    v-if="transaction !== null && edit == false && transaction.repeticao == 0">{{
+                                    $t('Única (Não Fixa)') }}</p>
+                                <p class="detail form-label"
+                                    v-if="transaction !== null && edit == false && transaction.repeticao > 0">{{
+                                    $t('Recorrente (Fixa)') }}</p>
 
-                                    <div v-if="recorrenceError === true && edit == true"
-                                        class="input-group input-group-outline form-input mb-1 is-invalid"
-                                        style="border-radius: 0.375rem;">
-                                        <button class="cursor-pointer form-control form-control-default material-input"
-                                            :class="{ 'dropdown-focused-error': isRecorrenceFocused }"
-                                            id="dropdownTable" data-bs-toggle="dropdown"
-                                            style="text-align:left; color: #7b809a" @focus="handleRecorrenceFocus">
-                                            {{ transaction.recorrencia || $t('Selecione a recorrência do movimento') }}
-                                        </button>
-                                        <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5"
-                                            aria-labelledby="dropdownTable">
-                                            <li>
-                                                <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRecorrence('Única (Não Fixa)')">
-                                                    {{ $t('Única (Não Fixa)') }}
-                                                </a>
-                                            </li>
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRecorrence('Recorrente (Fixa)')">
-                                                    {{ $t('Recorrente (Fixa)') }}
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div v-if="recorrenceError === null && edit == true || recorrenceError === false && edit == true"
+                                    class="input-group input-group-outline form-input mb-1"
+                                    style="border-radius: 0.375rem;">
+                                    <button v-if="transaction !== null && transaction.repeticao == 0"
+                                        class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-null': transaction.repeticao !== null && edit == true }"
+                                        id="dropdownTable" data-bs-toggle="dropdown"
+                                        style="text-align:left; color: #7b809a">
+                                        {{ Recorrence || $t('Única (Não Fixa)') }}
+                                    </button>
+                                    <button v-if="transaction !== null && transaction.repeticao > 0"
+                                        class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-null': transaction.repeticao !== null && edit == true }"
+                                        id="dropdownTable" data-bs-toggle="dropdown"
+                                        style="text-align:left; color: #7b809a">
+                                        {{ Recorrence || $t('Recorrente (Fixa)') }}
+                                    </button>
+                                    <i class="material-icons arrow-icon">keyboard_arrow_down</i>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                        <li>
+                                            <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRecorrence('Única (Não Fixa)')">
+                                                {{ $t('Única (Não Fixa)') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRecorrence('Recorrente (Fixa)')">
+                                                {{ $t('Recorrente (Fixa)') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Repetição -->
-                        <div v-if="transaction !== null && transaction.recorrencia === 'fixa' && Recorrence === 'Recorrente (Fixa)'" class="dropdown" ref="repeatDropdown">
+                        <div v-if="transaction !== null && transaction.repeticao > 0 || transaction !== null && Recorrence === 'Recorrente (Fixa)'"
+                            class="dropdown" ref="repeatDropdown">
                             <div class="form-group form-row">
                                 <label for="Repetition" class="form-label">{{ $t('Repetição') }}
                                     <p v-if="edit" class="required"> *</p>
                                 </label>
-                                <p class="detail form-label" v-if="transaction !== null && edit == false">{{
-                                    transaction.repeticao }}</p>
-                                    <div v-if="repetitionError === null && edit == true || repetitionError === false && edit == true"
-                                        class="input-group input-group-outline form-input mb-1"
-                                        style="border-radius: 0.375rem;">
-                                        <button class="cursor-pointer form-control form-control-default material-input"
-                                            :class="{ 'dropdown-focused-null': isRepetitionFocused }" id="dropdownTable"
-                                            data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
-                                            @focus="handleRepetitionFocus">
-                                            {{ transaction.repeticao || $t('Selecione a repetição') }}
-                                        </button>
-                                        <i class="material-icons arrow-icon">repeat</i>
-                                        <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5"
-                                            aria-labelledby="dropdownTable">
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRepetition('Todos os dias')">
-                                                    {{ $t('Todos os dias') }}
-                                                </a>
-                                            </li>
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRepetition('Todas as semanas')">
-                                                    {{ $t('Todas as semanas') }}
-                                                </a>
-                                            </li>
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRepetition('Todos os meses')">
-                                                    {{ $t('Todos os meses') }}
-                                                </a>
-                                            </li>
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRepetition('Todos os anos')">
-                                                    {{ $t('Todos os anos') }}
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <p class="detail form-label" v-if="transaction !== null && edit == false">
+                                    {{ transaction.repeticao == 1 ? 'Todos os dias' :
+                                    transaction.repeticao == 2 ? 'Todas as semanas' :
+                                    transaction.repeticao == 3 ? 'Todos os meses' :
+                                    transaction.repeticao == 4 ? 'Todos os anos' :
+                                    '' }}
+                                </p>
+                                <div v-if="repetitionError === null && edit == true || repetitionError === false && edit == true"
+                                    class="input-group input-group-outline form-input mb-1"
+                                    style="border-radius: 0.375rem;">
+                                    <button class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-null': transaction.repeticao !== 0 && edit == true }"
+                                        id="dropdownTable" data-bs-toggle="dropdown"
+                                        style="text-align:left; color: #7b809a">
+                                        {{ transaction.repeticao == 1 ? 'Todos os dias' :
+                                        transaction.repeticao == 2 ? 'Todas as semanas' :
+                                        transaction.repeticao == 3 ? 'Todos os meses' :
+                                        transaction.repeticao == 4 ? 'Todos os anos' :
+                                        ''
+                                        }}
+                                    </button>
+                                    <i class="material-icons arrow-icon">repeat</i>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition(1)">
+                                                {{ $t('Todos os dias') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition(2)">
+                                                {{ $t('Todas as semanas') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition(3)">
+                                                {{ $t('Todos os meses') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition(4)">
+                                                {{ $t('Todos os anos') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
 
-                                    <div v-if="repetitionError === true && edit == true"
-                                        class="input-group input-group-outline form-input mb-1 is-invalid"
-                                        style="border-radius: 0.375rem;">
-                                        <button class="cursor-pointer form-control form-control-default material-input"
-                                            :class="{ 'dropdown-focused-error': isRepetitionFocused }"
-                                            id="dropdownTable" data-bs-toggle="dropdown"
-                                            style="text-align:left; color: #7b809a" @focus="handleRepetitionFocus">
-                                            {{ transaction.repeticao || $t('Selecione a repetição') }}
-                                        </button>
+                                <div v-if="repetitionError === true && edit == true"
+                                    class="input-group input-group-outline form-input mb-1 is-invalid"
+                                    style="border-radius: 0.375rem;">
+                                    <button class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-error': isRepetitionFocused }" id="dropdownTable"
+                                        data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                        @focus="handleRepetitionFocus">
+                                        {{ transaction.repeticao || $t('Selecione a repetição') }}
+                                    </button>
 
-                                        <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5"
-                                            aria-labelledby="dropdownTable">
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRepetition('Todos os dias')">
-                                                    {{ $t('Todos os dias') }}
-                                                </a>
-                                            </li>
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRepetition('Todas as semanas')">
-                                                    {{ $t('Todas as semanas') }}
-                                                </a>
-                                            </li>
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRepetition('Todos os meses')">
-                                                    {{ $t('Todos os meses') }}
-                                                </a>
-                                            </li>
-                                            <li> <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectRepetition('Todos os anos')">
-                                                    {{ $t('Todos os anos') }}
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition(1)">
+                                                {{ $t('Todos os dias') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition(2)">
+                                                {{ $t('Todas as semanas') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition(3)">
+                                                {{ $t('Todos os meses') }}
+                                            </a>
+                                        </li>
+                                        <li> <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectRepetition(4)">
+                                                {{ $t('Todos os anos') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
@@ -346,63 +342,61 @@
                                 </label>
                                 <p class="detail form-label" v-if="transaction !== null && edit == false">{{
                                     transaction.categoria }}</p>
-                                    <div v-if="CategoryError === null && edit == true || CategoryError === false && edit == true"
-                                        class="input-group input-group-outline form-input mb-1"
-                                        style="border-radius: 0.375rem;">
-                                        <button v-if="displayCategories.length > 0"
-                                            class="cursor-pointer form-control form-control-default material-input"
-                                            :class="{ 'dropdown-focused-null': isCategoryFocused }" id="dropdownTable"
-                                            data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
-                                            @focus="handleCategoryFocus">
-                                            {{ transaction.categoria || $t('Selecione a categoria') }}
-                                        </button>
-                                        <!-- show this button if type has not been chosen -->
-                                        <button v-else
-                                            class="cursor-pointer form-control form-control-default material-input"
-                                            :class="{ 'dropdown-focused-null': isCategoryFocused }" id="dropdownTable"
-                                            style="text-align:left; color: #7b809a" @click="alert">
-                                            {{ transaction.categoria || $t('Selecione a categoria') }}
-                                        </button>
-                                        <i class="material-icons arrow-icon">keyboard_arrow_down</i>
-                                        <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5"
-                                            aria-labelledby="dropdownTable">
-                                            <li v-for='(category, index) in displayCategories' :key="index">
-                                                <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectCategory(category)">
-                                                    {{ category.name }}
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div v-if="CategoryError === null && edit == true || CategoryError === false && edit == true"
+                                    class="input-group input-group-outline form-input mb-1"
+                                    style="border-radius: 0.375rem;">
+                                    <button v-if="displayCategories.length > 0"
+                                        class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-null': isCategoryFocused }" id="dropdownTable"
+                                        data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                        @focus="handleCategoryFocus">
+                                        {{ transaction.categoria || $t('Selecione a categoria') }}
+                                    </button>
+                                    <!-- show this button if type has not been chosen -->
+                                    <button v-else
+                                        class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-null': isCategoryFocused }" id="dropdownTable"
+                                        style="text-align:left; color: #7b809a" @click="alert">
+                                        {{ transaction.categoria || $t('Selecione a categoria') }}
+                                    </button>
+                                    <i class="material-icons arrow-icon">keyboard_arrow_down</i>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                        <li v-for='(category, index) in displayCategories' :key="index">
+                                            <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectCategory(category)">
+                                                {{ category.name }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
 
-                                    <div v-if="CategoryError === true && edit == true"
-                                        class="input-group input-group-outline form-input mb-1 is-invalid"
-                                        style="border-radius: 0.375rem;">
-                                        <button v-if="displayCategories.length > 0"
-                                            class="cursor-pointer form-control form-control-default material-input"
-                                            :class="{ 'dropdown-focused-error': isCategoryFocused }" id="dropdownTable"
-                                            data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
-                                            @focus="handleCategoryFocus">
-                                            {{ transaction.categoria || $t('Selecione a categoria') }}
-                                        </button>
-                                        <!-- show this button if type has not been chosen -->
-                                        <button v-else
-                                            class="cursor-pointer form-control form-control-default material-input"
-                                            :class="{ 'dropdown-focused-error': isCategoryFocused }" id="dropdownTable"
-                                            style="text-align:left; color: #7b809a" @click="alert">
-                                            {{ transaction.categoria || $t('Selecione a categoria') }}
-                                        </button>
-                                        <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5"
-                                            aria-labelledby="dropdownTable">
-                                            <li v-for='(category, index) in displayCategories' :key="index">
-                                                <a class="dropdown-item border-radius-md" href="javascript:;"
-                                                    @click="selectCategory(category)">
-                                                    {{ category.name }}
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                
+                                <div v-if="CategoryError === true && edit == true"
+                                    class="input-group input-group-outline form-input mb-1 is-invalid"
+                                    style="border-radius: 0.375rem;">
+                                    <button v-if="displayCategories.length > 0"
+                                        class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-error': isCategoryFocused }" id="dropdownTable"
+                                        data-bs-toggle="dropdown" style="text-align:left; color: #7b809a"
+                                        @focus="handleCategoryFocus">
+                                        {{ transaction.categoria || $t('Selecione a categoria') }}
+                                    </button>
+                                    <!-- show this button if type has not been chosen -->
+                                    <button v-else
+                                        class="cursor-pointer form-control form-control-default material-input"
+                                        :class="{ 'dropdown-focused-error': isCategoryFocused }" id="dropdownTable"
+                                        style="text-align:left; color: #7b809a" @click="alert">
+                                        {{ transaction.categoria || $t('Selecione a categoria') }}
+                                    </button>
+                                    <ul class="dropdown-menu px-2 py-3 ms-sm-n1 ms-n5" aria-labelledby="dropdownTable">
+                                        <li v-for='(category, index) in displayCategories' :key="index">
+                                            <a class="dropdown-item border-radius-md" href="javascript:;"
+                                                @click="selectCategory(category)">
+                                                {{ category.name }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
                             </div>
                         </div>
 
@@ -415,11 +409,24 @@
                         <div v-if="transaction !== null && transaction.local !== null" class="form-group form-row">
                             <label for="place" class="form-label">{{ $t('Local') }}</label>
                             <p class="detail form-label" v-if="transaction !== null && edit == false">{{
-                                    transaction.local }}</p>
+                                transaction.local }}</p>
                             <div v-if="edit == true" class="form-input mb-1">
                                 <material-input class="material-input" id="place" type="text"
                                     :label="$t('Indique o local')" name="place" :value="transaction.local"
+                                    :class="{'is-focused': transaction.local !== null && edit == true}"
                                     @update:value="Place = $event" />
+                            </div>
+                        </div>
+                        <div v-if="transaction !== null && transaction.local === null && edit"
+                            class="form-group form-row">
+                            <label v-if="edit" for="place" class="form-label">{{ $t('Local') }}</label>
+                            <p class="detail form-label" v-if="transaction !== null && edit == false">{{
+                                transaction.local }}</p>
+
+                            <div class="form-input mb-1">
+                                <material-input class="material-input" id="place" type="text"
+                                    :label="$t('Indique a descrição')" name="place" :value="transaction.local" 
+                                    @update:value="Place = $event"/>
                             </div>
                         </div>
 
@@ -427,7 +434,8 @@
                             <p class="required" style="font-weight: 400;"> * {{ $t('Campo obrigatório') }}</p>
                         </label>
 
-                        <div v-if="transaction !== null && transaction.comentario !== null" class="modal-footer d-block justify-content-center">
+                        <div v-if="transaction !== null && transaction.comentario !== null"
+                            class="modal-footer d-block justify-content-center">
                             <div class="align-items-center text-center">
                                 <i class="material-icons align-self-center comment"
                                     style="max-width: 24px; color: #344767">insert_comment_outlined</i>
@@ -435,7 +443,10 @@
                                 <p class="detail form-label" v-if="transaction !== null && edit === false">{{
                                     transaction.comentario }}</p>
                                 <div v-if="edit == true" class="form-input">
-                                    <material-input class="material-input" :class="{'is-focused': transaction.comentario !== null && edit == true}" id="comment" type="text" :value="transaction.comentario"
+                                    <material-input class="material-input"
+                                        :class="{'is-focused': transaction.comentario !== null && edit == true}"
+                                        id="comment" type="text" :value="transaction.comentario"
+                                        @update:value="Comment = $event"
                                         :label="$t('Escreva o seu comentário')" />
                                 </div>
                             </div>
@@ -443,17 +454,84 @@
 
                     </div>
 
-                    <div class="tab tab-content" id="tab-1">
+                    <div class="tab-details tab-content" id="tab-1">
 
-                        <div class="mt-2 d-flex">
-                            <label for="sharedExpense" class="mb-0 form-label">{{ $t('Partilhar Despesa') }}</label>
-                            <div class="form-check form-switch ps-0 ms-auto my-auto">
-                                <input class="form-check-input mt-1 ms-auto" type="checkbox" v-model="ShareExpense" />
+                        <div v-if="transaction && transaction.users && transaction.users.length > 0">
+                            <!-- Shared expense -->
+                            <div class="form-group">
+                                <label for="sharedExpense" class="form-label mb-3">{{ $t('Despesa partilhada com:')
+                                    }}</label>
+                                
+                                
+                            <MaterialAlert v-if="showAlertUsers" color="danger" @click="hideAlertUsers"
+                                class="font-weight-light" dismissible>
+                                <span class="text-sm">{{ $t('Adicione utilizadores para partilhar a despesa') }}</span>
+                            </MaterialAlert>
+                            <div v-if="transaction.users.length > 0">
+                                <div class="align-items-center text-center">
+                                    <label v-if="transaction != null" class="form-label align-self-center mb-3"
+                                        style="font-size: large; font-weight: 600;"
+                                        >{{ transaction.valor + $t('€ a dividir com:')}}</label>
+                                </div>
+                                <div class="form-row" v-for="(user, index) in transaction.users" :key="index">
+                                    <div class="form-row">
+                                        <material-checkbox :id="'checkbox_' + index" class="font-weight-light" checked
+                                            @click="removeUser(index)">
+                                        </material-checkbox>
+                                        <span style="font-size: 16px; padding-left: 10px;">{{ user.name }} </span>
+                                    </div>
+                                    <span style="font-size: 16px; padding-right: 10px;">{{ calculateShare() }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <hr class="horizontal dark my-sm-4" />
+                            <hr class="horizontal dark my-sm-4" />
 
-                        <div v-if="ShareExpense">
+                            <label for="sharedExpense" class="form-label mb-3">{{ $t('Adicione mais utilizadores para partilha da despesa:')
+                                    }}
+                                    <p class="required"> *</p>
+                                </label>
+
+                                <div class="form-input mb-3">
+                                    <div v-if="emailError === true && emailErrorStore === null" class="mb-3">
+                                        <material-input class="material-input mb-3" id="email" type="email"
+                                            :label="$t('Indique o email do utilizador')" name="email"
+                                            :value="newUserEmail" @update:value="newUserEmail = $event" error />
+                                    </div>
+
+                                    <div v-if="emailError === true && emailErrorStore !== null" class="mb-3">
+                                        <material-input class="material-input mb-3" id="email" type="email"
+                                            :label=emailErrorStore name="email" :value="newUserEmail"
+                                            @update:value="newUserEmail = $event" error />
+                                    </div>
+
+                                    <div v-if="emailError === false" class="mb-3">
+                                        <material-input class="material-input mb-3" id="email" type="email" name="email"
+                                            :value="newUserEmail" @update:value="newUserEmail = $event" success />
+                                    </div>
+
+                                    <div v-if="emailError === null" class="mb-3">
+                                        <material-input class="material-input mb-3" id="email" type="email" name="email"
+                                            :value="newUserEmail" @update:value="newUserEmail = $event"
+                                            :label="$t('Indique o email do utilizador')" />
+                                    </div>
+
+                                    <p class="btn btn-default bg-gradient-info mb-1" 
+                                    @click="addUser">{{ $t('Adicionar Utilizador') }}</p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        <!-- TRANSAÇÃO NÃO PARTILHADA -->
+                        <div v-if="transaction !== null && transaction.users !== null && transaction.users.length == 0">
+                            
+                            <div class="mt-2 d-flex">
+                                <label for="sharedExpense" class="mb-0 form-label">{{ $t('Partilhar Despesa') }}</label>
+                                <div class="form-check form-switch ps-0 ms-auto my-auto">
+                                    <input class="form-check-input mt-1 ms-auto" type="checkbox" v-model="ShareExpense" />
+                                </div>
+                            </div>
+                            <hr class="horizontal dark my-sm-4" />
+                            <div v-if="ShareExpense">
                             <!-- Shared expense -->
                             <div class="form-group">
                                 <label for="sharedExpense" class="form-label mb-3">{{ $t('Partilhar despesa com:')
@@ -492,31 +570,35 @@
                                 class="font-weight-light" dismissible>
                                 <span class="text-sm">{{ $t('Adicione utilizadores para partilhar a despesa') }}</span>
                             </MaterialAlert>
-                            <div v-if="sharedUsers.length > 0">
+                            <div v-if="transaction && transaction.users && transaction.users.length > 0">
                                 <div class="align-items-center text-center">
                                     <label class="form-label align-self-center mb-3"
                                         style="font-size: large; font-weight: 600;">{{ Value + $t('€ a dividir com:')}}</label>
                                 </div>
-                                <div class="form-row" v-for="(user, index) in sharedUsers" :key="index">
+                                <div class="form-row" v-for="(user, index) in transaction.users" :key="index">
                                     <div class="form-row">
                                         <material-checkbox :id="'checkbox_' + index" class="font-weight-light" checked
                                             @click="removeUser(index)">
                                         </material-checkbox>
-                                        <span style="font-size: 16px; padding-left: 10px;">{{ user }} </span>
+                                        <span style="font-size: 16px; padding-left: 10px;">{{ user.name }} </span>
                                     </div>
                                     <span style="font-size: 16px; padding-right: 10px;">{{ calculateShare() }}</span>
                                 </div>
                             </div>
                         </div>
+                        </div>
+
+                        
 
                     </div>
                 </div>
 
 
                 <div class="modal-footer mt-0">
-                    <p v-if="Type == 'Despesa' && showShareTab == false" class="btn btn-default bg-gradient-info mb-1"
-                        @click="showTab(1)">{{ $t('Próximo') }}</p>
-                    <p v-else class="btn btn-default bg-gradient-info mb-1" @click="add(); edit = true;">{{ $t('Editar') }}</p>
+                    <p v-if="edit == false" class="btn btn-default bg-gradient-info mb-1"
+                        @click="editTransaction(); edit = true;">{{ $t('Editar') }}</p>
+                    <p v-if="edit" class="btn btn-default bg-gradient-info mb-1"
+                        @click="saveEditedTransact();">{{ $t('Guardar') }}</p>
                     <p id="cancelButton" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal"
                         @click="cancel(); edit = false;">{{
                         $t('Cancelar') }}
@@ -535,8 +617,7 @@ import MaterialInput from "@/components/MaterialInput.vue";
 import MaterialCheckbox from "@/components/MaterialCheckbox.vue";
 //import NavPill from './NavPill.vue';
 //import { transactionStore } from "@/store/transactionStore.js";
-import { ref, reactive, toRefs  } from 'vue';
-
+import { ref, reactive, toRefs, onMounted } from 'vue';
 import { categoriesStore } from "@/store/categoriesStore";
 import { userStore } from "@/store/userStore";
 import { useRouter } from 'vue-router';
@@ -555,6 +636,8 @@ export default {
         MaterialCheckbox
     },
     setup(props) {
+        const { transaction } = toRefs(props);
+
         const { t } = useI18n();
         const Name = ref('');
         const nameError = ref(null);
@@ -570,9 +653,8 @@ export default {
         const Type = ref('');
         const TypeError = ref(null);
         const Repetition = ref('');
-        const SendRepetition = ref(0);
         const repetitionError = ref(null);
-        const Recorrence = ref('');
+        const Recorrence = ref(null);
         const recorrenceError = ref(null);
         const Comment = ref(null);
         const newUserEmail = ref('');
@@ -586,7 +668,8 @@ export default {
         let timestamp = ref(null);
         let isValid = true;
 
-        const { transaction } = toRefs(props);
+        const edit = ref(false);
+        
 
         // dinamica
         const categories = categoriesStore();
@@ -686,24 +769,24 @@ export default {
 
         const checkInputs = function () {
             
-            if (!transaction.value.name.trim())
+            if (!Name.value.trim())
                 nameError.value = true;
             else
                 nameError.value = false;
 
-            if (!transaction.value.valor)
+            if (!Value.value)
                 valueError.value = true;
-            else if (transaction.value.valor <= 0) {
+            else if (Value.value <= 0) {
                 valueError.value = true;
                 valueNegative.value = true;
+                Value.value = '';
             }
             else{
                 valueError.value = false;
                 valueNegative.value = null;
             }
-                
 
-            if (!transaction.value.date)
+            if (!DateM.value)
                 DateError.value = true;
             else
                 DateError.value = false;
@@ -717,34 +800,16 @@ export default {
                 TypeError.value = true;
             else
                 TypeError.value = false;
-
-            if (!transaction.value.recorrencia)
-                recorrenceError.value = true;
-            else
-                recorrenceError.value = false;
-
-            if (transaction.value.recorrencia == 'Recorrente (Fixa)') {
-                if (!transaction.value.repeticao)
-                    repetitionError.value = true;
-                else
-                    repetitionError.value = false;
-            }
         }
 
         const goToShare = function () {
             checkInputs();
             if (TypeError.value == false && nameError.value == false && DateError.value == false
-                && valueError.value == false && CategoryError.value == false && recorrenceError.value == false) {
-                if (Recorrence.value == 'Recorrente (Fixa)') {
-                    if (repetitionError.value == false)
-                        return true;
-                    else
-                        return false
-                } else {
+                && valueError.value == false && CategoryError.value == false) {
                     return true;
                 }
-            } else
-                return false;
+                else
+                    return false;
         }
 
 
@@ -757,6 +822,33 @@ export default {
                 console.error("sharedUsers is undefined");
             }
         };
+
+        const selectRecorrence = function(recorrence) {
+            if(recorrence == 'Recorrente (Fixa)'){
+                Recorrence.value = 'Recorrente (Fixa)';
+                transaction.value.repeticao = 1;
+            }
+            else{
+                Recorrence.value = 'Única (Não Fixa)';
+                transaction.value.repeticao = 0;
+                console.log(transaction.value);
+            }
+                
+        }
+
+        const selectRepetition = function(repetition) {
+            transaction.value.repeticao = repetition;
+            console.log(transaction.value.repeticao);
+        }
+
+        const selectType = function(type) {
+            transaction.value.tipo = type;
+            transaction.value.categoria = null;
+        }
+
+        const selectCategory = function(category) {
+            transaction.value.categoria = category.name;
+        }
 
         const cancel = function () {
             console.log(Description.value);
@@ -788,335 +880,72 @@ export default {
 
             resetTab.value = true;
 
-            if (ShareExpense.value == true) {
-                ShareExpense.value = false;
-                console.log(sharedUsers.value);
-                clearSharedUsers();
-                console.log("after cleared:" + sharedUsers.value);
-                newUserEmail.value = '';
-            }
+            newUserEmail.value = '';
         }
 
-        function transformRepetition(repetition) {
-            if (repetition == 'Todos os dias') {
-                return 1;
-            } else if (repetition == 'Todas as semanas') {
-                return 2;
-            } else if (repetition == 'Todos os meses') {
-                return 3;
-            } else if (repetition == 'Todos os anos') {
-                return 4;
-            }
-        }
+        const loadCategories = async () => {
+            try {
+                await categories.load();
+            } catch (err) {
+                if (err.message.includes('token')) {
+                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
 
-        const add = async function () {
+                    localStorage.clear();
+                    sessionStorage.clear();
 
-
-
-            if (Type.value == 'Receita' || Type.value == '') {
-                checkInputs();
-
-                if (TypeError.value == false && nameError.value == false && DateError.value == false
-                    && valueError.value == false && CategoryError.value == false && recorrenceError.value == false) {
-
-                    if (Recorrence.value == 'Recorrente (Fixa)') {
-                        if (repetitionError.value == false) {
-                            //faz post de receita fixa
-                            timestamp.value = convertToTimestamp(DateM.value);
-                            SendRepetition.value = transformRepetition(Repetition.value.trim());
-
-                            console.log("data: " + DateM.value);
-                            console.log("timestamp: " + timestamp.value);
-                            console.log(Repetition.value + ": " + SendRepetition.value);
-                            //POST da Receita Não Fixa
-                            const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/fixa/receita/add";
-
-                            const token = localStorage.getItem("token");
-
-                            const request = {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    Authorization: "Bearer " + token,
-                                },
-                                body: JSON.stringify({
-                                    name: Name.value,
-                                    value: Value.value,
-                                    descricao: Description.value,
-                                    IdCategoria: Category.value.id,
-                                    local: Place.value,
-                                    date: timestamp.value,
-                                    repeticao: SendRepetition.value,
-                                    users: [],
-                                    comentario: Comment.value
-                                }),
-
-                            };
-
-                            try {
-                                const response = await fetch(url, request);
-
-                                if (!response.ok) {
-                                    const errorData = await response.json();
-                                    throw new Error(errorData.message);
-                                }
-                                console.log("post receita fixa");
-
-                                const cancelButton = document.getElementById('cancelButton');
-                                cancelButton.click();
-
-                                //sucesso
-                                const event = new CustomEvent('show-snackbar', { detail: 'success' });
-                                document.dispatchEvent(event);
-                                console.log('PopUp emitiu evento');
-                                user.getUser(); //atualiza o saldo da homepage
-
-                            } catch (error) {
-                                if (error.message.includes('token')) {
-                                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
-
-                                    localStorage.clear();
-                                    sessionStorage.clear();
-
-                                    router.push('/sign-in');
-                                } else {
-                                    alert("Erro ao adicionar Recorrente (Fixa):", error.message);
-                                    const event = new CustomEvent('show-snackbar', { detail: 'error' });
-                                    document.dispatchEvent(event);
-                                    console.log('PopUp emitiu evento');
-                                }
-                            }
-
-                        }
-                    } else {
-                        //post de receita não fixa
-                        timestamp.value = convertToTimestamp(DateM.value);
-                        console.log("data: " + DateM.value);
-                        console.log("timestamp: " + timestamp.value);
-                        //POST da Receita Não Fixa
-                        const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/unica/receita/add";
-
-                        const token = localStorage.getItem("token");
-
-                        const request = {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: "Bearer " + token,
-                            },
-                            body: JSON.stringify({
-                                name: Name.value,
-                                value: Value.value,
-                                descricao: Description.value,
-                                IdCategoria: Category.value.id,
-                                local: Place.value,
-                                date: timestamp.value,
-                                repeticao: SendRepetition.value,
-                                users: [],
-                                comentario: Comment.value
-                            }),
-
-                        };
-
-                        try {
-                            const response = await fetch(url, request);
-
-                            if (!response.ok) {
-                                const errorData = await response.json();
-                                throw new Error(errorData.message);
-                            }
-                            console.log("post receita não fixa");
-
-                            const cancelButton = document.getElementById('cancelButton');
-                            cancelButton.click();
-
-                            //sucesso
-                            const event = new CustomEvent('show-snackbar', { detail: 'successAddMove' });
-                            document.dispatchEvent(event);
-                            console.log('PopUp emitiu evento');
-                            user.getUser(); //atualiza o saldo da homepage
-
-                        } catch (error) {
-                            if (error.message.includes('token')) {
-                                alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
-
-                                localStorage.clear();
-                                sessionStorage.clear();
-
-                                router.push('/sign-in');
-                            } else {
-                                alert("Erro ao adicionar Receita nao fixa:", error.message);
-                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
-                                document.dispatchEvent(event);
-                                console.log('PopUp emitiu evento');
-                            }
-                        }
-                    }
-                }
-
-            } else {
-                if (showAlertUsers.value == true)
-                    showAlertUsers.value = false;
-
-                if (ShareExpense.value == true && sharedUsers.length === 0) {
-                    console.log("sharedExpense:" + ShareExpense.value)
-                    console.log("sharedUsers length:" + sharedUsers.length)
-                    showAlertUsers.value = true;
+                    router.push('/sign-in');
                 } else {
-
-                    if (Recorrence.value == 'Recorrente (Fixa)') {
-                        if (repetitionError.value == false) {
-
-                            timestamp.value = convertToTimestamp(DateM.value);
-                            SendRepetition.value = transformRepetition(Repetition.value.trim());
-
-                            console.log("data: " + DateM.value);
-                            console.log("timestamp: " + timestamp.value);
-                            console.log(Repetition.value + ": " + SendRepetition.value);
-
-                            console.log("post despesa fixa e partilhada");
-
-                            const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/fixa/despesa/add";
-
-                            const token = localStorage.getItem("token");
-
-                            const usersArray = sharedUsers.map(email => ({ email }));
-
-                            for (let i = 0; i < usersArray.length; i++) {
-                                alert(usersArray[i]);
-                            }
-
-                            const request = {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                    Authorization: "Bearer " + token,
-                                },
-                                body: JSON.stringify({
-                                    name: Name.value,
-                                    value: Value.value,
-                                    descricao: Description.value,
-                                    IdCategoria: Category.value.id,
-                                    local: Place.value,
-                                    date: timestamp.value,
-                                    repeticao: SendRepetition.value,
-                                    users: usersArray,
-                                    comentario: Comment.value
-                                }),
-                            };
-
-                            try {
-                                const response = await fetch(url, request);
-
-                                if (!response.ok) {
-                                    const errorData = await response.json();
-                                    throw new Error(errorData.message);
-                                }
-
-                                //POST da Despesa
-                                const cancelButton = document.getElementById('cancelButton');
-                                cancelButton.click();
-
-                                //sucesso
-                                const event = new CustomEvent('show-snackbar', { detail: 'success' });
-                                document.dispatchEvent(event);
-                                console.log('PopUp emitiu evento');
-                                user.getUser(); //atualiza o saldo da homepage
-
-                            } catch (error) {
-                                if (error.message.includes('token')) {
-                                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
-
-                                    localStorage.clear();
-                                    sessionStorage.clear();
-
-                                    router.push('/sign-in');
-                                } else {
-                                    const event = new CustomEvent('show-snackbar', { detail: 'error' });
-                                    document.dispatchEvent(event);
-                                    console.log('PopUp emitiu evento');
-                                }
-                            }
-                        }
-                    } else {
-
-                        timestamp.value = convertToTimestamp(DateM.value);
-
-                        console.log("data: " + DateM.value);
-                        console.log("timestamp: " + timestamp.value);
-
-                        const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/unica/despesa/add";
-
-                        const token = localStorage.getItem("token");
-
-                        const usersArray = sharedUsers.map(email => ({ email }));
-
-                        const request = {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: "Bearer " + token,
-                            },
-                            body: JSON.stringify({
-                                name: Name.value,
-                                value: Value.value,
-                                descricao: Description.value,
-                                IdCategoria: Category.value.id,
-                                local: Place.value,
-                                date: timestamp.value,
-                                repeticao: SendRepetition.value,
-                                users: usersArray,
-                                comentario: Comment.value
-                            }),
-                        };
-
-                        try {
-                            const response = await fetch(url, request);
-
-                            if (!response.ok) {
-                                const errorData = await response.json();
-                                throw new Error(errorData.message);
-                            }
-                            //POST da Despesa
-                            console.log("post despesa não fixa e partilhada");
-
-                            const cancelButton = document.getElementById('cancelButton');
-                            cancelButton.click();
-
-                            //sucesso
-                            const event = new CustomEvent('show-snackbar', { detail: 'successAddMove' });
-                            document.dispatchEvent(event);
-                            console.log('PopUp emitiu evento');
-                            user.getUser(); //atualiza o saldo da homepage
-
-
-                        } catch (error) {
-                            if (error.message.includes('token')) {
-                                alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
-
-                                localStorage.clear();
-                                sessionStorage.clear();
-
-                                router.push('/sign-in');
-                            } else {
-                                const event = new CustomEvent('show-snackbar', { detail: 'error' });
-                                document.dispatchEvent(event);
-                                console.log('PopUp emitiu evento');
-                            }
-                        }
-                    }
+                    alert(err.message);
                 }
+            }
+        };
+
+        onMounted(() => {
+            loadCategories();
+        });
+
+        
+        function editTransaction(){
+            Name.value = transaction.value.name;
+            Value.value = transaction.value.valor;
+            DateM.value = transaction.value.date;
+            Description.value = transaction.value.description;
+            Place.value = transaction.value.local;
+        }
+
+        function saveEditedTransact(){
+            checkInputs();
+            if(nameError.value == false && DateError.value == false
+            && valueError.value == false && CategoryError.value == false){
+
+            
+            transaction.value.name = Name.value;
+            transaction.value.description = Description.value;
+            transaction.value.valor = Value.value;
+            timestamp.value = convertToTimestamp(DateM.value);
+            transaction.value.date = timestamp.value;
+            transaction.value.local = Place.value;
+
+            console.log("Saved transaction: ", transaction.value);
+
+            edit.value = false;
+
             }
         }
 
         return {
             t,
-            add,
+            editTransaction,
+            saveEditedTransact,
             cancel,
             checkInputs,
             goToShare,
             addUser,
             clearSharedUsers,
+            selectRecorrence,
+            selectRepetition,
+            selectType,
+            selectCategory,
             Name,
             nameError,
             Description,
@@ -1143,13 +972,12 @@ export default {
             showAlertUsers,
             resetTab,
             categories,
-            valueNegative
+            valueNegative,
+            edit
         };
     },
     data() {
         return {
-            expenseCategories: ['Pessoal', 'Alimentação', 'Familiar', 'Casa', 'Entretenimento'],
-            incomeCategories: ['Rendas', 'Salários'],
             isEditing: [],
             isEditingIncome: [],
             editedCategory: '',
@@ -1167,8 +995,7 @@ export default {
             SetBorder: true,
             showAlert: false,
             showShareTab: false,
-            Tab: 0,
-            edit: false,
+            Tab: 0
         };
     },
     mounted() {
@@ -1178,12 +1005,10 @@ export default {
     },
     computed: {
         displayCategories() {
-            if (this.Type == 'Despesa')
+            if (this.transaction.tipo == 'Despesa')
                 return this.categories.CategoriesExpense;
-            else if (this.Type == 'Receita')
-                return this.categories.CategoriesIncome;
             else
-                return '';
+                return this.categories.CategoriesIncome;
         },
     },
     watch: {
@@ -1202,26 +1027,36 @@ export default {
             this.showAlertUsers = false;
         },
         calculateShare() {
-            if (this.sharedUsers === 0) return ''; // Evita divisão por zero
-            this.shareValue = this.Value / (this.sharedUsers.length + 1);
+            if (this.transaction.users === 0) return ''; // Evita divisão por zero
+            this.shareValue = this.transaction.valor / (this.transaction.users.length + 1);
             return `${this.shareValue.toFixed(2)} €`; // Formata o valor com duas casas decimais
         },
         removeUser(index) {
             this.sharedUsers.splice(index, 1);
         },
         showTab(index) {
-            this.Tab = index;
-            const tabs = document.querySelectorAll('.tab');
-            const buttons = document.querySelectorAll('.tab-button');
 
+            this.Tab = index;
+            const tabs = document.querySelectorAll('.tab-details');
+            const buttons = document.querySelectorAll('.tab-button-details');
             if (index == 1) {
-                if (this.goToShare() == true) {
+                if (this.transaction.tipo == 'Despesa' && this.edit == false) {
                     tabs.forEach((tab, i) => {
                         tab.classList.toggle('active', i === index);
                         buttons[i].classList.toggle('active', i === index);
                     });
                     this.showShareTab = !this.showShareTab;
                     console.log("showShare index 1:" + this.showShareTab);
+                }else if(this.transaction.tipo == 'Despesa' && this.edit == true){
+                    this.checkInputs();
+                    if(this.goToShare() == true){
+                        tabs.forEach((tab, i) => {
+                        tab.classList.toggle('active', i === index);
+                        buttons[i].classList.toggle('active', i === index);
+                        });
+                        this.showShareTab = !this.showShareTab;
+                        console.log("showShare index 1:" + this.showShareTab);
+                    }
                 }
             } else {
                 tabs.forEach((tab, i) => {
@@ -1232,21 +1067,11 @@ export default {
                     this.showShareTab = false;
                 console.log("showShare else:" + this.showShareTab);
             }
+
+
         },
         alert() {
             this.showAlert = !this.showAlert;
-        },
-        selectType(type) {
-            this.Type = type;
-        },
-        selectRecorrence(recorrence) {
-            this.Recorrence = recorrence;
-        },
-        selectRepetition(repetition) {
-            this.Repetition = repetition;
-        },
-        selectCategory(category) {
-            this.Category = category;
         },
         handleCategoryFocus() {
             console.log("antes" + this.isCategoryFocused);
@@ -1432,11 +1257,11 @@ export default {
     border-radius: 0.375rem;
 }
 
-.tab {
+.tab-details {
     display: none;
 }
 
-.tab.active {
+.tab-details.active {
     display: block;
 }
 

@@ -830,6 +830,8 @@ export default {
                         timestamp.value = convertToTimestamp(DateM.value);
                         console.log("data: " + DateM.value);
                         console.log("timestamp: " + timestamp.value);
+
+                        console.log("repetição: " + SendRepetition.value);
                         //POST da Receita Não Fixa
                         const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/unica/receita/add";
 

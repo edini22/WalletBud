@@ -12,9 +12,14 @@ export const useTransactionStore = defineStore('transaction', {
                 local: 'LivroStore',
                 tipo: 'Despesa',
                 categoria: 'Entretenimento',
-                recorrencia: 'fixa',
-                repeticao: '1',
-                comentario: 'bdsnaskdnd'
+                repeticao: 1,
+                comentario: 'bdsnaskdnd',
+                users: [ 
+                  {id: 1,
+                  name: "inês"
+                  }
+
+                ]
             },
             {
                 id: 2,
@@ -25,9 +30,14 @@ export const useTransactionStore = defineStore('transaction', {
                 local: 'Empresa de Energia',
                 tipo: 'Receita',
                 categoria: 'Saúde',
-                recorrencia: 'nãofixa',
-                repeticao: '2',
-                comentario: null
+                repeticao: 0,
+                comentario: null,
+                users: [ 
+                  {id: 1,
+                  name: "inês"
+                  }
+
+                ]
             },
             {
                 id: 3,
@@ -38,9 +48,11 @@ export const useTransactionStore = defineStore('transaction', {
                 local: 'Banco XPTO',
                 tipo: 'Despesa',
                 categoria: 'Pessoal',
-                recorrencia: 'fixa',
-                repeticao: '3',
-                comentario: 'ocsnjkancjasc'
+                repeticao: 3,
+                comentario: 'ocsnjkancjasc',
+                users: [ 
+
+                ]
             }
         ]
     }),

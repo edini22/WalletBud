@@ -9,34 +9,33 @@
 
                 <div class="modal-body">
                     <!-- Valor objetivo poupança -->
-                    <div class="form-group form-row">
-                            <label for="value" class="form-label">{{ $t('Objetivo Poupança') }}:
-                            </label>
-                            <div v-if="valueError === true && valueNegative === null" class="form-input mb-3">
-                                <material-input class="material-input" id="value" type="number" :value="Value"
-                                    :label="$t('Indique um valor')" name="value" @update:value="Value = $event" error />
-                            </div>
-                            <div v-if="valueError === true && valueNegative === true" class="form-input mb-3">
-                                <material-input class="material-input" id="value" type="number" :value="Value"
-                                    :label="$t('Indique um valor positivo')" name="value" @update:value="Value = $event" error />
-                            </div>
-                            <div v-if="valueError === false" class="form-input mb-3">
-                                <material-input class="material-input" id="value" type="number" name="value"
-                                    :value="Value" @update:value="Value = $event" success />
-                            </div>
-                            <div v-if="valueError === null" class="form-input mb-3">
-                                <material-input class="material-input" id="value" type="number" :value="Value"
-                                    :label="$t('Indique um valor')" name="value" @update:value="Value = $event" />
-                            </div>
+                    <div class="form-group form-row ">
+                        <label for="value" class="form-label fs-6 text-center">{{ $t('Objetivo Poupança') }}: </label>
+
+                        <div v-if="valueError === true && valueNegative === null" class="form-input mb-2">
+                            <material-input class="material-input" id="value" type="number" :value="Value"
+                                :label="$t('Indique um valor')" name="value" @update:value="Value = $event" error />
                         </div>
+                        <div v-if="valueError === true && valueNegative === true" class="form-input mb-2">
+                            <material-input class="material-input" id="value" type="number" :value="Value"
+                                :label="$t('Indique um valor positivo')" name="value" @update:value="Value = $event" error />
+                        </div>
+                        <div v-if="valueError === false" class="form-input mb-2">
+                            <material-input class="material-input" id="value" type="number" name="value"
+                                :value="Value" @update:value="Value = $event" success />
+                        </div>
+                        <div v-if="valueError === null" class="form-input mb-2">
+                            <material-input class="material-input" id="value" type="number" :value="Value"
+                                :label="$t('Indique um valor')" name="value" @update:value="Value = $event" />
+                        </div>
+                    </div>
                 </div>
 
-
-                <div class="modal-footer mt-0">
-                    <button class="btn btn-default bg-gradient-info mb-1" :disabled="isLoading" @click="add">{{ $t('Definir') }}</button>
+                <div class="modal-footer mt-0 d-flex justify-content-between">
                     <button id="cancelSavings" class="btn btn-default bg-gradient-primary mb-1" :disabled="isLoading" data-bs-dismiss="modal" @click="cancel">{{
                         $t('Cancelar') }}
                     </button>
+                    <button class="btn btn-default bg-gradient-info mb-1" :disabled="isLoading" @click="add">{{ $t('Definir') }}</button>
                 </div>
             </div>
         </div>
@@ -157,7 +156,7 @@ export default {
 }
 
 .modal {
-    z-index: 1050;
+    z-index: 9999;
 }
 
 .input-group {

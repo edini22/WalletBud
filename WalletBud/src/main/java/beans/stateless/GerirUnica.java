@@ -11,6 +11,7 @@ import org.orm.PersistentSession;
 import wb.walletbud.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -141,12 +142,14 @@ public class GerirUnica {
         
                             // Notify shared users about the change
                             Notificacao notification = new Notificacao();
+                            notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                             notification.setDescrição("The transaction " + unica.getName() + " has been updated. Old share value: " + aSvalue + ", new share value: " + nSvalue);
                             u.notify(notification);
                         }
 
                         // Notify the owner about the successful update
                         Notificacao ownerNotification = new Notificacao();
+                        ownerNotification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                         ownerNotification.setDescrição("Your transaction " + unica.getName() + " has been successfully updated.");
                         user.notify(ownerNotification);
 
@@ -450,6 +453,7 @@ public class GerirUnica {
                         TransacaoPartilhadaDAO.deleteAndDissociate(tp);
                         // Notificar o utilizador removido
                         Notificacao notification = new Notificacao();
+                        notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                         notification.setDescrição("You have been removed from the transaction " + unica.getName() + ".");
                         tp.getUserId_user().notify(notification);
                     }
@@ -466,6 +470,7 @@ public class GerirUnica {
                     TransacaoPartilhadaDAO.save(tp);
                     // Notificar o utilizador adicionado
                     Notificacao notification = new Notificacao();
+                    notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                     notification.setDescrição("You have been added to the transaction " + unica.getName() + ". Please confirm your participation.");
                     user_shared.notify(notification);
                 }
@@ -511,11 +516,13 @@ public class GerirUnica {
                 for (TransacaoPartilhada tpu : transacoesPart) {
                     User u = tpu.getUserId_user();
                     Notificacao notification = new Notificacao();
+                    notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                     notification.setDescrição("The transaction " + unica.getName() + " has been updated. Old share value: " + aSValue + ", New share value: " + nSValue + ".");
                     u.notify(notification);
                 }
 
                 Notificacao ownerNotification = new Notificacao();
+                ownerNotification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                 ownerNotification.setDescrição("The transaction " + unica.getName() + " has been successfully updated. Old share value: " + aSValue + ", New share value: " + nSValue + ".");
                 user.notify(ownerNotification);
 
@@ -592,6 +599,7 @@ public class GerirUnica {
                         TransacaoPartilhadaDAO.deleteAndDissociate(tp);
                         // Notify owner that a user has rejected the transaction
                         Notificacao notification = new Notificacao();
+                        notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                         notification.setDescrição("User " + email + " has rejected the transaction " + unica.getName());
                         unica.getOwner_id().notify(notification);
 
@@ -602,6 +610,7 @@ public class GerirUnica {
 
                         // Notify owner that a user has confirmed the transaction
                         Notificacao notification = new Notificacao();
+                        notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                         notification.setDescrição("User " + email + " has confirmed the transaction " + unica.getName());
                         unica.getOwner_id().notify(notification);
                     }
@@ -649,6 +658,7 @@ public class GerirUnica {
                 TransacaoPartilhada[] transacoesPart = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
                 // Notify remaining users and owner
                 Notificacao notification = new Notificacao();
+                notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                 notification.setDescrição("Transaction " + unica.getName() + " has been updated. Previous share value: " + aSValue + ", new share value: " + nSValue + ", users remaining: " + users);
                 for (TransacaoPartilhada tp : transacoesPart) {
                     User sharedUser = gerirUtilizador.getUserByEmail(session,tp.getUserId_user().getEmail());
@@ -671,6 +681,7 @@ public class GerirUnica {
 
                 // Notify all users that the transaction is confirmed
                 Notificacao notification = new Notificacao();
+                notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                 notification.setDescrição("Transaction " + unica.getName() + " is now confirmed.");
                 for (TransacaoPartilhada tp : transacoesPart) {
                     tp.getUserId_user().notify(notification);
@@ -751,6 +762,11 @@ public class GerirUnica {
                     user.setSaldo(user.getSaldo() + unica.getShareValue());
                 }
                 UserDAO.save(user);
+                LocalDateTime now = LocalDateTime.now();
+                // Notificar todos os utilizadores (u) que o owner eliminou esta transacao
+                Notificacao notification = new Notificacao();
+                notification.setDate(Timestamp.valueOf(now));
+                notification.setDescrição("The owner has deleted the transaction " + unica.getName() + ". Please confirm if you want to continue with the new share value.");
 
                 for (TransacaoPartilhada tp : tps) {
                     User u = tp.getUserId_user();
@@ -762,9 +778,6 @@ public class GerirUnica {
                     UserDAO.save(u);
                     TransacaoPartilhadaDAO.deleteAndDissociate(tp);
 
-                    // Notificar todos os utilizadores (u) que o owner eliminou esta transacao
-                    Notificacao notification = new Notificacao();
-                    notification.setDescrição("The owner has deleted the transaction " + unica.getName() + ". Please confirm if you want to continue with the new share value.");
                     u.notify(notification);
                 }
 
@@ -775,6 +788,7 @@ public class GerirUnica {
 
                 // Notificar o owner que eliminou esta transacao
                 Notificacao ownerNotification = new Notificacao();
+                ownerNotification.setDate(Timestamp.valueOf(now));
                 ownerNotification.setDescrição("You have successfully deleted the transaction " + unica.getName() + ".");
                 user.notify(ownerNotification);
 

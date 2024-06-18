@@ -119,6 +119,7 @@ public class GerirFixa {
                         TransacaoPartilhadaDAO.save(transacao);
                         if (sharedUser != null) {
                             Notificacao notification = new Notificacao();
+                            notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                             notification.setDescrição("Transaction " + fixa.getName() + " has been edited. Old share value: " + aSvalue + ", new share value: " + nSvalue);
                             sharedUser.notify(notification);
                         }
@@ -142,6 +143,7 @@ public class GerirFixa {
             FixaDAO.save(fixa);
 
             Notificacao ownerNotification = new Notificacao();
+            ownerNotification.setDate(Timestamp.valueOf(LocalDateTime.now()));
             ownerNotification.setDescrição("Your transaction " + fixa.getName() + " has been successfully edited.");
             user.notify(ownerNotification);
         } catch (Exception e) {
@@ -405,6 +407,7 @@ public class GerirFixa {
                         TransacaoPartilhadaDAO.deleteAndDissociate(tp);
                         //notificar que user rejeitou a transacao
                         Notificacao notification = new Notificacao();
+                        notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                         notification.setDescrição("User " + email_shared + " has been removed from the transaction " + fixa.getName());
                         user.notify(notification);
                     }
@@ -422,6 +425,7 @@ public class GerirFixa {
 
                     // Notify that a user was added to the transaction
                     Notificacao notification = new Notificacao();
+                    notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                     notification.setDescrição("User " + email_shared + " has been added to the transaction " + fixa.getName());
                     user.notify(notification);
                 }
@@ -446,6 +450,7 @@ public class GerirFixa {
                 FixaDAO.save(fixa);
                 
                 Notificacao notification = new Notificacao();
+                notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                 notification.setDescrição("Transaction " + fixa.getName() + " has been updated. Previous share value: " + aSValue + ", new share value: " + nSValue + ", total users: " + nUsers);
 
                 // Notify all users involved in the transaction
@@ -517,6 +522,7 @@ public class GerirFixa {
 
                         // Notify owner that a user has rejected the transaction
                         Notificacao notification = new Notificacao();
+                        notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                         notification.setDescrição("User " + email + " has rejected the transaction " + fixa.getName());
                         fixa.getOwner_id().notify(notification);
 
@@ -530,6 +536,7 @@ public class GerirFixa {
 
                         // Notify owner that a user has confirmed the transaction
                         Notificacao notification = new Notificacao();
+                        notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                         notification.setDescrição("User " + email + " has confirmed the transaction " + fixa.getName());
                         fixa.getOwner_id().notify(notification);
                     }
@@ -565,6 +572,7 @@ public class GerirFixa {
 
                 // Notify remaining users and owner
                 Notificacao notification = new Notificacao();
+                notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                 notification.setDescrição("Transaction " + fixa.getName() + " has been updated. Previous share value: " + aSValue + ", new share value: " + nSValue + ", users remaining: " + users);
                 for (TransacaoPartilhada tp : transacoesPart) {
                     User sharedUser = gerirUtilizador.getUserByEmail(session,tp.getUserId_user().getEmail());
@@ -585,6 +593,7 @@ public class GerirFixa {
 
                 // Notify all users that the transaction is confirmed
                 Notificacao notification = new Notificacao();
+                notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                 notification.setDescrição("Transaction " + fixa.getName() + " is now confirmed. Share value: " + nSValue + ", total users: " + users);
 
                 for(TransacaoPartilhada tp : transacoesPart){
@@ -644,6 +653,7 @@ public class GerirFixa {
 
             // Notify the owner
             Notificacao ownerNotification = new Notificacao();
+            ownerNotification.setDate(Timestamp.valueOf(LocalDateTime.now()));
             ownerNotification.setDescrição("Your fixed transaction " + fixa.getName() + " has been paid.");
             user.notify(ownerNotification);
 
@@ -659,6 +669,7 @@ public class GerirFixa {
 
                 //notificar todos os utilizadores (u) que uma despes/receita fixa foi paga
                 Notificacao userNotification = new Notificacao();
+                userNotification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                 userNotification.setDescrição("The fixed transaction " + fixa.getName() + " has been paid.");
                 u.notify(userNotification);
             }
@@ -744,12 +755,14 @@ public class GerirFixa {
 
                     //notificar todos os utilizadores (u) que o owner eliminou esta  transacao
                     Notificacao notification = new Notificacao();
+                    notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                     notification.setDescrição("The owner has deleted the fixed transaction " + fixa.getName() + ".");
                     u.notify(notification);
 
                     // enviar notificação para toda os utilizadores(pedir para se querem continuar mas agora vao pagar/receber (nSValue))
                     float nSValue = fixa.getValue() / (tps.length - 1);
                     Notificacao newShareNotification = new Notificacao();
+                    newShareNotification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                     newShareNotification.setDescrição("Do you want to continue with the new share value of " + nSValue + "?");
                     u.notify(newShareNotification);
 
@@ -770,6 +783,7 @@ public class GerirFixa {
 
                 //notificar o owner (user) eliminou esta  transacao
                 Notificacao ownerNotification = new Notificacao();
+                ownerNotification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                 ownerNotification.setDescrição("You have deleted the fixed transaction " + fixa.getName() + ".");
                 user.notify(ownerNotification);
 
@@ -798,11 +812,13 @@ public class GerirFixa {
 
                         // Notify all users that a user has given up
                         Notificacao notification = new Notificacao();
+                        notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                         notification.setDescrição("A user has given up the fixed transaction " + fixa.getName() + ".");
                         u.notify(notification);
 
                         // Inform users to decide on continuing with the new share value
                         Notificacao newShareNotification = new Notificacao();
+                        newShareNotification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                         newShareNotification.setDescrição("Do you want to continue with the new share value of " + nSValue + "?");
                         u.notify(newShareNotification);
                     }

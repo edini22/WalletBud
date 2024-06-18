@@ -2,7 +2,6 @@
 
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-8">
       <div class="timeline-header mb-4">
         <h4>Agenda</h4>
       </div>
@@ -21,7 +20,6 @@
             <h5 class="text-secondary">Sem eventos futuros!</h5>
           </div>
       </div>
-    </div>
   </div>
 </div>
 

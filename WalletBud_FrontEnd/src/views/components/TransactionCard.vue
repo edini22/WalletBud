@@ -9,10 +9,9 @@
             :options='time_periods' 
             v-model:selected="activeFilter" />
         </div>
-        <div class="me-2">
-          <!-- filter by category or/and type -->
+        <!--<div class="me-2">
           <MaterialFilter @change="handleFilterChange" />
-        </div>
+        </div>-->
         <div class="me-2">
           <!-- search movements -->
           <div class="input-group input-group-outline" 
@@ -86,7 +85,7 @@ import MaterialPagination from "@/components/MaterialPagination.vue";
 import MaterialPaginationItem from "@/components/MaterialPaginationItem.vue";
 import { useTransactionStore } from '@/store/transactionStore.js';
 import MaterialDropdown from "@/components/MaterialDropdown.vue";
-import MaterialFilter from "@/components/MaterialFilter.vue";
+//import MaterialFilter from "@/components/MaterialFilter.vue";
 import ExportData from '@/components/ExportData.vue';
 
 
@@ -97,7 +96,7 @@ export default {
     MaterialPagination,
     MaterialPaginationItem,
     MaterialDropdown,
-    MaterialFilter,
+    //MaterialFilter,
     ExportData
   },
   data() {
@@ -129,6 +128,7 @@ export default {
           t.name.toLowerCase().includes(search) ||
           t.date.toLowerCase().includes(search) ||
           t.tipo.toLowerCase().includes(search) ||
+          t.categoria.toLowerCase().includes(search) ||
           t.value.toString().toLowerCase().includes(search)
         );
       });

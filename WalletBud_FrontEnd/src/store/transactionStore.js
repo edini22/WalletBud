@@ -6,41 +6,53 @@ export const useTransactionStore = defineStore('transaction', {
             {
                 id: 1,
                 name: 'Compra de Livro',
-                valor: 20.50,
+                value: 20.50,
                 date: '2022-05-23',
                 description: 'Livro sobre JavaScript',
                 local: 'LivroStore',
                 tipo: 'Despesa',
                 categoria: 'Entretenimento',
-                recorrencia: 'fixa',
-                repeticao: '1',
-                comentario: 'bdsnaskdnd'
+                repeticao: 1,
+                comentario: 'bdsnaskdnd',
+                users: [ 
+                  {id: 1,
+                  name: "inês"
+                  }
+
+                ]
             },
             {
                 id: 2,
                 name: 'Pagamento de Conta',
-                valor: 50,
+                value: 50,
                 date: '23 Abril 2024',
                 description: null,
                 local: 'Empresa de Energia',
                 tipo: 'Receita',
                 categoria: 'Saúde',
-                recorrencia: 'nãofixa',
-                repeticao: '2',
-                comentario: null
+                repeticao: 0,
+                comentario: null,
+                users: [ 
+                  {id: 1,
+                  name: "inês"
+                  }
+
+                ]
             },
             {
                 id: 3,
                 name: 'Depósito Bancário',
-                valor: 1000,
+                value: 1000,
                 date: '20 Abril 2024',
                 description: 'Depósito salário',
                 local: 'Banco XPTO',
                 tipo: 'Despesa',
                 categoria: 'Pessoal',
-                recorrencia: 'fixa',
-                repeticao: '3',
-                comentario: 'ocsnjkancjasc'
+                repeticao: 3,
+                comentario: 'ocsnjkancjasc',
+                users: [ 
+
+                ]
             }
         ]
     }),

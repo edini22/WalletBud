@@ -1,11 +1,11 @@
 <template>
-  <div class="container-fluid py-4">
+  <div class="container-fluid py-2">
     <div class="row">
       <div class="col-md-8 mx-auto">
-        <div class="card mt-4">
-          <div class="card-header p-3">
-            <h5 class="mb-0">Alerts</h5>
-          </div>
+        <div class=" mb-4">
+          <h4>Notificações</h4>
+        </div>
+        <div class="card mt-1">
           <div class="card-body p-3 pb-0">
             <material-alert class="font-weight-light" color="primary" dismissible>
               <span class="text-sm"
@@ -72,65 +72,7 @@
               >
             </material-alert>
           </div>
-        </div>
-        <div class="card mt-4">
-          <div class="card-header p-3">
-            <h5 class="mb-0">Notifications</h5>
-            <p class="text-sm mb-0">
-              Notifications on this page use Toasts from Bootstrap. Read more
-              details
-              <a
-                href="https://getbootstrap.com/docs/5.0/components/toasts/"
-                target="
-          "
-                >here</a
-              >.
-            </p>
-          </div>
-          <div class="card-body p-3">
-            <div class="row">
-              <div class="col-lg-3 col-sm-6 col-12">
-                <button
-                  class="btn bg-gradient-success w-100 mb-0 toast-btn"
-                  type="button"
-                  data-target="successToast"
-                  @click="snackbar = 'success'"
-                >
-                  Success
-                </button>
-              </div>
-              <div class="col-lg-3 col-sm-6 col-12 mt-sm-0 mt-2">
-                <button
-                  class="btn bg-gradient-info w-100 mb-0 toast-btn"
-                  type="button"
-                  data-target="infoToast"
-                  @click="snackbar = 'info'"
-                >
-                  Info
-                </button>
-              </div>
-              <div class="col-lg-3 col-sm-6 col-12 mt-lg-0 mt-2">
-                <button
-                  class="btn bg-gradient-warning w-100 mb-0 toast-btn"
-                  type="button"
-                  data-target="warningToast"
-                  @click="snackbar = 'warning'"
-                >
-                  Warning
-                </button>
-              </div>
-              <div class="col-lg-3 col-sm-6 col-12 mt-lg-0 mt-2">
-                <button
-                  class="btn bg-gradient-danger w-100 mb-0 toast-btn"
-                  type="button"
-                  data-target="dangerToast"
-                  @click="snackbar = 'danger'"
-                >
-                  Danger
-                </button>
-              </div>
-            </div>
-          </div>
+        
         </div>
       </div>
     </div>

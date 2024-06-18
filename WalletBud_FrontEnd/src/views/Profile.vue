@@ -6,9 +6,8 @@
         background-image: url('https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
       "
     >
-      <span class="mask bg-gradient-info opacity-0"></span>
+      <span class="mask bg-gradient-info opacity-1"></span>
     </div>
-
 
     <div class="card card-body mx-3 mx-md-4 mt-n6">
       <div class="row gx-3">

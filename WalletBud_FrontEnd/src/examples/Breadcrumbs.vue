@@ -8,7 +8,7 @@
         class="text-sm breadcrumb-item active"
         :class="color"
         aria-current="page">
-        <a :class="color" class="opacity-8" href="/tables">{{ currentPage }}</a>
+        <a :class="color" class="opacity-8">{{ currentPage }}</a>
       </li>
     </ol>
   </nav>

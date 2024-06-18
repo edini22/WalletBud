@@ -19,16 +19,17 @@
         <ul class="navbar-nav justify-content-end">
           <li class="nav-item d-flex align-items-center">
             <router-link
-              :to="{ name: 'Profile' }"
-              class="px-0 nav-link font-weight-bold lh-1"
-              :class="color ? color : 'text-body'"
+            :to="{ name: 'Profile' }"
+            class="px-0 nav-link font-weight-bold lh-1 d-flex align-items-center"
+            :class="color ? color : 'text-body'"
             >
-              <i class="material-icons me-sm-1">
+            <span class="username px-1 ">{{ store.username }}</span>
+              <i class="material-icons me-sm-1 ">
                 account_circle
               </i>
             </router-link>
           </li>
-          <li class="nav-item d-xl-none ps-3 px-2 d-flex align-items-center">
+          <li class="nav-item d-xl-none ps-2 d-flex align-items-center">
             <a
               href="#"
               @click="toggleSidebar"
@@ -43,8 +44,9 @@
             </a>
           </li>
           
+          
           <li
-            class="nav-item dropdown d-flex align-items-center pe-2 px-2"
+            class="nav-item dropdown d-flex align-items-center pe-3 px-2"
           >
             <a
               href="#"
@@ -55,7 +57,7 @@
               aria-expanded="false"
               @click="showMenu = !showMenu"
             >
-              <i class="material-icons cursor-pointer"> notifications </i>
+              <i class="material-icons cursor-pointer "> notifications </i>
             </a>
             <ul
               class="px-2 py-3 dropdown-menu dropdown-menu-end me-sm-n4"
@@ -165,6 +167,26 @@
               </li>
             </ul>
           </li>
+          <li class="nav-item d-flex align-items-center ">
+            <a
+              href="#"
+              class="p-0 nav-link lh-1"
+              :class="color ? color : 'text-body'"
+              @click="showModal">
+              <i class="material-icons red-icon text-danger font-weight-bold me-sm-1">
+                power_settings_new
+              </i>
+            </a>
+          </li>
+
+          
+          <li v-if="isModalVisible">
+            <confirm 
+            :isVisible="isModalVisible" 
+            :message="$t('Tem a certeza?')"
+            @confirm="logOut"
+            @cancel="handleCancel"/>
+          </li>
         </ul>
       </div>
     </div>
@@ -173,12 +195,38 @@
 <script>
 import Breadcrumbs from "../Breadcrumbs.vue";
 import { mapMutations, mapState } from "vuex";
+import confirm from "@/views/components/ActionConfirm.vue";
+
+import { useRouter } from "vue-router";
+import { userStore } from "@/store/userStore";
+import { useI18n } from "vue-i18n";
+import { categoriesStore } from "@/store/categoriesStore";
+import { fixaStore } from "@/store/fixaStore";
 
 export default {
   name: "navbar",
+  setup(){
+    const store = userStore();
+    const router = useRouter();
+    const { t } = useI18n();
+
+    const logOut = async () => {
+      await store.logOut();
+      await categoriesStore().resetCategories();
+      await fixaStore().resetFixas();
+      router.push({ name: "SignIn" });
+    };
+    return {
+      logOut,
+      t,
+      store,
+    };
+
+  },
   data() {
     return {
       showMenu: false,
+      isModalVisible: false,
     };
   },
   props: ["minNav", "color"],
@@ -186,14 +234,22 @@ export default {
     this.minNav;
   },
   methods: {
-    ...mapMutations(["navbarMinimize", "toggleConfigurator"]),
+    ...mapMutations(["navbarMinimize", "toggleConfigurator", "isDarkMode"]),
 
     toggleSidebar() {
       this.navbarMinimize();
     },
+
+    showModal() {
+      this.isModalVisible = true;
+    },
+    handleCancel() {
+      this.isModalVisible = false;
+    },
   },
   components: {
     Breadcrumbs,
+    confirm,
   },
   computed: {
     ...mapState(["isAbsolute"]),
@@ -204,3 +260,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.red-icon {
+  color: red !important;
+}
+
+
+</style>

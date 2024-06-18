@@ -369,7 +369,14 @@ input {
   color: red;
 }
 
+.dark-version .card p, .dark-version .swal2-popup p, .dark-version .dropdown .dropdown-menu p, .dark-version .kanban-board p {
+    color: red !important;
+    opacity: 1;
+}
+
 .input-error {
   border: 1px solid red;
 }
+
+
 </style>

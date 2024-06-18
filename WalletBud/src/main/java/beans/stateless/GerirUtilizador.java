@@ -110,7 +110,7 @@ public class GerirUtilizador {
                 u.setPassword(hashedPassword);
             }
             if (idioma != null) u.setIdioma(idioma);
-            if (idioma != null) u.setMoeda(moeda);
+            if (moeda != null) u.setMoeda(moeda);
             if (new_email != null) {
                 //verifica se existe algum ‘user’ com o endereço eletrónico
                 User us = getUserByEmail(session, new_email);

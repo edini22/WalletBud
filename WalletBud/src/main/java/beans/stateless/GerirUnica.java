@@ -34,6 +34,7 @@ public class GerirUnica {
         notification.setDescrição(description);
         notification.setTransacaoId_transacao(unica);
         notification.setUserId_user(user);
+        notification.setDate(new Timestamp(System.currentTimeMillis()));
         NotificacaoDAO.save(notification);
         user.notify(notification);
     }

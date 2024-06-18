@@ -36,6 +36,7 @@ public class GerirFixa {
         notification.setDescrição(description);
         notification.setTransacaoId_transacao(fixa);
         notification.setUserId_user(user);
+        notification.setDate(new Timestamp(System.currentTimeMillis()));
         NotificacaoDAO.save(notification);
         user.notify(notification);
     }

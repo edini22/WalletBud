@@ -91,8 +91,6 @@ export const fixaStore = defineStore('fixa', {
             IdTransacao: id,
             date: this.formatTimestamp(date),
           };
-          alert(req.date);
-          alert(req.IdTransacao);
           const newtJSON = JSON.stringify(req); 
 
           const url = `http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/fixa/pay`;

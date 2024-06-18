@@ -8,11 +8,15 @@
       <div class="scroll-container">
         <div v-if="store.timeline.length > 0">
           
-          <timeline-list>
-            <timeline-item v-for="(p, index) in store.timeline" :key="index" :color="p.tipo === 'receita' ? 'success' : 'danger'"
-              :icon="{ component: p.tipo === 'receita' ? 'notifications' : 'shopping_cart', class: 'text-white text-sm' }"
-              :title="p.name" :value="p.tipo === 'receita' ? (p.value + ' ' + user.moeda) : ('-' + p.value + ' ' + user.moeda)"
-              :date-time="p.date" :description="p.descricao" />
+          <timeline-list class="cuter">
+            <timeline-item v-for="(p, index) in store.timeline" :key="index"
+                 :color="p.tipo === 'receita' ? 'success' : 'danger'"
+                 :icon="{ component: p.tipo === 'receita' ? 'notifications' : 'shopping_cart', class: 'text-white text-sm' }"
+                 :title="p.name"
+                 :value="p.tipo === 'receita' ? (p.value + ' ' + user.moeda) : ('-' + p.value + ' ' + user.moeda)"
+                 :date-time="p.date"
+                 :description="p.descricao"
+                 :date-color="p.tipo === 'receita' ? 'success' : 'danger'" />
             </timeline-list>
           
           </div>
@@ -210,6 +214,7 @@ export default {
     position: sticky;
     top: 0;
   }
+
 
   
 

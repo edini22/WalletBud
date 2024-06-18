@@ -48,7 +48,7 @@
                                                 <td>
                                                     <div class="d-flex px-3">
                                                         <div class="my-auto">
-                                                            <h6 class="mb-0 text-sm">{{ p.name }}</h6>
+                                                            <h6 class="mb-0 text-sm cuter">{{ p.name }}</h6>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -130,7 +130,7 @@
                                                         <td>
                                                             <div class="d-flex px-3">
                                                                 <div class="my-auto">
-                                                                    <h6 class="mb-0 text-sm">{{ p.name }}</h6>
+                                                                    <h6 class="mb-0 text-sm cuter">{{ p.name }}</h6>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -209,7 +209,7 @@
                                                         <td>
                                                             <div class="d-flex px-3">
                                                                 <div class="my-auto">
-                                                                    <h6 class="mb-0 text-sm">{{ p.name }}</h6>
+                                                                    <h6 class="mb-0 text-sm cuter">{{ p.name }}</h6>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -2201,5 +2201,12 @@ export default {
         color 0.15s ease-in-out,
         background-color 0.15s ease-in-out,
         border-color 0.15s ease-in-out;
+}
+
+.cuter{
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 </style>

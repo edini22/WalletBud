@@ -6,17 +6,25 @@
       </i>
     </span>
     <div class="timeline-content" style="max-width: 100%;">
-      <h5 class="mb-0 text-s font-weight-bold justify-content-between d-flex"
-        :class="$parent.darkMode ? 'text-white' : 'text-dark'">
-        {{ title }} &nbsp;&nbsp;&nbsp;&nbsp;
-        <h6 class="mb-0 text-s font-weight-bold">{{dateTime}}</h6>
+      
+      <h5 class="mb-0 text-s font-weight-bold cuter"
+          :class="$parent.darkMode ? 'text-white' : 'text-dark'">
+        {{ title }}
       </h5>
-      <p class="mt-2 mb-0 text-sm  font-weight-bold">
+      
+      <h6 class="mb-0 text-sm"
+        :class="dateColor === 'success' ? 'text-success' : 'text-danger'">
+        {{ dateTime }}
+      </h6>
+
+      <p class="mt-2 mb-0 text-sm font-weight-bold">
         {{ value }}
       </p>
+
       <p v-if="description" class="mt-1 mb-0 text-sm" :class="$parent.darkMode ? 'text-white' : 'text-dark'">
         {{ description }}
       </p>
+
     </div>
   </div>
 </template>
@@ -50,6 +58,10 @@ export default {
       type: String,
       default: "",
     },
+    dateColor: {
+      type: String,
+      default: "",
+    },
   },
 };
 </script>
@@ -58,4 +70,20 @@ export default {
 .white-icon {
   color: white !important;
 }
+
+.cuter{
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.text-success{
+  color: #4caf50 !important;
+}
+
+.text-danger{
+  color: #f44335 !important;
+}
+
 </style>

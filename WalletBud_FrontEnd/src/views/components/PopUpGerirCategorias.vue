@@ -1,5 +1,5 @@
 <template>
-    <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true" data-bs-backdrop='static'>
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true" data-bs-backdrop='static' data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -157,7 +157,7 @@ import { useRouter } from "vue-router";
 
 export default {
 
-    setup(props, { emit }) {
+    setup() {
         // setup() {
         const { t } = useI18n();
         const store = categoriesStore();
@@ -340,14 +340,7 @@ export default {
             }
         };
 
-        const forceRerender = () => {
-            emit('forceRerender');
-        };
-
         onMounted(() => {
-            const modal = document.getElementById('categoryModal');
-            modal.addEventListener('hidden.bs.modal', forceRerender);
-
             loadCategories();
         });
 
@@ -443,15 +436,6 @@ export default {
     width: 100%;
     padding: 5px;
     border-radius: 5px;
-}
-
-.modal-content {
-    width: 100%;
-}
-
-.modal {
-    z-index: 1050;
-    /* padrão do Bootstrap para modais */
 }
 
 h2,

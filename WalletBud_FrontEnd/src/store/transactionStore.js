@@ -6,93 +6,42 @@ export const useTransactionStore = defineStore('transaction', {
             {
                 id: 1,
                 name: 'Compra de Livro',
-                value: 20.50,
-                date: '27 Abril 2024',
+                valor: 20.50,
+                date: '2022-05-23',
                 description: 'Livro sobre JavaScript',
                 local: 'LivroStore',
                 tipo: 'Despesa',
-                categoria: 'Alimentação'
+                categoria: 'Entretenimento',
+                recorrencia: 'fixa',
+                repeticao: '1',
+                comentario: 'bdsnaskdnd'
             },
             {
                 id: 2,
                 name: 'Pagamento de Conta',
-                value: 50,
+                valor: 50,
                 date: '23 Abril 2024',
-                description: 'Conta de luz',
+                description: null,
                 local: 'Empresa de Energia',
                 tipo: 'Receita',
-                categoria: 'Saúde'
+                categoria: 'Saúde',
+                recorrencia: 'nãofixa',
+                repeticao: '2',
+                comentario: null
             },
             {
                 id: 3,
                 name: 'Depósito Bancário',
-                value: 1000,
+                valor: 1000,
                 date: '20 Abril 2024',
                 description: 'Depósito salário',
                 local: 'Banco XPTO',
                 tipo: 'Despesa',
-                categoria: 'Pessoal'
-            },
-            {
-                id: 4,
-                name: 'Compra de Roupas',
-                value: 80,
-                date: '15 Abril 2024',
-                description: 'Roupas de verão',
-                local: 'Fashion Store',
-                tipo: 'Despesa',
-                categoria: 'Pessoal'
-            },
-            {
-                id: 5,
-                name: 'Salário',
-                value: 2000,
-                date: '30 Maio 2024',
-                description: 'Salário mensal',
-                local: 'Empresa XYZ',
-                tipo: 'Receita',
-                categoria: 'Renda'
-            },
-            {
-                id: 6,
-                name: 'Aluguer',
-                value: 800,
-                date: '05 Maio 2024',
-                description: 'Aluguer do apartamento',
-                local: 'Imobiliária ABC',
-                tipo: 'Despesa',
-                categoria: 'Pessoal'
-            },
-            {
-                id: 7,
-                name: "Consulta Médica",
-                value: 120,
-                date: "10 Maio 2024",
-                description: "Consulta com o Dr. Silva",
-                local: "Clínica São José",
-                tipo: "Despesa",
-                categoria: "Saúde"
-            },
-            {
-                id: 8,
-                name: "Supermercado",
-                value: 250,
-                date: "12 Maio 2024",
-                description: "Compras do mês",
-                local: "Supermercado XYZ",
-                tipo: "Despesa",
-                categoria: "Alimentação"
-            },
-            {
-                id: 9,
-                name: "Mensalidade pacote tv",
-                value: 100,
-                date: "15 Maio 2024",
-                description: "Mensalidade de maio",
-                local: "Vodafone",
-                tipo: "Despesa",
-                categoria: "Pessoal"
-            },
+                categoria: 'Pessoal',
+                recorrencia: 'fixa',
+                repeticao: '3',
+                comentario: 'ocsnjkancjasc'
+            }
         ]
     }),
     actions: {

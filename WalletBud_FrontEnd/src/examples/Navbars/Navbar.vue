@@ -264,7 +264,6 @@ export default {
         return currentPage;
       } else if (this.store.idioma === "en") {
         if (currentPage !== undefined) {
-          alert(currentPage);
           return this.t(currentPage);
         }
       }

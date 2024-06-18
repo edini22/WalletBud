@@ -1,6 +1,8 @@
 package beans.stateless;
 
 import java.time.LocalDateTime;
+
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import org.orm.PersistentException;
 import org.orm.PersistentTransaction;
@@ -12,6 +14,13 @@ import wb.walletbud.User;
 
 @Stateless
 public class GerirNotificacao {
+
+    @EJB
+    private GerirUtilizador gerirUtilizador;
+
+    @EJB
+    private GerirNotificacao gerirNotificacao;
+
 
     public static void clearOldNotificacoes() throws PersistentException {
         try {

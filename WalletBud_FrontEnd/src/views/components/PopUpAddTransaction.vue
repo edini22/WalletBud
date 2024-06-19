@@ -590,12 +590,15 @@ export default {
                         newUserEmail.value = '';
                         return;
                     } else {
-                        alert(newUserEmail.value);
-                        sharedUsers.push(newUserEmail.value);
-                        alert("Utilizador adicionado com sucesso!");
-                        for (let i = 0; i < sharedUsers.length; i++) {
-                            alert(sharedUsers[i]);
+                        let isEmailPresent = sharedUsers.some(user => user === newUserEmail.value);
+                        if(isEmailPresent ){
+                            emailErrorStore.value = `${t('Não pode partilhar novamente com este utilizador!')}`;
+                            emailError.value = true;
+                            newUserEmail.value = '';
+                            return;
                         }
+                        sharedUsers.push(newUserEmail.value);
+                        
                         newUserEmail.value = '';
                         emailError.value = null;
                     }
@@ -921,10 +924,6 @@ export default {
 
                             const usersArray = sharedUsers.map(email => ({ email }));
 
-                            for (let i = 0; i < usersArray.length; i++) {
-                                alert(usersArray[i]);
-                            }
-
                             const request = {
                                 method: "POST",
                                 headers: {
@@ -1027,7 +1026,8 @@ export default {
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                             user.getUser(); //atualiza o saldo da homepage
-                            window.location.reload();
+                            if(usersArray.length == 0)
+                                window.location.reload();
 
                         } catch (error) {
                             if (error.message.includes('token')) {

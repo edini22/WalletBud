@@ -98,11 +98,11 @@
         </div>
 
     <div class="position-fixed top-1 end-1 z-index-2">
-      <material-snackbar v-if="snackbar === 'success'" title="Editar Perfil" date="now"
-        description="Alterações guardadas com sucesso!" :icon="{ component: 'done', color: 'white' }" color="success"
+      <material-snackbar v-if="snackbar === 'success'" :title="$t('Editar Perfil')" date="now"
+        :description="$t('Alterações guardadas com sucesso')" :icon="{ component: 'done', color: 'white' }" color="success"
         :close-handler="closeSnackbar" />
-      <material-snackbar v-if="snackbar === 'error'" title="Editar Perfil" date="now"
-        description="Erro a guardar alterações!" :icon="{ component: 'campaign', color: 'white' }" color="danger"
+      <material-snackbar v-if="snackbar === 'error'" :title="$t('Editar Perfil')" date="now"
+        :description="$t('Erro ao guardar alterações')" :icon="{ component: 'campaign', color: 'white' }" color="danger"
         :close-handler="closeSnackbar" />
     </div>
   </div>

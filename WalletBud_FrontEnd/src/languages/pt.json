@@ -18,7 +18,7 @@
     "Close":"Fechar",
     "Confirm Password":"Confirmar Password",
     "Passwords do not match":"Passwords não coincidem",
-    "Passwords must have at least":"As senhas devem ter no mínimo",
+    "Passwords must have at least":"Passwords devem ter no mínimo",
     "characters":"caracteres",
     "Change language":"Mudar idioma",
     "Category names cannot be null": "Nomes de Categorias não podem ser nulos",
@@ -100,6 +100,23 @@
     "Recovery email" : "Email de recuperação",
     "profile" : "perfil",
     "Payments" : "Pagamentos",
-    "Dashboard" : "Painel de Controlo"
+    "Dashboard" : "Painel de Controlo",
+    "No events scheduled" : "Sem eventos agendados",
+    "Password cannot be null" : "Password não pode ser nula",
+    "Password successfully recovered" : "Password recuperada com sucesso",
+    "Error saving changes" : "Erro ao guardar alterações",
+    "Changes saved successfully" : "Alterações guardadas com sucesso",
+    "Jnuary" : "Janeiro",
+    "February" : "Fevereiro",
+    "March" : "Março",
+    "April" : "Abril",
+    "May" : "Maio",
+    "June" : "Junho",
+    "July" : "Julho",
+    "August" : "Agosto",
+    "September" : "Setembro",
+    "October" : "Outubro",
+    "November" : "Novembro",
+    "December" : "Dezembro"
 
 }

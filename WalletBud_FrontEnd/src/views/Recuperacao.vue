@@ -16,7 +16,7 @@
               >
                 
                 <h4  class="text-white font-weight-bolder text-center mt-2 mb-0">
-                  {{$t('Recuperação ')}} de Password
+                  {{$t('Recuperação de Password')}}
                 </h4>
               </div>
             </div>
@@ -78,7 +78,7 @@
                   <material-input
                     id="password2"
                     type="password"
-                    label="Confirmar Password"
+                    :label="t('Confirmar Password')"
                     name="password2"
                     @update:value="password2 = $event"
                   />
@@ -111,7 +111,7 @@
     <div class="position-fixed top-1 end-1 z-index-2">
         <material-snackbar
             v-if="snackbar === 'error'"
-            title="Recuperação de Password"
+            :title="t('Recuperação de Password')"
             date="now"
             :description = "passwordErrorMessages"
             :icon="{ component: 'campaign', color: 'white' }"
@@ -120,9 +120,9 @@
         />
         <material-snackbar
             v-if="snackbar === 'success'"
-            title="Recuperação de Password"
+            :title="t('Recuperação de Password')"
             date="now"
-            description="Password recuperada com sucesso!"
+            :description="t('Password recuperada com sucesso')"
             :icon="{ component: 'done', color: 'white' }"
             color="success"
             :close-handler="closeSnackbar"
@@ -193,8 +193,8 @@
         const verificarPasswords = () => {
             if (password.value === password2.value) {
                 if (password.value === "" || password2.value === "") {
-                    passwordError.value = true;
-                    passwordErrorMessages.value = "Password não pode ser nula";
+                    passwordError.value = true; 
+                    passwordErrorMessages.value = `${t('Password não pode ser nula')}`;
 
                     snackbar.value = 'error';
                     setTimeout(() => {
@@ -203,7 +203,7 @@
                     return;
                 }else if(password.value.length < 6){
                     passwordError.value = true;
-                    passwordErrorMessages.value = "Password deve ter no mínimo 6 caracteres";
+                    passwordErrorMessages.value = `${t('Passwords devem ter no mínimo')}` + " 6 " +  `${t('caracteres')}`;
 
                     snackbar.value = 'error';
                     setTimeout(() => {
@@ -233,7 +233,7 @@
                 }
             } else {
                 passwordError.value = true;
-                passwordErrorMessages.value = "Passwords não coincidem";
+                passwordErrorMessages.value = `${t('Passwords não coincidem')}`;
 
                 snackbar.value = 'error';
                 setTimeout(() => {

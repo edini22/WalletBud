@@ -876,7 +876,9 @@ export default {
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                             user.getUser(); //atualiza o saldo da homepage
-                            window.location.reload();
+                            //window.location.reload();
+                            const event2 = new CustomEvent('reload-transactions', { detail: true });
+                            document.dispatchEvent(event2);
 
                         } catch (error) {
                             if (error.message.includes('token')) {
@@ -1026,8 +1028,10 @@ export default {
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                             user.getUser(); //atualiza o saldo da homepage
-                            if(usersArray.length == 0)
-                                window.location.reload();
+                            if(usersArray.length == 0){
+                                const event2 = new CustomEvent('reload-transactions', { detail: true });
+                                document.dispatchEvent(event2);
+                            }
 
                         } catch (error) {
                             if (error.message.includes('token')) {

@@ -33,7 +33,7 @@
         <div class="row mt-4">
 
           <!-- Weekly spend chart -->
-          <div v-if="categories !== {}" class="col-12 col-md-6 col-lg-6 mt-4">
+          <div v-if="!isCategoriesEmpty" class="col-12 col-md-6 col-lg-6 mt-4">
             <chart-holder-card :title="$t('Gasto Semanal')" :subtitle="$t('Gasto total por dia na semana anterior')"
               :week="pastWeekDate">
 
@@ -150,7 +150,7 @@ export default {
       console.log(value.month);
       console.log(value.year);
       this.categories =  {
-        "oiojojoj": 123,
+        "ffffff": 123,
         "pessoal": 2312
       };
     },
@@ -170,7 +170,10 @@ export default {
     user() {
       const uStore = userStore();
       return uStore;
-    }
+    },
+    isCategoriesEmpty() {
+      return Object.keys(this.categories).length === 0;
+    },
   },
   mounted() {
     this.getBudget();

@@ -29,85 +29,40 @@
 
           <li class="nav-item dropdown d-flex align-items-center pe-3 px-2">
             <a href="#" class="p-0 nav-link lh-1" :class="[color ? color : 'text-body', showMenu ? 'show' : '']"
-              id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" @click="showMenu = !showMenu">
+              id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"
+              @click="refresh(); showMenu = !showMenu;">
               <i class="material-icons cursor-pointer "> notifications </i>
             </a>
-            <ul class="px-2 py-3 dropdown-menu dropdown-menu-end me-sm-n4" :class="showMenu ? 'show' : ''"
-              aria-labelledby="dropdownMenuButton">
-              <li class="mb-2">
-                <a class="dropdown-item border-radius-md" href="javascript:;">
-                  <div class="py-1 d-flex">
-                    <div class="my-auto">
-                      <img src="../../assets/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user image" />
+            <ul class=" px-2 py-3 dropdown-menu dropdown-menu-end
+                me-sm-n4 secondary" :class="showMenu ? 'show' : ''" aria-labelledby="dropdownMenuButton">
+              <div v-if="notifs && notifs.length > 0">
+                <li v-for="(notif, index) in notifs" :key="index" class="mb-2">
+                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                    <div class="py-1 d-flex">
+                      <div class="my-auto">
+                        <img src="../../assets/img/icons/user_1.png" class="avatar avatar-sm me-3" alt="user image" />
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-1 text-sm font-weight-normal">
+                          <span class="font-weight-bold">{{ notif.descricao }}</span> from
+                          {{ notif.email }}
+                        </h6>
+                        <p class="mb-0 text-xs text-secondary">
+                          <i class="fa fa-clock me-1"></i>
+                          {{ notif.data }}
+                        </p>
+                      </div>
+                      <!-- <button type="button" class="btn-close d-flex justify-content-center align-items-center"
+                        data-bs-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true" class="text-lg font-weight-bold">&times;</span>
+                      </button> -->
                     </div>
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-1 text-sm font-weight-normal">
-                        <span class="font-weight-bold">New message</span> from
-                        Laur
-                      </h6>
-                      <p class="mb-0 text-xs text-secondary">
-                        <i class="fa fa-clock me-1"></i>
-                        13 minutes ago
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              </li>
-              <li class="mb-2">
-                <a class="dropdown-item border-radius-md" href="javascript:;">
-                  <div class="py-1 d-flex">
-                    <div class="my-auto">
-                      <img src="../../assets/img/small-logos/logo-spotify.svg"
-                        class="avatar avatar-sm bg-gradient-dark me-3" alt="logo spotify" />
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-1 text-sm font-weight-normal">
-                        <span class="font-weight-bold">New album</span> by
-                        Travis Scott
-                      </h6>
-                      <p class="mb-0 text-xs text-secondary">
-                        <i class="fa fa-clock me-1"></i>
-                        1 day
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item border-radius-md" href="javascript:;">
-                  <div class="py-1 d-flex">
-                    <div class="my-auto avatar avatar-sm bg-gradient-secondary me-3">
-                      <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1"
-                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <title>credit-card</title>
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                          <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                            <g transform="translate(1716.000000, 291.000000)">
-                              <g transform="translate(453.000000, 454.000000)">
-                                <path class="color-background"
-                                  d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z"
-                                  opacity="0.593633743"></path>
-                                <path class="color-background"
-                                  d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z">
-                                </path>
-                              </g>
-                            </g>
-                          </g>
-                        </g>
-                      </svg>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center">
-                      <h6 class="mb-1 text-sm font-weight-normal">
-                        Payment successfully completed
-                      </h6>
-                      <p class="mb-0 text-xs text-secondary">
-                        <i class="fa fa-clock me-1"></i>
-                        2 days
-                      </p>
-                    </div>
-                  </div>
-                </a>
-              </li>
+                  </a>
+                </li>
+              </div>
+              <div v-else>
+                <span id="sem" class="font-weight-bold"> Sem notificações </span>
+              </div>
             </ul>
           </li>
           <li class="nav-item d-flex align-items-center ">
@@ -127,11 +82,25 @@
       </div>
     </div>
   </nav>
+
+  <div class="position-fixed bottom-1 end-1 z-index-1051">
+    <!-- <div class="d-flex justify-content-start"> -->
+    <!-- <material-snackbar v-if="snackbar === 'error'" :title="$t('Adicionar Categoria')" date="now"
+      :description="$t('Não foi possível adicionar a categoria. Tente novamente.')"
+      :icon="{ component: 'campaign', color: 'white' }" color="danger" :close-handler="closeSnackbar" />
+    <material-snackbar v-if="snackbar === 'exists'" :title="$t('Adicionar Categoria')" date="now"
+      :description="$t('Já existe um categoria com esse nome!')" :icon="{ component: 'campaign', color: 'white' }"
+      color="danger" :close-handler="closeSnackbar" /> -->
+    <material-snackbar v-if="snackbar === 'success'" :title="$t('Adicionar Categoria')" date="now"
+      :description="tempnotif.descricao" :icon="{ component: 'notifications', color: 'white' }" color="info"
+      :close-handler="closeSnackbar" />
+  </div>
 </template>
 <script>
 import Breadcrumbs from "../Breadcrumbs.vue";
 import { mapMutations, mapState } from "vuex";
 import confirm from "@/views/components/ActionConfirm.vue";
+import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 
 import { useRouter } from "vue-router";
 import { userStore } from "@/store/userStore";
@@ -140,7 +109,7 @@ import { categoriesStore } from "@/store/categoriesStore";
 import { fixaStore } from "@/store/fixaStore";
 
 // import { WebSocketService } from "@/services/WebSocketService";
-import WebSocketService from '@/services/WebSocketService';
+// import WebSocketService from '@/services/WebSocketService';
 
 import { onMounted, ref } from "vue";
 
@@ -151,24 +120,86 @@ export default {
     const store = userStore();
     const router = useRouter();
     const { t } = useI18n();
-    const websocketservice = ref(null);
+    // const websocketservice = ref(null);
+
+    const notifs = ref(null);
+    const snackbar = ref(null);
+
+    const tempnotif = ref(null);
+
+    const url = 'ws://localhost:8000/WalletBud-1.0-SNAPSHOT/notifs';
+    let ws = null;
+    let close = false;
+
+    const closeSnackbar = () => {
+      snackbar.value = 'false';
+    };
+
+
+    const connect = () => {
+      ws = new WebSocket(url);
+
+      ws.onopen = () => {
+        // alert('WebSocket connected' + store.username);
+        const token = localStorage.getItem('token');
+        ws.send(token);
+      };
+
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        // alert(JSON.stringify(data));
+
+        tempnotif.value = data;
+
+        store.addNotif(data);
+        snackbar.value = 'success';
+        // alert(store.notifs[store.notifs.length - 1].descricao);
+        // this.onMessageCallback(data);
+      };
+
+      ws.onclose = () => {
+        if (!close) {
+          // alert('WebSocket disconnected');
+          setTimeout(() => connect(), 500); // Reconnect after 1 second
+        } else {
+          // alert('WebSocket disconnected2');
+        }
+      };
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error', error);
+      };
+    }
+
+    const disconnect = () => {
+      close = true;
+      ws.close();
+    }
 
     const initWebsocket = () => {
-      alert("init websocket")
+      // alert("init websocket")
       try {
-        const token = localStorage.getItem('token');
-        websocketservice.value = new WebSocketService('ws://localhost:8000/WalletBud-1.0-SNAPSHOT/notifs', token);
-        websocketservice.value.connect();
+        // websocketservice.value = new WebSocketService('ws://localhost:8000/WalletBud-1.0-SNAPSHOT/notifs', token);
+        connect();
+        notifs.value = store.notifs;
       } catch (err) {
         alert(err)
       }
     };
 
+    const refresh = () => {
+      // alert("refresh")
+      notifs.value = store.notifs;
+    };
+
     onMounted(() => {
-      initWebsocket();
+      if (store.email != "") {
+        initWebsocket();
+      }
     });
 
     const logOut = async () => {
+      disconnect();
       await store.logOut();
       await categoriesStore().resetCategories();
       await fixaStore().resetFixas();
@@ -177,11 +208,20 @@ export default {
 
 
     return {
+      closeSnackbar,
+      snackbar,
+      connect,
+      disconnect,
+      url,
+      ws,
+      close,
+      refresh,
+      notifs,
+      tempnotif,
       initWebsocket,
       logOut,
       t,
       store,
-
     };
 
   },
@@ -214,6 +254,7 @@ export default {
   components: {
     Breadcrumbs,
     confirm,
+    MaterialSnackbar,
   },
   computed: {
     ...mapState(["isAbsolute"]),
@@ -236,5 +277,37 @@ export default {
 <style scoped>
 .red-icon {
   color: red !important;
+}
+
+/* .dropdown-menu{
+  background-image: linear-gradient(195deg, #49a3f1 0%, red 100%);
+}  */
+
+h6,
+.h6,
+h5,
+.h5,
+h4,
+.h4,
+h3,
+.h3,
+h2,
+.h2,
+h1,
+.h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+  line-height: 1.2;
+  color: black;
+}
+
+.text-secondary {
+  color: black !important;
+}
+
+
+#sem {
+  color: black;
 }
 </style>

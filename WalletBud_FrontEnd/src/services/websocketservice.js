@@ -1,28 +1,38 @@
+import { userStore } from "@/store/userStore";
 
 class WebSocketService {
     constructor(url, token) {
         this.url = url;
         this.token = token;
         this.ws = null;
+        this.close = false;
+        this.store = userStore();
     }
 
     connect() {
         this.ws = new WebSocket(this.url);
 
         this.ws.onopen = () => {
-            alert('WebSocket connected');
+            alert('WebSocket connected' + this.store.username);
             this.ws.send(this.token);
         };
 
         this.ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            alert(data);
-            this.onMessageCallback(data);
+            alert(JSON.stringify(data));
+
+            this.store.addNotif(data);
+            alert(this.store.notifs[this.store.notifs.length - 1].descricao)
+            // this.onMessageCallback(data);
         };
 
         this.ws.onclose = () => {
-            alert('WebSocket disconnected');
-            setTimeout(() => this.connect(), 1000); // Reconnect after 1 second
+            if (!this.close) {
+                alert('WebSocket disconnected');
+                setTimeout(() => this.connect(), 500); // Reconnect after 1 second
+            } else {
+                alert('WebSocket disconnected2');
+            }
         };
 
         this.ws.onerror = (error) => {
@@ -30,9 +40,14 @@ class WebSocketService {
         };
     }
 
-    onMessage(callback) {
-        this.onMessageCallback = callback;
+    disconnect() {
+        this.close = true;
+        this.ws.close();
     }
+
+    // onMessage(callback) {
+    //     this.onMessageCallback = callback;
+    // }
 
     sendMessage(message) {
         this.ws.send(JSON.stringify(message));

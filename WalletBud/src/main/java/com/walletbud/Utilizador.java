@@ -204,11 +204,8 @@ public class Utilizador {
                         .build();
             }
             transaction.commit();
-            JsonObject jsonResponse = Json.createObjectBuilder()
-                    .add("message", "Utilizador encontrado!")
-                    .add("notificacoes", notifsUser)
-                    .build();
-            return Response.ok(jsonResponse, MediaType.APPLICATION_JSON).build();
+
+            return Response.ok(notifsUser, MediaType.APPLICATION_JSON).build();
 
         } catch (Exception e) {
             if( transaction != null)

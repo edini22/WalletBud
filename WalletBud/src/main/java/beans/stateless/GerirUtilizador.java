@@ -3,6 +3,7 @@ package beans.stateless;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import java.time.LocalDate;
 
@@ -236,23 +237,31 @@ public class GerirUtilizador {
             User user = getUserByEmail(session, email);
 
             if (user == null) {
+                System.out.println("aqui");
                 return Json.createObjectBuilder()
                         .build();
             }
 
-            JsonObjectBuilder notifJsonObjectBuilder = Json.createObjectBuilder();
+//            List<Notificacao> notifs = user.getNotifications();
+            String condition = "UserId_user = " + user.getId_user();
+            Notificacao[] notifs = NotificacaoDAO.listNotificacaoByQuery(session, condition, "Date DESC");
 
-            List<Notificacao> notifs = user.getNotifications();
-
-            for (Notificacao n : notifs) {
-                notifJsonObjectBuilder.add("notificacoes", Json.createObjectBuilder()
-                        .add("id", n.getId_notificacao())
-                        .add("date", n.getDate().toString())
-                        .add("descricao", n.getDescrição())
-                        .build());
+            JsonArrayBuilder comentaioArrayBuilder = Json.createArrayBuilder();
+            for (Notificacao notif : notifs) {
+                JsonObject userJs = Json.createObjectBuilder()
+                        .add("id", notif.getId_notificacao())
+                        .add("descricao", notif.getDescrição())
+                        .add("date", notif.getDate().toString())
+                        .build();
+                comentaioArrayBuilder.add(userJs);
             }
-            return notifJsonObjectBuilder.build();
+
+            return Json.createObjectBuilder()
+                    .add("notificacoes", comentaioArrayBuilder.build())
+                    .build();
+
         } catch (Exception e) {
+            System.out.println("aqui2");
             e.printStackTrace();
             return Json.createObjectBuilder()
                     .build();

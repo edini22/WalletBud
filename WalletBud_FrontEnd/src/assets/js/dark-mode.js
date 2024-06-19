@@ -4,6 +4,7 @@ export function activateDarkMode() {
   const body = document.getElementsByTagName("body")[0];
   const modals = document.querySelectorAll(".modal-dialog.modal-dialog-centered");
   const values = document.querySelectorAll(".form-control");
+  const details = document.querySelectorAll(".detail");
   const configurators = document.querySelectorAll(".fixed-plugin-button");
   const icons = document.querySelectorAll(".material-icons", "comment");
   const inputGroups = document.querySelectorAll(".input-group");
@@ -36,6 +37,10 @@ export function activateDarkMode() {
   });
 
   categorylabels.forEach(label => {
+    label.style.color = "#e1e1e1 !important"; // Remove o fundo branco do <thead> ao ativar o modo escuro
+  });
+
+  details.forEach(label => {
     label.style.color = "#e1e1e1"; // Remove o fundo branco do <thead> ao ativar o modo escuro
   });
   

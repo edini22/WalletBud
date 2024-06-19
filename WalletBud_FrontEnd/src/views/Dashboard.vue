@@ -33,7 +33,7 @@
         <div class="row mt-4">
 
           <!-- Weekly spend chart -->
-          <div class="col-lg-4 col-md-6 mt-4">
+          <div class="col-12 col-md-6 col-lg-6 mt-4">
             <chart-holder-card :title="$t('Gasto Semanal')" :subtitle="$t('Gasto total por dia numa semana')"
               :week="pastWeekDate">
 
@@ -48,7 +48,7 @@
           </div>
 
           <!-- category spend chart -->
-          <div class="col-lg-4 col-md-6 mt-4">
+          <div class="col-12 col-md-6 col-lg-6 mt-4">
             <chart-holder-card :title="$t('Gastos Por Categoria')" :subtitle="$t('Gasto total por dia numa semana')"
               :week="pastWeekDate">
 
@@ -166,7 +166,7 @@ export default {
   },
   methods: {
     getBudget() {
-      this.budget = this.user.saldo - this.user.objetivo;
+      this.budget = parseFloat((this.user.saldo - this.user.objetivo).toFixed(2));
     },
     SelectYear(option) {
       this.selectedYear = option;

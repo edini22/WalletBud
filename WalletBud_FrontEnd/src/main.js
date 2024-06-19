@@ -8,6 +8,9 @@ import "./assets/css/nucleo-svg.css";
 import MaterialDashboard from "./material-dashboard";
 import i18n from './i18n';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import CanvasJSChart from '@canvasjs/vue-charts';
+
+
 
 
 
@@ -18,6 +21,7 @@ pinia.use(piniaPluginPersistedstate);
 appInstance.use(store);
 appInstance.use(pinia);
 appInstance.use(router);
+appInstance.use(CanvasJSChart);
 appInstance.use(MaterialDashboard);
 appInstance.use(i18n);
 

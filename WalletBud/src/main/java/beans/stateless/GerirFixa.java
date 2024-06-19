@@ -1,8 +1,10 @@
 package beans.stateless;
 
 
+import com.walletbud.EventProducer;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.json.*;
 import org.orm.PersistentException;
 import org.orm.PersistentSession;
@@ -31,6 +33,9 @@ public class GerirFixa {
     @EJB
     private GerirComentario gerirComentario;
 
+    @Inject
+    private EventProducer eventProducer;
+
     public void notify(String description, User user, Transacao fixa) throws PersistentException{
         Notificacao notification = new Notificacao();
         notification.setDescrição(description);
@@ -39,6 +44,7 @@ public class GerirFixa {
         notification.setDate(new Timestamp(System.currentTimeMillis()));
         NotificacaoDAO.save(notification);
         user.notify(notification);
+        eventProducer.fireEvent(notification);
     }
 
     public int createFixa(PersistentSession session, String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, int repeticao, String email, JsonArray usersArray, String comentario) throws PersistentException {

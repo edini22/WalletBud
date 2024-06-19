@@ -16,6 +16,14 @@ package wb.walletbud;
 public class Notificacao {
 	public Notificacao() {
 	}
+
+	public Notificacao(int id_notificacao, wb.walletbud.Transacao transacaoId_transacao, wb.walletbud.User userId_user, java.sql.Timestamp date, String descrição) {
+		this.id_notificacao = id_notificacao;
+		this.transacaoId_transacao = transacaoId_transacao;
+		this.userId_user = userId_user;
+		this.date = date;
+		this.descrição = descrição;
+	}
 	
 	private void this_setOwner(Object owner, int key) {
 		if (key == wb.walletbud.ORMConstants.KEY_NOTIFICACAO_USERID_USER) {

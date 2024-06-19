@@ -14,6 +14,7 @@ import org.orm.PersistentException;
 import org.orm.PersistentSession;
 import org.orm.PersistentTransaction;
 import wb.walletbud.AASICPersistentManager;
+import wb.walletbud.Notificacao;
 import wb.walletbud.User;
 
 import java.util.Map;
@@ -29,7 +30,7 @@ public class EventObserver {
     @EJB
     private GerirUtilizador gerirUtilizador;
 
-    public void receiveEvent(@Observes String message) {
+    public void receiveEvent(@Observes Notificacao message) {
         System.out.println("Evento recebido: " + message);
 //        sessionRegistry.getAll().forEach(session -> session.getAsyncRemote().sendText(toJson(message)));
         // Assuming sessionRegistry.getAll() returns a Map<Session, ?>
@@ -39,7 +40,7 @@ public class EventObserver {
         for (Map.Entry<Session, User> entry : sessions.entrySet()) {
             Session session = entry.getKey();
             User user = entry.getValue();
-            session.getAsyncRemote().sendText(toJson(message, user.getEmail()));
+            session.getAsyncRemote().sendText(toJson(message.getDescrição(), user.getEmail()));
         }
 
     }
@@ -82,7 +83,6 @@ public class EventObserver {
                 psession.close();
             }
         }
-
 
         sessionRegistry.add(session, user);
     }

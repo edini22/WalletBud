@@ -51,7 +51,7 @@ public class Register {
         System.out.println("Received JSON: " + jsonObject.toString());
 
         // Dispara um evento
-        eventProducer.fireEvent("Hello, observerszzzzzzzzzzzzzzzzzz!");
+//        eventProducer.fireEvent("Hello, observerszzzzzzzzzzzzzzzzzz!");
 
         String username = jsonObject.getString("username");
         String password = jsonObject.getString("password");

@@ -14,7 +14,7 @@ public class Teste {
             EventProducer eventProducer = container.select(EventProducer.class).get();
 
             // Dispara um evento
-            eventProducer.fireEvent("Hello, observers!");
+            //eventProducer.fireEvent("Hello, observers!");
         }
 
     }

@@ -7,65 +7,18 @@
         </div>
         <div class="card mt-1">
           <div v-for="(notif, index) in store.permaNotifs" :key="index" class="card-body p-3 pb-0">
-            <material-alert class="font-weight-light" color="primary" dismissible>
-              <span class="text-sm">{{ notif.descricao }}</span>
+            <material-alert class="font-weight-bold" color="info" dismissible>
+              <div class="d-flex flex-column justify-content-center">
+                <!-- <h6 class="mb-1 text-sm font-weight-normal"> -->
+                <span class="font-weight-bold">{{ notif.descricao }}</span>
+                <!-- </h6> -->
+                <p class="mb-0 text-xs text-secondary">
+                  <i class="fa fa-clock me-1"></i>
+                  {{ notif.date }}
+                </p>
+              </div>
             </material-alert>
-            <!-- <material-alert class="font-weight-light" color="secondary" dismissible>
-              <span class="text-sm"
-                >A simple secondary alert with
-                <a href="javascript:;" class="alert-link text-white"
-                  >an example link</a
-                >. Give it a click if you like.</span
-              >
-            </material-alert>
-            <material-alert class="font-weight-light" color="success" dismissible>
-              <span class="text-sm"
-                >A simple success alert with
-                <a href="javascript:;" class="alert-link text-white"
-                  >an example link</a
-                >. Give it a click if you like.</span
-              >
-            </material-alert>
-            <material-alert class="font-weight-light" color="danger" dismissible>
-              <span class="text-sm"
-                >A simple danger alert with
-                <a href="javascript:;" class="alert-link text-white"
-                  >an example link</a
-                >. Give it a click if you like.</span
-              >
-            </material-alert>
-            <material-alert class="font-weight-light" color="warning" dismissible>
-              <span class="text-sm"
-                >A simple warning alert with
-                <a href="javascript:;" class="alert-link text-white"
-                  >an example link</a
-                >. Give it a click if you like.</span
-              >
-            </material-alert>
-            <material-alert class="font-weight-light" color="info" dismissible>
-              <span class="text-sm"
-                >A simple info alert with
-                <a href="javascript:;" class="alert-link text-white"
-                  >an example link</a
-                >. Give it a click if you like.</span
-              >
-            </material-alert>
-            <material-alert class="font-weight-light" color="light" dismissible>
-              <span class="text-sm"
-                >A simple light alert with
-                <a href="javascript:;" class="alert-link text-white"
-                  >an example link</a
-                >. Give it a click if you like.</span
-              >
-            </material-alert>
-            <material-alert color="dark" dismissible>
-              <span class="text-sm"
-                >A simple dark alert with
-                <a href="javascript:;" class="alert-link text-white"
-                  >an example link</a
-                >. Give it a click if you like.</span
-              >
-            </material-alert> -->
+
           </div>
 
         </div>
@@ -113,7 +66,7 @@ export default {
     const loadNotifications = async () => {
       try {
         await store.getPermaNotifs();
-        console.log("Notificacoes carregadas:", store.permaNotifs);
+        // console.log("Notificacoes carregadas:", store.permaNotifs);
       } catch (err) {
         if (err.message.includes('token')) {
           alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
@@ -146,3 +99,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.text-secondary {
+  color: white !important;
+}
+</style>

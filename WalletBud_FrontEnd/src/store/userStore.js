@@ -142,7 +142,7 @@ export const userStore = defineStore("user", {
     },
 
     async getPermaNotifs() {
-      const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/getNotif";
+      const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/user/getNotif";
       const token = localStorage.getItem('token');
       const request = {
         method: "GET",
@@ -161,7 +161,9 @@ export const userStore = defineStore("user", {
       }
 
       const data = await response.json();
-      this.permaNotifs = data;
+
+      // alert(JSON.stringify(data));
+      this.permaNotifs = data.notificacoes;
 
     },
 

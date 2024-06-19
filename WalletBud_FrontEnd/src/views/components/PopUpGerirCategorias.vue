@@ -395,6 +395,10 @@ export default {
     z-index: 1051;
 }
 
+.modal {
+    z-index: 9999;
+}
+
 .message {
     text-align: center;
     color: #495057;

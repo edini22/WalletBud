@@ -1287,4 +1287,8 @@ export default {
     margin-left: auto !important;
     margin-right: 10px;
 }
+
+.modal {
+    z-index: 9999;
+}
 </style>

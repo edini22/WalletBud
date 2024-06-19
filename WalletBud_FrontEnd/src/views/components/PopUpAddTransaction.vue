@@ -1250,7 +1250,7 @@ export default {
 }
 
 .modal {
-    z-index: 1050;
+    z-index: 9999;
 }
 
 .input-group {

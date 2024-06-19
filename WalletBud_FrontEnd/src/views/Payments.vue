@@ -840,13 +840,22 @@
                     <p>A sua ação é irreversível!</p>
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
-                    <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
+                    <material-button v-if="auxDelete" variant="gradient" color="secondary" class="btn btn-md" @click="
                         popupReject = false;
                     popup = true;
                     leave = false;
                     " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#Pop1Modal'>
                         {{ $t("Voltar") }}
                     </material-button>
+
+                    <material-button v-else variant="gradient" color="secondary" class="btn btn-md" @click="
+                        popupReject = false;
+                        popupDetails = true;
+                        leave = false;
+                        " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#Pop1Modal'>
+                        {{ $t("Voltar") }}
+                    </material-button>
+
                     <material-button variant="gradient" color="info" class="btn btn-md" @click="
                         deleteTransacao();
                     popupReject = false;
@@ -2197,7 +2206,8 @@ export default {
             repetitionError,
             toggleToEdit,
             toggleToDelete,
-            editTransaction
+            editTransaction,
+            auxDelete,
         };
     },
     data() {
@@ -2257,6 +2267,11 @@ export default {
 </script>
 
 <style scoped>
+
+.modal {
+    z-index: 9999;
+}
+
 .scroll-container {
     height: 77vh;
     overflow-y: auto;

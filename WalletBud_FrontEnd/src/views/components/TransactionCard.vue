@@ -105,19 +105,13 @@ export default {
 
         const loadMovements = async () => {
             try {
-                alert("loadMovements");
                 await tStore.load(30);
             } catch (error) {
                 console.error(error);
             }
         };
-        watch(tStore.stateReload, () => {
-            alert("watch reload")
-            loadMovements();
-        });
 
         onMounted(() => {
-            // alert("TransactionCard component mounted");
             loadMovements();
         });
 

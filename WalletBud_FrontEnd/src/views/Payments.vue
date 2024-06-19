@@ -775,32 +775,31 @@
                             </material-button>
                         </div>
                         <div v-else>
-                            <div v-if="acceptorRejectPendenteButton() === true"
-                                class="modal-footer d-flex justify-content-end">
-                                <material-button variant="gradient" color="danger" class="btn btn-md" @click="
-                                    popupReject2 = true;
-                                popupDetails = false;
-                                currentEditIndex = null;
-                                infos = true;
-                                participantes = false;
-                                emailError = null; newUserEmail = '', emailErrorStore = null;
-                                isEditing = false;
-                                " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#rejectModal'>
-                                    {{ $t("Rejeitar") }}
-                                </material-button>
+                            <div v-if="acceptorRejectPendenteButton() === true" class="modal-footer d-flex justify-content-between">
+                                    <material-button variant="gradient" color="danger" class="btn btn-md" @click="
+                                        popupReject2 = true;
+                                        popupDetails = false;
+                                        currentEditIndex = null;
+                                        infos = true;
+                                        participantes = false;
+                                        emailError = null; newUserEmail = '', emailErrorStore = null;
+                                        isEditing = false;
+                                        " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#rejectModal'>
+                                        {{ $t("Rejeitar") }}
+                                    </material-button>
 
-                                <material-button variant="gradient" color="info" class="btn btn-md" @click="
-                                    popupAccept2 = true;
-                                popupDetails = false;
-                                currentEditIndex = null;
-                                infos = true;
-                                participantes = false;
-                                emailError = null; newUserEmail = '', emailErrorStore = null;
-                                isEditing = false;
-                                " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#acceptModal'>
-                                    {{ $t("Aceitar") }}
-                                </material-button>
-                            </div>
+                                    <material-button variant="gradient" color="info" class="btn btn-md" @click="
+                                        popupAccept2 = true;
+                                        popupDetails = false;
+                                        currentEditIndex = null;
+                                        infos = true;
+                                        participantes = false;
+                                        emailError = null; newUserEmail = '', emailErrorStore = null;
+                                        isEditing = false;
+                                        " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#acceptModal'>
+                                        {{ $t("Aceitar") }}
+                                    </material-button>
+                                </div>
                         </div>
                     </div>
                 </div>

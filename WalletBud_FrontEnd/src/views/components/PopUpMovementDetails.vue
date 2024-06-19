@@ -7,7 +7,7 @@
                     <h5 class="modal-title" id="transactionModalLabel">{{ $t('Detalhes do Movimento') }}</h5>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body scroll-container">
                     <div v-if="transaction !== null && transaction.tipo == 'despesa'"
                         class="nav-wrapper position-relative end-0 mb-4">
                         <ul class="nav nav-pills nav-fill p-1" role="tablist">
@@ -286,10 +286,26 @@
                             </div>
                             <div class="justify-content-left">
                                 <div v-for="(c, index) in comments" :key="index" class="mb-3">
+
                                     <h6 v-if="currentEditIndex !== index">
-                                        {{ c.user_email + " " + c.timestamp + " " + c.descricao }}
+                                        <div class="form-group form-row">
+                                                <label for="description" class="form-label">{{ $t('Nome') }} </label>
+                                                <p class="detail form-label cuter">{{ c.user_email }}</p>
+                                            </div>
+                                            <div class="form-group form-row">
+                                                <label for="description" class="form-label">{{ $t('Data') }} </label>
+                                                <p class="detail form-label cuter">{{ c.timestamp }}</p>
+                                            </div>
+                                            <div class="form-group form-row ">
+                                                <label for="description" class="form-label cuter">{{ $t('Comentáio') }}
+                                                </label>
+                                                <p class="detail form-label cuter">{{ c.descricao }}</p>
+                                            </div>
                                     </h6>
+
+
                                     <input v-else class="input-group input-group-outline custom"
+                                        style="border-radius: 6px;border: 2px solid #344767;"
                                         v-model="editComment" />
                                     <div class="buttons" v-if="currentEditIndex === index">
                                         <button @click="saveComment(index)" style="background-color: white;">
@@ -313,6 +329,7 @@
                                             <i class="material-icons"
                                                 style="color: #344767; font-size: 18px;">delete</i>
                                         </button>
+                                        <hr class="horizontal dark" />
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -323,7 +340,7 @@
                                     </div>
                                     <div class="col-3 d-flex align-items-center justify-content-end">
                                         <material-button variant="gradient" color="info"
-                                            class="btn btn-md d-flex justify-content-center align-items-center"
+                                            class="btn btn-md bg-gradient-info d-flex justify-content-center align-items-center "
                                             @click="addComment(transaction.id)">
                                             {{ $t("Comentar") }}
                                         </material-button>
@@ -421,16 +438,16 @@
                 </div>
 
 
-                <div class="modal-footer mt-0"> 
-                    <p v-if="edit == false && transaction && (!transaction.repeticao || transaction.repeticao==0) && user.id === transaction.users[0].id"
-                        class="btn btn-default bg-gradient-info mb-1" @click="editTransaction(); edit = true;">{{
-                        $t('Editar') }}</p>
-                    <p v-if="edit" class="btn btn-default bg-gradient-info mb-1" @click="saveTransaction();">{{
-                        $t('Guardar') }}</p>
+                <div class="modal-footer mt-0 d-flex justify-content-between"> 
                     <p id="cancelButton2" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal"
                         @click="cancel;edit = false;">{{
                             $t('Cancelar') }}
                     </p>
+                    <p v-if="edit" class="btn btn-default bg-gradient-info mb-1" @click="saveTransaction();">{{
+                        $t('Guardar') }}</p>
+                    <p v-if="edit == false && transaction && (!transaction.repeticao || transaction.repeticao==0) && user.id === transaction.users[0].id"
+                        class="btn btn-default bg-gradient-warning mb-1" @click="editTransaction(); edit = true;">{{
+                        $t('Editar') }}</p>
                 </div>
             </div>
         </div>
@@ -1482,5 +1499,43 @@ export default {
 .ms-auto {
     margin-left: auto !important;
     margin-right: 10px;
+}
+
+.cuter {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-label {
+    flex: 1;
+    color: #344767;
+    margin-right: 10px;
+    text-align: left;
+}
+
+.scroll-container {
+    max-height: 77vh;
+    overflow-y: auto;
+}
+
+.scroll-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
 }
 </style>

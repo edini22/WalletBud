@@ -460,14 +460,13 @@
                 </div>
 
 
-                <div class="modal-footer mt-0">
+                <div class="modal-footer mt-0 d-flex justify-content-between">
+                    <p id="cancelButton" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal"
+                        @click="cancel">{{ $t('Cancelar') }}
+                    </p>
                     <p v-if="Type == 'Despesa' && showShareTab == false" class="btn btn-default bg-gradient-info mb-1"
                         @click="showTab(1)">{{ $t('Próximo') }}</p>
-                    <p v-else class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Adicionar') }}</p>
-                    <p id="cancelButton" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal"
-                        @click="cancel">{{
-                            $t('Cancelar') }}
-                    </p>
+                        <p v-else class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Adicionar') }}</p>
                 </div>
             </div>
         </div>

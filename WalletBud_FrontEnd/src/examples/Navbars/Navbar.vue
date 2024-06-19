@@ -83,7 +83,7 @@
     </div>
   </nav>
 
-  <div class="position-fixed top-1 end-1 z-index-1051">
+  <div class="position-fixed top-1 end-1 z-index-8000">
     <!-- <div class="d-flex justify-content-start"> -->
     <!-- <material-snackbar v-if="snackbar === 'error'" :title="$t('Adicionar Categoria')" date="now"
       :description="$t('Não foi possível adicionar a categoria. Tente novamente.')"
@@ -309,5 +309,9 @@ h1,
 
 #sem {
   color: black;
+}
+
+.z-index-8000 {
+  z-index: 8000;
 }
 </style>

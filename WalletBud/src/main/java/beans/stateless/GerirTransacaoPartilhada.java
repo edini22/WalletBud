@@ -340,13 +340,17 @@ public class GerirTransacaoPartilhada {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime dateTime = LocalDateTime.parse(dateStr, formatter);
 
+            LocalDateTime endTime = dateTime.plusMonths(1);
+
             List<Map<String, Object>> arrayFixas = new ArrayList<>();
 
             //criar transacoes fixas do mes e adicionar ao
 
             for (Fixa fixa: transacoes_id) {
                 Timestamp time = Timestamp.valueOf(dateTime);
-
+                if(fixa.getDate().after(Timestamp.valueOf(endTime))){
+                    continue;
+                }
                 if (time.before(fixa.getDate())) {
                     time = new Timestamp(fixa.getDate().getTime());
                 }

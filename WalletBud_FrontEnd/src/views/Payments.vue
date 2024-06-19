@@ -2022,7 +2022,7 @@ export default {
                 console.log(data_comments);
 
                 comments.value = data_comments.comentarios;
-                alert("1:" + comments.value.timestamp);
+                
 
                 
             } catch (error) {

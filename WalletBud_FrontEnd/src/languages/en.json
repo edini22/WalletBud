@@ -173,5 +173,17 @@
     "Password não pode ser nula": "Password cannot be null",
     "Password recuperada com sucesso": "Password successfully recovered",
     "Erro ao guardar alterações": "Error saving changes",
-    "Alterações guardadas com sucesso": "Changes saved successfully"
+    "Alterações guardadas com sucesso": "Changes saved successfully",
+    "Janeiro": "January",
+    "Fevereiro": "February",
+    "Março": "March",
+    "Abril": "April",
+    "Maio": "May",
+    "Junho": "June",
+    "Julho": "July",
+    "Agosto": "August",
+    "Setembro": "September",
+    "Outubro": "October",
+    "Novembro": "November",
+    "Dezembro": "December"
 }

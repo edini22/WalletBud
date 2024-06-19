@@ -28,7 +28,7 @@
                     <h6 class="mb-0">{{ $t('Movimentos') }}</h6>
                 </div>
                 <div class="col-md-6 d-flex justify-content-end align-items-center">
-                    <i class="fas fa-wallet me-2" aria-hidden="true"></i>
+                    <i class="fas fa-dollar-sign me-2" aria-hidden="true"></i>
                     <small>{{ date }}</small>
                 </div>
             </div>

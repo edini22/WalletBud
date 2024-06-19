@@ -2,14 +2,26 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="timeline-header mb-4 d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Agenda</h4>
+                <h4 class="mb-0">{{ $t('Agenda')}}</h4>
                 <div class="d-flex align-items-center">
-                    <select class="form-select me-2" v-model="selectedMonth" @change="loadTimeline">
-                        <option v-for="(month, index) in months" :key="index" :value="index">{{ month }}</option>
-                    </select>
-                    <select class="form-select" v-model="selectedYear" @change="loadTimeline">
-                        <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-                    </select>
+
+                    <!-- time period-->
+                        <MaterialDropdown
+                            :on-click="loadTimeline"
+                            :options="months"
+                            v-model:selected="selectedMonth"
+                            class="me-2"
+                            style="width: 110px;"
+                        />
+
+                        <MaterialDropdown
+                            :on-click="loadTimeline"
+                            :options="years"
+                            v-model:selected="selectedYear"
+                            class="me-2"
+                            style="width: 80px;"
+                        />
+
                 </div>
             </div>
 
@@ -26,7 +38,7 @@
                     </timeline-list>
                 </div>
                 <div v-else class="d-flex justify-content-center align-items-center" style="height: 70vh;">
-                    <h5 class="text-secondary">Sem eventos!</h5>
+                    <h5 class="text-secondary">{{ $t('Sem eventos agendados')}}</h5>
                 </div>
             </div>
         </div>
@@ -36,7 +48,8 @@
 <script>
 import TimelineList from "@/examples/Cards/TimelineList.vue";
 import TimelineItem from "@/examples/Cards/TimelineItem.vue";
-import { ref, computed, onMounted } from 'vue';
+import MaterialDropdown from "@/components/MaterialDropdown.vue";
+import { ref, computed, onMounted, watch } from 'vue';
 import { fixaStore } from "@/store/fixaStore";
 import { userStore } from "@/store/userStore";
 import { useRouter } from 'vue-router';
@@ -44,8 +57,10 @@ import { useI18n } from "vue-i18n";
 
 export default {
     name: "schedule",
-    components: { TimelineList, TimelineItem },
+    components: { TimelineList, TimelineItem, MaterialDropdown },
     setup() {
+        const { t, locale } = useI18n();
+
         const snackbar = ref(false);
         const popup = ref(false);
         const popupReject = ref(false);
@@ -58,11 +73,40 @@ export default {
         const selectedPendenteId = ref(null);
         const transa = ref(null);
         const router = useRouter();
+        
+        // Array de meses inicial
+        let months = [
+        t('Janeiro'),
+        t('Fevereiro'),
+        t('Março'),
+        t('Abril'),
+        t('Maio'),
+        t('Junho'),
+        t('Julho'),
+        t('Agosto'),
+        t('Setembro'),
+        t('Outubro'),
+        t('Novembro'),
+        t('Dezembro')
+        ];
 
-        const selectedMonth = ref(new Date().getMonth());
-        const selectedYear = ref(new Date().getFullYear());
-        const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        // Observa mudanças no locale
+        watch(locale, () => {
+        // Atualiza cada elemento do array individualmente
+        months.forEach((_, index) => {
+            months[index] = t(months[index]);
+        });
+
+        // Opcional: Atualiza o mês selecionado
+        selectedMonth.value = months[new Date().getMonth()];
+        });
+
+        // Variável reativa para o mês selecionado
+        const selectedMonth = ref(months[new Date().getMonth()]);
+        
+        
         const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - 5 + i);
+        const selectedYear = ref(new Date().getFullYear());
 
         const loadTimeline = async () => {
             try {
@@ -185,7 +229,8 @@ export default {
             selectedMonth,
             selectedYear,
             months,
-            years
+            years,
+            t,
         };
     },
 };

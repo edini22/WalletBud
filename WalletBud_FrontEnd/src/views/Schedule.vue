@@ -53,7 +53,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { fixaStore } from "@/store/fixaStore";
 import { userStore } from "@/store/userStore";
 import { useRouter } from 'vue-router';
-//import { useI18n } from "vue-i18n";
+import { useI18n } from "vue-i18n";
 
 export default {
     name: "schedule",

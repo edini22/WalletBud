@@ -273,11 +273,8 @@ export const fixaStore = defineStore('fixa', {
               }
           
               const data = await response.json();
-              console.log(data);
           
               // Mapear os dados recebidos para o formato de categorias desejado
-              // name, sharevalue, data, descricao, tipo, rep
-              //TODO: meter o shared value em vez do value PIKA PIKA PIKA PIKA PIKA
               this.timeline = data.timeline.map(cat => ({
                 id: cat.id,
                 name: cat.name,

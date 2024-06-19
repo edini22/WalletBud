@@ -83,7 +83,7 @@
     </div>
   </nav>
 
-  <div class="position-fixed bottom-1 end-1 z-index-1051">
+  <div class="position-fixed top-1 end-1 z-index-1051">
     <!-- <div class="d-flex justify-content-start"> -->
     <!-- <material-snackbar v-if="snackbar === 'error'" :title="$t('Adicionar Categoria')" date="now"
       :description="$t('Não foi possível adicionar a categoria. Tente novamente.')"
@@ -93,7 +93,7 @@
       color="danger" :close-handler="closeSnackbar" /> -->
     <material-snackbar v-if="snackbar === 'success'" :title="$t('Adicionar Categoria')" date="now"
       :description="tempnotif.descricao" :icon="{ component: 'notifications', color: 'white' }" color="info"
-      :close-handler="closeSnackbar" />
+      :close-handler="closeSnackbar" :duration="3500" />
   </div>
 </template>
 <script>

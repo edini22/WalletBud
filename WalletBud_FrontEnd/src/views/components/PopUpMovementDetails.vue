@@ -29,8 +29,8 @@
                             <label for="description" class="form-label">{{ $t('Nome') }}
                                 <p v-if="edit" class="required"> *</p>
                             </label>
-                            <p class="detail form-label" v-if="transaction !== null && edit == false">{{
-                                transaction.name }}</p>
+                            <label class="detail form-label" v-if="transaction !== null && edit == false">{{
+                                transaction.name }}</label>
                             <div v-if="nameError === true && edit == true" class="form-input mb-1">
                                 <material-input class="material-input" id="description" type="text"
                                     :label="$t('Indique o nome')" name="description" :value="Name"
@@ -52,8 +52,8 @@
                         <!-- Descrição -->
                         <div v-if="transaction !== null && transaction.descricao !== null" class="form-group form-row">
                             <label for="place" class="form-label">{{ $t('Descrição') }}</label>
-                            <p class="detail form-label" v-if="transaction !== null && edit == false">{{
-                                transaction.descricao }}</p>
+                            <label class="detail form-label" v-if="transaction !== null && edit == false">{{
+                                transaction.descricao }}</label>
                             <div v-if="edit == true" class="form-input mb-1">
                                 <material-input class="material-input" id="description" type="text"
                                     :class="{ 'is-focused': transaction.descricao !== null && edit == true }"
@@ -64,8 +64,8 @@
                         <div v-if="transaction !== null && transaction.descricao === null && edit"
                             class="form-group form-row">
                             <label v-if="edit" for="place" class="form-label">{{ $t('Descrição') }}</label>
-                            <p class="detail form-label" v-if="transaction !== null && edit == false">{{
-                                transaction.descricao }}</p>
+                            <label class="detail form-label" v-if="transaction !== null && edit == false">{{
+                                transaction.descricao }}</label>
 
                             <div class="form-input mb-1">
                                 <material-input class="material-input" id="place" type="text"
@@ -79,8 +79,8 @@
                             <label for="value" class="form-label">{{ $t('Montante') }}
                                 <p v-if="edit" class="required"> *</p>
                             </label>
-                            <p class="detail form-label" v-if="transaction !== null && edit == false">{{
-                                transaction.value }}</p>
+                            <label class="detail form-label" v-if="transaction !== null && edit == false">{{
+                                transaction.value }}</label>
 
                             <div v-if="valueError === true && valueNegative === null && edit === true"
                                 class="form-input mb-1">
@@ -112,7 +112,7 @@
                                 {{ $t('Data do Movimento') }}
                                 <p v-if="edit" class="required"> *</p>
                             </label>
-                            <p class="detail form-label" v-if="edit == false">{{ transaction.date }}</p>
+                            <label class="detail form-label" v-if="edit == false">{{ transaction.date }}</label>
 
                             <div v-if="DateError === true && edit == true" class="form-input mb-1 date-input-wrapper"
                                 :class="{ 'dropdown-focused-error': isDateFocused, 'border': SetBorder }"
@@ -140,8 +140,8 @@
                             <div class="form-group form-row">
                                 <label for="Type" class="form-label">{{ $t('Tipo de movimento') }}
                                 </label>
-                                <p class="detail form-label">{{
-                                    transaction.tipo }}</p>
+                                <label class="detail form-label">{{
+                                    transaction.tipo }}</label>
                             </div>
                         </div>
 
@@ -151,11 +151,11 @@
                             <div class="form-group form-row">
                                 <label for="recorrence" class="form-label">{{ $t('Recorrência') }}
                                 </label>
-                                <p class="detail form-label" v-if="transaction !== null && transaction.repeticao == 0">
+                                <label class="detail form-label" v-if="transaction !== null && transaction.repeticao == 0">
                                     {{
-                                        $t('Única (Não Fixa)') }}</p>
-                                <p class="detail form-label" v-if="transaction !== null && transaction.repeticao > 0">{{
-                                    $t('Recorrente (Fixa)') }}</p>
+                                        $t('Única (Não Fixa)') }}</label>
+                                <label class="detail form-label" v-if="transaction !== null && transaction.repeticao > 0">{{
+                                    $t('Recorrente (Fixa)') }}</label>
 
                             </div>
                         </div>
@@ -164,13 +164,13 @@
                         <div v-if="transaction !== null && transaction.repeticao > 0 || transaction !== null && Recorrence === 'Recorrente (Fixa)'"
                             class="dropdown" ref="repeatDropdown">
                             <div class="form-group form-row">
-                                <p class="detail form-label" v-if="transaction !== null && edit == false">
+                                <label class="detail form-label" v-if="transaction !== null && edit == false">
                                     {{ transaction.repeticao == 1 ? 'Todos os dias' :
                                         transaction.repeticao == 2 ? 'Todas as semanas' :
                                         transaction.repeticao == 3 ? 'Todos os meses' :
                                         transaction.repeticao == 4 ? 'Todos os anos' :
                                     '' }}
-                                </p>
+                                </label>
                             </div>
                         </div>
 
@@ -180,8 +180,8 @@
                                 <label for="category" class="form-label">{{ $t('Categoria') }}
                                     <p v-if="edit" class="required"> *</p>
                                 </label>
-                                <p class="detail form-label" v-if="transaction !== null && edit == false">{{
-                                    transaction.categoria }}</p>
+                                <label class="detail form-label" v-if="transaction !== null && edit == false">{{
+                                    transaction.categoria }}</label>
                                 <div v-if="CategoryError === null && edit == true || CategoryError === false && edit == true"
                                     class="input-group input-group-outline form-input mb-1"
                                     style="border-radius: 0.375rem;">
@@ -248,8 +248,8 @@
                         <!-- Local -->
                         <div v-if="transaction !== null && transaction.local !== null" class="form-group form-row">
                             <label for="place" class="form-label">{{ $t('Local') }}</label>
-                            <p class="detail form-label" v-if="transaction !== null && edit == false">{{
-                                transaction.local }}</p>
+                            <label class="detail form-label" v-if="transaction !== null && edit == false">{{
+                                transaction.local }}</label>
                             <div v-if="edit == true" class="form-input mb-1">
                                 <material-input class="material-input" id="place" type="text"
                                     :label="$t('Indique o local')" name="place" :value="transaction.local"
@@ -260,8 +260,8 @@
                         <div v-if="transaction !== null && transaction.local === null && edit"
                             class="form-group form-row">
                             <label v-if="edit" for="place" class="form-label">{{ $t('Local') }}</label>
-                            <p class="detail form-label" v-if="transaction !== null && edit == false">{{
-                                transaction.local }}</p>
+                            <label class="detail form-label" v-if="transaction !== null && edit == false">{{
+                                transaction.local }}</label>
 
                             <div class="form-input mb-1">
                                 <material-input class="material-input" id="place" type="text"
@@ -290,16 +290,16 @@
                                     <h6 v-if="currentEditIndex !== index">
                                         <div class="form-group form-row">
                                                 <label for="description" class="form-label">{{ $t('Nome') }} </label>
-                                                <p class="detail form-label cuter">{{ c.user_email }}</p>
+                                                <label class="detail form-label cuter">{{ c.user_email }}</label>
                                             </div>
                                             <div class="form-group form-row">
                                                 <label for="description" class="form-label">{{ $t('Data') }} </label>
-                                                <p class="detail form-label cuter">{{ c.timestamp }}</p>
+                                                <label class="detail form-label cuter">{{ c.timestamp }}</label>
                                             </div>
                                             <div class="form-group form-row ">
                                                 <label for="description" class="form-label cuter">{{ $t('Comentáio') }}
                                                 </label>
-                                                <p class="detail form-label cuter">{{ c.descricao }}</p>
+                                                <label class="detail form-label cuter">{{ c.descricao }}</label>
                                             </div>
                                     </h6>
 

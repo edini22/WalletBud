@@ -3,7 +3,7 @@
 <div class="container">
   <div class="row justify-content-center">
       <div class="timeline-header mb-4">
-        <h4>Agenda</h4>
+        <h4>{{ $t('Agenda') }}</h4>
       </div>
       <div class="scroll-container">
         <div v-if="store.timeline.length > 0">
@@ -21,7 +21,7 @@
           
           </div>
           <div v-else class="d-flex justify-content-center align-items-center" style="height: 70vh;">
-            <h5 class="text-secondary">Sem eventos futuros!</h5>
+            <h5 class="text-secondary">{{ $t ('Sem eventos agendados')}}!</h5>
           </div>
       </div>
   </div>
@@ -37,11 +37,14 @@ import { ref, computed, onMounted } from 'vue';
 import { fixaStore } from "@/store/fixaStore";
 import { userStore } from "@/store/userStore";
 import { useRouter } from 'vue-router';
+import { useI18n } from "vue-i18n";
 
 export default {
   name: "schedule",
   components: { TimelineList, TimelineItem },
   setup() {
+    const { t } = useI18n();
+
     const snackbar = ref(false);
     const popup = ref(false);
     const popupReject = ref(false);
@@ -176,6 +179,7 @@ export default {
       openDetailsPopup,
       selectedPendente,
       openPopup,
+      t,
     };
   },
 };

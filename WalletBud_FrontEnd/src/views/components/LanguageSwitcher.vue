@@ -30,8 +30,12 @@ export default {
         idioma: language,
       };
 
-      updateLang(user);
-      store.idioma = language;
+      if(localStorage.getItem('token') !== null){
+        updateLang(user);
+        store.idioma = language;
+      }else{
+        store.idioma = language;
+      }
     };
 
     const updateLang = async (user) => {

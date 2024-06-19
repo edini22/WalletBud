@@ -177,10 +177,10 @@ public class Utilizador {
     }
 
     @GET
-    @Path("/getNotif/{email}")
+    @Path("/getNotif")
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserNotifs(@PathParam("email") String email_user, @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
+    public Response getUserNotifs( @HeaderParam(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws PersistentException {
         String token = authorizationHeader.substring("Bearer ".length()).trim();
         String email = JWTUtil.getEmailFromToken(token);
 
@@ -191,7 +191,7 @@ public class Utilizador {
             session = AASICPersistentManager.instance().getSession();
             transaction = session.beginTransaction();
 
-            JsonObject notifsUser = gerirUtilizador.getJsonUserNotifs(session,email_user);
+            JsonObject notifsUser = gerirUtilizador.getJsonUserNotifs(session,email);
 
             if (notifsUser.isEmpty()) {
                 JsonObject jsonResponse = Json.createObjectBuilder()

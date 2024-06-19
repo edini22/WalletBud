@@ -10,7 +10,7 @@ class WebSocketService {
         this.ws = new WebSocket(this.url);
 
         this.ws.onopen = () => {
-            console.log('WebSocket connected');
+            alert('WebSocket connected');
             this.ws.send(this.token);
         };
 
@@ -21,7 +21,7 @@ class WebSocketService {
         };
 
         this.ws.onclose = () => {
-            console.log('WebSocket disconnected');
+            alert('WebSocket disconnected');
             setTimeout(() => this.connect(), 1000); // Reconnect after 1 second
         };
 

@@ -139,9 +139,10 @@ import { useI18n } from "vue-i18n";
 import { categoriesStore } from "@/store/categoriesStore";
 import { fixaStore } from "@/store/fixaStore";
 
-import { websocketservice } from "@/services/websocketservice";
+// import { WebSocketService } from "@/services/WebSocketService";
+import WebSocketService from '@/services/WebSocketService';
 
-// import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 
 export default {
@@ -150,16 +151,22 @@ export default {
     const store = userStore();
     const router = useRouter();
     const { t } = useI18n();
+    const websocketservice = ref(null);
 
     const initWebsocket = () => {
-      const token = localStorage.getItem('token');
-      this.websocketservice = new websocketservice('ws://localhost:8000/WalletBud-1.0-SNAPSHOT/notifs', token);
-      this.websocketservice.connect();
+      alert("init websocket")
+      try {
+        const token = localStorage.getItem('token');
+        websocketservice.value = new WebSocketService('ws://localhost:8000/WalletBud-1.0-SNAPSHOT/notifs', token);
+        websocketservice.value.connect();
+      } catch (err) {
+        alert(err)
+      }
     };
 
-    // onMounted(() => {
-    //   initWebsocket();
-    // });
+    onMounted(() => {
+      initWebsocket();
+    });
 
     const logOut = async () => {
       await store.logOut();

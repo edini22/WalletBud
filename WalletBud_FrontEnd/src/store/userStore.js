@@ -7,14 +7,15 @@ export const userStore = defineStore("user", {
       email: "",
       password: "",
       id: 0,
-      saldo : 0,
+      saldo: 0,
       idioma: "",
       objetivo: 0,
       moeda: "EUR",
+      notifs: [],
     }
   },
   persist: true,
-  
+
   actions: {
     updateUser(editedUser) {
       this.username = editedUser.username;
@@ -36,6 +37,10 @@ export const userStore = defineStore("user", {
       this.idioma = user.idioma;
       this.objetivo = user.objetivo;
       this.moeda = user.moeda;
+    },
+
+    addNotif(notif) {
+      this.notifs.unshift(notif);
     },
 
     async registUser(newUser) {
@@ -67,6 +72,7 @@ export const userStore = defineStore("user", {
     },
 
     async logUser(user) {
+      this.notifs = [];
       const newUserJSON = JSON.stringify(user);
       const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/login";
       const request = {
@@ -96,7 +102,7 @@ export const userStore = defineStore("user", {
         localStorage.setItem("token", data.token);
       }
       this.password = user.password;
-     
+
     },
 
     async getUser() {
@@ -119,7 +125,7 @@ export const userStore = defineStore("user", {
       }
 
       const data = await response.json();
-      
+
       const user = {
         username: data.name,
         email: data.email,
@@ -155,7 +161,7 @@ export const userStore = defineStore("user", {
 
     },
 
-    async updateEditedUser(editedUser){
+    async updateEditedUser(editedUser) {
 
       const newUserJSON = JSON.stringify(editedUser);
       //alert(newUserJSON);
@@ -180,16 +186,16 @@ export const userStore = defineStore("user", {
       }
 
       //moeda
-      if(editedUser.moeda != this.moeda){
+      if (editedUser.moeda != this.moeda) {
         this.moeda = editedUser.moeda;
       }
 
       //idioma
-      if(editedUser.idioma != this.idioma){
+      if (editedUser.idioma != this.idioma) {
         this.idioma = editedUser.idioma;
       }
 
-      if(editedUser.email && editedUser.email != this.email){
+      if (editedUser.email && editedUser.email != this.email) {
         let user = {
           email: editedUser.email,
           password: this.password,
@@ -197,24 +203,24 @@ export const userStore = defineStore("user", {
         this.email = editedUser.email;
         this.logUser(user);
       }
-      if(editedUser.password && editedUser.password != this.password){
+      if (editedUser.password && editedUser.password != this.password) {
         this.password = editedUser.password;
       }
-      if(editedUser.idioma && editedUser.idioma != this.idioma){
+      if (editedUser.idioma && editedUser.idioma != this.idioma) {
         this.idioma = editedUser.idioma;
       }
-      if(editedUser.username && editedUser.username != this.username){
+      if (editedUser.username && editedUser.username != this.username) {
         this.username = editedUser.username;
       }
 
-      if(editedUser.objetivo && editedUser.objetivo != this.objetivo){
+      if (editedUser.objetivo && editedUser.objetivo != this.objetivo) {
         this.objetivo = editedUser.objetivo;
       }
 
     },
 
 
-    async logOut(){
+    async logOut() {
       localStorage.removeItem('token');
       this.username = "";
       this.email = "";
@@ -223,8 +229,9 @@ export const userStore = defineStore("user", {
       this.saldo = 0;
       this.idioma = "";
       this.moeda = "EUR";
+      this.notifs = [];
     },
-    
+
   },
-  }
+}
 );

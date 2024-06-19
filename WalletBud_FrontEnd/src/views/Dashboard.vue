@@ -33,8 +33,8 @@
         <div class="row mt-4">
 
           <!-- Weekly spend chart -->
-          <div class="col-12 col-md-6 col-lg-6 mt-4">
-            <chart-holder-card :title="$t('Gasto Semanal')" :subtitle="$t('Gasto total por dia numa semana')"
+          <div v-if="categories !== {}" class="col-12 col-md-6 col-lg-6 mt-4">
+            <chart-holder-card :title="$t('Gasto Semanal')" :subtitle="$t('Gasto total por dia na semana anterior')"
               :week="pastWeekDate">
 
               <reports-bar-chart :chart="{
@@ -48,60 +48,28 @@
           </div>
 
           <!-- category spend chart -->
-          <div class="col-12 col-md-6 col-lg-6 mt-4">
-            <chart-holder-card :title="$t('Gastos Por Categoria')" :subtitle="$t('Gasto total por dia numa semana')"
-              :week="pastWeekDate">
+          <div class="col-12 col-md-6 col-lg-6 mt-4 mt-lg-4 mt-sm-5 mt-md-4">
+            <chart-holder-card :title="$t('Gastos Por Categoria')" :subtitle="$t('Gasto total por categoria por mês') "
+              :week="pastWeekDate" color="dark">
 
-              <reports-bar-chart :chart="{
-                labels: [$t('Seg'), $t('Ter'), $t('Qua'), $t('Qui'), $t('Sex'), $t('Sáb'), $t('Dom')],
-                datasets: {
-                  label: $t('Gasto diário'),
-                  data: weekDailySpend,
-                },
-              }" />
+              <PieChart :categories="categories" />
               <template #detail>
                 <div class="d-flex">
-                <year-picker></year-picker>
-                <month-picker></month-picker>
+                <month-picker-input :default-month="currentMonth" :default-year="currentYear" show-year lang="pt"
+                @input="CategoriesMonthYearChange"></month-picker-input>
               </div>
               </template>
             </chart-holder-card>
           </div>
         </div>
 
-        <div class="row mt-4">
+        <div class="row mt-lg-6 mt-5 mt-md-6 mt-lg-4">
 
-          
-          <div class="col-lg-8 mt-5 mt-md-6 mt-lg-4">
-            <chart-holder-card title="Completed Tasks" subtitle="Last Campaign Performance" update="just updated"
-              color="dark">
+          <!-- GASTOS POR MÊS -->
+          <div v-if="monthSpend !== null">
+            <chart-holder-card title='Gasto por mês' :subtitle="'Gasto total por cada mês no ano ' + monthSelectedYear" update="just updated"
+              color="success">
               <reports-line-chart id="tasks-chart" :chart="{
-                labels: [
-                  'Apr',
-                  'May',
-                  'Jun',
-                  'Jul',
-                  'Aug',
-                  'Sep',
-                  'Oct',
-                  'Nov',
-                  'Dec',
-                ],
-                datasets: {
-                  label: 'Mobile apps',
-                  data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-                },
-              }" />
-            </chart-holder-card>
-          </div>
-        </div>
-
-        <div class="row mt-4">
-<!-- Month spend chart on chosen year -->
-<div class="col-lg-8 col-md-6 mt-5 mt-md-4">
-            <chart-holder-card title="Daily Sales"
-              subtitle="(<span class='font-weight-bolder'>+15%</span>) increase in today sales." color="success">
-              <reports-line-chart :chart="{
                 labels: [
                   $t('Jan'),
                   $t('Fev'),
@@ -117,16 +85,21 @@
                   $t('Dez'),
                 ],
                 datasets: {
-                  label: 'Gasto total',
-                  data: [800, 500, 1200, 900, 1100, 600, 910, 1000, 500, 1000, 690, 901],
+                  label: 'Mobile apps',
+                  data: monthSpend,
                 },
               }" />
               <template #detail>
-                <year-picker></year-picker>
+                <div class="d-flex">
+                <month-picker-input :default-month="currentMonth" :default-year="currentYear" show-year lang="pt"
+                @input="monthChange"></month-picker-input>
+              </div>
               </template>
             </chart-holder-card>
           </div>
         </div>
+
+      
       </div>
     </div>
   </div>
@@ -134,13 +107,14 @@
 
 <script>
 import ChartHolderCard from "./components/ChartHolderCard.vue";
+import PieChart from "./components/PieChart.vue";
 import ReportsBarChart from "@/examples/Charts/ReportsBarChart.vue";
 import ReportsLineChart from "@/examples/Charts/ReportsLineChart.vue";
 import MiniStatisticsCard from "./components/MiniStatisticsCard.vue";
 import MaterialDropdown from "@/components/MaterialDropdown.vue"
-import YearPicker from "@/components/YearPicker.vue"
-import MonthPicker from "../components/MonthPicker.vue";
 import { userStore } from "@/store/userStore";
+//import { MonthPicker } from 'vue-month-picker'
+import { MonthPickerInput } from 'vue-month-picker'
 
 export default {
   name: "Dashboard",
@@ -152,7 +126,12 @@ export default {
       weekDailySpend: [100, 20, 10, 40, 50, 10, 40],
       userActiveYears: [2020, 2021, 2022, 2023, 2024],
       selectedYear: 0,
-      anualSpend: 0
+      anualSpend: 0,
+      currentMonth: new Date().getMonth(),
+      currentYear: new Date().getFullYear(),
+      categories: {},
+      monthSpend: null,
+      monthSelectedYear: new Date().getFullYear()
     };
   },
   components: {
@@ -161,10 +140,25 @@ export default {
     ReportsLineChart,
     MiniStatisticsCard,
     MaterialDropdown,
-    YearPicker,
-    MonthPicker
+    //MonthPicker,
+    MonthPickerInput,
+    PieChart
   },
   methods: {
+    CategoriesMonthYearChange(value) {
+      // 'value' will contain an object with 'month' and 'year' properties
+      console.log(value.month);
+      console.log(value.year);
+      this.categories =  {
+        "oiojojoj": 123,
+        "pessoal": 2312
+      };
+    },
+    monthChange(value){
+      this.monthSelectedYear = value.year;
+      //GET GASTO POR MÊS
+      this.monthSpend = [203, 3030, 404, 233, 230, 120, 333, 5556, 4554, 34, 424, 434];
+    },
     getBudget() {
       this.budget = parseFloat((this.user.saldo - this.user.objetivo).toFixed(2));
     },
@@ -180,8 +174,32 @@ export default {
   },
   mounted() {
     this.getBudget();
-    //get current year
+    //GET GASTO POR MÊS NO ANO ATUAL 
+    this.monthSpend = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
     this.selectedYear = 2024;
+    this.categories = {"renda": 123,
+    "pessoal": 2312};
   },
 };
 </script>
+
+<style>
+.month-picker-input-container {
+  z-index: 1000;
+}
+
+.month-picker__year button {
+  background-color: transparent !important;
+  background-color: none !important;
+  border: none;
+}
+
+.month-picker__year p {
+  cursor: default;
+}
+
+.month-picker__month.selected{
+  background-image: linear-gradient(195deg, #49a3f1 0%, #1a73e8 100%);
+  border-radius: 0px;
+}
+</style>

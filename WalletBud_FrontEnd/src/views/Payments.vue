@@ -258,7 +258,8 @@
     </div>
 
     <!--PopUp 1-->
-    <div class="modal fade" id="Pop1Modal" tabindex="-1" aria-hidden="true" ata-bs-backdrop='static' data-bs-keyboard='false'>
+    <div class="modal fade" id="Pop1Modal" tabindex="-1" aria-labelledby="transactionModalLabel" aria-hidden="true" data-bs-backdrop='static' 
+    data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -823,7 +824,7 @@
     </div>
 
     <!--PopUp Eliminar-->
-    <div class="modal fade" id="PopEliminarModal" tabindex="-1" aria-hidden="true" ata-bs-backdrop='static' data-bs-keyboard='false'>
+    <div class="modal fade" id="PopEliminarModal" tabindex="-1" aria-hidden="true" aria-labelledby="transactionModalLabel" data-bs-backdrop='static' data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">

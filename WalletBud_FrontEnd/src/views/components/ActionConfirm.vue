@@ -1,5 +1,6 @@
 <template>
-    <div v-if="isVisible" class="modal fade show" aria-hidden="true" data-bs-backdrop="static" >
+    <div v-if="isVisible" class="modal fade show" aria-hidden="true" tabindex="-1"
+    aria-labelledby="transactionModalLabel" data-bs-backdrop="static" data-bs-keyboard='false'>
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">

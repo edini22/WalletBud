@@ -48,7 +48,7 @@
           </div>
 
           <!-- category spend chart -->
-          <div class="col-12 col-md-6 col-lg-6 mt-5 mt-md-6 mt-lg-4">
+          <div class="col-12 col-md-6 col-lg-6 mt-4 mt-lg-4 mt-sm-5 mt-md-4">
             <chart-holder-card :title="$t('Gastos Por Categoria')" :subtitle="$t('Gasto total por categoria por mês') "
               :week="pastWeekDate" color="dark">
 
@@ -68,7 +68,7 @@
           <!-- GASTOS POR MÊS -->
           <div v-if="monthSpend !== null">
             <chart-holder-card title='Gasto por mês' :subtitle="'Gasto total por cada mês no ano ' + monthSelectedYear" update="just updated"
-              color="dark">
+              color="success">
               <reports-line-chart id="tasks-chart" :chart="{
                 labels: [
                   $t('Jan'),

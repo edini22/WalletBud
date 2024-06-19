@@ -16,12 +16,12 @@
                                 <!-- @blur="saveCategory(index)" /> -->
                                 <div class="buttons">
                                     <button @click="toggleEditMode('expense', index, Editing)"
-                                        style="background-color: white;">
+                                        style="background-color: none; background-color: transparent;">
                                         <i class="material-icons" style="color: #344767;"
                                             v-if="store.CategoriesExpense[index].isedit">save</i>
                                         <i class="material-icons" style="color: #344767;" v-else>edit</i>
                                     </button>
-                                    <button @click="deleteCategory(index, 'expense')" style="background-color: white;">
+                                    <button @click="deleteCategory(index, 'expense')" style="background-color: none; background-color: transparent;">
                                         <i class="material-icons" style="color: #344767;">delete</i>
                                     </button>
                                 </div>
@@ -40,13 +40,13 @@
                                 <!-- @blur="saveIncomeCategory(index)" /> -->
                                 <div class="buttons">
                                     <button @click="toggleEditMode('income', index, Editing)"
-                                        style="background-color: white;">
+                                    style="background-color: none; background-color: transparent;">
                                         <i class="material-icons" style="color: #344767; font-size: 18px;"
                                             v-if="store.CategoriesIncome[index].isedit">save</i>
                                         <i class="material-icons" style="color: #344767; font-size: 18px;"
                                             v-else>edit</i>
                                     </button>
-                                    <button @click="deleteCategory(index, 'income')" style="background-color: white;">
+                                    <button @click="deleteCategory(index, 'income')" style="background-color: none; background-color: transparent;">
                                         <i class="material-icons" style="color: #344767; font-size: 18px;">delete</i>
                                     </button>
                                 </div>

@@ -10,6 +10,7 @@ export function activateDarkMode() {
   const hr = document.querySelectorAll("div:not(.sidenav) > hr");
   const hr_card = document.querySelectorAll("div:not(.bg-gradient-dark) hr");
   const text_btn = document.querySelectorAll("button:not(.btn) > .text-dark");
+  const categorylabels = document.querySelectorAll(".category");
   const text_span = document.querySelectorAll(
     "span.text-dark, .breadcrumb .text-dark",
   );
@@ -32,6 +33,10 @@ export function activateDarkMode() {
   
   theads.forEach(thead => {
     thead.style.backgroundColor = "#202940"; // Remove o fundo branco do <thead> ao ativar o modo escuro
+  });
+
+  categorylabels.forEach(label => {
+    label.style.color = "#e1e1e1"; // Remove o fundo branco do <thead> ao ativar o modo escuro
   });
   
   modals.forEach(modal => {
@@ -162,7 +167,11 @@ export function deactivateDarkMode() {
   );
   const svg = document.querySelectorAll("g");
   const theads = document.querySelectorAll("thead.table-head-fixed");
+  const categorylabels = document.querySelectorAll(".category");
 
+  categorylabels.forEach(label => {
+    label.style.color = "#15181a";
+  });
 
   body.classList.remove("dark-version");
   

@@ -12,6 +12,7 @@ export const userStore = defineStore("user", {
       objetivo: 0,
       moeda: "EUR",
       notifs: [],
+      permaNotifs: [],
     }
   },
   persist: true,
@@ -138,6 +139,30 @@ export const userStore = defineStore("user", {
       };
 
       this.setUser(user); // Adiciona o novo usuário aos dados do store
+    },
+
+    async getPermaNotifs() {
+      const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/getNotif";
+      const token = localStorage.getItem('token');
+      const request = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+      };
+
+      const response = await fetch(url, request);
+
+      // Verifica se a resposta não é OK
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+
+      const data = await response.json();
+      this.permaNotifs = data;
+
     },
 
     async getUserByEmail(email) {

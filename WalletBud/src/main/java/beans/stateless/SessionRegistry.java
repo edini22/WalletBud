@@ -4,24 +4,23 @@ import jakarta.ejb.Lock;
 import jakarta.ejb.LockType;
 import jakarta.ejb.Singleton;
 import jakarta.websocket.Session;
+import wb.walletbud.User;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Singleton
 public class SessionRegistry {
 
-    private final Set<Session> sessions = new HashSet<>();
+    private final Map<Session, User> sessions = new HashMap<>();
 
     @Lock(LockType.READ)
-    public Set<Session> getAll() {
-        return Collections.unmodifiableSet(sessions);
+    public Map<Session, User> getAll() {
+        return Collections.unmodifiableMap(sessions);
     }
 
     @Lock(LockType.WRITE)
-    public void add(Session session) {
-        sessions.add(session);
+    public void add(Session session, User user) {
+        sessions.put(session, user);
     }
 
     @Lock(LockType.WRITE)

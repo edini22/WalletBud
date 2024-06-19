@@ -848,9 +848,9 @@ export default {
                 let url;
                 if(transaction.value.repeticao == 0){
                     transaction.value.repeticao = null;
-                    url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/unica/despesa/set";
+                    url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/unica/" + transaction.value.tipo + "/set";
                 } else {
-                    url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/fixa/despesa/set";
+                    url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/fixa/" + transaction.value.tipo + "/set";
                 }
 
                 console.log(url);

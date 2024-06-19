@@ -67,7 +67,7 @@
 
           <!-- GASTOS POR MÊS -->
           <div v-if="monthSpend !== null">
-            <chart-holder-card title='Gasto por mês' :subtitle="'Gasto total por cada mês no ano ' + monthSelectedYear" update="just updated"
+            <chart-holder-card :title="$t('Gasto por mês')" :subtitle="$t('Gasto total por cada mês no ano ') + monthSelectedYear" update="just updated"
               color="success">
               <reports-line-chart id="tasks-chart" :chart="{
                 labels: [

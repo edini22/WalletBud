@@ -156,7 +156,6 @@ export default {
     },
     yearChange(value){
       console.log(value.year);
-      //value.month; mês
       //value.year; ano
       this.monthSelectedYear = value.year;
       //GET GASTO POR MÊS

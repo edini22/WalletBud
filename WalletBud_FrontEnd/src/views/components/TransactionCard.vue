@@ -155,7 +155,8 @@ export default {
                     t.date.toLowerCase().includes(search) ||
                     t.tipo.toLowerCase().includes(search) ||
                     t.categoria.toLowerCase().includes(search) ||
-                    t.value.toString().toLowerCase().includes(search)
+                    t.value.toString().toLowerCase().includes(search) ||
+                    t.descricao.toLowerCase().includes(search)
                 );
             });
         },

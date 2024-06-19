@@ -140,8 +140,10 @@
                             <div class="form-group form-row">
                                 <label for="Type" class="form-label">{{ $t('Tipo de movimento') }}
                                 </label>
-                                <label class="detail form-label">{{
-                                    transaction.tipo }}</label>
+                                <label class="detail form-label">
+                                    {{ transaction.tipo === 'despesa' ? 'Despesa' :
+                                    transaction.tipo === 'receita' ? 'Receita' : 
+                                    ''}}</label>
                             </div>
                         </div>
 
@@ -1481,8 +1483,8 @@ export default {
 
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
-    color: #344767;
-    background-color: #fff;
+    color: #ffffff;
+    background-image: linear-gradient(195deg, #49a3f1 0%, #1a73e8 100%);;
     animation: 0.2s ease;
 }
 

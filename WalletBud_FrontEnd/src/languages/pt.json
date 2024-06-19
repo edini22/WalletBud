@@ -126,6 +126,9 @@
     "Overdue Payments" : "Pagamentos em Atraso",
     "Pending Membership Requests": "Pedidos de Adesão Pendentes",
     "Details": "Detalhes",
-    "Open": "Abrir"
+    "Open": "Abrir",
+    "Last 30 days": "Últimos 30 dias",
+    "Last 60 dias": "Últimos 60 dias",
+    "Last 90 dias": "Últimos 90 dias"
 
 }

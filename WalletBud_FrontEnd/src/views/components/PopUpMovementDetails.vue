@@ -29,7 +29,7 @@
                             <label for="description" class="form-label">{{ $t('Nome') }}
                                 <p v-if="edit" class="required"> *</p>
                             </label>
-                            <label class="detail form-label" v-if="transaction !== null && edit == false">{{
+                            <label class="detail form-label cuter" v-if="transaction !== null && edit == false">{{
                                 transaction.name }}</label>
                             <div v-if="nameError === true && edit == true" class="form-input mb-1">
                                 <material-input class="material-input" id="description" type="text"
@@ -52,7 +52,7 @@
                         <!-- Descrição -->
                         <div v-if="transaction !== null && transaction.descricao !== null" class="form-group form-row">
                             <label for="place" class="form-label">{{ $t('Descrição') }}</label>
-                            <label class="detail form-label" v-if="transaction !== null && edit == false">{{
+                            <label class="detail form-label cuter" v-if="transaction !== null && edit == false">{{
                                 transaction.descricao }}</label>
                             <div v-if="edit == true" class="form-input mb-1">
                                 <material-input class="material-input" id="description" type="text"
@@ -149,7 +149,7 @@
                         <div v-if="transaction !== null && transaction.repeticao !== null" class="dropdown"
                             ref="recorrenceDropdown">
                             <div class="form-group form-row">
-                                <label for="recorrence" class="form-label">{{ $t('Recorrência') }}
+                                <label for="place" class="form-label">{{ $t('Recorrência') }}
                                 </label>
                                 <label class="detail form-label" v-if="transaction !== null && transaction.repeticao == 0">
                                     {{
@@ -164,6 +164,7 @@
                         <div v-if="transaction !== null && transaction.repeticao > 0 || transaction !== null && Recorrence === 'Recorrente (Fixa)'"
                             class="dropdown" ref="repeatDropdown">
                             <div class="form-group form-row">
+                                <label for="Type" class="form-label">{{ $t('Periodicidade') }}</label>
                                 <label class="detail form-label" v-if="transaction !== null && edit == false">
                                     {{ transaction.repeticao == 1 ? 'Todos os dias' :
                                         transaction.repeticao == 2 ? 'Todas as semanas' :

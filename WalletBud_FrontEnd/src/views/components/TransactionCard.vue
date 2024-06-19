@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-md-6 d-flex justify-content-end align-items-center">
                     <i class="fas fa-dollar-sign me-2" aria-hidden="true"></i>
-                    <small>{{ date }}</small>
+                    <small>{{ $t('Montante') }}</small>
                 </div>
             </div>
         </div>
@@ -84,8 +84,9 @@ import { useTransactionStore } from '@/store/transactionStore.js';
 import MaterialDropdown from "@/components/MaterialDropdown.vue";
 //import MaterialFilter from "@/components/MaterialFilter.vue";
 import ExportData from '@/components/ExportData.vue';
-import { ref, onMounted } from "vue";
+import {  onMounted } from "vue";
 import { watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 
 export default {
@@ -100,7 +101,8 @@ export default {
     },
     setup() {
         const tStore = useTransactionStore();
-        const activeFilter = ref('Últimos 30 dias');
+        const { t } = useI18n();
+        const activeFilter = t('Últimos 30 dias');
 
 
         const loadMovements = async () => {
@@ -120,7 +122,8 @@ export default {
             tStore.load(newFilter);
         });
         return {
-            activeFilter
+            activeFilter,
+            t,
         };
     },
     data() {
@@ -130,13 +133,13 @@ export default {
             searchQuery: '',
             isFocused: false,
             time_periods: [
-                'Últimos 30 dias',
-                'Últimos 60 dias',
-                'Últimos 90 dias'
+                this.t('Últimos 30 dias'),
+                this.t('Últimos 60 dias'),
+                this.t('Últimos 90 dias')
             ],
             selectedCategories: [],
             selectedType: '',
-            date: 'Montante',
+            date: this.t('Montante'),
         };
     },
     computed: {

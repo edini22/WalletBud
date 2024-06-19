@@ -20,7 +20,7 @@ import wb.walletbud.User;
 import java.util.Map;
 
 
-@ServerEndpoint("/teste")
+@ServerEndpoint("/notifs")
 @ApplicationScoped
 public class EventObserver {
 
@@ -38,8 +38,10 @@ public class EventObserver {
         for (Map.Entry<Session, User> entry : sessions.entrySet()) {
             Session session = entry.getKey();
             User user = entry.getValue();
-            if (user == message.getUserId_user()) {
+            System.out.println("User notif: " + message.getUserId_user() + " , user token: " + user.getId_user());
+            if (user.getId_user() == message.getUserId_user().getId_user()) {
                 session.getAsyncRemote().sendText(toJson(message, user.getEmail()));
+                break;
             }
         }
 

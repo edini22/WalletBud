@@ -761,7 +761,7 @@ public class GerirUnica {
                     TransacaoPartilhadaDAO.deleteAndDissociate(tp);
 
                     // Notificar todos os utilizadores (u) que o owner eliminou esta transacao
-                    notify("The owner has deleted the transaction " + unica.getName() + ". Please confirm if you want to continue with the new share value.", u, unica);
+                    notify("The owner has deleted the transaction " + unica.getName(), u, null);
                 }
 
                 //mudar o owner para null para assim "eliminar" a transacao
@@ -770,7 +770,7 @@ public class GerirUnica {
                 UnicaDAO.save(unica);
 
                 // Notificar o owner que eliminou esta transacao
-                notify("You have successfully deleted the transaction " + unica.getName() + ".",user,unica);
+                notify("You have successfully deleted the transaction " + unica.getName() + ".",user,null);
 
             } else{
                 return -2;

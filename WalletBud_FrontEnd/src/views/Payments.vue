@@ -296,10 +296,12 @@
                             <div v-if="isEditing">
                                 <div class="tab tab-content active" id="tab-0">
 
+                                    <h6>Tipo: <span class="text-info">&nbsp;&nbsp;{{ transa.tipo }}</span></h6>
+
                                     <!-- Name -->
                                     <div class="form-group form-row">
                                         <label for="description" class="form-label">{{ $t('Nome') }}
-                                            <p class="required"> *</p>
+                                            <p class="required text-danger text-sm"> *</p>
                                         </label>
                                         <div v-if="nameError === true" class="form-input mb-1">
                                             <material-input class="material-input" id="description" type="text"
@@ -329,7 +331,7 @@
                                     <!-- Montante -->
                                     <div class="form-group form-row">
                                         <label for="value" class="form-label">{{ $t('Montante') }}
-                                            <p class="required"> *</p>
+                                            <p class="required text-danger text-sm"> *</p>
                                         </label>
                                         <div v-if="valueError === true" class="form-input mb-1">
                                             <material-input class="material-input" id="value" type="number"
@@ -350,7 +352,7 @@
                                     <div v-if="Recorrence != 'Unica'" class="dropdown" ref="repeatDropdown">
                                         <div class="form-group form-row">
                                             <label for="Repetition" class="form-label">{{ $t('Repetição') }}
-                                                <p class="required"> *</p>
+                                                <p class="required text-danger text-sm"> *</p>
                                             </label>
                                             <div v-if="repetitionError === null || repetitionError === false"
                                                 class="input-group input-group-outline form-input mb-1"
@@ -428,13 +430,12 @@
                                         </div>
                                     </div>
 
-                                    <h6>Tipo: {{ transa.tipo }}</h6>
 
                                     <!-- Categoria -->
                                     <div class="dropdown" ref="categoryDropdown">
                                         <div class="form-group form-row">
                                             <label for="category" class="form-label">{{ $t('Categoria') }}
-                                                <p class="required"> *</p>
+                                                <p class="required text-danger text-sm "> *</p>
                                             </label>
                                             <div v-if="CategoryError === null || CategoryError === false"
                                                 class="input-group input-group-outline form-input mb-1"
@@ -511,25 +512,54 @@
                                     </div>
 
                                     <label class="form-label mb-1">
-                                        <p class="required" style="font-weight: 400;"> * {{ $t('Campo obrigatório') }}
+                                        <p class="required text-danger text-xs"> * {{ $t('Campo obrigatório') }}
                                         </p>
                                     </label>
 
                                 </div>
                             </div>
                             <div v-else>
-                                <h6>Nome: {{ transa.name }}</h6>
-                                <h6>Descrição: {{ transa.descricao }}</h6>
-                                <h6>Valor Total: {{ transa.value }}€</h6>
-                                <h6 v-if="transa.value != transa.shareValue">
-                                    Valor Partilhado: {{ transa.shareValue }}€
-                                </h6>
-                                <h6>Periodicidade: {{ getRepetitionText(transa.repeticao) }}</h6>
-                                <h6>Data Criação: {{ transa.date }}</h6>
-                                <h6 v-if="popup">Data: {{ dateP }}</h6>
-                                <h6>Categoria: {{ transa.categoria }}</h6>
-                                <h6>Tipo: {{ transa.tipo }}</h6>
-                                <h6>Local: {{ transa.local }}</h6>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Nome') }} </label>
+                                    <p class="detail form-label cuter">{{ transa.name }}</p>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Descrição') }} </label>
+                                    <p class="detail form-label cuter">{{ transa.descricao }}</p>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Valor Total') }} </label>
+                                    <p class="detail form-label">{{ transa.value }}</p>
+                                </div>
+                                <div v-if="transa.value != transa.shareValue" class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Valor Partilhado') }} </label>
+                                    <p class="detail form-label">{{ transa.shareValue }}</p>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Periodicidade') }} </label>
+                                    <p class="detail form-label">{{ getRepetitionText(transa.repeticao) }}</p>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Data Criação') }} </label>
+                                    <p class="detail form-label">{{ transa.date }}</p>
+                                </div>
+                                <div v-if="popup" class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Próximo Pagamento') }} </label>
+                                    <p class="detail form-label">{{ dateP }}</p>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Categoria') }} </label>
+                                    <p class="detail form-label">{{ transa.categoria }}</p>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Tipo') }} </label>
+                                    <p class="detail form-label">{{ transa.tipo }}</p>
+                                </div>
+                                <div v-if="transa.local != ''" class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Local') }} </label>
+                                    <p class="detail form-label cuter">{{ transa.local }}</p>
+                                </div>
+                                
 
                                 <!-- <div v-if="comments && comments.length > 0" class="modal-footer d-block justify-content-center"> -->
                                 <div v-if="comments" class="modal-footer d-block justify-content-center">
@@ -542,12 +572,24 @@
                                 <div class="justify-content-left">
                                     <div v-for="(c, index) in comments" :key="index" class="mb-3">
                                         <h6 v-if="currentEditIndex !== index">
-                                            {{ c.user_email + " " + c.timestamp + " " + c.descricao }}
+                                            <div class="form-group form-row">
+                                                <label for="description" class="form-label">{{ $t('Nome') }} </label>
+                                                <p class="detail form-label cuter">{{ c.user_email }}</p>
+                                            </div>
+                                            <div class="form-group form-row">
+                                                <label for="description" class="form-label">{{ $t('Data') }} </label>
+                                                <p class="detail form-label cuter">{{ c.timestamp }}</p>
+                                            </div>
+                                            <div class="form-group form-row ">
+                                                <label for="description" class="form-label cuter">{{ $t('Comentáio') }} </label>
+                                                <p class="detail form-label cuter">{{ c.descricao }}</p>
+                                            </div>
+                                           
                                         </h6>
-                                        <input v-else class="input-group input-group-outline custom"
+                                        <input v-else class="input-group input-group-outline custom" style="border-radius: 6px;border: 2px solid #344767;"
                                             v-model="editComment" />
                                         <div class="buttons" v-if="currentEditIndex === index">
-                                            <button @click="saveComment(index)" style="background-color: white;">
+                                            <button @click="saveComment(index)" style="background-color: white; ">
                                                 <i class="material-icons"
                                                     style="color: #344767; font-size: 18px;">save</i>
                                             </button>
@@ -560,14 +602,15 @@
                                             <button v-if="user.email === c.user_email"
                                                 @click="editCommentMode(index, c.descricao)"
                                                 style="background-color: white;">
-                                                <i class="material-icons"
-                                                    style="color: #344767; font-size: 18px;">edit</i>
+                                                <i class="material-icons "
+                                                    style="color: #344767; font-size: 18px; ">edit</i>
                                             </button>
                                             <button v-if="user.email === c.user_email || user.id === transa.users[0].id"
                                                 @click="deleteComment(index)" style="background-color: white;">
                                                 <i class="material-icons"
                                                     style="color: #344767; font-size: 18px;">delete</i>
                                             </button>
+                                            <hr class="horizontal dark" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -590,15 +633,25 @@
 
                         <div v-if="participantes">
                             <div v-for="(u, index) in transa.users" :key="index">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <h6>Utilizador: {{ u.name }}</h6>
-                                        <h6>Email: {{ u.email }}</h6>
-                                        <h6 v-if="u.confirma === 1">Estado: Aceite</h6>
-                                        <h6 v-if="u.confirma === 0">Estado: Em espera</h6>
-                                    </div>
-                                    <div v-if="transa.users[0].id === user.id">
-                                        <div>
+                                <div class="">
+                                        <div class="form-group form-row">
+                                            <label for="description" class="form-label">{{ $t('Utilizador') }} </label>
+                                            <p class="detail form-label cuter">{{ u.name }}</p>
+                                        </div>
+                                        <div class="form-group form-row">
+                                            <label for="description" class="form-label">{{ $t('Email') }} </label>
+                                            <p class="detail form-label cuter">{{ u.email }}</p>
+                                        </div>
+                                        <div v-if="u.confirma === 1" class="form-group form-row">
+                                            <label for="description" class="form-label">{{ $t('Estado') }} </label>
+                                            <p class="detail form-label cuter text-success">Aceite</p>
+                                        </div>
+                                        <div v-if="u.confirma === 0" class="form-group form-row">
+                                            <label for="description" class="form-label">{{ $t('Estado') }} </label>
+                                            <p class="detail form-label cuter text-warning">Em espera</p>
+                                        </div>
+                                    
+                                        <div v-if="transa.users[0].id === user.id">
                                             <!--remove user-->
                                             <material-button v-if="transa.users[0].id != u.id && popup" variant="gradient"
                                                 color="danger" class="btn btn-sm small-button" @click="
@@ -627,7 +680,7 @@
                                                 {{ $t("Remover") }}
                                             </material-button>
                                         </div>
-                                    </div>
+                                        <hr class="horizontal dark" />
                                 </div>
                             </div>
                             <!-- Shared expense -->
@@ -671,8 +724,8 @@
                     </div>
                 </div>
                 <div v-if="transa && transa.users && transa.users.length > 0">
-                    <div v-if="transa.users[0].id == user.id" class="modal-footer d-flex justify-content-between">
-                        <div v-if="isEditing === false">
+                    <div v-if="transa.users[0].id == user.id" >
+                        <div class="modal-footer d-flex justify-content-between" v-if="isEditing === false">
                             <material-button variant="gradient" color="danger" class="btn btn-md" @click="
                                 toggleToDelete();
                             " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#PopEliminarModal'>
@@ -691,21 +744,21 @@
                             </material-button>
                             <material-button v-if="popup" variant="gradient" color="info" class="btn btn-md" @click="
                                 isEditing = false;
-                            popupAccept = true;
-                            popup = false;
-                            popupDetails = false;
-                            currentEditIndex = null;
-                            infos = true;
-                            participantes = false;
-                            emailError = null; newUserEmail = '', emailErrorStore = null;
-                            "
-                            data-bs-dismiss="modal"
-                            data-bs-toggle='modal' data-bs-target='#PayModal'
-                            >
+                                popupAccept = true;
+                                popup = false;
+                                popupDetails = false;
+                                currentEditIndex = null;
+                                infos = true;
+                                participantes = false;
+                                emailError = null; newUserEmail = '', emailErrorStore = null;
+                                "
+                                data-bs-dismiss="modal"
+                                data-bs-toggle='modal' data-bs-target='#PayModal'
+                                >
                                 {{ $t("Pagar") }}
                             </material-button>
                         </div>
-                        <div v-else>
+                        <div class="modal-footer d-flex justify-content-between" v-else>
                             <material-button variant="gradient" color="danger" class="btn btn-md" @click="
                                 isEditing = false;
                                 currentEditIndex = null;
@@ -1591,6 +1644,8 @@ export default {
                 console.log(data_comments);
 
                 comments.value = data_comments.comentarios;
+                
+
             } catch (error) {
                 if (error.message.includes('token')) {
                     alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
@@ -1938,7 +1993,23 @@ export default {
                 console.log(data);
 
                 // Mapear os dados recebidos para o formato de categorias desejado
-                transa.value = data;
+                transa.value = {
+                    id: data.id,
+                    name: data.name,
+                    descricao: data.descricao,
+                    value: data.value,
+                    local: data.local,
+                    repeticao: data.repeticao,
+                    tipo: data.tipo,
+                    categoria: data.categoria,
+                    users: data.users,
+                    status: data.status,
+                    shareValue: parseFloat(data.shareValue.toFixed(2)),
+                    date: store.formatTimestampToDate(data.date),
+
+                };
+                
+               
 
                 const response_comments = await fetch(url_comments, request);
 
@@ -1951,6 +2022,9 @@ export default {
                 console.log(data_comments);
 
                 comments.value = data_comments.comentarios;
+                alert("1:" + comments.value.timestamp);
+
+                
             } catch (error) {
                 if (error.message.includes('token')) {
                     alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
@@ -2293,5 +2367,25 @@ export default {
     word-break: break-all;
     white-space: normal;
     overflow-wrap: break-word;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-label {
+    flex: 1;
+    color: #344767;
+    margin-right: 10px;
+    text-align: left;
+}
+
+.required {
+    display: inline;
+    color: red;
+    font-weight: 500;
+    font-size: 12px;
 }
 </style>

@@ -17,6 +17,19 @@ export const fixaStore = defineStore('fixa', {
           this.timeline = [];
         },
 
+        formatTimestampToDate(timestamp) {
+          // Cria um objeto Date a partir do timestamp
+          const date = new Date(timestamp);
+      
+          // Extrai o ano, mês e dia
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0'); // Adiciona zero à esquerda se necessário
+          const day = String(date.getDate()).padStart(2, '0'); // Adiciona zero à esquerda se necessário
+      
+          // Retorna a data no formato desejado
+          return `${year}/${month}/${day}`;
+        },
+
         async deleteOrGiveUp(id,tipo) {
 
             const url = `http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/${tipo}/${id}`;
@@ -141,7 +154,7 @@ export const fixaStore = defineStore('fixa', {
                 name: cat.name,
                 value: cat.value,
                 shareValue: parseFloat(cat.shareValue.toFixed(2)), // Arredonda para duas casas decimais
-                date: cat.date,
+                date: this.formatTimestampToDate(cat.date),
                 descricao: cat.descricao,
                 categoria: cat.categoria,
                 status: cat.status,
@@ -187,7 +200,7 @@ export const fixaStore = defineStore('fixa', {
                 name: cat.name,
                 value: cat.value,
                 shareValue: parseFloat(cat.shareValue.toFixed(2)),
-                date: cat.date,
+                date: this.formatTimestampToDate(cat.date),
                 categoria: cat.categoria,
                 tipo: cat.tipo,
                 repeticao: cat.repeticao
@@ -228,7 +241,7 @@ export const fixaStore = defineStore('fixa', {
                 name: cat.name,
                 value: cat.value,
                 shareValue: parseFloat(cat.sharevalue.toFixed(2)),
-                date: cat.date,
+                date: this.formatTimestampToDate(cat.date),
                 categoria: cat.categoria,
                 tipo: cat.tipo,
                 repeticao: cat.repeticao
@@ -268,7 +281,7 @@ export const fixaStore = defineStore('fixa', {
               this.timeline = data.timeline.map(cat => ({
                 id: cat.id,
                 name: cat.name,
-                date: cat.date,
+                date: this.formatTimestampToDate(cat.date),
                 value: cat.value,
                 // shareValue: parseFloat(cat.shareValue.toFixed(2)),
                 categoria: cat.categoria,

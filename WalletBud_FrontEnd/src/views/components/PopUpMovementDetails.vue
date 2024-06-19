@@ -841,7 +841,6 @@ export default {
             if (nameError.value == false && DateError.value == false
                 && valueError.value == false && CategoryError.value == false) {
                 
-                alert(DateM.value);
                 timestamp.value = convertToTimestamp(DateM.value);
                 
                 const sendaddUsers = addUsers.map(email => ({ email }));
@@ -905,14 +904,12 @@ export default {
                 if(diff){
                     requestBody.IdTransacao = transaction.value.id;
                 } else {
-                    alert("Nada foi alterado");
                     edit.value = false;
-                    alert(store.stateReload);
-                    store.stateReload = !store.stateReload;
-                    alert(store.stateReload);
                     const cancelButton = document.getElementById('cancelButton2');
                     cancelButton.click();
-                    router.push('/home');
+                    //window.location.reload();
+                    store.load(30);
+                    cancel();
                     return;
                 }
 
@@ -944,12 +941,11 @@ export default {
                     console.log('PopUp emitiu evento');
                     
                     user.getUser(); //atualiza o saldo da homepage
-                    alert(store.stateReload);
-                    store.stateReload = !store.stateReload;
-                    alert(store.stateReload);
                     const cancelButton = document.getElementById('cancelButton2');
                     cancelButton.click();
-                    router.push('/home');
+                    window.location.reload(); //TODO: DAR APENAS RELOAD DA DOS DADOS
+
+
 
                 } catch (error) {
                     const cancelButton = document.getElementById('cancelButton2');
@@ -969,7 +965,7 @@ export default {
                         document.dispatchEvent(event);
                         console.log('PopUp emitiu evento');
                     }
-                    router.push('/home');
+                    window.location.reload(); //TODO: DAR APENAS RELOAD DA DOS DADOS
                 }
 
             }

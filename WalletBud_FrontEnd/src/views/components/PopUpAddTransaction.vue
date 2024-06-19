@@ -874,6 +874,7 @@ export default {
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                             user.getUser(); //atualiza o saldo da homepage
+                            window.location.reload();
 
                         } catch (error) {
                             if (error.message.includes('token')) {
@@ -1027,7 +1028,7 @@ export default {
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                             user.getUser(); //atualiza o saldo da homepage
-
+                            window.location.reload();
 
                         } catch (error) {
                             if (error.message.includes('token')) {

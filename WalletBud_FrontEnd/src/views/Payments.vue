@@ -7,7 +7,7 @@
                         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                             <div class="bg-gradient-info shadow-info border-radius-lg pt-3 pb-2">
                                 <h6 class="text-white text-capitalize ps-3">
-                                    Transações Fixas - Pagamentos
+                                    {{ $t('Pagamentos Fixos')}}
                                 </h6>
                             </div>
                         </div>
@@ -17,19 +17,19 @@
                                     <thead class="table-head-fixed">
                                         <tr>
                                             <th class="text-uppercase text-xxs font-weight-bolder opacity-7">
-                                                Despesa
+                                                {{ $t('Despesa')}}
                                             </th>
                                             <th class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Periodicidade
+                                                {{ $t('Periodicidade')}}
                                             </th>
                                             <th class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Próximo Pagamento
+                                                {{ $t('Próximo Pagamento')}}
                                             </th>
                                             <th class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Valor
+                                                {{ $t('Valor')}}
                                             </th>
                                             <th class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Ação
+                                                
                                             </th>
                                         </tr>
                                     </thead>
@@ -92,7 +92,7 @@
                             <div class="card my-4">
                                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                                     <div class="bg-gradient-danger shadow-danger border-radius-lg pt-3 pb-2">
-                                        <h6 class="text-white text-capitalize ps-3">Por Pagar</h6>
+                                        <h6 class="text-white text-capitalize ps-3">{{ $t('Pagamentos em Atraso')}}</h6>
                                     </div>
                                 </div>
                                 <div class="px-0 pb-2">
@@ -101,19 +101,19 @@
                                             <thead class="table-head-fixed">
                                                 <tr>
                                                     <th class="text-uppercase text-xxs font-weight-bolder opacity-7">
-                                                        Despesa
+                                                        {{ $t('Despesa')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Periodicidade
+                                                        {{ $t('Periodicidade')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Data de Pagamento
+                                                        {{ $t('Data de Pagamento')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Valor
+                                                        {{ $t('Valor')}}
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -164,7 +164,7 @@
                                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                                     <div class="bg-gradient-warning shadow-warning border-radius-lg pt-3 pb-2">
                                         <h6 class="text-white text-capitalize ps-3">
-                                            Pedidos Pendentes
+                                            {{ $t('Pedidos de Adesão Pendentes')}}
                                         </h6>
                                     </div>
                                 </div>
@@ -174,23 +174,23 @@
                                             <thead class="table-head-fixed">
                                                 <tr>
                                                     <th class="text-uppercase text-xxs font-weight-bolder opacity-7">
-                                                        Despesa
+                                                        {{ $t('Despesa')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Periodicidade
+                                                        {{ $t('Periodicidade')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Próximo Pagamento
+                                                        {{ $t('Próximo Pagamento')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Valor
+                                                        {{ $t('Valor')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Detalhes
+                                                        
                                                     </th>
                                                 </tr>
                                             </thead>

@@ -185,5 +185,14 @@
     "Setembro": "September",
     "Outubro": "October",
     "Novembro": "November",
-    "Dezembro": "December"
+    "Dezembro": "December",
+    "Periodicidade": "Periodicity",
+    "Próximo Pagamento": "Next Payment",
+    "Valor": "Value",
+    "Ação": "Action",
+    "Pagamentos Fixos": "Fixed Payments",
+    "Pagamentos em Atraso": "Overdue Payments",
+    "Pedidos de Adesão Pendentes": "Pending Membership Requests",
+    "Detalhes": "Details",
+    "Abrir": "Open"
 }

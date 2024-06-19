@@ -55,7 +55,7 @@
               <PieChart :categories="categories" />
               <template #detail>
                 <div class="d-flex">
-                <month-picker-input :default-month="currentMonth" :default-year="currentYear" show-year lang="pt"
+                <month-picker-input v-if="idioma !== ''" :default-month="currentMonth" :default-year="currentYear" show-year :lang=idioma
                 @input="CategoriesMonthYearChange"></month-picker-input>
               </div>
               </template>
@@ -91,8 +91,8 @@
               }" />
               <template #detail>
                 <div class="d-flex">
-                <month-picker-input :default-month="currentMonth" :default-year="currentYear" show-year lang="pt"
-                @input="monthChange"></month-picker-input>
+                <month-picker-input v-if="idioma !== ''" default-month="" :default-year="currentYear" show-year :lang=idioma
+                  @change="yearChange" year-only></month-picker-input>
               </div>
               </template>
             </chart-holder-card>
@@ -113,8 +113,7 @@ import ReportsLineChart from "@/examples/Charts/ReportsLineChart.vue";
 import MiniStatisticsCard from "./components/MiniStatisticsCard.vue";
 import MaterialDropdown from "@/components/MaterialDropdown.vue"
 import { userStore } from "@/store/userStore";
-//import { MonthPicker } from 'vue-month-picker'
-import { MonthPickerInput } from 'vue-month-picker'
+import { MonthPickerInput } from 'vue-month-picker';
 
 export default {
   name: "Dashboard",
@@ -131,7 +130,8 @@ export default {
       currentYear: new Date().getFullYear(),
       categories: {},
       monthSpend: null,
-      monthSelectedYear: new Date().getFullYear()
+      monthSelectedYear: new Date().getFullYear(),
+      idioma: '',
     };
   },
   components: {
@@ -154,7 +154,10 @@ export default {
         "pessoal": 2312
       };
     },
-    monthChange(value){
+    yearChange(value){
+      console.log(value.year);
+      //value.month; mês
+      //value.year; ano
       this.monthSelectedYear = value.year;
       //GET GASTO POR MÊS
       this.monthSpend = [203, 3030, 404, 233, 230, 120, 333, 5556, 4554, 34, 424, 434];
@@ -176,10 +179,11 @@ export default {
     },
   },
   mounted() {
+    this.idioma = this.user.idioma;
     this.getBudget();
-    //GET GASTO POR MÊS NO ANO ATUAL 
+    //GET GASTO POR MÊS NO ANO ATUAL - monthSpend
     this.monthSpend = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
-    this.selectedYear = 2024;
+    this.selectedYear = new Date().getFullYear();
     this.categories = {"renda": 123,
     "pessoal": 2312};
   },

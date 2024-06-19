@@ -13,6 +13,9 @@
  */
 package wb.walletbud;
 
+import com.walletbud.EventProducer;
+import jakarta.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.List;
 

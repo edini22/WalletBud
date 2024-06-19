@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.inject.Inject;
 import org.orm.PersistentException;
 import org.orm.PersistentSession;
 import org.orm.PersistentTransaction;
@@ -16,6 +17,9 @@ import beans.stateless.GerirNotificacao;
 import beans.stateless.GerirUtilizador;
 
 public class NotificationTask implements Runnable {
+
+    @Inject
+    private EventProducer eventProducer;
 
     @Override
     public void run() {
@@ -50,6 +54,7 @@ public class NotificationTask implements Runnable {
                     notification.setDate(Timestamp.valueOf(now));
                     notification.setDescrição("Tem uma transação dentro de 3 dias: " + transacao.getName() + " on " + transacao.getDate());
                     user.notify(notification);
+                    eventProducer.fireEvent(notification);
                 }
             }
             transaction.commit();

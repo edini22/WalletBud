@@ -2,6 +2,7 @@ package com.walletbud;
 
 import beans.stateless.GerirUtilizador;
 import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -27,6 +28,10 @@ public class Register {
     @EJB
     private GerirUtilizador gerirUtilizador;
 
+    @Inject
+    private EventProducer eventProducer;
+
+
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
@@ -44,6 +49,9 @@ public class Register {
         reader.close();
 
         System.out.println("Received JSON: " + jsonObject.toString());
+
+        // Dispara um evento
+//        eventProducer.fireEvent("Hello, observerszzzzzzzzzzzzzzzzzz!");
 
         String username = jsonObject.getString("username");
         String password = jsonObject.getString("password");

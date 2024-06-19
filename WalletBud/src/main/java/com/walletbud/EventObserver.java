@@ -32,15 +32,15 @@ public class EventObserver {
 
     public void receiveEvent(@Observes Notificacao message) {
         System.out.println("Evento recebido: " + message);
-//        sessionRegistry.getAll().forEach(session -> session.getAsyncRemote().sendText(toJson(message)));
-        // Assuming sessionRegistry.getAll() returns a Map<Session, ?>
+
         Map<Session, User> sessions = sessionRegistry.getAll();
 
-        // Iterate over the entries of the map
         for (Map.Entry<Session, User> entry : sessions.entrySet()) {
             Session session = entry.getKey();
             User user = entry.getValue();
-            session.getAsyncRemote().sendText(toJson(message.getDescrição(), user.getEmail()));
+            if (user == message.getUserId_user()) {
+                session.getAsyncRemote().sendText(toJson(message, user.getEmail()));
+            }
         }
 
     }
@@ -87,10 +87,11 @@ public class EventObserver {
         sessionRegistry.add(session, user);
     }
 
-    private String toJson(String message, String email) {
+    private String toJson(Notificacao message, String email) {
         final JsonObject jsonObject = Json.createObjectBuilder()
-                .add("id", message)
-                .add("cooked", email)
+                .add("descricao", message.getDescrição())
+                .add("data", message.getDate().toString())
+                .add("email", email)
                 .build();
         return jsonObject.toString();
     }

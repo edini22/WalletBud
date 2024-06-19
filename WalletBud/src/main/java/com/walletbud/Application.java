@@ -1,5 +1,7 @@
 package com.walletbud;
 
+import jakarta.enterprise.event.Event;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.ApplicationPath;
 
 import java.util.HashSet;
@@ -32,6 +34,7 @@ public class Application extends jakarta.ws.rs.core.Application {
         resources.add(ResetPassword.class);
         resources.add(Utilizador.class);
         resources.add(Comentario.class);
+        resources.add(EventObserver.class);
         resources.add(AuthenticationFilter.class);
         resources.add(CORSFilter.class);
         return resources;

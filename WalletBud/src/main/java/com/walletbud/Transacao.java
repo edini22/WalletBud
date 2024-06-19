@@ -201,7 +201,6 @@ public class Transacao {
             Timestamp timestamp;
 
             int IdTransacao = jsonObject.getInt("IdTransacao");
-            System.out.println("IdTransacao :" + IdTransacao);
 
             try {
                 name = jsonObject.getString("name");

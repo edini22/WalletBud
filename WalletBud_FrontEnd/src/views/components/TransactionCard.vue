@@ -28,7 +28,7 @@
                     <h6 class="mb-0">{{ $t('Movimentos') }}</h6>
                 </div>
                 <div class="col-md-6 d-flex justify-content-end align-items-center">
-                    <i class="far fa-calendar-alt me-2" aria-hidden="true"></i>
+                    <i class="fas fa-wallet me-2" aria-hidden="true"></i>
                     <small>{{ date }}</small>
                 </div>
             </div>
@@ -136,7 +136,7 @@ export default {
             ],
             selectedCategories: [],
             selectedType: '',
-            date: 'fetch date',
+            date: 'Montante',
         };
     },
     computed: {

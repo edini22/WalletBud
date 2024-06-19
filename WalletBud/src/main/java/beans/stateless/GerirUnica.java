@@ -250,6 +250,8 @@ public class GerirUnica {
                             }
                             UserDAO.save(user);
                         }
+                        unica.setValue(value);
+                        unica.setShareValue(value);
                     }
 
 

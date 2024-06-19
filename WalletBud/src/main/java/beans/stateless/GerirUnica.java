@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Stateless
 public class GerirUnica {
@@ -82,8 +83,9 @@ public class GerirUnica {
         return 0;
     }
 
-    public int editUnica(PersistentSession session, int id, String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, String email) throws PersistentException {
+    public int editUnica(PersistentSession session, int id, String name, float value, String descricao, String local, String tipo, int categoria, Timestamp time, String email, List<String> sendAddUsersEmails, List<String> sendDeleteUsersEmails) throws PersistentException {
         try {
+            System.out.println("editUnica");
             User user = gerirUtilizador.getUserByEmail(session, email);
             if (user == null) {
                 return -3;
@@ -100,21 +102,92 @@ public class GerirUnica {
             Unica[] unicas = UnicaDAO.listUnicaByQuery(session, condition, null);
 
             if (unicas.length == 0) {
+                System.out.println("No unicas found");
                 return -1;
             }
 
             Unica unica = unicas[0];
 
             if (!unica.getTipo().equals(tipo)) {
+                System.out.println("Tipo de unica " + unica.getTipo());
                 return -1;
             }
 
             if (name != null) unica.setName(name);
-            if (value != -1) {
+
+            if((sendAddUsersEmails != null && !sendAddUsersEmails.isEmpty()) || (sendDeleteUsersEmails != null && !sendDeleteUsersEmails.isEmpty())) {
+                if (unica.getStatus()) {
+                    if (unica.getTipo().equals("receita")) {
+                        user.setSaldo(user.getSaldo() - unica.getShareValue());
+                    } else {
+                        user.setSaldo(user.getSaldo() + unica.getShareValue());
+                    }
+                    UserDAO.save(user);
+                }
+                if(sendDeleteUsersEmails != null && !sendDeleteUsersEmails.isEmpty()) {
+                    condition = "TransacaoId_transacao = " + unica.getId_transacao();
+                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
+                    for (TransacaoPartilhada t : tp) {
+                        if(t.getUserId_user().equals(user.getId_user())) {
+
+                            TransacaoPartilhadaDAO.deleteAndDissociate(t,session);
+                        }
+                    }
+                }
+                //criar os novos
+                condition = "TransacaoId_transacao = " + unica.getId_transacao();
+                TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
+                int users = tp.length + 1 + sendAddUsersEmails.size();
+                if(value == -1){
+                    value = unica.getValue();
+                }
+                Float nSValue = value / users;
+
+                for(TransacaoPartilhada transa : tp){
+                    if (unica.getStatus()) {
+                        if (unica.getTipo().equals("receita")) {
+                            transa.getUserId_user().setSaldo(transa.getUserId_user().getSaldo() - unica.getShareValue());
+                        } else {
+                            transa.getUserId_user().setSaldo(transa.getUserId_user().getSaldo() + unica.getShareValue());
+                        }
+                        UserDAO.save(transa.getUserId_user());
+                    }
+                    transa.setConfirma(0);
+                    TransacaoPartilhadaDAO.save(transa);
+                }
+                if(users == 1){
+                    unica.setShareValue(nSValue);
+                    unica.setValue(value);
+                    if (unica.getTipo().equals("receita")) {
+                        user.setSaldo(user.getSaldo() + unica.getShareValue());
+                    } else {
+                        user.setSaldo(user.getSaldo() - unica.getShareValue());
+                    }
+                    UserDAO.save(user);
+                }else{
+                    unica.setShareValue(nSValue);
+                    unica.setValue(value);
+                    unica.setStatus(false);
+                }
+
+                if(sendAddUsersEmails != null && !sendAddUsersEmails.isEmpty()) {
+                    for (String s : sendAddUsersEmails) {
+                        User u = gerirUtilizador.getUserByEmail(session, s);
+                        if (u != null) {
+                            TransacaoPartilhada tr = TransacaoPartilhadaDAO.createTransacaoPartilhada();
+                            tr.setConfirma(0);
+                            tr.setUsertransacaoId(unica);
+                            tr.setUserId_user(u);
+                            TransacaoPartilhadaDAO.save(tr);
+                        }
+                    }
+                }
+            } else if (value != -1) {
                 //iterar pelos ‘users’ todos partilhados a alterar
                 condition = "TransacaoId_transacao = " + unica.getId_transacao();
                 TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
                 if(unica.getValue() != value){
+                    System.out.println("Saldo diferente!! " + unica.getValue() + " " + value);
                     float aSvalue = unica.getShareValue();
                     float nSvalue = (value * aSvalue) / unica.getValue();
                     if(tp.length > 0){
@@ -131,12 +204,14 @@ public class GerirUnica {
                         
                         for (TransacaoPartilhada transacao : tp) {
                             User u = transacao.getUserId_user();
-                            if (unica.getTipo().equals("receita")) {
-                                u.setSaldo(u.getSaldo() - aSvalue);
-                            } else {
-                                u.setSaldo(u.getSaldo() + aSvalue);
+                            if (unica.getStatus()) {
+                                if (unica.getTipo().equals("receita")) {
+                                    u.setSaldo(u.getSaldo() - aSvalue);
+                                } else {
+                                    u.setSaldo(u.getSaldo() + aSvalue);
+                                }
+                                UserDAO.save(u);
                             }
-                            UserDAO.save(u);
                             transacao.setConfirma(0);
                             TransacaoPartilhadaDAO.save(transacao);
         
@@ -167,7 +242,6 @@ public class GerirUnica {
                                 user.setSaldo(user.getSaldo() - value);
                             }
                             UserDAO.save(user);
-                            //TODO: eliminar todas as notificacoes referentes a esta transacao
                         }
                     }
 
@@ -417,6 +491,7 @@ public class GerirUnica {
 
             Unica unica = UnicaDAO.getUnicaByORMID(session, id_unica);
             if (unica == null) {
+                System.out.println("No unica");
                 return -1;
             }
 
@@ -450,12 +525,13 @@ public class GerirUnica {
                             }
                             UserDAO.save(us);
                         }
-                        TransacaoPartilhadaDAO.deleteAndDissociate(tp);
                         // Notificar o utilizador removido
                         Notificacao notification = new Notificacao();
                         notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
                         notification.setDescrição("You have been removed from the transaction " + unica.getName() + ".");
                         tp.getUserId_user().notify(notification);
+
+                        TransacaoPartilhadaDAO.deleteAndDissociate(tp,session);
                     }
                 }
             }
@@ -531,6 +607,7 @@ public class GerirUnica {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             return -1;
         }
 
@@ -596,7 +673,7 @@ public class GerirUnica {
                         }
                         unica.setStatus(false);
                         UnicaDAO.save(unica);
-                        TransacaoPartilhadaDAO.deleteAndDissociate(tp);
+                        TransacaoPartilhadaDAO.deleteAndDissociate(tp,session);
                         // Notify owner that a user has rejected the transaction
                         Notificacao notification = new Notificacao();
                         notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
@@ -750,7 +827,7 @@ public class GerirUnica {
                 Comentario[] comments = ComentarioDAO.listComentarioByQuery(session, condition, null);
 
                 for (Comentario c : comments) {
-                    ComentarioDAO.deleteAndDissociate(c);
+                    ComentarioDAO.deleteAndDissociate(c,session);
                 }
                 condition = "TransacaoId_transacao = " + unica.getId_transacao();
                 TransacaoPartilhada[] tps = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
@@ -776,7 +853,7 @@ public class GerirUnica {
                         u.setSaldo(u.getSaldo() + unica.getShareValue());
                     }
                     UserDAO.save(u);
-                    TransacaoPartilhadaDAO.deleteAndDissociate(tp);
+                    TransacaoPartilhadaDAO.deleteAndDissociate(tp,session);
 
                     u.notify(notification);
                 }

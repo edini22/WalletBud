@@ -77,9 +77,37 @@ public class GerirTransacaoPartilhada {
                 if(transacao.get("Discriminator").equals("Unica")){
                     Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
                     String descricao = unica.getDescrição();
+                    String local = unica.getLocal();
                     if(descricao == null) {
                         descricao = "";
                     }
+                    if(local == null) {
+                        local = "";
+                    }
+                    String condition = "TransacaoId_transacao = " + unica.getId_transacao();
+                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
+
+                    User Owner = unica.getOwner_id();
+                    JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
+                    JsonObject userJs = Json.createObjectBuilder()
+                            .add("id", Owner.getId_user())
+                            .add("name", Owner.getName())
+                            .add("email", Owner.getEmail())
+                            .add("confirma", 1)
+                            .build();
+                    userArrayBuilder.add(userJs);
+
+                    for (TransacaoPartilhada tpPartilhada : tp) {
+                        User u = tpPartilhada.getUserId_user();
+                        JsonObject userJson = Json.createObjectBuilder()
+                                .add("id", u.getId_user())
+                                .add("name", u.getName())
+                                .add("email", u.getEmail())
+                                .add("confirma", tpPartilhada.getConfirma())
+                                .build();
+                        userArrayBuilder.add(userJson);
+                    }
+                    JsonArray userArray = userArrayBuilder.build();
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", unica.getId_transacao())
                             .add("name", unica.getName())
@@ -88,26 +116,56 @@ public class GerirTransacaoPartilhada {
                             .add("descricao", descricao)
                             .add("categoria", unica.getCategoriaId_categoria().getName())
                             .add("tipo", unica.getTipo())
-                            .add("local", unica.getLocal())
+                            .add("local", local)
+                            .add("users", userArray)
                             .build();
                     arrayBuilder.add(unicaJson);
                 } else{
                     TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
                     Fixa fixa = tf.getTransacaofixa_ID();
                     String descricao = fixa.getDescrição();
+                    String local = fixa.getLocal();
                     if(descricao == null) {
                         descricao = "";
                     }
+                    if(local == null) {
+                        local = "";
+                    }
+                    String condition = "TransacaoId_transacao = " + fixa.getId_transacao();
+                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
+
+                    User Owner = fixa.getOwner_id();
+                    JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
+                    JsonObject userJs = Json.createObjectBuilder()
+                            .add("id", Owner.getId_user())
+                            .add("name", Owner.getName())
+                            .add("email", Owner.getEmail())
+                            .add("confirma", 1)
+                            .build();
+                    userArrayBuilder.add(userJs);
+
+                    for (TransacaoPartilhada tpPartilhada : tp) {
+                        User u = tpPartilhada.getUserId_user();
+                        JsonObject userJson = Json.createObjectBuilder()
+                                .add("id", u.getId_user())
+                                .add("name", u.getName())
+                                .add("email", u.getEmail())
+                                .add("confirma", tpPartilhada.getConfirma())
+                                .build();
+                        userArrayBuilder.add(userJson);
+                    }
+                    JsonArray userArray = userArrayBuilder.build();
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", fixa.getId_transacao())
-                            .add("id_tf",tf.getID())
                             .add("name", fixa.getName())
                             .add("value", tf.getPayvalue())
                             .add("date", tf.getDataAtual().toString())
-                            .add("description", descricao)
+                            .add("repeticao",fixa.getRepeticao())
+                            .add("descricao", descricao)
                             .add("categoria", fixa.getCategoriaId_categoria().getName())
                             .add("tipo", fixa.getTipo())
-                            .add("local", fixa.getLocal())
+                            .add("local", local)
+                            .add("users", userArray)
                             .build();
                     arrayBuilder.add(unicaJson);
 
@@ -140,37 +198,97 @@ public class GerirTransacaoPartilhada {
                 if(transacao.get("Discriminator").equals("Unica")){
                     Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
                     String descricao = unica.getDescrição();
+                    String local = unica.getLocal();
                     if(descricao == null) {
                         descricao = "";
                     }
+                    if(local == null) {
+                        local = "";
+                    }
+                    String condition = "TransacaoId_transacao = " + unica.getId_transacao();
+                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
+
+                    User Owner = unica.getOwner_id();
+                    JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
+                    JsonObject userJs = Json.createObjectBuilder()
+                            .add("id", Owner.getId_user())
+                            .add("name", Owner.getName())
+                            .add("email", Owner.getEmail())
+                            .add("confirma", 1)
+                            .build();
+                    userArrayBuilder.add(userJs);
+
+                    for (TransacaoPartilhada tpPartilhada : tp) {
+                        User u = tpPartilhada.getUserId_user();
+                        JsonObject userJson = Json.createObjectBuilder()
+                                .add("id", u.getId_user())
+                                .add("name", u.getName())
+                                .add("email", u.getEmail())
+                                .add("confirma", tpPartilhada.getConfirma())
+                                .build();
+                        userArrayBuilder.add(userJson);
+                    }
+                    JsonArray userArray = userArrayBuilder.build();
+
+
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", unica.getId_transacao())
                             .add("name", unica.getName())
                             .add("value", unica.getShareValue())
                             .add("date", unica.getDate().toString())
                             .add("descricao", descricao)
+                            .add("local", local)
                             .add("categoria", unica.getCategoriaId_categoria().getName())
                             .add("tipo", unica.getTipo())
-                            .add("local", unica.getLocal())
+                            .add("users", userArray)
                             .build();
                     arrayBuilder.add(unicaJson);
                 } else{
                     TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
                     Fixa fixa = tf.getTransacaofixa_ID();
                     String descricao = fixa.getDescrição();
+                    String local = fixa.getLocal();
                     if(descricao == null) {
                         descricao = "";
                     }
+                    if(local == null) {
+                        local = "";
+                    }
+                    String condition = "TransacaoId_transacao = " + fixa.getId_transacao();
+                    TransacaoPartilhada[] tp = TransacaoPartilhadaDAO.listTransacaoPartilhadaByQuery(session, condition, null);
+
+                    User Owner = fixa.getOwner_id();
+                    JsonArrayBuilder userArrayBuilder = Json.createArrayBuilder();
+                    JsonObject userJs = Json.createObjectBuilder()
+                            .add("id", Owner.getId_user())
+                            .add("name", Owner.getName())
+                            .add("email", Owner.getEmail())
+                            .add("confirma", 1)
+                            .build();
+                    userArrayBuilder.add(userJs);
+
+                    for (TransacaoPartilhada tpPartilhada : tp) {
+                        User u = tpPartilhada.getUserId_user();
+                        JsonObject userJson = Json.createObjectBuilder()
+                                .add("id", u.getId_user())
+                                .add("name", u.getName())
+                                .add("email", u.getEmail())
+                                .add("confirma", tpPartilhada.getConfirma())
+                                .build();
+                        userArrayBuilder.add(userJson);
+                    }
+                    JsonArray userArray = userArrayBuilder.build();
                     JsonObject unicaJson = Json.createObjectBuilder()
                             .add("id", fixa.getId_transacao())
-                            .add("id_tf",tf.getID())
                             .add("name", fixa.getName())
                             .add("value", tf.getPayvalue())
                             .add("date", tf.getDataAtual().toString())
-                            .add("description", descricao)
+                            .add("repeticao",fixa.getRepeticao())
+                            .add("descricao", descricao)
                             .add("categoria", fixa.getCategoriaId_categoria().getName())
                             .add("tipo", fixa.getTipo())
-                            .add("local", fixa.getLocal())
+                            .add("local", local)
+                            .add("users", userArray)
                             .build();
                     arrayBuilder.add(unicaJson);
 

@@ -404,7 +404,7 @@ public class GerirFixa {
                 if (tp.getUserId_user().getEmail().equals(email_shared)) {
                     cond = true;
                     if (option == -1) {
-                        TransacaoPartilhadaDAO.deleteAndDissociate(tp);
+                        TransacaoPartilhadaDAO.deleteAndDissociate(tp,session);
                         //notificar que user rejeitou a transacao
                         Notificacao notification = new Notificacao();
                         notification.setDate(Timestamp.valueOf(LocalDateTime.now()));
@@ -518,7 +518,7 @@ public class GerirFixa {
                             return -2;
                         }
                         remove = true;
-                        TransacaoPartilhadaDAO.deleteAndDissociate(tp);
+                        TransacaoPartilhadaDAO.deleteAndDissociate(tp,session);
 
                         // Notify owner that a user has rejected the transaction
                         Notificacao notification = new Notificacao();
@@ -743,7 +743,7 @@ public class GerirFixa {
                 Comentario[] comments = ComentarioDAO.listComentarioByQuery(session, condition, null);
 
                 for (Comentario c : comments) {
-                    ComentarioDAO.deleteAndDissociate(c);
+                    ComentarioDAO.deleteAndDissociate(c,session);
                 }
 
                 condition = "TransacaoId_transacao = " + fixa.getId_transacao();
@@ -751,7 +751,7 @@ public class GerirFixa {
 
                 for (TransacaoPartilhada tp : tps) {
                     User u = tp.getUserId_user();
-                    TransacaoPartilhadaDAO.deleteAndDissociate(tp);
+                    TransacaoPartilhadaDAO.deleteAndDissociate(tp,session);
 
                     //notificar todos os utilizadores (u) que o owner eliminou esta  transacao
                     Notificacao notification = new Notificacao();
@@ -773,7 +773,7 @@ public class GerirFixa {
                 TransacaoFixa[] tpfixas = TransacaoFixaDAO.listTransacaoFixaByQuery(session, condition, null);
 
                 if(tpfixas.length == 0){
-                    FixaDAO.deleteAndDissociate(fixa);
+                    FixaDAO.deleteAndDissociate(fixa,session);
                 } else{
                     //mudar o owner para null para assim "eliminar" a transacao
                     fixa.setOwner_id(null);
@@ -795,7 +795,7 @@ public class GerirFixa {
                     return -4;
                 }
                 //remove a subscricao
-                TransacaoPartilhadaDAO.deleteAndDissociate(tpcheck[0]);
+                TransacaoPartilhadaDAO.deleteAndDissociate(tpcheck[0],session);
 
 
                 // mete o estado a false e o confirma a 0 e notificaa todos para aceitar

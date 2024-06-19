@@ -100,7 +100,7 @@ public class GerirComentario {
                 return -2;
             }
 
-            ComentarioDAO.deleteAndDissociate(comentario);
+            ComentarioDAO.deleteAndDissociate(comentario,session);
         } catch (Exception e) {
             return -2;
         }

@@ -233,7 +233,7 @@ public class GerirCategoria {
                 return -4;
             }
 
-            CategoriaDAO.deleteAndDissociate(categoria);
+            CategoriaDAO.deleteAndDissociate(categoria,session);
         } catch (Exception e) {
             e.printStackTrace();
             return -2;

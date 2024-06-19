@@ -20,6 +20,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
 @Path("")
 public class Transacao {
 
@@ -198,6 +201,7 @@ public class Transacao {
             Timestamp timestamp;
 
             int IdTransacao = jsonObject.getInt("IdTransacao");
+            System.out.println("IdTransacao :" + IdTransacao);
 
             try {
                 name = jsonObject.getString("name");
@@ -239,7 +243,7 @@ public class Transacao {
             }
 
             String valueStr = null;
-            float value = 0.0f;
+            float value = -1;
 
             try {
                 JsonValue jsonValue = jsonObject.get("value");
@@ -251,8 +255,43 @@ public class Transacao {
                     valueStr = jsonObject.getString("value");
                     value = Float.parseFloat(valueStr);
                 }
-            } catch (java.lang.NullPointerException | ClassCastException | NumberFormatException e) {
-                value = -1;
+            } catch (java.lang.NullPointerException | ClassCastException | NumberFormatException ignored) {
+            }
+
+            // sendaddUsers
+            List<String> sendAddUsersEmails = new ArrayList<>();
+            try {
+                JsonArray sendAddUsersArray = jsonObject.getJsonArray("sendaddUsers");
+                if (sendAddUsersArray != null) {
+                    for (JsonValue val : sendAddUsersArray) {
+                        if (val instanceof JsonObject) {
+                            JsonObject userObject = (JsonObject) val;
+                            JsonValue emailValue = userObject.get("email");
+                            if (emailValue instanceof JsonString) {
+                                sendAddUsersEmails.add(((JsonString) emailValue).getString());
+                            }
+                        }
+                    }
+                }
+            } catch (NullPointerException ignored) {
+            }
+
+            // sendDeleteUsers
+            List<String> sendDeleteUsersEmails = new ArrayList<>();
+            try {
+                JsonArray sendDeleteUsersArray = jsonObject.getJsonArray("sendDeleteUsers");
+                if (sendDeleteUsersArray != null) {
+                    for (JsonValue val : sendDeleteUsersArray) {
+                        if (val instanceof JsonObject) {
+                            JsonObject userObject = (JsonObject) val;
+                            JsonValue emailValue = userObject.get("email");
+                            if (emailValue instanceof JsonString) {
+                                sendDeleteUsersEmails.add(((JsonString) emailValue).getString());
+                            }
+                        }
+                    }
+                }
+            } catch (NullPointerException ignored) {
             }
 
             int cond = -1;
@@ -267,7 +306,7 @@ public class Transacao {
 
                 cond = gerirFixa.editFixa(session, IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp, repeticao, email);
             } else if (transacao.equals("unica")) {
-                cond = gerirUnica.editUnica(session, IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp, email);
+                cond = gerirUnica.editUnica(session, IdTransacao, name, value, descricao, local, tipo, IdCategoria, timestamp, email, sendAddUsersEmails, sendDeleteUsersEmails);
             } else {
                 JsonObject jsonResponse = Json.createObjectBuilder()
                         .add("message", "Tipo de Transacao nao existe!")
@@ -330,6 +369,7 @@ public class Transacao {
                     .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (Exception e) {
+            e.printStackTrace();
             if( transaction != null)
                 transaction.rollback();
             System.out.println("Error: " + e.getMessage());
@@ -339,7 +379,6 @@ public class Transacao {
                 session.close();
             }
         }
-
     }
 
     @GET

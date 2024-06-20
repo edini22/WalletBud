@@ -278,7 +278,7 @@
                         <div v-if="edit == false">
 
                         
-                            <div v-if="comments" class="modal-footer d-block justify-content-center">
+                            <div  class="modal-footer d-block justify-content-center">
                                 <div class="align-items-center text-center">
                                     <i class="material-icons align-self-center comment"
                                         style="max-width: 24px; color: #344767">insert_comment_outlined</i>
@@ -635,7 +635,7 @@ export default {
                         alert("Não é possível partilhar despesas com utilizadores não registados!");
                         return;
                     } else {
-                        alert("Erro ao registar: " + error.message);
+                        console.error(error.message);
                     }
                 }
 
@@ -768,7 +768,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert(err.message);
+                    console.error(err.message);
                 }
             }
         };
@@ -795,6 +795,10 @@ export default {
             try{
                 const response_comments = await fetch(url_comments, request);
 
+                if(response_comments.status == 401) {
+                    alert("Nao tem permissoes para comentar pois ja saiu desta transacao");
+                }
+
                 if (!response_comments.ok) {
                     const errorData = await response_comments.json();
                     throw new Error(errorData.message);
@@ -802,7 +806,7 @@ export default {
 
                 const data_comments = await response_comments.json();
                 console.log(data_comments);
-
+                console.log(transaction.value)
                 comments.value = data_comments.comentarios;
             } catch (error) {
                 if (error.message.includes('token')) {
@@ -813,7 +817,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao carregar comentários:", error.message);
+                    console.error(error.message);
                 }
             }
         }
@@ -978,7 +982,7 @@ export default {
 
                         router.push('/sign-in');
                     } else {
-                        alert("Erro ao EDITAR: " + error.message);
+                        console.error(error.message);
                         const event = new CustomEvent('show-snackbar', { detail: 'error' });
                         document.dispatchEvent(event);
                         console.log('PopUp emitiu evento');
@@ -1042,7 +1046,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao editar comentario:", error.message);
+                    console.error(error.message);
                 }
             }
         };
@@ -1088,7 +1092,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao eliminar comentario:", error.message);
+                    console.error(error.message);
                 }
             }
         };
@@ -1137,7 +1141,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao adicionar comentario:", error.message);
+                    console.error(error.message);
                 }
             }
         };

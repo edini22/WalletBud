@@ -618,7 +618,7 @@ export default {
                         alert("Não é possível partilhar despesas com utilizadores não registados!");
                         return;
                     } else {
-                        alert("Erro ao registar: " + error.message);
+                        console.error(error.message);
                     }
                 }
 

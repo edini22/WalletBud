@@ -266,7 +266,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert(err.message);
+                    console.error(err);
                 }
             }
         };
@@ -283,7 +283,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert(err.message);
+                    console.error(err);
                 }
             }
         };
@@ -304,7 +304,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert(err.message);
+                    console.error(err);
                 }
             }
         };

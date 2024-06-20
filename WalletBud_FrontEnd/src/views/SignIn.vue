@@ -419,7 +419,7 @@ export default {
           state = true;
           return;
         }
-        alert(err.message);
+        console.error(err);
       }
     }
     return{

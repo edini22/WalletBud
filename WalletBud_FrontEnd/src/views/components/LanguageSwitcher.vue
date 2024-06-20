@@ -54,7 +54,7 @@ export default {
 
             router.push('/sign-in');
         } else {
-          alert("Erro -> " + err.message);
+          console.error(err);
         }
       }
     };

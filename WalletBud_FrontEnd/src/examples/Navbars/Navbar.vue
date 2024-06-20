@@ -183,7 +183,7 @@ export default {
         connect();
         notifs.value = store.notifs;
       } catch (err) {
-        alert(err)
+        console.error(err);
       }
     };
 

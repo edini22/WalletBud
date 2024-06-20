@@ -218,7 +218,7 @@ export default {
 
             router.push('/sign-in');
         } else {
-          alert("Erro: " + error.message);
+          console.error(error);
         }
         }
 
@@ -260,7 +260,7 @@ export default {
 
             router.push('/sign-in');
         } else {
-          alert("Erro: " + error.message);
+          console.log(error);
         }
         }
 

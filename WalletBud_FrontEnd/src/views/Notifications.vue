@@ -75,8 +75,6 @@ export default {
           sessionStorage.clear();
 
           router.push('/sign-in');
-        } else {
-          alert("Erro -> " + err.message);
         }
       }
     };

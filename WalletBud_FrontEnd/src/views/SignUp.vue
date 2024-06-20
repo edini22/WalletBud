@@ -357,7 +357,7 @@ export default {
           state = true;
           return;
         } else {
-          alert("Erro ao registar: " + error.message);
+          console.error(error);
         }
       }
     };

@@ -73,7 +73,7 @@
                                         <template v-else>
                                             <tr>
                                                 <td colspan="5" class="text-center">
-                                                    <h6 class=" message">{{ $t("Sem pagamentos em atraso!") }}</h6>
+                                                    <h6 class=" message">{{ $t("Sem pagamentos!") }}</h6>
                                                 </td>
                                             </tr>
                                         </template>
@@ -1270,7 +1270,7 @@ export default {
 
                                     router.push('/sign-in');
                                 } else {
-                                    alert("Erro ao adicionar Recorrente (Fixa):", error.message);
+                                    alert("Erro ao editar Receita fixa");
                                     const event = new CustomEvent('show-snackbar', { detail: 'error' });
                                     document.dispatchEvent(event);
                                     console.log('PopUp emitiu evento');
@@ -1336,7 +1336,7 @@ export default {
 
                                 router.push('/sign-in');
                             } else {
-                                alert("Erro ao adicionar Receita nao fixa:", error.message);
+                                alert("Erro ao editar Receita nao fixa");
                                 const event = new CustomEvent('show-snackbar', { detail: 'error' });
                                 document.dispatchEvent(event);
                                 console.log('PopUp emitiu evento');
@@ -1549,8 +1549,8 @@ export default {
             try {
                 await store.loadPendentes();
                 console.log("Pendentes carregados:", store.pendentes);
-            } catch (err) {
-                alert("Erro loadPendentes-> " + err.message);
+            } catch (ignore) {
+                console.log("Erro loadPendentes-> " + ignore.message);
             }
         };
 
@@ -1567,7 +1567,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro loadPorPagar-> " + err.message);
+                    console.log("Erro loadPorPagar-> " + err.message);
                 }
             }
         };
@@ -1584,7 +1584,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro loadProximosPagamentos-> " + err.message);
+                    console.log("Erro loadProximosPagamentos-> " + err.message);
                 }
             }
         };
@@ -1643,7 +1643,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao carregar comentários:", error.message);
+                    console.log("Erro openDetailsPopup-> " + error.message);
                 }
             }
             popup.value = false;
@@ -1697,7 +1697,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro DeleteTransacao-> " + err.message);
+                    console.log("Erro deleteTransacao-> " + err.message);
                 }
             }
         };
@@ -1719,7 +1719,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro acceptReject-> " + err.message);
+                    console.log("Erro acceptorReject-> " + err.message);
                 }
             }
         };
@@ -1742,7 +1742,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro payTransaction-> " + err.message);
+                    console.log("Erro payTransaction-> " + err.message);
                 }
             }
         };
@@ -1790,7 +1790,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro kickUser-> " + err.message);
+                    console.log("Erro kickUser-> " + err.message);
                 }
             }
         };
@@ -1843,7 +1843,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao adicionar comentario:", error.message);
+                    console.log("Erro addComment-> " + error.message);
                 }
             }
         };
@@ -1901,7 +1901,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao editar comentario:", error.message);
+                    console.log("Erro saveComment-> " + error.message);
                 }
             }
         };
@@ -1947,7 +1947,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao eliminar comentario:", error.message);
+                    console.log("Erro deleteComment-> " + error.message);
                 }
             }
         };
@@ -2026,7 +2026,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao carregar transacao:", error.message);
+                    console.log("Erro openPopup-> " + error.message);
                 }
             }
             popupDetails.value = false;
@@ -2106,7 +2106,7 @@ export default {
                             alert("Não é possível partilhar despesas com utilizadores não registados!");
                             return;
                         } else {
-                            alert("Erro ao adicionar User: " + err.message);
+                            console.log("Erro addUser-> " + err.message);
                         }
                     }
                 }

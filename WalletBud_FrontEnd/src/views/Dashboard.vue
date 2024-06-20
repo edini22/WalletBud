@@ -253,16 +253,8 @@ export default {
                 const data = await response.json();
 
                 console.log(data);
-
-                // Verifica se a chave this.selectedYear existe no objeto data
-                if (Object.prototype.hasOwnProperty.call(data, this.selectedYear)) {
-                    let valor = data[this.selectedYear]; // Obtém o valor associado ao ano selecionado
-                    console.log(`Para o ano ${this.selectedYear}, o valor é ${valor}`);
-                    this.anualSpend = valor.toFixed(2);
-                } else {
-                    console.log(`Não há dados disponíveis para o ano ${this.selectedYear}`);
-                    this.anualSpend = 0;
-                }
+                
+                this.anualSpend = data.balanco;
 
             } catch (error) {
                 this.anualSpend = 0;

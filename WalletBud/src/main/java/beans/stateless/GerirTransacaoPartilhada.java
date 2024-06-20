@@ -182,6 +182,51 @@ public class GerirTransacaoPartilhada {
 
     }
 
+    public JsonObject getBalanco(PersistentSession session, String email) throws PersistentException {
+        try {
+            User user = gerirUtilizador.getUserByEmail(session, email);
+
+            if (user == null) {
+                return Json.createObjectBuilder()
+                        .build();
+            }
+
+            List<Map<String, Object>> transacoes = TransacaoDAO.queryBalanco(session, user.getId_user());
+
+            System.out.println("passou!");
+
+            Float balanco = 0f;
+            for(Map<String, Object> transacao : transacoes) {
+                if(transacao.get("Discriminator").equals("Unica")){
+                    Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
+                    if(unica.getTipo().equals("receita")){
+                        balanco += unica.getShareValue();
+                    } else {
+                        balanco -= unica.getShareValue();
+                    }
+                } else{
+                    TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
+                    Fixa fixa = tf.getTransacaofixa_ID();
+                    if(fixa.getTipo().equals("receita")){
+                        balanco += tf.getPayvalue();
+                    } else {
+                        balanco -= tf.getPayvalue();
+                    }
+
+                }
+            }
+            return Json.createObjectBuilder()
+                    .add("balanco", balanco)
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Json.createObjectBuilder()
+                    .build();
+        }
+
+    }
+
     public JsonObject getMovimentosDays(PersistentSession session, String email, int days) throws PersistentException {
         try {
             User user = gerirUtilizador.getUserByEmail(session, email);

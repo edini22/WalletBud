@@ -41,7 +41,7 @@ export function activateDarkMode() {
   });
 
   details.forEach(label => {
-    label.style.color = "#e1e1e1"; // Remove o fundo branco do <thead> ao ativar o modo escuro
+    label.style.color = "#e1e1e1";
   });
   
   modals.forEach(modal => {
@@ -182,6 +182,11 @@ export function deactivateDarkMode() {
   
   theads.forEach(thead => {
     thead.style.backgroundColor = "#fff";
+  });
+
+  const details = document.querySelectorAll(".detail");
+  details.forEach(label => {
+    label.style.color = "#344767";
   });
 
   modals.forEach(modal => {

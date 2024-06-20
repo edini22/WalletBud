@@ -99,6 +99,9 @@ export default {
         //MaterialFilter,
         ExportData
     },
+    mounted(){
+        document.addEventListener('reload-transactions', this.reloadMovs);
+    },
     setup() {
         const tStore = useTransactionStore();
         const { t } = useI18n();
@@ -124,6 +127,7 @@ export default {
         return {
             activeFilter,
             t,
+            loadMovements
         };
     },
     data() {
@@ -140,6 +144,7 @@ export default {
             selectedCategories: [],
             selectedType: '',
             date: this.t('Montante'),
+            reload: false,
         };
     },
     computed: {
@@ -155,7 +160,8 @@ export default {
                     t.date.toLowerCase().includes(search) ||
                     t.tipo.toLowerCase().includes(search) ||
                     t.categoria.toLowerCase().includes(search) ||
-                    t.value.toString().toLowerCase().includes(search)
+                    t.value.toString().toLowerCase().includes(search) ||
+                    t.descricao.toLowerCase().includes(search)
                 );
             });
         },
@@ -172,9 +178,11 @@ export default {
         searchQuery() {
             this.currentPage = 1; // Reset pagination when search query changes
         },
-
     },
     methods: {
+        reloadMovs() {
+            this.loadMovements();
+        },
         openTransactionDetails(transaction) {
             // Emita um evento globalmente ou passe diretamente para o componente pai
             this.$emit('open-details-modal', transaction);

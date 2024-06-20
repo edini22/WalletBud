@@ -90,7 +90,7 @@
                                     $t('Dez'),
                                 ],
                                 datasets: {
-                                    label: 'Mobile apps',
+                                    label: 'Gasto por mês',
                                     data: monthSpend,
                                 },
                             }" />

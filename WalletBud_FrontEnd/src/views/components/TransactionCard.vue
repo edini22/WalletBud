@@ -51,7 +51,7 @@
                         </material-button>
                         <div class="d-flex flex-column">
                             <h6 class="mb-1 text-dark text-sm">{{ t.name }}</h6>
-                            <span class="text-xs">{{ t.date }}</span>
+                            <span class="text-xs">{{ removerHoras(t.date) }}</span>
                         </div>
                     </div>
                     <div v-if="t.tipo == 'despesa'"
@@ -98,6 +98,9 @@ export default {
         //MaterialFilter,
         ExportData
     },
+    mounted(){
+        document.addEventListener('reload-transactions', this.reloadMovs);
+    },
     setup() {
         const tStore = useTransactionStore();
         const activeFilter = ref('Últimos 30 dias');
@@ -120,7 +123,8 @@ export default {
             tStore.load(newFilter);
         });
         return {
-            activeFilter
+            activeFilter,
+            loadMovements
         };
     },
     data() {
@@ -172,6 +176,12 @@ export default {
 
     },
     methods: {
+        removerHoras(dataHora) {
+      return dataHora.split(' ')[0];
+    },
+    reloadMovs() {
+            this.loadMovements();
+        },
         openTransactionDetails(transaction) {
             // Emita um evento globalmente ou passe diretamente para o componente pai
             this.$emit('open-details-modal', transaction);

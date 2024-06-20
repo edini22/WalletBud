@@ -376,6 +376,47 @@ export default {
                 this.weekDailySpend = [0, 0, 0, 0, 0, 0, 0];
             }
         },
+        async balanco() {
+            //GET GASTO POR MÊS
+
+            const url =
+                "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/balanco";
+            const token = localStorage.getItem("token");
+
+            const request = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                },
+            };
+
+            try {
+                const response = await fetch(url, request);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message);
+                }
+
+                const data = await response.json();
+
+                console.log(data);
+
+                this.balance = data.balanco;
+
+            } catch (error) {
+                if (error.message.includes('token')) {
+                    alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    router.push('/sign-in');
+                }
+                this.weekDailySpend = [0, 0, 0, 0, 0, 0, 0];
+            }
+        },
         getBudget() {
             this.budget = parseFloat((this.user.saldo - this.user.objetivo).toFixed(2));
         },
@@ -406,6 +447,8 @@ export default {
             "Sem Gastos": "0.00",
         };
         this.statsCategory();
+
+        this.balanco();
 
         this.statsWeek();
     },

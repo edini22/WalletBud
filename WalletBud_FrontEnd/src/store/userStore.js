@@ -7,14 +7,16 @@ export const userStore = defineStore("user", {
       email: "",
       password: "",
       id: 0,
-      saldo : 0,
+      saldo: 0,
       idioma: "",
       objetivo: 0,
       moeda: "EUR",
+      notifs: [],
+      permaNotifs: [],
     }
   },
   persist: true,
-  
+
   actions: {
     updateUser(editedUser) {
       this.username = editedUser.username;
@@ -36,6 +38,10 @@ export const userStore = defineStore("user", {
       this.idioma = user.idioma;
       this.objetivo = user.objetivo;
       this.moeda = user.moeda;
+    },
+
+    addNotif(notif) {
+      this.notifs.unshift(notif);
     },
 
     async registUser(newUser) {
@@ -67,6 +73,7 @@ export const userStore = defineStore("user", {
     },
 
     async logUser(user) {
+      this.notifs = [];
       const newUserJSON = JSON.stringify(user);
       const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/login";
       const request = {
@@ -96,7 +103,7 @@ export const userStore = defineStore("user", {
         localStorage.setItem("token", data.token);
       }
       this.password = user.password;
-     
+
     },
 
     async getUser() {
@@ -119,7 +126,7 @@ export const userStore = defineStore("user", {
       }
 
       const data = await response.json();
-      
+
       const user = {
         username: data.name,
         email: data.email,
@@ -128,10 +135,36 @@ export const userStore = defineStore("user", {
         idioma: data.idioma,
         password: this.password,
         objetivo: parseFloat(data.objetivo.toFixed(2)),
-        //moeda: data.moeda,
+        moeda: data.moeda,
       };
 
       this.setUser(user); // Adiciona o novo usuário aos dados do store
+    },
+
+    async getPermaNotifs() {
+      const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/user/getNotif";
+      const token = localStorage.getItem('token');
+      const request = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        },
+      };
+
+      const response = await fetch(url, request);
+
+      // Verifica se a resposta não é OK
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+
+      const data = await response.json();
+
+      // alert(JSON.stringify(data));
+      this.permaNotifs = data.notificacoes;
+
     },
 
     async getUserByEmail(email) {
@@ -155,7 +188,7 @@ export const userStore = defineStore("user", {
 
     },
 
-    async updateEditedUser(editedUser){
+    async updateEditedUser(editedUser) {
 
       const newUserJSON = JSON.stringify(editedUser);
       //alert(newUserJSON);
@@ -180,16 +213,16 @@ export const userStore = defineStore("user", {
       }
 
       //moeda
-      //if(editedUser.moeda != this.moeda){
-      //  this.moeda = editedUser.moeda;
-      //}
+      if (editedUser.moeda != this.moeda) {
+        this.moeda = editedUser.moeda;
+      }
 
       //idioma
-      if(editedUser.idioma != this.idioma){
+      if (editedUser.idioma != this.idioma) {
         this.idioma = editedUser.idioma;
       }
 
-      if(editedUser.email && editedUser.email != this.email){
+      if (editedUser.email && editedUser.email != this.email) {
         let user = {
           email: editedUser.email,
           password: this.password,
@@ -197,24 +230,24 @@ export const userStore = defineStore("user", {
         this.email = editedUser.email;
         this.logUser(user);
       }
-      if(editedUser.password && editedUser.password != this.password){
+      if (editedUser.password && editedUser.password != this.password) {
         this.password = editedUser.password;
       }
-      if(editedUser.idioma && editedUser.idioma != this.idioma){
+      if (editedUser.idioma && editedUser.idioma != this.idioma) {
         this.idioma = editedUser.idioma;
       }
-      if(editedUser.username && editedUser.username != this.username){
+      if (editedUser.username && editedUser.username != this.username) {
         this.username = editedUser.username;
       }
 
-      if(editedUser.objetivo && editedUser.objetivo != this.objetivo){
+      if (editedUser.objetivo && editedUser.objetivo != this.objetivo) {
         this.objetivo = editedUser.objetivo;
       }
 
     },
 
 
-    async logOut(){
+    async logOut() {
       localStorage.removeItem('token');
       this.username = "";
       this.email = "";
@@ -222,9 +255,10 @@ export const userStore = defineStore("user", {
       this.id = 0;
       this.saldo = 0;
       this.idioma = "";
-      this.moeda = "€";
+      this.moeda = "EUR";
+      this.notifs = [];
     },
-    
+
   },
-  }
+}
 );

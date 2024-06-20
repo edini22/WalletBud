@@ -4,12 +4,14 @@ export function activateDarkMode() {
   const body = document.getElementsByTagName("body")[0];
   const modals = document.querySelectorAll(".modal-dialog.modal-dialog-centered");
   const values = document.querySelectorAll(".form-control");
+  const details = document.querySelectorAll(".detail");
   const configurators = document.querySelectorAll(".fixed-plugin-button");
   const icons = document.querySelectorAll(".material-icons", "comment");
   const inputGroups = document.querySelectorAll(".input-group");
   const hr = document.querySelectorAll("div:not(.sidenav) > hr");
   const hr_card = document.querySelectorAll("div:not(.bg-gradient-dark) hr");
   const text_btn = document.querySelectorAll("button:not(.btn) > .text-dark");
+  const categorylabels = document.querySelectorAll(".category");
   const text_span = document.querySelectorAll(
     "span.text-dark, .breadcrumb .text-dark",
   );
@@ -32,6 +34,14 @@ export function activateDarkMode() {
   
   theads.forEach(thead => {
     thead.style.backgroundColor = "#202940"; // Remove o fundo branco do <thead> ao ativar o modo escuro
+  });
+
+  categorylabels.forEach(label => {
+    label.style.color = "#e1e1e1 !important"; // Remove o fundo branco do <thead> ao ativar o modo escuro
+  });
+
+  details.forEach(label => {
+    label.style.color = "#e1e1e1";
   });
   
   modals.forEach(modal => {
@@ -162,12 +172,21 @@ export function deactivateDarkMode() {
   );
   const svg = document.querySelectorAll("g");
   const theads = document.querySelectorAll("thead.table-head-fixed");
+  const categorylabels = document.querySelectorAll(".category");
 
+  categorylabels.forEach(label => {
+    label.style.color = "#15181a";
+  });
 
   body.classList.remove("dark-version");
   
   theads.forEach(thead => {
     thead.style.backgroundColor = "#fff";
+  });
+
+  const details = document.querySelectorAll(".detail");
+  details.forEach(label => {
+    label.style.color = "#344767";
   });
 
   modals.forEach(modal => {

@@ -7,7 +7,7 @@
                         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                             <div class="bg-gradient-info shadow-info border-radius-lg pt-3 pb-2">
                                 <h6 class="text-white text-capitalize ps-3">
-                                    Transações Fixas - Pagamentos
+                                    {{ $t('Transações Fixas')}}
                                 </h6>
                             </div>
                         </div>
@@ -16,25 +16,20 @@
                                 <table class="table align-items-center justify-content-center mb-0">
                                     <thead class="table-head-fixed">
                                         <tr>
-                                            <th
-                                                class="text-uppercase text-xxs font-weight-bolder opacity-7">
-                                                Despesa
+                                            <th class="text-uppercase text-xxs font-weight-bolder opacity-7">
+                                                {{ $t('Transação')}}
                                             </th>
-                                            <th
-                                                class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Periodicidade
+                                            <th class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
+                                                {{ $t('Periodicidade')}}
                                             </th>
-                                            <th
-                                                class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Próximo Pagamento
+                                            <th class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
+                                                {{ $t('Próximo Pagamento')}}
                                             </th>
-                                            <th
-                                                class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Valor
+                                            <th class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
+                                                {{ $t('Valor')}}
                                             </th>
-                                            <th
-                                                class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                Ação
+                                            <th class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
+                                                
                                             </th>
                                         </tr>
                                     </thead>
@@ -48,7 +43,7 @@
                                                 <td>
                                                     <div class="d-flex px-3">
                                                         <div class="my-auto">
-                                                            <h6 class="mb-0 text-sm">{{ p.name }}</h6>
+                                                            <h6 class="mb-0 text-sm cuter">{{ p.name }}</h6>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -60,27 +55,28 @@
                                                 <td>
                                                     <span class="text-xs font-weight-bold">{{
                                                         p.date
-                                                        }}</span>
+                                                    }}</span>
                                                 </td>
                                                 <td>
-                                                    <span class="text-md font-weight-bold">{{ p.shareValue }} {{user.moeda}}</span>
+                                                    <span class="text-md font-weight-bold">{{ p.shareValue }}
+                                                        {{ user.moeda }}</span>
                                                 </td>
                                                 <td>
                                                     <material-button variant="gradient" color="secondary"
-                                                        class="btn btn-sm small-button"
-                                                        @click="openPopup(p.id)">
+                                                        data-bs-toggle='modal' data-bs-target='#Pop1Modal'
+                                                        class="btn btn-sm small-button" @click="openPopup(p.id)">
                                                         {{ $t("Abrir") }}
                                                     </material-button>
                                                 </td>
                                             </tr>
                                         </template>
                                         <template v-else>
-                                                    <tr>
-                                                        <td colspan="5" class="text-center">
-                                                            <h6 class=" message">{{ $t("Sem pagamentos em atraso!") }}</h6>
-                                                        </td>
-                                                    </tr>
-                                                </template>
+                                            <tr>
+                                                <td colspan="5" class="text-center">
+                                                    <h6 class=" message">{{ $t("Sem pagamentos!") }}</h6>
+                                                </td>
+                                            </tr>
+                                        </template>
                                     </tbody>
                                 </table>
                             </div>
@@ -96,7 +92,7 @@
                             <div class="card my-4">
                                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                                     <div class="bg-gradient-danger shadow-danger border-radius-lg pt-3 pb-2">
-                                        <h6 class="text-white text-capitalize ps-3">Por Pagar</h6>
+                                        <h6 class="text-white text-capitalize ps-3">{{ $t('Pagamentos em Atraso')}}</h6>
                                     </div>
                                 </div>
                                 <div class="px-0 pb-2">
@@ -104,21 +100,20 @@
                                         <table class="table align-items-center justify-content-center mb-0">
                                             <thead class="table-head-fixed">
                                                 <tr>
-                                                    <th
-                                                        class="text-uppercase text-xxs font-weight-bolder opacity-7">
-                                                        Despesa
+                                                    <th class="text-uppercase text-xxs font-weight-bolder opacity-7">
+                                                        {{ $t('Despesa')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Periodicidade
+                                                        {{ $t('Periodicidade')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Data de Pagamento
+                                                        {{ $t('Data de Pagamento')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Valor
+                                                        {{ $t('Valor')}}
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -130,7 +125,7 @@
                                                         <td>
                                                             <div class="d-flex px-3">
                                                                 <div class="my-auto">
-                                                                    <h6 class="mb-0 text-sm">{{ p.name }}</h6>
+                                                                    <h6 class="mb-0 text-sm cuter">{{ p.name }}</h6>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -142,18 +137,19 @@
                                                         <td>
                                                             <span class="text-xs font-weight-bold">{{
                                                                 p.date
-                                                                }}</span>
+                                                            }}</span>
                                                         </td>
                                                         <td>
                                                             <span class="text-md font-weight-bold">{{ p.shareValue
-                                                                }} {{user.moeda}}</span>
+                                                                }} {{ user.moeda }}</span>
                                                         </td>
                                                     </tr>
                                                 </template>
                                                 <template v-else>
                                                     <tr>
                                                         <td colspan="5" class="text-center">
-                                                            <h6 class="message">{{ $t("Sem pagamentos em atraso!") }}</h6>
+                                                            <h6 class="message">{{ $t("Sem pagamentos em atraso!") }}
+                                                            </h6>
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -168,7 +164,7 @@
                                 <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                                     <div class="bg-gradient-warning shadow-warning border-radius-lg pt-3 pb-2">
                                         <h6 class="text-white text-capitalize ps-3">
-                                            Pedidos Pendentes
+                                            {{ $t('Pedidos de Adesão Pendentes')}}
                                         </h6>
                                     </div>
                                 </div>
@@ -177,25 +173,24 @@
                                         <table class="table align-items-center justify-content-center mb-0">
                                             <thead class="table-head-fixed">
                                                 <tr>
-                                                    <th
-                                                        class="text-uppercase text-xxs font-weight-bolder opacity-7">
-                                                        Despesa
+                                                    <th class="text-uppercase text-xxs font-weight-bolder opacity-7">
+                                                        {{ $t('Despesa')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Periodicidade
+                                                        {{ $t('Periodicidade')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Próximo Pagamento
+                                                        {{ $t('Próximo Pagamento')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Valor
+                                                        {{ $t('Valor')}}
                                                     </th>
                                                     <th
                                                         class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
-                                                        Detalhes
+                                                        
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -209,7 +204,7 @@
                                                         <td>
                                                             <div class="d-flex px-3">
                                                                 <div class="my-auto">
-                                                                    <h6 class="mb-0 text-sm">{{ p.name }}</h6>
+                                                                    <h6 class="mb-0 text-sm cuter">{{ p.name }}</h6>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -221,16 +216,17 @@
                                                         <td>
                                                             <span class="text-xs font-weight-bold">{{
                                                                 p.date
-                                                                }}</span>
+                                                            }}</span>
                                                         </td>
                                                         <td>
                                                             <span class="text-md font-weight-bold">{{ p.shareValue
-                                                                }} {{user.moeda}}</span>
+                                                                }} {{ user.moeda }}</span>
                                                         </td>
                                                         <td>
                                                             <material-button variant="gradient" color="secondary"
                                                                 class="btn btn-sm small-button"
-                                                                @click="openDetailsPopup(p.id)">
+                                                                @click="openDetailsPopup(p.id)" data-bs-toggle='modal'
+                                                                data-bs-target='#Pop1Modal'>
                                                                 {{ $t("Detalhes") }}
                                                             </material-button>
                                                         </td>
@@ -239,7 +235,8 @@
                                                 <template v-else>
                                                     <tr>
                                                         <td colspan="5" class="text-center">
-                                                            <h6 class=" message ">{{ $t("Sem pedidos pendentes!") }}</h6>
+                                                            <h6 class=" message ">{{ $t("Sem pedidos pendentes!") }}
+                                                            </h6>
                                                         </td>
                                                     </tr>
                                                 </template>
@@ -256,18 +253,20 @@
     </div>
 
     <!--PopUp 1-->
-    <div v-if="popup || popupDetails" class="modal fade show" style="display: block">
+    <div class="modal fade" id="Pop1Modal" tabindex="-1" aria-labelledby="transactionModalLabel" aria-hidden="true"
+        data-bs-backdrop='static' data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header d-flex justify-content-between align-items-center">
+                <div class="modal-header">
                     <div v-if="popup">
                         <h5 class="modal-title">Informações da Transacao</h5>
                     </div>
                     <div v-if="popupDetails">
                         <h5 class="modal-title">Informações do pedido de adesão</h5>
                     </div>
-                    <material-button variant="gradient" color="secondary" class="btn btn-sm small-button"
-                        @click="popup = false;popupDetails = false; isEditing = false; currentEditIndex = null; infos = true; participantes = false; emailError = null; newUserEmail = '', emailErrorStore = null;">
+                    <material-button id="cancelButton" variant="gradient" color="secondary"
+                        class="btn btn-sm small-button" data-bs-dismiss="modal"
+                        @click="popup = false; popupDetails = false; isEditing = false; currentEditIndex = null; infos = true; participantes = false; emailError = null; newUserEmail = '', emailErrorStore = null;">
                         {{ $t("Voltar") }}
                     </material-button>
                 </div>
@@ -294,10 +293,12 @@
                             <div v-if="isEditing">
                                 <div class="tab tab-content active" id="tab-0">
 
+                                    <h6>Tipo: <span class="text-info">&nbsp;&nbsp;{{ transa.tipo }}</span></h6>
+
                                     <!-- Name -->
                                     <div class="form-group form-row">
                                         <label for="description" class="form-label">{{ $t('Nome') }}
-                                            <p class="required"> *</p>
+                                            <p class="required text-danger text-sm"> *</p>
                                         </label>
                                         <div v-if="nameError === true" class="form-input mb-1">
                                             <material-input class="material-input" id="description" type="text"
@@ -327,7 +328,7 @@
                                     <!-- Montante -->
                                     <div class="form-group form-row">
                                         <label for="value" class="form-label">{{ $t('Montante') }}
-                                            <p class="required"> *</p>
+                                            <p class="required text-danger text-sm"> *</p>
                                         </label>
                                         <div v-if="valueError === true" class="form-input mb-1">
                                             <material-input class="material-input" id="value" type="number"
@@ -348,7 +349,7 @@
                                     <div v-if="Recorrence != 'Unica'" class="dropdown" ref="repeatDropdown">
                                         <div class="form-group form-row">
                                             <label for="Repetition" class="form-label">{{ $t('Repetição') }}
-                                                <p class="required"> *</p>
+                                                <p class="required text-danger text-sm"> *</p>
                                             </label>
                                             <div v-if="repetitionError === null || repetitionError === false"
                                                 class="input-group input-group-outline form-input mb-1"
@@ -426,13 +427,12 @@
                                         </div>
                                     </div>
 
-                                    <h6>Tipo: {{ transa.tipo }}</h6>
 
                                     <!-- Categoria -->
                                     <div class="dropdown" ref="categoryDropdown">
                                         <div class="form-group form-row">
                                             <label for="category" class="form-label">{{ $t('Categoria') }}
-                                                <p class="required"> *</p>
+                                                <p class="required text-danger text-sm "> *</p>
                                             </label>
                                             <div v-if="CategoryError === null || CategoryError === false"
                                                 class="input-group input-group-outline form-input mb-1"
@@ -502,32 +502,60 @@
                                     <div class="form-group form-row">
                                         <label for="place" class="form-label">{{ $t('Local') }}</label>
                                         <div class="form-input mb-1">
-                                            <material-input class="material-input" id="place" type="text"
-                                                name="place" :value="Place"
-                                                @update:value="Place = $event" />
+                                            <material-input class="material-input" id="place" type="text" name="place"
+                                                :value="Place" @update:value="Place = $event" />
                                         </div>
                                     </div>
 
                                     <label class="form-label mb-1">
-                                        <p class="required" style="font-weight: 400;"> * {{ $t('Campo obrigatório') }}
+                                        <p class="required text-danger text-xs"> * {{ $t('Campo obrigatório') }}
                                         </p>
                                     </label>
 
                                 </div>
                             </div>
                             <div v-else>
-                                <h6>Nome: {{ transa.name }}</h6>
-                                <h6>Descrição: {{ transa.descricao }}</h6>
-                                <h6>Valor Total: {{ transa.value }}€</h6>
-                                <h6 v-if="transa.value != transa.shareValue">
-                                    Valor Partilhado: {{ transa.shareValue }}€
-                                </h6>
-                                <h6>Periodicidade: {{ getRepetitionText(transa.repeticao) }}</h6>
-                                <h6>Data Criação: {{ transa.date }}</h6>
-                                <h6 v-if="popup">Data: {{ dateP }}</h6>
-                                <h6>Categoria: {{ transa.categoria }}</h6>
-                                <h6>Tipo: {{ transa.tipo }}</h6>
-                                <h6>Local: {{ transa.local }}</h6>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Nome') }} </label>
+                                    <p class="detail form-label cuter">{{ transa.name }}</p>
+                                </div>
+                                <div v-if="transa.descricao !== ''" class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Descrição') }} </label>
+                                    <p class="detail form-label cuter">{{ transa.descricao }}</p>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Valor Total') }} </label>
+                                    <p class="detail form-label">{{ transa.value }}</p>
+                                </div>
+                                <div v-if="transa.value != transa.shareValue" class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Valor Partilhado') }} </label>
+                                    <p class="detail form-label">{{ transa.shareValue }}</p>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Periodicidade') }} </label>
+                                    <p class="detail form-label">{{ getRepetitionText(transa.repeticao) }}</p>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Data Criação') }} </label>
+                                    <p class="detail form-label">{{ transa.date }}</p>
+                                </div>
+                                <div v-if="popup" class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Próximo Pagamento') }} </label>
+                                    <p class="detail form-label">{{ dateP }}</p>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Categoria') }} </label>
+                                    <p class="detail form-label">{{ transa.categoria }}</p>
+                                </div>
+                                <div class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Tipo') }} </label>
+                                    <p class="detail form-label">{{ transa.tipo }}</p>
+                                </div>
+                                <div v-if="transa.local != ''" class="form-group form-row">
+                                    <label for="description" class="form-label">{{ $t('Local') }} </label>
+                                    <p class="detail form-label cuter">{{ transa.local }}</p>
+                                </div>
+
 
                                 <!-- <div v-if="comments && comments.length > 0" class="modal-footer d-block justify-content-center"> -->
                                 <div v-if="comments" class="modal-footer d-block justify-content-center">
@@ -540,12 +568,26 @@
                                 <div class="justify-content-left">
                                     <div v-for="(c, index) in comments" :key="index" class="mb-3">
                                         <h6 v-if="currentEditIndex !== index">
-                                            {{ c.user_email + " " + c.timestamp + " " + c.descricao }}
+                                            <div class="form-group form-row">
+                                                <label for="description" class="form-label">{{ $t('Nome') }} </label>
+                                                <p class="detail form-label cuter">{{ c.user_email }}</p>
+                                            </div>
+                                            <div class="form-group form-row">
+                                                <label for="description" class="form-label">{{ $t('Data') }} </label>
+                                                <p class="detail form-label cuter">{{ c.timestamp }}</p>
+                                            </div>
+                                            <div class="form-group form-row ">
+                                                <label for="description" class="form-label cuter">{{ $t('Comentáio') }}
+                                                </label>
+                                                <p class="detail form-label cuter">{{ c.descricao }}</p>
+                                            </div>
+
                                         </h6>
                                         <input v-else class="input-group input-group-outline custom"
+                                            style="border-radius: 6px;border: 2px solid #344767;"
                                             v-model="editComment" />
                                         <div class="buttons" v-if="currentEditIndex === index">
-                                            <button @click="saveComment(index)" style="background-color: white;">
+                                            <button @click="saveComment(index)" style="background-color: white; ">
                                                 <i class="material-icons"
                                                     style="color: #344767; font-size: 18px;">save</i>
                                             </button>
@@ -558,14 +600,15 @@
                                             <button v-if="user.email === c.user_email"
                                                 @click="editCommentMode(index, c.descricao)"
                                                 style="background-color: white;">
-                                                <i class="material-icons"
-                                                    style="color: #344767; font-size: 18px;">edit</i>
+                                                <i class="material-icons "
+                                                    style="color: #344767; font-size: 18px; ">edit</i>
                                             </button>
                                             <button v-if="user.email === c.user_email || user.id === transa.users[0].id"
                                                 @click="deleteComment(index)" style="background-color: white;">
                                                 <i class="material-icons"
                                                     style="color: #344767; font-size: 18px;">delete</i>
                                             </button>
+                                            <hr class="horizontal dark" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -588,28 +631,50 @@
 
                         <div v-if="participantes">
                             <div v-for="(u, index) in transa.users" :key="index">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div>
-                                        <h6>Utilizador: {{ u.name }}</h6>
-                                        <h6>Email: {{ u.email }}</h6>
-                                        <h6 v-if="u.confirma === 1">Estado: Aceite</h6>
-                                        <h6 v-if="u.confirma === 0">Estado: Em espera</h6>
+                                <div class="">
+                                    <div class="form-group form-row">
+                                        <label for="description" class="form-label">{{ $t('Utilizador') }} </label>
+                                        <p class="detail form-label cuter">{{ u.name }}</p>
                                     </div>
+                                    <div class="form-group form-row">
+                                        <label for="description" class="form-label">{{ $t('Email') }} </label>
+                                        <p class="detail form-label cuter">{{ u.email }}</p>
+                                    </div>
+                                    <div v-if="u.confirma === 1" class="form-group form-row">
+                                        <label for="description" class="form-label">{{ $t('Estado') }} </label>
+                                        <p class="detail form-label cuter text-success">Aceite</p>
+                                    </div>
+                                    <div v-if="u.confirma === 0" class="form-group form-row">
+                                        <label for="description" class="form-label">{{ $t('Estado') }} </label>
+                                        <p class="detail form-label cuter text-warning">Em espera</p>
+                                    </div>
+
                                     <div v-if="transa.users[0].id === user.id">
-                                        <div>
-                                            <!--remove user-->
-                                            <material-button v-if="transa.users[0].id != u.id" variant="gradient"
-                                                color="danger" class="btn btn-sm small-button" @click="
-                                                    popupKickInfo(u);
-                                                popupKick = true;
-                                                popup = false;
-                                                popupDetails = false;
-                                                typeKick = 0;
-                                                ">
-                                                {{ $t("Remover") }}
-                                            </material-button>
-                                        </div>
+                                        <!--remove user-->
+                                        <material-button v-if="transa.users[0].id != u.id && popup" variant="gradient"
+                                            color="danger" class="btn btn-sm small-button" @click="
+                                                popupKickInfo(u);
+                                            popupKick = true;
+                                            popup = false;
+                                            popupDetails = false;
+                                            typeKick = 0;
+                                            " data-bs-dismiss="modal" data-bs-toggle='modal'
+                                            data-bs-target='#kickModal'>
+                                            {{ $t("Remover") }}
+                                        </material-button>
+                                        <material-button v-if="transa.users[0].id != u.id && popupDetails"
+                                            variant="gradient" color="danger" class="btn btn-sm small-button" @click="
+                                                popupKickInfo(u);
+                                            popupKick = true;
+                                            popup = false;
+                                            popupDetails = false;
+                                            typeKick = 1;
+                                            " data-bs-dismiss="modal" data-bs-toggle='modal'
+                                            data-bs-target='#kickModal'>
+                                            {{ $t("Remover") }}
+                                        </material-button>
                                     </div>
+                                    <hr class="horizontal dark" />
                                 </div>
                             </div>
                             <!-- Shared expense -->
@@ -643,7 +708,7 @@
                                                 :label="$t('Indique o email do utilizador')" />
                                         </div>
 
-                                        <p class="btn btn-default bg-gradient-info mb-1" @click="addUser(1)">{{
+                                        <p class="btn btn-default bg-gradient-info mb-1" @click="addUser()">{{
                                             $t('Adicionar Utilizador') }}
                                         </p>
                                     </div>
@@ -653,23 +718,16 @@
                     </div>
                 </div>
                 <div v-if="transa && transa.users && transa.users.length > 0">
-                    <div v-if="transa.users[0].id == user.id" class="modal-footer d-flex justify-content-between">
-                        <div v-if="isEditing === false">
+                    <div v-if="transa.users[0].id == user.id">
+                        <div class="modal-footer d-flex justify-content-between" v-if="isEditing === false">
                             <material-button variant="gradient" color="danger" class="btn btn-md" @click="
-                                isEditing = false;
-                            popupReject = true;
-                            popup = false;
-                            popupDetails = false;
-                            currentEditIndex = null;
-                            infos = true;
-                            participantes = false;
-                            emailError = null; newUserEmail = '', emailErrorStore = null;
-                            ">
+                                toggleToDelete();
+                            " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#PopEliminarModal'>
                                 {{ $t("Eliminar") }}
                             </material-button>
                             <material-button v-if="infos === true" variant="gradient" color="warning" class="btn btn-md"
                                 @click="
-                                    togleToEdit();
+                                    toggleToEdit();
                                 isEditing = true;
                                 currentEditIndex = null;
                                 infos = true;
@@ -687,11 +745,15 @@
                             infos = true;
                             participantes = false;
                             emailError = null; newUserEmail = '', emailErrorStore = null;
-                            ">
-                                {{ $t("Pagar") }}
+                            " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#PayModal'>
+                                {{ 
+                                    transa.tipo === 'despesa' ? $t("Confirmar Pagamento") :
+                                    transa.tipo === 'receita' ? $t("Confirmar Receção") : 
+                                    ''
+                            }}
                             </material-button>
                         </div>
-                        <div v-else>
+                        <div class="modal-footer d-flex justify-content-between" v-else>
                             <material-button variant="gradient" color="danger" class="btn btn-md" @click="
                                 isEditing = false;
                             currentEditIndex = null;
@@ -707,36 +769,29 @@
                             </material-button>
                         </div>
                     </div>
-                    <div v-else class="modal-footer d-flex justify-content-end">
-                        <div v-if="popup || !acceptorRejectPendenteButton()">
+                    <div v-else>
+                        <div v-if="popup" class="modal-footer d-flex justify-content-end">
                             <material-button variant="gradient" color="danger" class="btn btn-md" @click="
-                                isEditing = false;
-                            popupReject = true;
-                            popup = false;
-                            popupDetails = false;
+                                toggleToDelete();
                             leave = true;
-                            currentEditIndex = null;
-                            infos = true;
-                            participantes = false;
-                            emailError = null; newUserEmail = '', emailErrorStore = null;
-                            ">
+                            " data-bs-dismiss="modal">
                                 {{ $t("Sair") }}
                             </material-button>
                         </div>
-                        <div v-else-if="popupDetails">
-                            <div v-if="acceptorRejectPendenteButton() === true">
-                                <div v-if="transa.users[0].id != user.id">
+                        <div v-else>
+                            <div v-if="acceptorRejectPendenteButton() === true" class="modal-footer d-flex justify-content-between">
                                     <material-button variant="gradient" color="danger" class="btn btn-md" @click="
                                         popupReject2 = true;
-                                    popupDetails = false;
-                                    currentEditIndex = null;
-                                    infos = true;
-                                    participantes = false;
-                                    emailError = null; newUserEmail = '', emailErrorStore = null;
-                                    isEditing = false;
-                                    ">
+                                        popupDetails = false;
+                                        currentEditIndex = null;
+                                        infos = true;
+                                        participantes = false;
+                                        emailError = null; newUserEmail = '', emailErrorStore = null;
+                                        isEditing = false;
+                                        " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#rejectModal'>
                                         {{ $t("Rejeitar") }}
                                     </material-button>
+
                                     <material-button variant="gradient" color="info" class="btn btn-md" @click="
                                         popupAccept2 = true;
                                         popupDetails = false;
@@ -745,22 +800,10 @@
                                         participantes = false;
                                         emailError = null; newUserEmail = '', emailErrorStore = null;
                                         isEditing = false;
-                                    ">
+                                        " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#acceptModal'>
                                         {{ $t("Aceitar") }}
                                     </material-button>
                                 </div>
-                                <div v-else class="modal-footer d-flex justify-content-end">
-                                    <material-button variant="gradient" color="danger" class="btn btn-md"
-                                        @click="deleteTransacao();
-                                        currentEditIndex = null;
-                                        infos = true;
-                                        participantes = false;
-                                        emailError = null; newUserEmail = '', emailErrorStore = null;
-                                        isEditing = false;">
-                                        {{ $t("Eliminar") }}
-                                    </material-button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -769,10 +812,11 @@
     </div>
 
     <!--PopUp Eliminar-->
-    <div v-if="popupReject" class="modal fade show" style="display: block">
+    <div class="modal fade" id="PopEliminarModal" tabindex="-1" aria-hidden="true"
+        aria-labelledby="transactionModalLabel" data-bs-backdrop='static' data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header d-flex justify-content-between align-items-center">
+                <div class="modal-header">
                     <div v-if="leave === true">
                         <h5 class="modal-title">Tem a certeza que deseja sair do grupo?</h5>
                     </div>
@@ -786,19 +830,28 @@
                     <p>A sua ação é irreversível!</p>
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
-                    <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
+                    <material-button v-if="auxDelete" variant="gradient" color="secondary" class="btn btn-md" @click="
                         popupReject = false;
                     popup = true;
                     leave = false;
-                    ">
+                    " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#Pop1Modal'>
                         {{ $t("Voltar") }}
                     </material-button>
+
+                    <material-button v-else variant="gradient" color="secondary" class="btn btn-md" @click="
+                        popupReject = false;
+                    popupDetails = true;
+                    leave = false;
+                    " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#Pop1Modal'>
+                        {{ $t("Voltar") }}
+                    </material-button>
+
                     <material-button variant="gradient" color="info" class="btn btn-md" @click="
                         deleteTransacao();
                     popupReject = false;
                     popup = false;
                     leave = false;
-                    ">
+                    " data-bs-dismiss="modal">
                         {{ $t("Confirmar") }}
                     </material-button>
                 </div>
@@ -807,10 +860,11 @@
     </div>
 
     <!--PopUp Aceitar-->
-    <div v-if="popupAccept" class="modal fade show" style="display: block">
+    <div class="modal fade" id="PayModal" tabindex="-1" aria-hidden="true" data-bs-backdrop='static'
+        data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header d-flex justify-content-between align-items-center">
+                <div class="modal-header">
                     <h5 class="modal-title">Deseja proceder com o pagamento?</h5>
                 </div>
                 <div class="modal-body text-center">
@@ -820,14 +874,14 @@
                     <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
                         popupAccept = false;
                     popup = true;
-                    ">
+                    " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#Pop1Modal'>
                         {{ $t("Voltar") }}
                     </material-button>
                     <material-button variant="gradient" color="info" class="btn btn-md" @click="
                         payTransaction();
                     popupAccept = false;
                     popup = false;
-                    ">
+                    " data-bs-dismiss="modal">
                         {{ $t("Confirmar") }}
                     </material-button>
                 </div>
@@ -836,10 +890,11 @@
     </div>
 
     <!--PopUp Detalhes Rejeitar-->
-    <div v-if="popupReject2" class="modal fade show" style="display: block">
+    <div id="rejectModal" class="modal fade" tabindex="-1" aria-hidden="true" data-bs-backdrop='static'
+        data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header d-flex justify-content-between align-items-center">
+                <div class="modal-header">
                     <h5 class="modal-title">
                         Tem a certeza que não deseja participar no grupo?
                     </h5>
@@ -851,7 +906,7 @@
                     <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
                         popupReject2 = false;
                     popupDetails = true;
-                    ">
+                    " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#Pop1Modal'>
                         {{ $t("Voltar") }}
                     </material-button>
                     <material-button variant="gradient" color="info" class="btn btn-md" @click="
@@ -859,7 +914,7 @@
                     popupReject2 = false;
                     snackbar = 'successReject2';
                     popupDetails = false;
-                    ">
+                    " data-bs-dismiss="modal">
                         {{ $t("Confirmar") }}
                     </material-button>
                 </div>
@@ -868,10 +923,11 @@
     </div>
 
     <!--PopUp Detalhes Aceitar-->
-    <div v-if="popupAccept2" class="modal fade show" style="display: block">
+    <div class="modal fade" id="acceptModal" tabindex="-1" aria-hidden="true" data-bs-backdrop='static'
+        data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header d-flex justify-content-between align-items-center">
+                <div class="modal-header">
                     <h5 class="modal-title">Deseja proceder a entrada no grupo?</h5>
                 </div>
                 <div class="modal-body text-center">
@@ -881,7 +937,7 @@
                     <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
                         popupAccept2 = false;
                     popupDetails = true;
-                    ">
+                    " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#Pop1Modal'>
                         {{ $t("Voltar") }}
                     </material-button>
                     <material-button variant="gradient" color="info" class="btn btn-md" @click="
@@ -889,7 +945,7 @@
                     popupAccept2 = false;
                     snackbar = 'successAccept2';
                     popupDetails = false;
-                    ">
+                    " data-bs-dismiss="modal">
                         {{ $t("Confirmar") }}
                     </material-button>
                 </div>
@@ -897,12 +953,14 @@
         </div>
     </div>
 
-    <!--PopUp Detalhes Aceitar-->
-    <div v-if="popupKick" class="modal fade show" style="display: block">
+    <!-- PopUp kick user -->
+    <div class="modal fade" id="kickModal" tabindex="-1" aria-hidden="true" data-bs-backdrop='static'
+        data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header d-flex justify-content-between align-items-center">
-                    <h5 class="modal-title">Deseja proceder a expulsao do elemento {{ userKick.name }}?</h5>
+                <div class="modal-header">
+                    <h5 v-if="userKick !== null" class="modal-title">Deseja deixar de partilhar a despesa com {{
+                        userKick.name }}?</h5>
                 </div>
                 <div class="modal-body text-center">
                     <p>A sua ação é irreversível!</p>
@@ -912,7 +970,7 @@
                         <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
                             popupKick = false;
                         popupDetails = true;
-                        ">
+                        " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#Pop1Modal'>
                             {{ $t("Voltar") }}
                         </material-button>
                     </div>
@@ -920,12 +978,20 @@
                         <material-button variant="gradient" color="secondary" class="btn btn-md" @click="
                             popupKick = false;
                         popup = true;
-                        ">
+                        " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#Pop1Modal'>
                             {{ $t("Voltar") }}
                         </material-button>
                     </div>
-                    <material-button variant="gradient" color="danger" class="btn btn-sm small-button"
-                        @click="kickUser()">
+                    <material-button v-if="transa && transa.users.length == 2 && transa.transacao && transa.transacao == 'unica'" variant="gradient" color="danger" class="btn btn-sm small-button"
+                        @click="kickUser()"
+                        data-bs-dismiss="modal"
+                        >
+                        {{ $t("Remover") }}
+                    </material-button>
+                    <material-button v-else variant="gradient" color="danger" class="btn btn-sm small-button"
+                        @click="kickUser()"
+                        data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#Pop1Modal'
+                        >
                         {{ $t("Remover") }}
                     </material-button>
                 </div>
@@ -1003,6 +1069,8 @@ export default {
         const emailError = ref(null);
 
         const transa_id = ref(0);
+
+        const auxDelete = ref(false);
 
         const router = useRouter();
 
@@ -1112,19 +1180,16 @@ export default {
             }
         }
 
-        function dataTransform(){
-            if(Recorrence.value == 'Unica'){
-                if(transa.value.name != Name.value || transa.value.descricao != Description.value || transa.value.value != Value.value || transa.value.local != Place.value || transa.value.categoria != Category.value.name ){
-                    alert('Existem campos alterados');
+        function dataTransform() {
+            if (Recorrence.value == 'Unica') {
+                if (transa.value.name != Name.value || transa.value.descricao != Description.value || transa.value.value != Value.value || transa.value.local != Place.value || transa.value.categoria != Category.value.name) {
                     return false;
                 }
-            }else{
-                alert('Repetida');
-                if(transa.value.name != Name.value || transa.value.descricao != Description.value || transa.value.value != Value.value || transa.value.local != Place.value || transa.value.repeticao != SendRepetition.value || transa.value.categoria != Category.value.name ){
-                    alert('Existem campos alterados');
+            } else {
+                if (transa.value.name != Name.value || transa.value.descricao != Description.value || transa.value.value != Value.value || transa.value.local != Place.value || transa.value.repeticao != transformRepetition(Repetition.value.trim()) || transa.value.categoria != Category.value.name) {
                     return false;
                 }
-            }   
+            }
             return true;
         }
 
@@ -1132,8 +1197,17 @@ export default {
             if (Type.value == 'receita' || Type.value == '') {
                 checkInputs();
                 //verifica se os campos estao alterados
-                if(dataTransform()){
+                if (dataTransform()) {
                     isEditing.value = false;
+                    console.log(transa.value);
+                    if (transa.value.status == true) {
+                        popup.value = true;
+                        popupDetails.value = false;
+                    } else {
+                        popup.value = false;
+                        popupDetails.value = true;
+                    }
+                    return;
                 }
 
 
@@ -1188,6 +1262,9 @@ export default {
                                 popup.value = false;
                                 popupDetails.value = false;
 
+                                const cancelButton = document.getElementById('cancelButton');
+                                cancelButton.click();
+
                             } catch (error) {
                                 if (error.message.includes('token')) {
                                     alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
@@ -1197,7 +1274,7 @@ export default {
 
                                     router.push('/sign-in');
                                 } else {
-                                    alert("Erro ao adicionar Recorrente (Fixa):", error.message);
+                                    alert("Erro ao editar Receita fixa");
                                     const event = new CustomEvent('show-snackbar', { detail: 'error' });
                                     document.dispatchEvent(event);
                                     console.log('PopUp emitiu evento');
@@ -1251,6 +1328,9 @@ export default {
                             popup.value = false;
                             popupDetails.value = false;
 
+                            const cancelButton = document.getElementById('cancelButton');
+                            cancelButton.click();
+
                         } catch (error) {
                             if (error.message.includes('token')) {
                                 alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
@@ -1260,7 +1340,7 @@ export default {
 
                                 router.push('/sign-in');
                             } else {
-                                alert("Erro ao adicionar Receita nao fixa:", error.message);
+                                alert("Erro ao editar Receita nao fixa");
                                 const event = new CustomEvent('show-snackbar', { detail: 'error' });
                                 document.dispatchEvent(event);
                                 console.log('PopUp emitiu evento');
@@ -1272,8 +1352,17 @@ export default {
             } else {
                 checkInputs();
 
-                if(dataTransform()){
+                if (dataTransform()) {
                     isEditing.value = false;
+                    console.log(transa.value);
+                    if (transa.value.status == true) {
+                        popup.value = true;
+                        popupDetails.value = false;
+                    } else {
+                        popup.value = false;
+                        popupDetails.value = true;
+                    }
+                    return;
                 }
 
                 if (Recorrence.value != 'Unica') {
@@ -1319,6 +1408,7 @@ export default {
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
 
+
                             isEditing.value = false;
                             loadPendentes();
                             loadPorPagar();
@@ -1326,6 +1416,9 @@ export default {
 
                             popup.value = false;
                             popupDetails.value = false;
+
+                            const cancelButton = document.getElementById('cancelButton');
+                            cancelButton.click();
 
                         } catch (error) {
                             if (error.message.includes('token')) {
@@ -1384,6 +1477,12 @@ export default {
                         loadPorPagar();
                         loadProximosPagamentos();
 
+                        popup.value = false;
+                        popupDetails.value = false;
+
+                        const cancelButton = document.getElementById('cancelButton');
+                        cancelButton.click();
+
                     } catch (error) {
                         if (error.message.includes('token')) {
                             alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
@@ -1403,14 +1502,33 @@ export default {
             }
         }
 
-        const togleToEdit = () => {
+        const toggleToDelete = () => { //adicionar este ao return 
+            if (popup.value == true) {
+                auxDelete.value = true; //se estiver nos proximos pagamentos
+            } else {
+                auxDelete.value = false; //se ainda estiver nos pendentes
+            }
+
+            isEditing.value = false;
+            popupReject.value = true;
+            popup.value = false;
+            popupDetails.value = false;
+            currentEditIndex.value = null;
+            infos.value = true;
+            participantes.value = false;
+            emailError.value = null;
+            newUserEmail.value = '',
+                emailErrorStore.value = null;
+        };
+
+        const toggleToEdit = () => {
             Name.value = transa.value.name;
             Description.value = transa.value.descricao;
             Value.value = transa.value.value;
             Repetition.value = transformInvRepetition(transa.value.repeticao);
             Type.value = transa.value.tipo;
 
-            if (transa.value.repeticao){
+            if (transa.value.repeticao) {
                 Recorrence.value = 'Fixa';
             } else {
                 Recorrence.value = 'Unica';
@@ -1421,14 +1539,22 @@ export default {
                 Category.value = categories.CategoriesIncome.find((c) => c.name === transa.value.categoria);
             }
             Place.value = transa.value.local;
-        }
+
+            isEditing.value = true;
+            currentEditIndex.value = null;
+            infos.value = true;
+            participantes.value = false;
+            emailError.value = null;
+            newUserEmail.value = '';
+            emailErrorStore.value = null;
+        };
 
         const loadPendentes = async () => {
             try {
                 await store.loadPendentes();
                 console.log("Pendentes carregados:", store.pendentes);
-            } catch (err) {
-                alert("Erro loadPendentes-> " + err.message);
+            } catch (ignore) {
+                console.log("Erro loadPendentes-> " + ignore.message);
             }
         };
 
@@ -1445,7 +1571,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro loadPorPagar-> " + err.message);
+                    console.log("Erro loadPorPagar-> " + err.message);
                 }
             }
         };
@@ -1462,7 +1588,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro loadProximosPagamentos-> " + err.message);
+                    console.log("Erro loadProximosPagamentos-> " + err.message);
                 }
             }
         };
@@ -1498,7 +1624,7 @@ export default {
                     Authorization: "Bearer " + token,
                 },
             };
-            try{
+            try {
                 const response_comments = await fetch(url_comments, request);
 
                 if (!response_comments.ok) {
@@ -1510,6 +1636,8 @@ export default {
                 console.log(data_comments);
 
                 comments.value = data_comments.comentarios;
+
+
             } catch (error) {
                 if (error.message.includes('token')) {
                     alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
@@ -1519,10 +1647,10 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao carregar comentários:", error.message);
+                    console.log("Erro openDetailsPopup-> " + error.message);
                 }
             }
-
+            popup.value = false;
             popupDetails.value = true;
         };
 
@@ -1547,19 +1675,20 @@ export default {
             return true;
         };
 
-        const deleteTransacao = async () => {
+        const deleteTransacao = async () => { // esta aqui e so substituir pela que estava
             try {
-                if(popup.value){
+                if (auxDelete.value) {
                     await store.deleteOrGiveUp(transa.value.id, "fixa");
                     snackbar.value = "successReject";
                     loadPendentes();
                     loadPorPagar();
                     loadProximosPagamentos();
-                }else if(popupDetails.value){
+                } else {
                     await store.deleteOrGiveUp(
                         transa.value.id,
                         transa.value.transacao
                     );
+                    snackbar.value = "successReject";//aqui sera outra cena
                     popupDetails.value = false;
                     loadPendentes();
                 }
@@ -1572,7 +1701,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro DeleteTransacao-> " + err.message);
+                    console.log("Erro deleteTransacao-> " + err.message);
                 }
             }
         };
@@ -1594,7 +1723,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro acceptReject-> " + err.message);
+                    console.log("Erro acceptorReject-> " + err.message);
                 }
             }
         };
@@ -1617,7 +1746,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro payTransaction-> " + err.message);
+                    console.log("Erro payTransaction-> " + err.message);
                 }
             }
         };
@@ -1628,19 +1757,35 @@ export default {
 
         const kickUser = async () => {
             try {
-                if(transa.value.repeticao){
+                if (transa.value.repeticao) {
                     await store.kickUser(userKick.value.email, transa.value.id, "fixa");
                 } else {
                     await store.kickUser(userKick.value.email, transa.value.id, "unica");
                 }
-                // popupDetails.value = false;
-                loadPendentes();
-                loadPorPagar();
-                loadProximosPagamentos();
-                popup.value = false;
-                popupDetails.value = false;
-                popupKick.value = false;
+
+                await store.loadPendentes();
+                await store.loadPorPagar();
+                await store.loadProximosPagamentos();
+
+                if(transa.value.users.length == 2 && transa.value.transacao == 'unica'){
+                    popupKick.value = false;
+                    popupDetails.value = false;
+                    popup.value = false;
+                } else if (transa.value.users.length == 2) {
+                    openPopup(transa.value.id);
+                    popupKick.value = false;
+                } else {
+                    openDetailsPopup(transa.value.id);
+                    popupKick.value = false;
+                }
+
             } catch (err) {
+                popupKick.value = false;
+                popupDetails.value = false;
+                popup.value = false;
+
+                //emitir evento de fechar modal
+
                 if (err.message.includes('token')) {
                     alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
 
@@ -1649,7 +1794,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro kickUser-> " + err.message);
+                    console.log("Erro kickUser-> " + err.message);
                 }
             }
         };
@@ -1688,9 +1833,9 @@ export default {
                 console.log(data);
 
                 Comment.value = "";
-                if(popupDetails.value){
+                if (popupDetails.value) {
                     openDetailsPopup(id);
-                }else{
+                } else {
                     openPopup(id);
                 }
             } catch (error) {
@@ -1702,7 +1847,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao adicionar comentario:", error.message);
+                    console.log("Erro addComment-> " + error.message);
                 }
             }
         };
@@ -1760,7 +1905,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao editar comentario:", error.message);
+                    console.log("Erro saveComment-> " + error.message);
                 }
             }
         };
@@ -1806,7 +1951,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao eliminar comentario:", error.message);
+                    console.log("Erro deleteComment-> " + error.message);
                 }
             }
         };
@@ -1814,7 +1959,7 @@ export default {
         const openPopup = async (id) => {
             const t = store.proximosPagamentos.find((p) => p.id === id);
             dateP.value = t.date;
-            
+
             const url =
                 "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/fixa/" +
                 t.tipo +
@@ -1844,7 +1989,23 @@ export default {
                 console.log(data);
 
                 // Mapear os dados recebidos para o formato de categorias desejado
-                transa.value = data;
+                transa.value = {
+                    id: data.id,
+                    name: data.name,
+                    descricao: data.descricao,
+                    value: data.value,
+                    local: data.local,
+                    repeticao: data.repeticao,
+                    tipo: data.tipo,
+                    categoria: data.categoria,
+                    users: data.users,
+                    status: data.status,
+                    shareValue: parseFloat(data.shareValue.toFixed(2)),
+                    date: store.formatTimestampToDate(data.date),
+
+                };
+
+
 
                 const response_comments = await fetch(url_comments, request);
 
@@ -1857,6 +2018,9 @@ export default {
                 console.log(data_comments);
 
                 comments.value = data_comments.comentarios;
+
+
+
             } catch (error) {
                 if (error.message.includes('token')) {
                     alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
@@ -1866,9 +2030,10 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert("Erro ao carregar transacao:", error.message);
+                    console.log("Erro openPopup-> " + error.message);
                 }
             }
+            popupDetails.value = false;
             popup.value = true;
         };
 
@@ -1897,7 +2062,7 @@ export default {
             }
         }
 
-        const addUser = async (flag) => {
+        const addUser = async () => {
 
             validarEmail(newUserEmail);
 
@@ -1911,15 +2076,19 @@ export default {
                             newUserEmail.value = '';
                             return;
                         }
-                        await store.ShareTransactionWithUser(newUserEmail.value, transa.value.id, "fixa");
-                        loadPendentes();
-                        loadPorPagar();
-                        loadProximosPagamentos();
-                        console.log(flag);
-                        popup.value = false;
-                        popupDetails.value = false;
 
-                        alert("Utilizador adicionado com sucesso!");
+                        if (transa.value.repeticao) {
+                            await store.ShareTransactionWithUser(newUserEmail.value, transa.value.id, "fixa");
+                        } else {
+                            await store.ShareTransactionWithUser(newUserEmail.value, transa.value.id, "unica");
+                        }
+
+                        await store.loadPendentes();
+                        await store.loadPorPagar();
+                        await store.loadProximosPagamentos();
+
+                        openDetailsPopup(transa.value.id);
+
                         newUserEmail.value = '';
                         emailError.value = null;
                     } catch (err) {
@@ -1941,7 +2110,7 @@ export default {
                             alert("Não é possível partilhar despesas com utilizadores não registados!");
                             return;
                         } else {
-                            alert("Erro ao adicionar User: " + err.message);
+                            console.log("Erro addUser-> " + err.message);
                         }
                     }
                 }
@@ -2022,8 +2191,10 @@ export default {
             recorrenceError,
             Repetition,
             repetitionError,
-            togleToEdit,
-            editTransaction
+            toggleToEdit,
+            toggleToDelete,
+            editTransaction,
+            auxDelete,
         };
     },
     data() {
@@ -2083,6 +2254,10 @@ export default {
 </script>
 
 <style scoped>
+.modal {
+    z-index: 9999;
+}
+
 .scroll-container {
     height: 77vh;
     overflow-y: auto;
@@ -2146,7 +2321,6 @@ export default {
 .table-head-fixed {
     position: sticky;
     top: 0;
-    background-color: white;
 }
 
 .small-button {
@@ -2157,20 +2331,6 @@ export default {
 .padding-row td {
     padding-top: 10px;
     padding-bottom: 10px;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1050;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    outline: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    transition-duration: 0.2s;
 }
 
 .modal-body {
@@ -2188,8 +2348,7 @@ export default {
     display: block;
 }
 
-.nav-pills .nav-link.active,
-.nav-pills .show>.nav-link {
+.nav-pills .nav-link.active {
     color: #344767;
     background-color: #fff;
     animation: 0.2s ease;
@@ -2202,5 +2361,32 @@ export default {
         color 0.15s ease-in-out,
         background-color 0.15s ease-in-out,
         border-color 0.15s ease-in-out;
+}
+
+.cuter {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-label {
+    flex: 1;
+    color: #344767;
+    margin-right: 10px;
+    text-align: left;
+}
+
+.required {
+    display: inline;
+    color: red;
+    font-weight: 500;
+    font-size: 12px;
 }
 </style>

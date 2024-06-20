@@ -149,7 +149,7 @@ export default {
 
     setNavbarFixed() {
       if (
-        this.$route.name !== "Profile" ||
+        this.$route.name !== "Perfil" ||
         this.$route.name !== "All Projects"
       ) {
         this.$store.state.isNavFixed = !this.$store.state.isNavFixed;

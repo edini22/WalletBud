@@ -1,13 +1,13 @@
 <template>
     <div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalLabel"
-        aria-hidden="true">
+        aria-hidden="true" data-bs-backdrop='static' data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="categoryModalLabel">{{ $t('Adicionar Movimento') }}</h5>
+                    <h5 class="modal-title">{{ $t('Adicionar Movimento') }}</h5>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body scroll-container">
                     <div v-if="Type == 'Despesa'" class="nav-wrapper position-relative end-0 mb-4">
                         <ul class="nav nav-pills nav-fill p-1" role="tablist">
                             <li class="nav-item">
@@ -56,10 +56,14 @@
                             <label for="value" class="form-label">{{ $t('Montante') }}
                                 <p class="required"> *</p>
                             </label>
-                            <div v-if="valueError === true" class="form-input mb-1">
+                            <div v-if="valueError === true && valueNegative === null" class="form-input mb-1">
                                 <material-input class="material-input" id="value" type="number" :value="Value"
                                     :label="$t('Indique um montante válido')" name="value"
                                     @update:value="Value = $event" error />
+                            </div>
+                            <div v-if="valueError === true && valueNegative === true" class="form-input mb-1">
+                                <material-input class="material-input" id="value" type="number" :value="Value"
+                                    :label="$t('Indique um valor maior que zero')" name="value" @update:value="Value = $event" error />
                             </div>
                             <div v-if="valueError === false" class="form-input mb-1">
                                 <material-input class="material-input" id="value" type="number" name="value"
@@ -456,14 +460,13 @@
                 </div>
 
 
-                <div class="modal-footer mt-0">
+                <div class="modal-footer mt-0 d-flex justify-content-between">
+                    <p id="cancelButton" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal"
+                        @click="cancel">{{ $t('Cancelar') }}
+                    </p>
                     <p v-if="Type == 'Despesa' && showShareTab == false" class="btn btn-default bg-gradient-info mb-1"
                         @click="showTab(1)">{{ $t('Próximo') }}</p>
-                    <p v-else class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Adicionar') }}</p>
-                    <p id="cancelButton" class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal"
-                        @click="cancel">{{
-                            $t('Cancelar') }}
-                    </p>
+                        <p v-else class="btn btn-default bg-gradient-info mb-1" @click="add">{{ $t('Adicionar') }}</p>
                 </div>
             </div>
         </div>
@@ -498,6 +501,7 @@ export default {
         const Description = ref('');
         const Value = ref('');
         const valueError = ref(null);
+        const valueNegative = ref(null);
         const DateM = ref('');
         const DateError = ref(null);
         const Place = ref('');
@@ -586,12 +590,15 @@ export default {
                         newUserEmail.value = '';
                         return;
                     } else {
-                        alert(newUserEmail.value);
-                        sharedUsers.push(newUserEmail.value);
-                        alert("Utilizador adicionado com sucesso!");
-                        for (let i = 0; i < sharedUsers.length; i++) {
-                            alert(sharedUsers[i]);
+                        let isEmailPresent = sharedUsers.some(user => user === newUserEmail.value);
+                        if(isEmailPresent ){
+                            emailErrorStore.value = `${t('Não pode partilhar novamente com este utilizador!')}`;
+                            emailError.value = true;
+                            newUserEmail.value = '';
+                            return;
                         }
+                        sharedUsers.push(newUserEmail.value);
+                        
                         newUserEmail.value = '';
                         emailError.value = null;
                     }
@@ -611,7 +618,7 @@ export default {
                         alert("Não é possível partilhar despesas com utilizadores não registados!");
                         return;
                     } else {
-                        alert("Erro ao registar: " + error.message);
+                        console.error(error.message);
                     }
                 }
 
@@ -626,11 +633,16 @@ export default {
 
             if (!Value.value)
                 valueError.value = true;
-            else if (Value.value < 0) {
+            else if (Value.value <= 0) {
                 valueError.value = true;
+                valueNegative.value = true;
+                Value.value = '';
             }
-            else
+            else{
                 valueError.value = false;
+                valueNegative.value = null;
+            }
+                
 
             if (!DateM.value)
                 DateError.value = true;
@@ -820,6 +832,8 @@ export default {
                         timestamp.value = convertToTimestamp(DateM.value);
                         console.log("data: " + DateM.value);
                         console.log("timestamp: " + timestamp.value);
+
+                        console.log("repetição: " + SendRepetition.value);
                         //POST da Receita Não Fixa
                         const url = "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/unica/receita/add";
 
@@ -862,6 +876,9 @@ export default {
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                             user.getUser(); //atualiza o saldo da homepage
+                            //window.location.reload();
+                            const event2 = new CustomEvent('reload-transactions', { detail: true });
+                            document.dispatchEvent(event2);
 
                         } catch (error) {
                             if (error.message.includes('token')) {
@@ -908,10 +925,6 @@ export default {
                             const token = localStorage.getItem("token");
 
                             const usersArray = sharedUsers.map(email => ({ email }));
-
-                            for (let i = 0; i < usersArray.length; i++) {
-                                alert(usersArray[i]);
-                            }
 
                             const request = {
                                 method: "POST",
@@ -1015,7 +1028,12 @@ export default {
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                             user.getUser(); //atualiza o saldo da homepage
-
+                            const event2 = new CustomEvent('reload-transactions', { detail: true });
+                            document.dispatchEvent(event2);
+                            if(usersArray.length == 0){
+                                const event2 = new CustomEvent('reload-transactions', { detail: true });
+                                document.dispatchEvent(event2);
+                            }
 
                         } catch (error) {
                             if (error.message.includes('token')) {
@@ -1069,7 +1087,8 @@ export default {
             emailErrorStore,
             showAlertUsers,
             resetTab,
-            categories
+            categories,
+            valueNegative
         };
     },
     data() {
@@ -1237,7 +1256,7 @@ export default {
 }
 
 .modal {
-    z-index: 1050;
+    z-index: 9999;
 }
 
 .input-group {
@@ -1393,4 +1412,31 @@ export default {
     margin-left: auto !important;
     margin-right: 10px;
 }
+
+.modal-body {
+    overflow-y: auto;
+    /* Ativa a rolagem vertical */
+    max-height: 70vh;
+    /* Altura máxima do corpo do modal */
+}
+
+.scroll-container::-webkit-scrollbar,
+.scroll-container2::-webkit-scrollbar,
+.scroll-container3::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track,
+.scroll-container2::-webkit-scrollbar-track,
+.scroll-container3::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb,
+.scroll-container2::-webkit-scrollbar-thumb,
+.scroll-container3::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
 </style>

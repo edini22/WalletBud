@@ -6,17 +6,22 @@
         background-image: url('https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
       "
     >
-      <span class="mask bg-gradient-info opacity-0"></span>
+      <span class="mask bg-gradient-info opacity-1"></span>
     </div>
+
     <div class="card card-body mx-3 mx-md-4 mt-n6">
-      <div class="row gx-4">
+      <div class="row gx-3">
         <div class="col-auto">
           <div class="avatar avatar-xl position-relative">
             <img
-              src="@/assets/img/icons/user.png"
+              :src="
+                isDarkMode
+                  ? require('@/assets/img/icons/user_2.png')
+                  : require('@/assets/img/icons/user_1.png')"
               alt="profile_image"
-              class="shadow-sm w-100 border-radius-lg"
+              class="border-radius-lg"
             />
+            
           </div>
         </div>
         <div class="col-auto my-auto">
@@ -50,10 +55,13 @@ import setTooltip from "@/assets/js/tooltip.js";
 
 import { useI18n } from 'vue-i18n';
 import { userStore } from "@/store/userStore";
+import { mapState } from "vuex";
 
+import userDark from "@/assets/img/icons/user_2.png";
+import user from "@/assets/img/icons/user_1.png";
 
 export default {
-  name: "profile-overview",
+  name: "profile",
   components: {
     ProfileInfoCard,
   },
@@ -68,6 +76,8 @@ export default {
       showMenu: false,
       showPopup: false,
       showMessage: false,
+      userDark,
+      user,
     };
   },
   mounted() {
@@ -88,6 +98,9 @@ export default {
     handleEditProfile() {
       this.showMessage = true;
     },
+  },
+  computed: {
+    ...mapState(["sidebarType", "isDarkMode"]),
   },
 };
 </script>

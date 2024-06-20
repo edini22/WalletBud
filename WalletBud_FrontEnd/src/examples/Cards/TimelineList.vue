@@ -5,7 +5,7 @@
       <!--  eslint-disable-next-line vue/no-v-html -->
       <p class="text-sm" v-html="description"></p>
     </div>
-    <div class="p-3 card-body">
+    <div class="p-2 card-body">
       <div
         class="timeline timeline-one-side"
         :data-timeline-axis-style="darkMode ? 'dashed' : 'dotted'"

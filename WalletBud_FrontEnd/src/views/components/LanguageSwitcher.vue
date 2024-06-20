@@ -30,8 +30,12 @@ export default {
         idioma: language,
       };
 
-      updateLang(user);
-      store.idioma = language;
+      if(localStorage.getItem('token') !== null){
+        updateLang(user);
+        store.idioma = language;
+      }else{
+        store.idioma = language;
+      }
     };
 
     const updateLang = async (user) => {
@@ -50,7 +54,7 @@ export default {
 
             router.push('/sign-in');
         } else {
-          alert("Erro -> " + err.message);
+          console.error(err);
         }
       }
     };

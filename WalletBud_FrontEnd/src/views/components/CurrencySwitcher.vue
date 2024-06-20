@@ -11,42 +11,45 @@
 <script>
 
 import { userStore } from '@/store/userStore';
+import { useRouter } from 'vue-router';
 
 export default {
   name: "CurrencySwitcher",
   setup() {
     const store = userStore(); //guardar a moeda
+    const router = useRouter(); //navegar entre as páginas
+    //const currency = store.$state.moeda;
 
     const changeCurrency = (currency) => {
       
-      //const user = {
-          //  moeda: moeda,
-          //};
-          //updateMoeda(user);
-          //store.moeda = moeda;
-        // updateMoeda(user);
-        store.moeda = currency;
+      const user = {
+        moeda: currency,
+      };
+
+      updateMoeda(user);
+      store.moeda = currency;
     };
 
-    //const updateMoeda = async (user) => {
-      //try {
-        //await store.updateEditedUser(user);
-        //await store.getUser();
-        //if (store){
-          //moeda.value = store.$state.moeda;
-        //}
-      //} catch (err) {
-        //if (err.message.includes('token')) {
-            //alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
+    const updateMoeda = async (user) => {
+      try {
+        await store.updateEditedUser(user);
+        await store.getUser();
+        // if (store){
+        //   currency.value = store.$state.moeda;
+        // }
+      } catch (err) {
+        if (err.message.includes('token')) {
+            alert('Token inválido ou inesperado. Você será redirecionado para a página de login.');
 
-            //localStorage.clear();
-            //sessionStorage.clear();
+            localStorage.clear();
+            sessionStorage.clear();
 
-            //router.push('/sign-in');
-        //} else {
-          //alert("Erro -> " + err.message);
-        //}
-      //}
+            router.push('/sign-in');
+        } else {
+          console.error(err);
+        }
+      }
+    };
       const getCurrencies = () => {
         if (store.$state.moeda === 'EUR') {
           return ['EUR', 'USD'];

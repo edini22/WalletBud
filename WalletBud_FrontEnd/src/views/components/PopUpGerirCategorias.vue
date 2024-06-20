@@ -1,11 +1,11 @@
 <template>
-    <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true" data-bs-backdrop='static' data-bs-keyboard='false'>
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="categoryModalLabel">{{ $t('Gerir Categorias de Movimentos') }}</h5>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body scroll-container">
                     <div class="category-section">
                         <h6>{{ $t('Categorias para Despesas') }}</h6>
                         <ul class="category-list" v-if="store.CategoriesExpense && store.CategoriesExpense.length > 0">
@@ -16,12 +16,12 @@
                                 <!-- @blur="saveCategory(index)" /> -->
                                 <div class="buttons">
                                     <button @click="toggleEditMode('expense', index, Editing)"
-                                        style="background-color: white;">
+                                        style="background-color: none; background-color: transparent;">
                                         <i class="material-icons" style="color: #344767;"
                                             v-if="store.CategoriesExpense[index].isedit">save</i>
                                         <i class="material-icons" style="color: #344767;" v-else>edit</i>
                                     </button>
-                                    <button @click="deleteCategory(index, 'expense')" style="background-color: white;">
+                                    <button @click="deleteCategory(index, 'expense')" style="background-color: none; background-color: transparent;">
                                         <i class="material-icons" style="color: #344767;">delete</i>
                                     </button>
                                 </div>
@@ -40,13 +40,13 @@
                                 <!-- @blur="saveIncomeCategory(index)" /> -->
                                 <div class="buttons">
                                     <button @click="toggleEditMode('income', index, Editing)"
-                                        style="background-color: white;">
+                                    style="background-color: none; background-color: transparent;">
                                         <i class="material-icons" style="color: #344767; font-size: 18px;"
                                             v-if="store.CategoriesIncome[index].isedit">save</i>
                                         <i class="material-icons" style="color: #344767; font-size: 18px;"
                                             v-else>edit</i>
                                     </button>
-                                    <button @click="deleteCategory(index, 'income')" style="background-color: white;">
+                                    <button @click="deleteCategory(index, 'income')" style="background-color: none; background-color: transparent;">
                                         <i class="material-icons" style="color: #344767; font-size: 18px;">delete</i>
                                     </button>
                                 </div>
@@ -55,7 +55,7 @@
                         </ul>
                         <p class="message" v-else>{{ $t('Adicione Categorias!') }}</p>
                     </div>
-                </div>
+                
                 <div class="modal-footer">
                     <div class="modal-body">
                         <h5>{{ $t('Adicionar Categoria') }}</h5>
@@ -126,6 +126,7 @@
                         <p class="btn btn-default bg-gradient-info mb-0" @click="addCategory">{{ $t('Adicionar') }}</p>
                     </div>
                 </div>
+            </div>
                 <div class="modal-footer mt-0">
                     <p class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal">{{ $t('Fechar') }}</p>
                 </div>
@@ -157,7 +158,7 @@ import { useRouter } from "vue-router";
 
 export default {
 
-    setup(props, { emit }) {
+    setup() {
         // setup() {
         const { t } = useI18n();
         const store = categoriesStore();
@@ -266,7 +267,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert(err.message);
+                    console.error(err);
                 }
             }
         };
@@ -283,7 +284,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert(err.message);
+                    console.error(err);
                 }
             }
         };
@@ -304,7 +305,7 @@ export default {
 
                     router.push('/sign-in');
                 } else {
-                    alert(err.message);
+                    console.error(err);
                 }
             }
         };
@@ -340,14 +341,7 @@ export default {
             }
         };
 
-        const forceRerender = () => {
-            emit('forceRerender');
-        };
-
         onMounted(() => {
-            const modal = document.getElementById('categoryModal');
-            modal.addEventListener('hidden.bs.modal', forceRerender);
-
             loadCategories();
         });
 
@@ -402,6 +396,10 @@ export default {
     z-index: 1051;
 }
 
+.modal {
+    z-index: 9999;
+}
+
 .message {
     text-align: center;
     color: #495057;
@@ -443,15 +441,6 @@ export default {
     width: 100%;
     padding: 5px;
     border-radius: 5px;
-}
-
-.modal-content {
-    width: 100%;
-}
-
-.modal {
-    z-index: 1050;
-    /* padrão do Bootstrap para modais */
 }
 
 h2,
@@ -589,4 +578,31 @@ button.btn-close {
     pointer-events: none;
     color: #344767;
 }
+
+.modal-body {
+    overflow-y: auto;
+    /* Ativa a rolagem vertical */
+    max-height: 70vh;
+    /* Altura máxima do corpo do modal */
+}
+
+.scroll-container::-webkit-scrollbar,
+.scroll-container2::-webkit-scrollbar,
+.scroll-container3::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track,
+.scroll-container2::-webkit-scrollbar-track,
+.scroll-container3::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb,
+.scroll-container2::-webkit-scrollbar-thumb,
+.scroll-container3::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
 </style>

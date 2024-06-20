@@ -236,7 +236,7 @@ export default {
                 if (Object.prototype.hasOwnProperty.call(data, this.selectedYear)) {
                     let valor = data[this.selectedYear]; // Obtém o valor associado ao ano selecionado
                     console.log(`Para o ano ${this.selectedYear}, o valor é ${valor}`);
-                    this.anualSpend = valor;
+                    this.anualSpend = valor.toFixed(2);
                 } else {
                     console.log(`Não há dados disponíveis para o ano ${this.selectedYear}`);
                     this.anualSpend = 0;

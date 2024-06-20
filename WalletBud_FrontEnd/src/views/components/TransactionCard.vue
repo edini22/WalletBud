@@ -51,7 +51,7 @@
                         </material-button>
                         <div class="d-flex flex-column">
                             <h6 class="mb-1 text-dark text-sm">{{ t.name }}</h6>
-                            <span class="text-xs">{{ t.date }}</span>
+                            <span class="text-xs">{{ removerHoras(t.date) }}</span>
                         </div>
                     </div>
                     <div v-if="t.tipo == 'despesa'"
@@ -172,6 +172,9 @@ export default {
 
     },
     methods: {
+        removerHoras(dataHora) {
+      return dataHora.split(' ')[0];
+    },
         openTransactionDetails(transaction) {
             // Emita um evento globalmente ou passe diretamente para o componente pai
             this.$emit('open-details-modal', transaction);

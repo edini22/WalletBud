@@ -98,6 +98,9 @@ export default {
         //MaterialFilter,
         ExportData
     },
+    mounted(){
+        document.addEventListener('reload-transactions', this.reloadMovs);
+    },
     setup() {
         const tStore = useTransactionStore();
         const activeFilter = ref('Últimos 30 dias');
@@ -120,7 +123,8 @@ export default {
             tStore.load(newFilter);
         });
         return {
-            activeFilter
+            activeFilter,
+            loadMovements
         };
     },
     data() {
@@ -175,6 +179,9 @@ export default {
         removerHoras(dataHora) {
       return dataHora.split(' ')[0];
     },
+    reloadMovs() {
+            this.loadMovements();
+        },
         openTransactionDetails(transaction) {
             // Emita um evento globalmente ou passe diretamente para o componente pai
             this.$emit('open-details-modal', transaction);

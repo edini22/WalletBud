@@ -1028,9 +1028,10 @@ export default {
                             document.dispatchEvent(event);
                             console.log('PopUp emitiu evento');
                             user.getUser(); //atualiza o saldo da homepage
-                            if(usersArray.length == 0){
-                                const event2 = new CustomEvent('reload-transactions', { detail: true });
+                            const event2 = new CustomEvent('reload-transactions', { detail: true });
                                 document.dispatchEvent(event2);
+                            if(usersArray.length == 0){
+                                window.location.reload();
                             }
 
                         } catch (error) {

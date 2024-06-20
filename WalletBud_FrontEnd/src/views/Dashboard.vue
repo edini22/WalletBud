@@ -36,7 +36,7 @@
                 <div class="row mt-4">
 
                     <!-- Weekly spend chart -->
-                    <div v-if="!isCategoriesEmpty" class="col-12 col-md-6 col-lg-6 mt-4">
+                    <div class="col-12 col-md-6 col-lg-6 mt-4">
                         <chart-holder-card :title="$t('Gasto Semanal')"
                             :subtitle="$t('Gasto total por dia na semana anterior')" :week="pastWeekDate">
 
@@ -51,7 +51,7 @@
                     </div>
 
                     <!-- category spend chart -->
-                    <div class="col-12 col-md-6 col-lg-6 mt-4 mt-lg-4 mt-sm-5 mt-md-4">
+                    <div v-if="!isCategoriesEmpty" class="col-12 col-md-6 col-lg-6 mt-4 mt-lg-4 mt-sm-5 mt-md-4">
                         <chart-holder-card :title="$t('Gastos Por Categoria')"
                             :subtitle="$t('Gasto total por categoria por mês')" :week="pastWeekDate" color="dark">
 

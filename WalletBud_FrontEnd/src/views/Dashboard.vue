@@ -140,6 +140,21 @@ export default {
             monthSpend: null,
             monthSelectedYear: new Date().getFullYear(),
             idioma: '',
+            getCategory: '',
+            mesesParaNumeros: {
+  Janeiro: 1,
+  Fevereiro: 2,
+  Março: 3,
+  Abril: 4,
+  Maio: 5,
+  Junho: 6,
+  Julho: 7,
+  Agosto: 8,
+  Setembro: 9,
+  Outubro: 10,
+  Novembro: 11,
+  Dezembro: 12,
+}
         };
     },
     components: {
@@ -153,11 +168,15 @@ export default {
         PieChart
     },
     methods: {
+      mesParaNumero(mes) {
+      return this.mesesParaNumeros[mes] || null; // retorna null se o mês não for encontrado
+    },
         CategoriesMonthYearChange(value) {
             // 'value' will contain an object with 'month' and 'year' properties
             console.log(value.month);
             console.log(value.year);
             this.categories = { };
+            this.statsCategory(value.month);
         },
         async monthChange(value) {
             this.monthSelectedYear = value.year;
@@ -254,10 +273,15 @@ export default {
                 }
             }
         },
-        async statsCategory() {
+        async statsCategory(mes) {
+          console.log(mes);
+            if(mes == null)
+              this.getCategory = this.currentMonth;
+            else
+              this.getCategory = this.mesParaNumero(mes);
             //GET GASTO POR MÊS
             const url =
-                "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/gastoscategoria/" + this.selectedYear + "/" + this.currentMonth;
+                "http://localhost:8000/WalletBud-1.0-SNAPSHOT/api/gastoscategoria/" + this.selectedYear + "/" + this.getCategory;
             const token = localStorage.getItem("token");
 
             const request = {

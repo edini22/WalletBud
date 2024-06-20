@@ -58,8 +58,8 @@
                             <PieChart :categories="categories" />
                             <template #detail>
                                 <div class="d-flex">
-                                    <month-picker-input v-if="idioma !== ''" :default-month="currentMonth"
-                                        :default-year="currentYear" show-year :lang=idioma
+                                    <month-picker-input :default-month="currentMonth"
+                                        :default-year="currentYear" show-year lang='pt'
                                         @input="CategoriesMonthYearChange"></month-picker-input>
                                 </div>
                             </template>
@@ -96,8 +96,8 @@
                             }" />
                             <template #detail>
                                 <div class="d-flex">
-                                    <month-picker-input v-if="idioma !== ''" default-month=""
-                                        :default-year="currentYear" show-year :lang=idioma @change="monthChange"
+                                    <month-picker-input default-month=""
+                                        :default-year="currentYear" show-year lang='pt' @change="monthChange"
                                         year-only></month-picker-input>
                                 </div>
                             </template>
@@ -138,8 +138,7 @@ export default {
             currentYear: new Date().getFullYear(),
             categories: {},
             monthSpend: null,
-            monthSelectedYear: new Date().getFullYear(),
-            idioma: '',
+            monthSelectedYear: new Date().getFullYear()
         };
     },
     components: {

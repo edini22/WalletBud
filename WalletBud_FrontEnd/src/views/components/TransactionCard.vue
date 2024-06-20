@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-md-6 d-flex justify-content-end align-items-center">
                     <i class="fas fa-dollar-sign me-2" aria-hidden="true"></i>
-                    <small>{{ $t('Montante') }}</small>
+                    <small>{{ date }}</small>
                 </div>
             </div>
         </div>
@@ -84,9 +84,8 @@ import { useTransactionStore } from '@/store/transactionStore.js';
 import MaterialDropdown from "@/components/MaterialDropdown.vue";
 //import MaterialFilter from "@/components/MaterialFilter.vue";
 import ExportData from '@/components/ExportData.vue';
-import {  onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { watch } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 
 export default {
@@ -99,13 +98,9 @@ export default {
         //MaterialFilter,
         ExportData
     },
-    mounted(){
-        document.addEventListener('reload-transactions', this.reloadMovs);
-    },
     setup() {
         const tStore = useTransactionStore();
-        const { t } = useI18n();
-        const activeFilter = t('Últimos 30 dias');
+        const activeFilter = ref('Últimos 30 dias');
 
 
         const loadMovements = async () => {
@@ -125,9 +120,7 @@ export default {
             tStore.load(newFilter);
         });
         return {
-            activeFilter,
-            t,
-            loadMovements
+            activeFilter
         };
     },
     data() {
@@ -137,14 +130,13 @@ export default {
             searchQuery: '',
             isFocused: false,
             time_periods: [
-                this.t('Últimos 30 dias'),
-                this.t('Últimos 60 dias'),
-                this.t('Últimos 90 dias')
+                'Últimos 30 dias',
+                'Últimos 60 dias',
+                'Últimos 90 dias'
             ],
             selectedCategories: [],
             selectedType: '',
-            date: this.t('Montante'),
-            reload: false,
+            date: 'Montante',
         };
     },
     computed: {
@@ -160,8 +152,7 @@ export default {
                     t.date.toLowerCase().includes(search) ||
                     t.tipo.toLowerCase().includes(search) ||
                     t.categoria.toLowerCase().includes(search) ||
-                    t.value.toString().toLowerCase().includes(search) ||
-                    t.descricao.toLowerCase().includes(search)
+                    t.value.toString().toLowerCase().includes(search)
                 );
             });
         },
@@ -178,11 +169,9 @@ export default {
         searchQuery() {
             this.currentPage = 1; // Reset pagination when search query changes
         },
+
     },
     methods: {
-        reloadMovs() {
-            this.loadMovements();
-        },
         openTransactionDetails(transaction) {
             // Emita um evento globalmente ou passe diretamente para o componente pai
             this.$emit('open-details-modal', transaction);

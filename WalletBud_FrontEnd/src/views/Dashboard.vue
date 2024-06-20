@@ -4,7 +4,7 @@
             <div class="col-lg-12 position-relative">
                 <div class="row">
                     <div class="col-lg-4 col-md-6 col-sm-12">
-                        <mini-statistics-card :title="{ text: $t('Orçamento Disponível'), value: budget + ' €' }"
+                        <mini-statistics-card :title="{ text: $t('Orçamento Disponível'), value: budget + ' ' + store.moeda }"
                             :detail="`<span class='text-sm'>${$t('Objetivo poupança descontado no saldo')}</span>`"
                             :icon="{
                                 name: 'account_balance_wallet',
@@ -20,7 +20,7 @@
                         }" />
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-12 mt-lg-0 mt-4">
-                        <mini-statistics-card :title="{ text: $t('Gasto Total Anual'), value: anualSpend + ' €' }"
+                        <mini-statistics-card :title="{ text: $t('Gasto Total Anual'), value: anualSpend + ' ' + store.moeda }"
                             :icon="{
                                 name: 'receipt_long',
                                 color: 'text-white',
@@ -125,6 +125,10 @@ import router from "@/router";
 
 export default {
     name: "Dashboard",
+    setup() {
+    const store = userStore();
+    return { store };
+  },
     data() {
         return {
             budget: '',
@@ -173,8 +177,7 @@ export default {
     },
         CategoriesMonthYearChange(value) {
             // 'value' will contain an object with 'month' and 'year' properties
-            console.log(value.month);
-            console.log(value.year);
+            console.log(this.currentMonth);
             this.categories = { };
             this.statsCategory(value.month);
         },

@@ -23,7 +23,7 @@
           :aria-controls="''"
           v-bind:collapse="false"
           collapseRef="dashboard"
-          :navText= "$t('Painel de Controlo')"
+          :navText= "$t('Gerir Transações Fixas')"
         >
           <template v-slot:icon>
             <i class="material-icons-round opacity-10 fs-5">table_view</i>

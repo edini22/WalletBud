@@ -7,7 +7,7 @@
                     <h5 class="modal-title">{{ $t('Adicionar Movimento') }}</h5>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body scroll-container">
                     <div v-if="Type == 'Despesa'" class="nav-wrapper position-relative end-0 mb-4">
                         <ul class="nav nav-pills nav-fill p-1" role="tablist">
                             <li class="nav-item">
@@ -1410,4 +1410,31 @@ export default {
     margin-left: auto !important;
     margin-right: 10px;
 }
+
+.modal-body {
+    overflow-y: auto;
+    /* Ativa a rolagem vertical */
+    max-height: 70vh;
+    /* Altura máxima do corpo do modal */
+}
+
+.scroll-container::-webkit-scrollbar,
+.scroll-container2::-webkit-scrollbar,
+.scroll-container3::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track,
+.scroll-container2::-webkit-scrollbar-track,
+.scroll-container3::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb,
+.scroll-container2::-webkit-scrollbar-thumb,
+.scroll-container3::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
 </style>

@@ -5,7 +5,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="categoryModalLabel">{{ $t('Gerir Categorias de Movimentos') }}</h5>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body scroll-container">
                     <div class="category-section">
                         <h6>{{ $t('Categorias para Despesas') }}</h6>
                         <ul class="category-list" v-if="store.CategoriesExpense && store.CategoriesExpense.length > 0">
@@ -55,7 +55,7 @@
                         </ul>
                         <p class="message" v-else>{{ $t('Adicione Categorias!') }}</p>
                     </div>
-                </div>
+                
                 <div class="modal-footer">
                     <div class="modal-body">
                         <h5>{{ $t('Adicionar Categoria') }}</h5>
@@ -126,6 +126,7 @@
                         <p class="btn btn-default bg-gradient-info mb-0" @click="addCategory">{{ $t('Adicionar') }}</p>
                     </div>
                 </div>
+            </div>
                 <div class="modal-footer mt-0">
                     <p class="btn btn-default bg-gradient-primary mb-1" data-bs-dismiss="modal">{{ $t('Fechar') }}</p>
                 </div>
@@ -577,4 +578,31 @@ button.btn-close {
     pointer-events: none;
     color: #344767;
 }
+
+.modal-body {
+    overflow-y: auto;
+    /* Ativa a rolagem vertical */
+    max-height: 70vh;
+    /* Altura máxima do corpo do modal */
+}
+
+.scroll-container::-webkit-scrollbar,
+.scroll-container2::-webkit-scrollbar,
+.scroll-container3::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track,
+.scroll-container2::-webkit-scrollbar-track,
+.scroll-container3::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb,
+.scroll-container2::-webkit-scrollbar-thumb,
+.scroll-container3::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
 </style>

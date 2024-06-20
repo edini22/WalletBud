@@ -7,7 +7,7 @@
                         <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                             <div class="bg-gradient-info shadow-info border-radius-lg pt-3 pb-2">
                                 <h6 class="text-white text-capitalize ps-3">
-                                    {{ $t('Pagamentos Fixos')}}
+                                    {{ $t('Transações Fixas')}}
                                 </h6>
                             </div>
                         </div>
@@ -17,7 +17,7 @@
                                     <thead class="table-head-fixed">
                                         <tr>
                                             <th class="text-uppercase text-xxs font-weight-bolder opacity-7">
-                                                {{ $t('Despesa')}}
+                                                {{ $t('Transação')}}
                                             </th>
                                             <th class="text-uppercase text-xxs font-weight-bolder opacity-7 ps-2">
                                                 {{ $t('Periodicidade')}}
@@ -519,7 +519,7 @@
                                     <label for="description" class="form-label">{{ $t('Nome') }} </label>
                                     <p class="detail form-label cuter">{{ transa.name }}</p>
                                 </div>
-                                <div class="form-group form-row">
+                                <div v-if="transa.descricao !== ''" class="form-group form-row">
                                     <label for="description" class="form-label">{{ $t('Descrição') }} </label>
                                     <p class="detail form-label cuter">{{ transa.descricao }}</p>
                                 </div>
@@ -746,7 +746,11 @@
                             participantes = false;
                             emailError = null; newUserEmail = '', emailErrorStore = null;
                             " data-bs-dismiss="modal" data-bs-toggle='modal' data-bs-target='#PayModal'>
-                                {{ $t("Pagar") }}
+                                {{ 
+                                    transa.tipo === 'despesa' ? $t("Confirmar Pagamento") :
+                                    transa.tipo === 'receita' ? $t("Confirmar Receção") : 
+                                    ''
+                            }}
                             </material-button>
                         </div>
                         <div class="modal-footer d-flex justify-content-between" v-else>

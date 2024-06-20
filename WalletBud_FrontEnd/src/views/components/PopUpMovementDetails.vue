@@ -50,7 +50,7 @@
                         </div>
 
                         <!-- Descrição -->
-                        <div v-if="transaction !== null && transaction.descricao !== null" class="form-group form-row">
+                        <div v-if="transaction !== null && transaction.descricao !== ''" class="form-group form-row">
                             <label for="place" class="form-label">{{ $t('Descrição') }}</label>
                             <label class="detail form-label cuter" v-if="transaction !== null && edit == false">{{
                                 transaction.descricao }}</label>
@@ -249,7 +249,7 @@
                         </MaterialAlert>
 
                         <!-- Local -->
-                        <div v-if="transaction !== null && transaction.local !== null" class="form-group form-row">
+                        <div v-if="transaction !== null && transaction.local !== ''" class="form-group form-row">
                             <label for="place" class="form-label">{{ $t('Local') }}</label>
                             <label class="detail form-label" v-if="transaction !== null && edit == false">{{
                                 transaction.local }}</label>
@@ -403,12 +403,12 @@
                                     <span class="text-sm">{{ $t('Adicione utilizadores para partilhar a despesa') }}</span>
                                 </MaterialAlert>
                                 <div class="align-items-center text-center">
-                                    <label class="form-label align-self-center mb-3"
+                                    <label v-if="user.email !== loggedUser.email" class="form-label align-self-center mb-3"
                                         style="font-size: large; font-weight: 600;">{{ Value + $t('€ a dividir com:')}}</label>
                                 </div>
                                 <div class="form-row">
-                                    <span style="font-size: 16px; padding-left: 35px;">{{ transaction.users[0].email }} </span>
-                                    <span style="font-size: 16px; padding-right: 10px;">{{ calculateShare() }}</span>
+                                    <span v-if="user.email !== loggedUser.email" style="font-size: 16px; padding-left: 35px;">{{ transaction.users[0].email }} </span>
+                                    <span v-if="user.email !== loggedUser.email" style="font-size: 16px; padding-right: 10px;">{{ calculateShare() }}</span>
                                 </div>
                                 <div class="form-row" v-for="(user, index) in sharedUsers" :key="index">
                                     <div class="form-row">
@@ -426,12 +426,12 @@
                                     <span class="text-sm">{{ $t('Adicione utilizadores para partilhar a despesa') }}</span>
                                 </MaterialAlert>
                                 <div class="align-items-center text-center">
-                                    <label class="form-label align-self-center mb-3"
+                                    <label v-if="user.email !== loggedUser.email" class="form-label align-self-center mb-3"
                                         style="font-size: large; font-weight: 600;">{{ transaction.value + $t('€ a dividir com:')}}</label>
                                 </div>
                                 <div class="form-row" v-for="(user, index) in transaction.users" :key="index">
-                                    <span style="font-size: 16px; padding-left: 35px;">{{ user.email }} </span>
-                                    <span style="font-size: 16px; padding-right: 10px;">{{ transaction.shareValue }} EUR</span>
+                                    <span v-if="user.email !== loggedUser.email" style="font-size: 16px; padding-left: 35px;">{{ user.email }}</span>
+                                    <span v-if="user.email !== loggedUser.email" style="font-size: 16px; padding-right: 10px;">{{ transaction.shareValue }} EUR</span>
                                 </div>
                             </div>
 
@@ -455,6 +455,9 @@
             </div>
         </div>
     </div>
+    <material-snackbar v-if="snackbarErroUserNregistado" :title="$t('Movimento')" date="now"
+        :description="$t('Movimento adicionado com sucesso!')" :icon="{ component: 'done', color: 'white' }"
+        color="error" :close-handler="closeSnackbar" />
 </template>
 
 <script>
@@ -469,6 +472,7 @@ import { ref, reactive, toRefs, onMounted, watch } from 'vue';
 import { categoriesStore } from "@/store/categoriesStore";
 import { userStore } from "@/store/userStore";
 import { useRouter } from 'vue-router';
+import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 
 export default {
     name: "PopUpMovementDetails",
@@ -481,7 +485,8 @@ export default {
     components: {
         MaterialAlert,
         MaterialInput,
-        MaterialCheckbox
+        MaterialCheckbox,
+        MaterialSnackbar
     },
     setup(props) {
         const { transaction } = toRefs(props);
@@ -518,6 +523,7 @@ export default {
         const editComment = ref(null);
         const comments = ref(null);
         const Comment = ref('');
+        const snackbarErroUserNregistado = ref(false);
 
         const addUsers = reactive([]);
         const removeUsers = reactive([]);
@@ -635,6 +641,7 @@ export default {
                         emailErrorStore.value = `${t('Email não registado na plataforma.')}`;
                         emailError.value = true;
                         alert("Não é possível partilhar despesas com utilizadores não registados!");
+                        snackbarErroUserNregistado.value = true;
                         return;
                     } else {
                         console.error(error.message);
@@ -967,9 +974,8 @@ export default {
                     user.getUser(); //atualiza o saldo da homepage
                     const cancelButton = document.getElementById('cancelButton2');
                     cancelButton.click();
-                    window.location.reload(); //TODO: DAR APENAS RELOAD DA DOS DADOS
-
-
+                    const event2 = new CustomEvent('reload-transactions', { detail: true });
+                    document.dispatchEvent(event2);
 
                 } catch (error) {
                     const cancelButton = document.getElementById('cancelButton2');
@@ -989,7 +995,8 @@ export default {
                         document.dispatchEvent(event);
                         console.log('PopUp emitiu evento');
                     }
-                    window.location.reload(); //TODO: DAR APENAS RELOAD DA DOS DADOS
+                    const event2 = new CustomEvent('reload-transactions', { detail: true });
+                    document.dispatchEvent(event2); 
                 }
 
             }
@@ -1199,7 +1206,8 @@ export default {
             editComment,
             cancelEdit,
             deleteComment,
-            addComment
+            addComment,
+            snackbarErroUserNregistado
         };
     },
     data() {
@@ -1233,6 +1241,10 @@ export default {
                 return this.categories.CategoriesExpense;
             else
                 return this.categories.CategoriesIncome;
+        },
+        loggedUser() {
+            const uStore = userStore();
+            return uStore;
         },
     },
     watch: {

@@ -254,7 +254,7 @@ export default {
 
                 console.log(data);
                 
-                this.anualSpend = data.balanco;
+                this.anualSpend = data.balanco.toFixed(2);
 
             } catch (error) {
                 this.anualSpend = 0;
@@ -398,7 +398,7 @@ export default {
 
                 console.log(data);
 
-                this.balance = data.balanco;
+                this.balance = data.balanco.toFixed(2);
 
             } catch (error) {
                 if (error.message.includes('token')) {

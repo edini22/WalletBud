@@ -755,8 +755,11 @@ public class GerirTransacaoPartilhada {
         JsonObjectBuilder gastos_mes = Json.createObjectBuilder();
 
         for (Map<String, Object> transacao : gastos) {
-            Number totalCost = (Number) transacao.get("TotalCost");
-            gastos_mes.add(String.valueOf(ano), totalCost.doubleValue());
+            Object totalCostObj = transacao.get("TotalCost");
+            if (totalCostObj instanceof Number) {
+                Number totalCost = (Number) totalCostObj;
+                gastos_mes.add(String.valueOf(ano), totalCost.doubleValue());
+            }
         }
 
         return gastos_mes.build();
@@ -764,7 +767,8 @@ public class GerirTransacaoPartilhada {
 
     public JsonObject getGastosPorDiaDaSemana(PersistentSession session, String email, String startDay) throws PersistentException {
         User user = gerirUtilizador.getUserByEmail(session, email);
-        List<Map<String, Object>> gastos = TransacaoDAO.queryGastosTotalByDiaSemana(session, user.getId_user(), startDay);
+//        List<Map<String, Object>> gastos = TransacaoDAO.queryGastosTotalByDiaSemana(session, user.getId_user(), startDay);
+        List<Map<String, Object>> gastos = TransacaoDAO.queryGastosSemanaPassada(session, user.getId_user(), startDay);
 
         System.out.println("GASTOS: " + gastos.toString());
         JsonObjectBuilder gastosSemana = Json.createObjectBuilder();
@@ -775,13 +779,11 @@ public class GerirTransacaoPartilhada {
         JsonArrayBuilder semanaArray = Json.createArrayBuilder();
         for (Map<String, Object> transacao : gastos) {
             count++;
-
             String dia = transacao.get("Date").toString();
             String diaDaSemana = (String) transacao.get("DayOfWeek");
             double totalCost = ((Number) transacao.get("TotalCost")).doubleValue();
 
             if (count == 8) {
-                gastosSemana.add("Semana " + semanaCount, semanaArray.build());
 
                 semanaArray = Json.createArrayBuilder();
 
@@ -800,7 +802,7 @@ public class GerirTransacaoPartilhada {
             }
         }
 
-        gastosSemana.add("Semana " + semanaCount, semanaArray.build());
+        gastosSemana.add("semana" , semanaArray.build());
 
 
         return gastosSemana.build();

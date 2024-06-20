@@ -123,10 +123,10 @@ public class GerirComentario {
                         .build();
             }
 
-            if (!checkUserPermission(session, user, transacao)) {
-                return Json.createObjectBuilder()
-                        .build();
-            }
+//            if (!checkUserPermission(session, user, transacao)) {
+//                return Json.createObjectBuilder()
+//                        .build();
+//            }
 
             String condition = "TransacaoId_transacao = " + transacao.getId_transacao();
             Comentario[] comentarios = ComentarioDAO.listComentarioByQuery(session, condition, "Data");

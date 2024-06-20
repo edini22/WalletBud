@@ -795,19 +795,26 @@ public class GerirTransacaoPartilhada {
 
         User user = gerirUtilizador.getUserByEmail(session, email);
 
-        List<Map<String, Object>> gastos = TransacaoDAO.queryGastosTotalAnoById(session, user.getId_user(), ano);
+        List<Map<String, Object>> gastos = TransacaoDAO.queryBalancoByYear(session, user.getId_user(), ano);
 
-        JsonObjectBuilder gastos_mes = Json.createObjectBuilder();
-
-        for (Map<String, Object> transacao : gastos) {
-            Object totalCostObj = transacao.get("TotalCost");
-            if (totalCostObj instanceof Number) {
-                Number totalCost = (Number) totalCostObj;
-                gastos_mes.add(String.valueOf(ano), totalCost.doubleValue());
+        Float balanco = 0f;
+        for(Map<String, Object> transacao : gastos) {
+            if(transacao.get("Discriminator").equals("Unica")){
+                Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
+                if(unica.getTipo().equals("despesa")){
+                    balanco += unica.getShareValue();
+                }
+            } else{
+                TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
+                Fixa fixa = tf.getTransacaofixa_ID();
+                if(fixa.getTipo().equals("despesa")){
+                    balanco += tf.getPayvalue();
+                }
             }
         }
-
-        return gastos_mes.build();
+        return Json.createObjectBuilder()
+                .add("balanco", balanco)
+                .build();
     }
 
     public JsonObject getGastosPorDiaDaSemana(PersistentSession session, String email, String startDay) throws PersistentException {

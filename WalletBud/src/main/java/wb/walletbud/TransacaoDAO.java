@@ -262,6 +262,36 @@ public class TransacaoDAO {
         }
     }
 
+    public static List<Map<String, Object>> queryBalancoByYear(PersistentSession session, int userId, int year) throws PersistentException {
+        try {
+            String sqlQuery = "(SELECT t.Id_transacao AS Id, t.Date AS date, 'Unica' AS Discriminator " +
+                    "FROM Transacao t " +
+                    "LEFT JOIN TransacaoPartilhada tp ON t.Id_transacao = tp.TransacaoId_transacao " +
+                    "WHERE (t.UserId_user = :userId OR tp.UserId_user = :userId) " +
+                    "AND t.Status = 1 " +
+                    "AND t.Discriminator = 'Unica' " +
+                    "AND YEAR(t.Date) = :year) " +    // Filtra pelo ano específico
+                    "UNION ALL " +
+                    "(SELECT tf.ID AS Id, tf.DataAtual AS date, 'Fixa' AS Discriminator " +
+                    "FROM User_TransacaoFixa utf " +
+                    "JOIN TransacaoFixa tf ON utf.TransacaoFixaID = tf.ID " +
+                    "WHERE utf.UserId_user = :userId " +
+                    "AND YEAR(tf.DataAtual) = :year) " +  // Filtra pelo ano específico
+                    "ORDER BY date DESC";
+
+            Query query = session.createSQLQuery(sqlQuery)
+                    .setParameter("userId", userId)
+                    .setParameter("year", year)
+                    .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+            System.out.println(query.toString());  // Verifique a string SQL gerada
+
+            return query.list();
+        } catch (Exception e) {
+            throw new PersistentException("Erro ao executar a consulta SQL", e);
+        }
+    }
+
 
     public static List<Map<String, Object>> queryTransacoesByUserIdAndTime(PersistentSession session, int userId, int year, int month) throws PersistentException {
         try {

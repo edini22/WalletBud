@@ -756,39 +756,76 @@ public class GerirTransacaoPartilhada {
 
         User user = gerirUtilizador.getUserByEmail(session, email);
 
-        List<Map<String, Object>> gastos = TransacaoDAO.queryGastosByAnoById(session, user.getId_user(), ano);
-
         JsonObjectBuilder gastos_mes = Json.createObjectBuilder();
+        for (int i = 1; i < 13; i++) {
+            List<Map<String, Object>> gastos = TransacaoDAO.queryBalancoByYearAndMonth(session, user.getId_user(), ano,i);
+            Float balanco = 0f;
+            for(Map<String, Object> transacao : gastos) {
+                if(transacao.get("Discriminator").equals("Unica")){
+                    Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
+                    if(unica.getTipo().equals("despesa")){
+                        balanco += unica.getShareValue();
+                    }
+                } else{
+                    TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
+                    Fixa fixa = tf.getTransacaofixa_ID();
+                    if(fixa.getTipo().equals("despesa")){
+                        balanco += tf.getPayvalue();
+                    }
+                }
+            }
 
-        for (int mes = 1; mes <= 12; mes++) {
-            gastos_mes.add(String.valueOf(mes), 0);
-        }
-
-        for (Map<String, Object> transacao : gastos) {
-            int mes = (int) transacao.get("Month");
-            Number totalCost = (Number) transacao.get("TotalCost");
-            gastos_mes.add(String.valueOf(mes), totalCost.doubleValue());
+            gastos_mes.add(String.valueOf(i), balanco);
         }
 
         return gastos_mes.build();
     }
 
+    // Método para adicionar valores ao mapa de categorias
+    private static void adicionarAoMapa(Map<String, Float> categorias, String nomeCategoria, Float valor) {
+        // Verificar se a chave já existe no mapa
+        if (categorias.containsKey(nomeCategoria)) {
+            // Se a chave já existe, somar o valor atual com o novo valor
+            Float valorAtual = categorias.get(nomeCategoria);
+            categorias.put(nomeCategoria, valorAtual + valor);
+        } else {
+            // Se a chave não existe, simplesmente adicionar o novo valor
+            categorias.put(nomeCategoria, valor);
+        }
+    }
+    //TODO:
     public JsonObject queryGastosTotalByCategoriaById(PersistentSession session, String email, int ano, int mes) throws PersistentException {
 
         User user = gerirUtilizador.getUserByEmail(session, email);
 
-        List<Map<String, Object>> gastos = TransacaoDAO.queryGastosTotalByCategoriaById(session, user.getId_user(), ano, mes);
+        List<Map<String, Object>> gastos = TransacaoDAO.queryBalancoByYearAndMonth(session, user.getId_user(), ano, mes);
 
-        JsonObjectBuilder gastos_mes = Json.createObjectBuilder();
+        Map<String, Float> categorias  = new HashMap<>();
 
+        for(Map<String, Object> transacao : gastos) {
+            if(transacao.get("Discriminator").equals("Unica")){
+                Unica unica = UnicaDAO.getUnicaByORMID(session, (int) transacao.get("Id"));
+                if(unica.getTipo().equals("despesa")){
+                    String name = unica.getCategoriaId_categoria().getName();
+                    adicionarAoMapa(categorias,name,unica.getShareValue());
+                }
 
-        for (Map<String, Object> transacao : gastos) {
-            String categoria = (String) transacao.get("Categoria");
-            Number totalCost = (Number) transacao.get("TotalCost");
-            gastos_mes.add(categoria, totalCost.doubleValue());
+            } else{
+                TransacaoFixa tf = TransacaoFixaDAO.getTransacaoFixaByORMID(session, (int) transacao.get("Id"));
+                Fixa fixa = tf.getTransacaofixa_ID();
+                if(fixa.getTipo().equals("despesa")){
+                    String name = fixa.getCategoriaId_categoria().getName();
+                    adicionarAoMapa(categorias,name,fixa.getShareValue());
+                }
+            }
         }
 
-        return gastos_mes.build();
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        for (Map.Entry<String, Float> entry : categorias.entrySet()) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+
+        return builder.build();
     }
 
     public JsonObject getGastosPorAno(PersistentSession session, String email, int ano) throws PersistentException {
